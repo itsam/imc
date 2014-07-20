@@ -1,1 +1,11 @@
 Ioannis Tsampoulatidis
+
+
+Sublime3 packages for joomla development
+1) Color Highlighter
+2) GitGutter
+3) Package Control
+4) SublimeGit
+5) CodeFormatter
+6) SUblimeCodeIntel
+7) SuperAnt
