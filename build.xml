@@ -7,16 +7,18 @@
     <property name="adminsrc" location="administrator"/>
     <property name="mediasrc" location="media"/>
     <property name="sitesrc" location="site"/>
+    <property name="modulesrc" location="modules/mod_{$module.name}"/>
     <property name="searchpluginsrc" location="plugins/search/${search.plugin.name}"/>
     <property name="build" location="package"/>
     
     <property name="sitedst"  value="${copy.src.target}/components/com_${name}" />
+    <property name="moduledst"  value="${copy.src.target}/modules/mod_${module.name}" />
     <property name="admindst"  value="${copy.src.target}/administrator/components/com_${name}" />
     <property name="mediadst"  value="${copy.src.target}/media/com_${name}" />
     <property name="searchplugindst"  value="${copy.src.target}/plugins/search/${search.plugin.name}" />
     <property name="manifest"  value="${src}/${name}.xml" />
     
-    <target name="init" description="Checking paths">
+    <target name="_init" description="Settings overview">
         <tstamp/>
         <mkdir dir="${build}"/>
         <echo message="src: ${src} "/>
@@ -35,41 +37,42 @@
         <echo message="PluginSrc var:  ${searchpluginsrc} "/>
         <echo message="PluginDst var:  ${searchplugindst} "/>
         <echo message="------------------" />
+        <echo message="ModuleSrc var:  ${modulesrc} "/>
+        <echo message="ModuleDst var:  ${moduledst} "/>
+        <echo message="------------------" />
         <echo message="Manifest:  ${manifest} "/>
         <echo message="Build zip at: ${build} "/>
     </target>
     <!-- run all the targets-->
-    <target name="all" depends="_copy_site,_copy_admin,_copy_media,_copy_search_plugin,_zipup">
-    </target>
+<!--     <target name="all" depends="_copy_site,_copy_admin,_copy_media,_copy_search_plugin,_copy_module,_zipup">
+    </target> -->
 
-    <target name="_copy_site" description="Copies files to dst project.">
-        <echo message="Running build.xml. Copying files from dev to dst..." />
+    <target name="_copy_site" description="Copies site files to dst project.">
+        <echo message="Copying site files: ${sitesrc} --> ${sitedst}" />
         <copy todir="${sitedst}">
             <fileset dir="${sitesrc}">
                 <modified/>
-                <exclude name="**/*.git/"/>
-                <exclude name="**/package/**"/>
-                <exclude name="language/" />
+                   <exclude name="language/" />
             </fileset>
         </copy>
-        <copy file="${sitesrc}/language/en-GB.com_${name}.ini" todir="${copy.src.target}/language/en-GB"/>
-        <copy file="${sitesrc}/language/el-GR.com_${name}.ini" todir="${copy.src.target}/language/el-GR"/>
-                
+        <echo message="Copying site language if modified..." />
+        <copy file="${sitesrc}/language/en-GB/en-GB.com_${name}.ini" todir="${copy.src.target}/language/en-GB"/>
+        <copy file="${sitesrc}/language/el-GR/el-GR.com_${name}.ini" todir="${copy.src.target}/language/el-GR"/>
     </target>
-    <target name="_copy_admin" description="Copies files to dst project.">
-        <echo message="Running build.xml...." />
+
+    <target name="_copy_admin" description="Copies admin files to dst project.">
+        <echo message="Copying admin files: ${adminsrc} --> ${admindst}" />
         <copy todir="${admindst}">
             <fileset dir="${adminsrc}">
                 <modified/>
-                <exclude name="**/*.git/"/>
-                <exclude name="**/nbproject/**"/>
                 <exclude name="language/" />
             </fileset>
         </copy>
-        <copy file="${adminsrc}/language/en-GB.com_${name}.ini" todir="${copy.src.target}/administrator/language/en-GB"/>
-        <copy file="${adminsrc}/language/el-GR.com_${name}.ini" todir="${copy.src.target}/administrator/language/el-GR"/>
-        <copy file="${adminsrc}/language/en-GB.com_${name}.sys.ini" todir="${copy.src.target}/administrator/language/en-GB"/>
-        <copy file="${adminsrc}/language/el-GR.com_${name}.sys.ini" todir="${copy.src.target}/administrator/language/el-GR"/>
+        <echo message="Copying admin language if modified..." />
+        <copy file="${adminsrc}/language/en-GB/en-GB.com_${name}.ini" todir="${copy.src.target}/administrator/language/en-GB"/>
+        <copy file="${adminsrc}/language/el-GR/el-GR.com_${name}.ini" todir="${copy.src.target}/administrator/language/el-GR"/>
+        <copy file="${adminsrc}/language/en-GB/en-GB.com_${name}.sys.ini" todir="${copy.src.target}/administrator/language/en-GB"/>
+        <copy file="${adminsrc}/language/el-GR/el-GR.com_${name}.sys.ini" todir="${copy.src.target}/administrator/language/el-GR"/>
                 
         <copy file="${manifest}" todir="${admindst}"/>
         
@@ -110,7 +113,7 @@
         </zip>
     </target>
 
-    <target name="_build" depends="_copy_site,_copy_admin"
+    <target name="build" depends="_copy_site,_copy_admin"
             description="Copies to appropriate directories in Joomla site" >
     </target>   
 
