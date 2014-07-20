@@ -175,10 +175,10 @@ class ImcModelIssues extends JModelList {
 					$title = ImcFrontendHelper::getCategoryNameByCategoryId($item->catid);
 
 					// Finally replace the data object with proper information
-					$item->catid = !empty($title) ? $title : $item->catid;
+					//$item->catid = !empty($title) ? $title : $item->catid;
 				}
 		if ( isset($item->created_by) ) {
-			$item->created_by = JFactory::getUser($item->created_by)->name;
+			$item->created_by_title = JFactory::getUser($item->created_by)->name;
 		}
 }
         return $items;

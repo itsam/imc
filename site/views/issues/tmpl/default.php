@@ -77,9 +77,11 @@ $canDelete = $user->authorise('core.delete', 'com_imc');
         <tbody>
             <?php foreach ($this->items as $i => $item) : ?>
 
-                				<?php if (!$canEdit && $user->authorise('core.edit.own', 'com_imc')): ?>
-					<?php $canEdit = JFactory::getUser()->id == $this->item->created_by; ?>
-				<?php endif; ?>
+                <?php if (!$canEdit && $user->authorise('core.edit.own', 'com_imc')): ?>
+                    <?php $canEdit = JFactory::getUser()->id == $item->created_by; ?>
+                <?php else : ?>
+                    <?php $canEdit = $user->authorise('core.edit', 'com_imc');?>
+                <?php endif; ?>
 
                 <tr class="row<?php echo $i % 2; ?>">
 
@@ -131,7 +133,7 @@ $canDelete = $user->authorise('core.delete', 'com_imc');
                         </td>
                     <?php endif; ?>
 
-                    				<?php if ($canEdit || $canDelete): ?>
+                <?php if ($canEdit || $canDelete): ?>
 					<td class="center">
 						<?php if ($canEdit): ?>
 							<a href="<?php echo JRoute::_('index.php?option=com_imc&task=issue.edit&id=' . $item->id, false, 2); ?>" class="btn btn-mini" type="button"><i class="icon-edit" ></i></a>
