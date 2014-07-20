@@ -9,3 +9,5 @@ Sublime3 packages for joomla development
 5) CodeFormatter
 6) SUblimeCodeIntel
 7) SuperAnt
+8) SyncedSideBar
+9) Superlime
