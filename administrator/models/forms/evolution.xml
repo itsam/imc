@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+	<fieldset>
+
+              <field name="id" type="text" default="0" label="COM_IMC_FORM_LBL_EVOLUTION_ID"
+            readonly="true" class="readonly"
+            description="JGLOBAL_FIELD_ID_DESC" /> 
+
+ <field name="issueid" type="foreignkey" class="inputbox"
+            label="COM_IMC_FORM_LBL_EVOLUTION_ISSUEID"
+            description="COM_IMC_FORM_DESC_EVOLUTION_ISSUEID" input_type="list" table="#__imc_issues" key_field="id" value_field="title"  required="true"  /> 
+
+       <field name="filter_issueid" type="sql" class="inputbox"
+            onchange="this.form.submit();"
+            query="SELECT 0 AS `id`, '- Please select issueid -' AS `val` UNION SELECT `id`, `title` AS val FROM `#__imc_issues`" key_field="id" value_field="val"
+             /> 
+
+ 
+		<field name="stepid" type="sql" label="Step" description="" query="SELECT id, title AS value FROM #__imc_steps ORDER BY ordering" key_field="id" value_field="value"  required="true" /> 
+
+       <field name="description" type="textarea"
+                
+            label="COM_IMC_FORM_LBL_EVOLUTION_DESCRIPTION"
+            description="COM_IMC_FORM_DESC_EVOLUTION_DESCRIPTION" 
+                
+                
+                
+            cols="100"
+            rows="8" /> 
+
+       <field name="created" type="timecreated" default="" 
+            label="COM_IMC_FORM_LBL_EVOLUTION_CREATED"
+            description="COM_IMC_FORM_DESC_EVOLUTION_CREATED"  /> 
+
+       <field name="updated" type="timeupdated" default="" 
+            label="COM_IMC_FORM_LBL_EVOLUTION_UPDATED"
+            description="COM_IMC_FORM_DESC_EVOLUTION_UPDATED"  /> 
+
+       <field name="created_by" type="createdby" default="" 
+            label="COM_IMC_FORM_LBL_EVOLUTION_CREATED_BY"
+            description="COM_IMC_FORM_DESC_EVOLUTION_CREATED_BY"  /> 
+
+       <field name="language" type="language"
+                
+            label="COM_IMC_FORM_LBL_EVOLUTION_LANGUAGE"
+            description="COM_IMC_FORM_DESC_EVOLUTION_LANGUAGE" 
+                 default="*" 
+                
+                
+            client="administrator" /> 
+
+         <field
+        name="state"
+        type="list"
+        label="JSTATUS"
+        description="JFIELD_PUBLISHED_DESC"
+        class="inputbox"
+        size="1"
+        default="1">
+        <option value="1">JPUBLISHED</option>
+        <option value="0">JUNPUBLISHED</option>
+    </field> 
+
+                        <field name="checked_out" type="hidden" filter="unset" />
+        <field name="checked_out_time" type="hidden" filter="unset" /> 
+
+ </fieldset> 
+
+ <fieldset 
+                        name="accesscontrol">
+                       <field name="asset_id" type="hidden" filter="unset" />
+                       <field name="rules"
+                            type="rules"
+                            label="JFIELD_RULES_LABEL"
+                            translate_label="false"
+                            filter="rules"
+                            validate="rules"
+                            class="inputbox"
+                            component="com_imc"
+                            section="evolution"
+                        />
+
+	</fieldset>
+
+</form>

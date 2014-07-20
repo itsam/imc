@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="module" version="3.0" method="upgrade" client="site">
+    <name>MOD_IMC_NAME</name>
+    <creationDate>2014-07-19</creationDate>
+    <copyright>Copyright (C) 2014. All rights reserved.</copyright>
+    <license>GNU AFFERO GENERAL PUBLIC LICENSE Version 3; see LICENSE</license>
+    <author>Ioannis Tsampoulatidis</author>
+    <authorEmail>tsampoulatidis@gmail.com</authorEmail>
+    <authorUrl>https://github.com/itsam</authorUrl>
+    <version>3.0.0</version>
+    <description>MOD_IMC_DESCRIPTION</description>
+    
+    <files>
+        <filename module="mod_imc">mod_imc.php</filename>
+        <filename>helper.php</filename>
+        <filename>index.html</filename>
+        <folder>tmpl</folder>
+    </files>
+    <languages>
+        
+			<language tag="en-GB">language/en-GB.mod_imc.ini</language>
+			<language tag="en-GB">language/en-GB.mod_imc.sys.ini</language>
+			<language tag="el-GR">language/el-GR.mod_imc.ini</language>
+			<language tag="el-GR">language/el-GR.mod_imc.sys.ini</language>
+    </languages>
+    <config>
+        <fields name="params">
+            <fieldset 
+                name="content_type" 
+                label="MOD_IMC_CONTENT_TYPE_TAB_LBL"
+                description="MOD_IMC_CONTENT_TYPE_TAB_DESC">
+                <field
+                    name="content_type" type="list"
+                    label="MOD_IMC_CONTENT_TYPE_LBL"
+                    description="MOD_IMC_CONTENT_TYPE_DESC">
+                    <option value="blank">MOD_IMC_CUSTOM_CONTENT</option>
+                    <option value="list">MOD_IMC_LIST</option>
+                    <option value="item">MOD_IMC_ITEM</option>
+                </field>
+            </fieldset>
+            <fieldset 
+                name="blank_content" 
+                label="MOD_IMC_CUSTOM_CONTENT_TAB_LBL"
+                description="MOD_IMC_CUSTOM_CONTENT_TAB_DESC">
+                <field 
+                    name="html_content" type="editor" filter="safehtml"
+                    label="MOD_IMC_HTML_LBL"
+                    description="MOD_IMC_HTML_DESC" />
+            </fieldset>
+            <fieldset 
+                name="list_content" 
+                label="MOD_IMC_LIST_CONTENT_TAB_LBL"
+                description="MOD_IMC_LIST_CONTENT_TAB_DESC">
+                <field
+                    name="table" type="list"
+                    label="MOD_IMC_TABLE_LBL"
+                    description="MOD_IMC_TABLE_DESC">
+                    
+	<option value="#__imc_issues">#__imc_issues</option>
+	<option value="#__imc_steps">#__imc_steps</option>
+	<option value="#__imc_keys">#__imc_keys</option>
+	<option value="#__imc_evolution">#__imc_evolution</option>
+	<option value="#__imc_votes">#__imc_votes</option>
+	<option value="#__imc_comments">#__imc_comments</option>
+                </field>
+                <field 
+                    name="field" type="groupedlist" default=""
+                    label="MOD_IMC_FIELD_LBL"
+                    description="MOD_IMC_FIELD_DESC">
+                    
+	<group label="#__imc_issues">
+		<option value="id">id</option>
+		<option value="title">title</option>
+		<option value="stepid">stepid</option>
+		<option value="catid">catid</option>
+		<option value="description">description</option>
+		<option value="address">address</option>
+		<option value="latitude">latitude</option>
+		<option value="longitude">longitude</option>
+		<option value="photo">photo</option>
+		<option value="created">created</option>
+		<option value="updated">updated</option>
+		<option value="created_by">created_by</option>
+		<option value="language">language</option>
+		<option value="hits">hits</option>
+		<option value="userid">userid</option>
+		<option value="votes">votes</option>
+		<option value="modality">modality</option>
+		<option value="alias">alias</option>
+	</group>
+	<group label="#__imc_steps">
+		<option value="id">id</option>
+		<option value="title">title</option>
+		<option value="description">description</option>
+		<option value="created">created</option>
+		<option value="updated">updated</option>
+		<option value="created_by">created_by</option>
+		<option value="language">language</option>
+	</group>
+	<group label="#__imc_keys">
+		<option value="id">id</option>
+		<option value="title">title</option>
+		<option value="skey">skey</option>
+		<option value="created_by">created_by</option>
+		<option value="created">created</option>
+		<option value="updated">updated</option>
+	</group>
+	<group label="#__imc_evolution">
+		<option value="id">id</option>
+		<option value="issueid">issueid</option>
+		<option value="stepid">stepid</option>
+		<option value="description">description</option>
+		<option value="created">created</option>
+		<option value="updated">updated</option>
+		<option value="created_by">created_by</option>
+		<option value="language">language</option>
+	</group>
+	<group label="#__imc_votes">
+		<option value="id">id</option>
+		<option value="issueid">issueid</option>
+		<option value="created">created</option>
+		<option value="updated">updated</option>
+		<option value="created_by">created_by</option>
+	</group>
+	<group label="#__imc_comments">
+		<option value="id">id</option>
+		<option value="issueid">issueid</option>
+		<option value="parentid">parentid</option>
+		<option value="description">description</option>
+		<option value="photo">photo</option>
+		<option value="created">created</option>
+		<option value="updated">updated</option>
+		<option value="created_by">created_by</option>
+		<option value="language">language</option>
+	</group>
+                </field>
+                <field 
+                    name="offset" type="text" default="0" filter="uint" class="input-small"
+                    label="MOD_IMC_OFFSET_LBL"
+                    description="MOD_IMC_OFFSET_DESC" />
+                <field 
+                    name="limit" type="text" default="10" filter="uint" class="input-small"
+                    label="MOD_IMC_LIMIT_LBL"
+                    description="MOD_IMC_LIMIT_DESC" />
+            </fieldset>
+            <fieldset 
+                name="item_content" 
+                label="MOD_IMC_ITEM_CONTENT_TAB"
+                description="MOD_IMC_ITEM_CONTENT_TAB_DESC">
+                <field
+                    name="item_table" type="list"
+                    label="MOD_IMC_TABLE_LBL"
+                    description="MOD_IMC_TABLE_DESC">
+                    
+	<option value="#__imc_issues">#__imc_issues</option>
+	<option value="#__imc_steps">#__imc_steps</option>
+	<option value="#__imc_keys">#__imc_keys</option>
+	<option value="#__imc_evolution">#__imc_evolution</option>
+	<option value="#__imc_votes">#__imc_votes</option>
+	<option value="#__imc_comments">#__imc_comments</option>
+                </field>
+                <field 
+                    name="item_id" type="text" filter="uint" class="input-small"
+                    label="MOD_IMC_ITEM_ID_LBL"
+                    description="MOD_IMC_ITEM_ID_DESC"
+                />
+            </fieldset>
+        </fields>
+    </config>
+</extension>

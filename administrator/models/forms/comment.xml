@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+	<fieldset>
+
+              <field name="id" type="text" default="0" label="COM_IMC_FORM_LBL_COMMENT_ID"
+            readonly="true" class="readonly"
+            description="JGLOBAL_FIELD_ID_DESC" /> 
+
+ <field name="issueid" type="foreignkey" class="inputbox"
+            label="COM_IMC_FORM_LBL_COMMENT_ISSUEID"
+            description="COM_IMC_FORM_DESC_COMMENT_ISSUEID" input_type="list" table="#__imc_issues" key_field="id" value_field="title"  required="true"  /> 
+
+       <field name="filter_issueid" type="sql" class="inputbox"
+            onchange="this.form.submit();"
+            query="SELECT 0 AS `id`, '- Please select issueid -' AS `val` UNION SELECT `id`, `title` AS val FROM `#__imc_issues`" key_field="id" value_field="val"
+             /> 
+
+       <field name="parentid" type="text" size="40" class="inputbox"
+        
+            label="COM_IMC_FORM_LBL_COMMENT_PARENTID"
+            description="COM_IMC_FORM_DESC_COMMENT_PARENTID" 
+         default="0" 
+        
+        
+        filter="safehtml" /> 
+
+       <field name="description" type="textarea"
+                
+            label="COM_IMC_FORM_LBL_COMMENT_DESCRIPTION"
+            description="COM_IMC_FORM_DESC_COMMENT_DESCRIPTION" 
+                
+                
+                
+            cols="100"
+            rows="8" /> 
+
+       <field name="photo" type="text" size="40" class="inputbox"
+        
+            label="COM_IMC_FORM_LBL_COMMENT_PHOTO"
+            description="COM_IMC_FORM_DESC_COMMENT_PHOTO" 
+        
+        
+        
+        filter="safehtml" /> 
+
+       <field name="created" type="timecreated" default="" 
+            label="COM_IMC_FORM_LBL_COMMENT_CREATED"
+            description="COM_IMC_FORM_DESC_COMMENT_CREATED"  /> 
+
+       <field name="updated" type="timeupdated" default="" 
+            label="COM_IMC_FORM_LBL_COMMENT_UPDATED"
+            description="COM_IMC_FORM_DESC_COMMENT_UPDATED"  /> 
+
+       <field name="created_by" type="createdby" default="" 
+            label="COM_IMC_FORM_LBL_COMMENT_CREATED_BY"
+            description="COM_IMC_FORM_DESC_COMMENT_CREATED_BY"  /> 
+
+       <field name="language" type="language"
+                
+            label="COM_IMC_FORM_LBL_COMMENT_LANGUAGE"
+            description="COM_IMC_FORM_DESC_COMMENT_LANGUAGE" 
+                 default="*" 
+                
+                
+            client="administrator" /> 
+
+         <field
+        name="state"
+        type="list"
+        label="JSTATUS"
+        description="JFIELD_PUBLISHED_DESC"
+        class="inputbox"
+        size="1"
+        default="1">
+        <option value="1">JPUBLISHED</option>
+        <option value="0">JUNPUBLISHED</option>
+    </field> 
+
+                        <field name="checked_out" type="hidden" filter="unset" />
+        <field name="checked_out_time" type="hidden" filter="unset" /> 
+
+ </fieldset> 
+
+ <fieldset 
+                        name="accesscontrol">
+                       <field name="asset_id" type="hidden" filter="unset" />
+                       <field name="rules"
+                            type="rules"
+                            label="JFIELD_RULES_LABEL"
+                            translate_label="false"
+                            filter="rules"
+                            validate="rules"
+                            class="inputbox"
+                            component="com_imc"
+                            section="comment"
+                        />
+
+	</fieldset>
+
+</form>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="component" version="3.0" method="upgrade">
+    <name>com_imc</name>
+    <creationDate>2014-07-19</creationDate>
+    <copyright>Copyright (C) 2014. All rights reserved.</copyright>
+    <license>GNU AFFERO GENERAL PUBLIC LICENSE Version 3; see LICENSE</license>
+    <author>Ioannis Tsampoulatidis</author>
+    <authorEmail>tsampoulatidis@gmail.com</authorEmail>
+    <authorUrl>https://github.com/itsam</authorUrl>
+    <version>3.0.0</version>
+    <description>Improve My City for Joomla 3</description>
+    
+    <scriptfile>script.php</scriptfile>
+    
+    <install> <!-- Runs on install -->
+        <sql>
+            <file driver="mysql" charset="utf8">sql/install.mysql.utf8.sql</file>
+        </sql>
+    </install>
+    <uninstall> <!-- Runs on uninstall -->
+        <sql>
+            <file driver="mysql" charset="utf8">sql/uninstall.mysql.utf8.sql</file>
+        </sql>
+    </uninstall>
+
+    <files folder="site">
+        <filename>index.html</filename>
+        <filename>imc.php</filename>
+        <filename>controller.php</filename>
+        <filename>router.php</filename>
+        <folder>views</folder>
+        <folder>models</folder>
+        <folder>controllers</folder>
+        <folder>helpers</folder>
+        <folder>assets</folder>
+    </files>
+    <languages folder="site">
+        
+			<language tag="en-GB">language/en-GB/en-GB.com_imc.ini</language>
+			<language tag="el-GR">language/el-GR/el-GR.com_imc.ini</language>
+    </languages>
+    <administration>
+        <menu img="components/com_imc/assets/images/s_com_imc.png" >COM_IMC</menu>
+        <submenu>
+            
+			<menu link="option=com_imc&amp;view=issues" view="issues" img="components/com_imc/assets/images/s_issues.png" alt="Imc/Issues">COM_IMC_TITLE_ISSUES</menu>
+
+			<menu link="option=com_categories&amp;extension=com_imc" view="categories" img="components/com_imc/assets/images/s_issues.png" alt="Imc/Categories">COM_IMC_ISSUES_CATID</menu>
+
+			<menu link="option=com_imc&amp;view=steps" view="steps" img="components/com_imc/assets/images/s_steps.png" alt="Imc/Steps">COM_IMC_TITLE_STEPS</menu>
+
+			<menu link="option=com_imc&amp;view=keys" view="keys" img="components/com_imc/assets/images/s_keys.png" alt="Imc/Keys">COM_IMC_TITLE_KEYS</menu>
+
+			<menu link="option=com_imc&amp;view=evolutions" view="evolutions" img="components/com_imc/assets/images/s_evolutions.png" alt="Imc/Evolutions">COM_IMC_TITLE_EVOLUTIONS</menu>
+
+			<menu link="option=com_imc&amp;view=votes" view="votes" img="components/com_imc/assets/images/s_votes.png" alt="Imc/Votes">COM_IMC_TITLE_VOTES</menu>
+
+			<menu link="option=com_imc&amp;view=comments" view="comments" img="components/com_imc/assets/images/s_comments.png" alt="Imc/Comments">COM_IMC_TITLE_COMMENTS</menu>
+
+        </submenu>
+        <files folder="administrator">
+            <filename>access.xml</filename>
+            <filename>config.xml</filename>
+            <filename>controller.php</filename>
+            <filename>index.html</filename>
+            <filename>imc.php</filename>
+            <folder>controllers</folder>
+            <folder>assets</folder>
+            <folder>helpers</folder>
+            <folder>models</folder>
+            <folder>sql</folder>
+            <folder>tables</folder>
+            <folder>views</folder>
+            <folder>language</folder>
+        </files>
+        <languages folder="administrator">
+            
+			<language tag="en-GB">language/en-GB/en-GB.com_imc.ini</language>
+			<language tag="en-GB">language/en-GB/en-GB.com_imc.sys.ini</language>
+			<language tag="el-GR">language/el-GR/el-GR.com_imc.ini</language>
+			<language tag="el-GR">language/el-GR/el-GR.com_imc.sys.ini</language>
+        </languages>
+    </administration>
+    <plugins>
+        <plugin group="search" plugin="imc"/>
+    </plugins>
+    <modules>
+		<module module="mod_imc" />
+	</modules>
+</extension>
+<!-- Component built by the Joomla Component Creator -->
+<!-- http://www.component-creator.com/ -->

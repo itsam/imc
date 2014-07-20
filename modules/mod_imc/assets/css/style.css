@@ -1,0 +1,38 @@
+/**
+ * @version     3.0.0
+ * @package     com_imc
+ * @subpackage  mod_imc
+ * @copyright   Copyright (C) 2014. All rights reserved.
+ * @license     GNU AFFERO GENERAL PUBLIC LICENSE Version 3; see LICENSE
+ * @author      Ioannis Tsampoulatidis <tsampoulatidis@gmail.com> - https://github.com/itsam
+ */
+
+.field_name{
+    width: 16.66666666666667%;
+    display: inline-block;
+    float: left;
+}
+
+.field_value{
+    width: 83.33333333333333%;
+    display: inline-block;
+    float:left;
+}
+
+.table{
+    width: 100%;
+    margin-bottom: 18px;
+}
+
+.table tr{
+    border: none;
+}
+
+.table td, .table th{
+    padding: 8px;
+    line-height: 18px;
+    text-align: left;
+    vertical-align: top;
+    border: none;
+    border-top: 1px solid #ddd;
+}
