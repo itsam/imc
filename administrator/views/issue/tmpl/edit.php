@@ -69,6 +69,10 @@ $document->addStyleSheet('components/com_imc/assets/css/imc.css');
 				<div class="controls"><?php echo $this->form->getInput('title'); ?></div>
 			</div>
 			<div class="control-group">
+				<div class="control-label"><?php echo $this->form->getLabel('mycustomfield'); ?></div>
+				<div class="controls"><?php echo $this->form->getInput('mycustomfield'); ?></div>
+			</div>			
+			<div class="control-group">
 				<div class="control-label"><?php echo $this->form->getLabel('stepid'); ?></div>
 				<div class="controls"><?php echo $this->form->getInput('stepid'); ?></div>
 			</div>
