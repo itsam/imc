@@ -35,7 +35,7 @@ class JFormFieldMultiphoto extends JFormField
 	{
 		// Initialize variables.
 		$html = array();
-		$html[] = "<h1>" . 'MULTI PHOTO' . "</h1>";
+		$html[] = "<h1>" . 'MULTI PHOTO with jQuery' . "</h1>";
 		return implode($html);
 	}
 }
