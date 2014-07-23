@@ -19,3 +19,5 @@ http://docs.joomla.org/Creating_a_file_uploader_in_your_component
 http://stackoverflow.com/questions/15322035/joomla-2-5-back-end-add-custom-field-using-jquery-and-jformfield
 
 /var/www/joomla3/libraries/cms/form/field
+
+testing...
