@@ -96,7 +96,7 @@ class ImcModelComment extends JModelItem {
 					$query
 							->select('title')
 							->from('`#__imc_issues`')
-							->where('id = ' .$value);
+							->where('id = ' . $db->quote($db->escape($value)));
 					$db->setQuery($query);
 					$results = $db->loadObject();
 					if ($results) {

@@ -140,15 +140,6 @@
         
         filter="safehtml" /> 
 
-       <field name="alias" type="text" size="40" class="inputbox"
-        
-            label="COM_IMC_FORM_LBL_ISSUE_ALIAS"
-            description="COM_IMC_FORM_DESC_ISSUE_ALIAS" 
-        
-        
-        
-        filter="safehtml" /> 
-
          <field
         name="state"
         type="list"

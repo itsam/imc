@@ -22,7 +22,7 @@
     <field action="add" field_name="userid" field_type="INT" field_length="11" description=""/>
     <field action="add" field_name="votes" field_type="MEDIUMINT" field_length="8" description=""/>
     <field action="add" field_name="modality" field_type="SMALLINT" field_length="6" description=""/>
-    <field action="add" field_name="alias" field_type="VARCHAR" field_length="255" description=""/>
+    <field action="remove" field_name="alias"/>
   </table>
   <table action="add" table_name="#__imc_steps" storage_engine="" collation="utf8_general_ci">
     <field field_name="id" field_type="INT" field_length="11" is_autoincrement="1" index="primary" description=""/>

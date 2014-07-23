@@ -13,7 +13,7 @@ defined('_JEXEC') or die;
 /**
  * Imc helper.
  */
-class ImcBackendHelper {
+class ImcHelper {
 
     /**
      * Configure the Linkbar.

@@ -85,7 +85,7 @@ class ImcModelComments extends JModelList {
         // Select the required fields from the table.
         $query->select(
                 $this->getState(
-                        'list.select', 'a.*'
+                        'list.select', 'DISTINCT a.*'
                 )
         );
 
@@ -150,7 +150,7 @@ class ImcModelComments extends JModelList {
 					$query
 							->select('title')
 							->from('`#__imc_issues`')
-							->where('id = ' .$value);
+							->where('id = ' . $db->quote($db->escape($value)));
 					$db->setQuery($query);
 					$results = $db->loadObject();
 					if ($results) {
@@ -161,9 +161,6 @@ class ImcModelComments extends JModelList {
 			$item->issueid = !empty($textValue) ? implode(', ', $textValue) : $item->issueid;
 
 			}
-		if ( isset($item->created_by) ) {
-			$item->created_by = JFactory::getUser($item->created_by)->name;
-		}
 }
         return $items;
     }

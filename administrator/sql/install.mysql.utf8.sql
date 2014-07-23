@@ -23,7 +23,6 @@ CREATE TABLE IF NOT EXISTS `#__imc_issues` (
 `userid` INT(11)  NOT NULL ,
 `votes` MEDIUMINT(8)  NOT NULL ,
 `modality` SMALLINT(6)  NOT NULL ,
-`alias` VARCHAR(255)  NOT NULL ,
 PRIMARY KEY (`id`)
 ) DEFAULT COLLATE=utf8_general_ci;
 

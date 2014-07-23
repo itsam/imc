@@ -78,7 +78,7 @@ if($this->item->id) {
 	</div>
 	<?php foreach((array)$this->item->stepid as $value): ?>
 		<?php if(!is_array($value)): ?>
-			<input type="hidden" class="stepid" name="jform[stepidhidden][<?php echo $value; ?>]" value="<?php echo $value; ?>" />
+			<input type="hidden" class="stepid" name="jform[stepidhidden][<?php echo $value; ?>]" value="<?php echo $value; ?>" />';
 		<?php endif; ?>
 	<?php endforeach; ?>
 	<div class="control-group">
@@ -147,10 +147,6 @@ if($this->item->id) {
 	<div class="control-group">
 		<div class="control-label"><?php echo $this->form->getLabel('modality'); ?></div>
 		<div class="controls"><?php echo $this->form->getInput('modality'); ?></div>
-	</div>
-	<div class="control-group">
-		<div class="control-label"><?php echo $this->form->getLabel('alias'); ?></div>
-		<div class="controls"><?php echo $this->form->getInput('alias'); ?></div>
 	</div>				<div class="fltlft" <?php if (!JFactory::getUser()->authorise('core.admin','imc')): ?> style="display:none;" <?php endif; ?> >
                 <?php echo JHtml::_('sliders.start', 'permissions-sliders-'.$this->item->id, array('useCookie'=>1)); ?>
                 <?php echo JHtml::_('sliders.panel', JText::_('ACL Configuration'), 'access-rules'); ?>

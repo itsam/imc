@@ -17,7 +17,7 @@ if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_imc' . $th
 	$canEdit = JFactory::getUser()->id == $this->item->created_by;
 }
 ?>
-<?php if ($this->item) : ?>
+<?php if ($this->item && $this->item->state == 1) : ?>
 
     <div class="item_fields">
         <table class="table">

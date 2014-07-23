@@ -45,7 +45,6 @@ class ImcModelIssues extends JModelList {
                 'userid', 'a.userid',
                 'votes', 'a.votes',
                 'modality', 'a.modality',
-                'alias', 'a.alias',
 
             );
         }
@@ -94,7 +93,7 @@ class ImcModelIssues extends JModelList {
         // Select the required fields from the table.
         $query->select(
                 $this->getState(
-                        'list.select', 'a.*'
+                        'list.select', 'DISTINCT a.*'
                 )
         );
 
@@ -175,11 +174,8 @@ class ImcModelIssues extends JModelList {
 					$title = ImcFrontendHelper::getCategoryNameByCategoryId($item->catid);
 
 					// Finally replace the data object with proper information
-					//$item->catid = !empty($title) ? $title : $item->catid;
+					$item->catid = !empty($title) ? $title : $item->catid;
 				}
-		if ( isset($item->created_by) ) {
-			$item->created_by_title = JFactory::getUser($item->created_by)->name;
-		}
 }
         return $items;
     }

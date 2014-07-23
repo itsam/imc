@@ -45,7 +45,6 @@ class ImcModelIssues extends JModelList {
                 'userid', 'a.userid',
                 'votes', 'a.votes',
                 'modality', 'a.modality',
-                'alias', 'a.alias',
 
             );
         }
@@ -118,7 +117,7 @@ class ImcModelIssues extends JModelList {
         // Select the required fields from the table.
         $query->select(
                 $this->getState(
-                        'list.select', 'a.*'
+                        'list.select', 'DISTINCT a.*'
                 )
         );
         $query->from('`#__imc_issues` AS a');

@@ -125,9 +125,6 @@ class ModImcHelper {
 		case 'modality':
 		$result = $field_value;
 		break;
-		case 'alias':
-		$result = $field_value;
-		break;
 		}
 		break;
 		case '#__imc_steps':

@@ -17,7 +17,7 @@ if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_imc' . $th
 	$canEdit = JFactory::getUser()->id == $this->item->created_by;
 }
 ?>
-<?php if ($this->item) : ?>
+<?php if ($this->item && $this->item->state == 1) : ?>
 
     <div class="item_fields">
         <table class="table">
@@ -93,10 +93,6 @@ if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_imc' . $th
 <tr>
 			<th><?php echo JText::_('COM_IMC_FORM_LBL_ISSUE_MODALITY'); ?></th>
 			<td><?php echo $this->item->modality; ?></td>
-</tr>
-<tr>
-			<th><?php echo JText::_('COM_IMC_FORM_LBL_ISSUE_ALIAS'); ?></th>
-			<td><?php echo $this->item->alias; ?></td>
 </tr>
 
         </table>

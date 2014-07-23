@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="module" version="3.0" method="upgrade" client="site">
     <name>MOD_IMC_NAME</name>
-    <creationDate>2014-07-19</creationDate>
+    <creationDate>2014-07-23</creationDate>
     <copyright>Copyright (C) 2014. All rights reserved.</copyright>
     <license>GNU AFFERO GENERAL PUBLIC LICENSE Version 3; see LICENSE</license>
     <author>Ioannis Tsampoulatidis</author>
@@ -86,7 +86,6 @@
 		<option value="userid">userid</option>
 		<option value="votes">votes</option>
 		<option value="modality">modality</option>
-		<option value="alias">alias</option>
 	</group>
 	<group label="#__imc_steps">
 		<option value="id">id</option>

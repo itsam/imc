@@ -9,7 +9,7 @@
  */
 defined('_JEXEC') or die;
 
-require_once JPATH_SITE . '/components/com_jccupdater/router.php';
+require_once JPATH_SITE . '/components/com_imc/router.php';
 
 /**
  * Content search plugin.

@@ -100,7 +100,7 @@ class ImcModelKeys extends JModelList {
         // Select the required fields from the table.
         $query->select(
                 $this->getState(
-                        'list.select', 'a.*'
+                        'list.select', 'DISTINCT a.*'
                 )
         );
         $query->from('`#__imc_keys` AS a');

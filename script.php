@@ -1,8 +1,20 @@
 <?php
 
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
 define('MODIFIED', 1);
 define('NOT_MODIFIED', 2);
 
+/**
+ * Updates the database structure of the component
+ *
+ * @author Component Creator
+ * @version 0.2b
+ */
 class com_imcInstallerScript {
 
     /**
@@ -20,7 +32,7 @@ class com_imcInstallerScript {
 
         // abort if the component wasn't build for the current Joomla version
         if (!$jversion->isCompatible($this->release)) {
-            JFactory::getApplication()->enqueueMessage(JText::_('COM_IMC_IS_NOT_COMPATIBLE_JOOMLA_VERSION'), 'error');
+            JFactory::getApplication()->enqueueMessage(JText::_('This component is not compatible with installed Joomla version'), 'error');
             return false;
         }
     }
@@ -32,7 +44,6 @@ class com_imcInstallerScript {
     public function install($parent) {
         $this->installDb($parent);
         $this->installPlugins($parent);
-        $this->installModules($parent);
     }
 
     /**
@@ -257,7 +268,7 @@ class com_imcInstallerScript {
                 $this->processTable($app, $table);
             }
         } else {
-            $app->enqueueMessage(JText::_('COM_IMC_SIMPLEXML_LOAD_FILE_FUNCTION_DOES_NOT_EXISTS'));
+            $app->enqueueMessage(JText::_('This script needs \'simplexml_load_file\' to update the component'));
         }
     }
 
@@ -282,22 +293,22 @@ class com_imcInstallerScript {
 
                         try {
                             $db->execute();
-                            $app->enqueueMessage(JText::sprintf('COM_IMC_CREATING_TABLE_ACTION_COMPLETED_SUCCESFULLY', (string) $table['table_name']));
+                            $app->enqueueMessage(JText::sprintf('Table `%s` has been succesfully created', (string) $table['table_name']));
                             $table_added = true;
                         } catch (Exception $ex) {
-                            $app->enqueueMessage(JText::sprintf('COM_IMC_CREATING_TABLE_ACTION_AN_ERROR_OCCURRED', (string) $table['table_name'], $ex->getMessage()), 'error');
+                            $app->enqueueMessage(JText::sprintf('There was an error creating the table `%s`. Error: %s', (string) $table['table_name'], $ex->getMessage()), 'error');
                         }
                     }
                     break;
                 case 'change':
 
                     //Check if the table exists first to avoid errors.
-                    if ($this->existsTable($table['old_name'])) {
+                    if ($this->existsTable($table['old_name']) && !$this->existsTable($table['new_name'])) {
                         try {
                             $db->renameTable($table['old_name'], $table['new_name']);
-                            $app->enqueueMessage(JText::sprintf('COM_IMC_RENAMING_TABLE_ACTION_COMPLETED_SUCCESFULLY', $table['old_name'], $table['new_name']));
+                            $app->enqueueMessage(JText::sprintf('Table `%s` was succesfully renamed to `%s`', $table['old_name'], $table['new_name']));
                         } catch (Exception $ex) {
-                            $app->enqueueMessage(JText::sprintf('COM_IMC_RENAMING_TABLE_ACTION_AN_ERROR_OCCURRED', $table['old_name'], $ex->getMessage()), 'error');
+                            $app->enqueueMessage(JText::sprintf('There was an error renaming the table `%s`. Error: %s', $table['old_name'], $ex->getMessage()), 'error');
                         }
                     } else {
 
@@ -308,10 +319,10 @@ class com_imcInstallerScript {
 
                             try {
                                 $db->execute();
-                                $app->enqueueMessage(JText::sprintf('COM_IMC_CREATING_TABLE_ACTION_COMPLETED_SUCCESFULLY', $table['table_name']));
+                                $app->enqueueMessage(JText::sprintf('Table `%s` has been succesfully created', $table['table_name']));
                                 $table_added = true;
                             } catch (Exception $ex) {
-                                $app->enqueueMessage(JText::sprintf('COM_IMC_CREATING_TABLE_ACTION_AN_ERROR_OCCURRED', $table['table_name'], $ex->getMessage()), 'error');
+                                $app->enqueueMessage(JText::sprintf('There was an error creating the table `%s`. Error: %s', $table['table_name'], $ex->getMessage()), 'error');
                             }
                         }
                     }
@@ -321,9 +332,9 @@ class com_imcInstallerScript {
                     try {
                         //We make sure that the table will be removed only if it exists specifying ifExists argument as true.
                         $db->dropTable($table['table_name'], true);
-                        $app->enqueueMessage(JText::sprintf('COM_IMC_DROPPING_TABLE_ACTION_COMPLETED_SUCCESSFULLY', $table['table_name']));
+                        $app->enqueueMessage(JText::sprintf('Table `%s` was succesfully deleted', $table['table_name']));
                     } catch (Exception $ex) {
-                        $app->enqueueMessage(JText::sprintf('COM_IMC_DROPPING_TABLE_ACTION_AN_ERROR_OCCURRED', $table['table_name'], $ex->getMessage()), 'error');
+                        $app->enqueueMessage(JText::sprintf('There was an error deleting Table `%s`. Error: %s', $table['table_name'], $ex->getMessage()), 'error');
                     }
 
                     break;
@@ -347,33 +358,27 @@ class com_imcInstallerScript {
         $create_table_statement = '';
         if (isset($table->field)) {
 
+            $fields = $table->children();
+
             $fields_definitions = array();
             $indexes = array();
 
             $db = JFactory::getDbo();
 
-            if (!is_array($table->field)) {
-                $fields_definitions[] = $this->generateColumnDeclaration($table->field);
+            foreach ($fields as $field) {
 
-                if ($table->field['index'] == 'index') {
-                    $indexes[] = $table->field['field_name'];
-                }
-            } else {
-                foreach ($table->field as $field) {
+                $fields_definitions[] = $this->generateColumnDeclaration($field);
 
-                    $fields_definitions[] = $this->generateColumnDeclaration($field);
-
-                    if ($field['index'] == 'index') {
-                        $indexes[] = $field['field_name'];
-                    }
+                if ($field['index'] == 'index') {
+                    $indexes[] = $field['field_name'];
                 }
             }
 
             foreach ($indexes as $index) {
-                $fields_definitions[] = JText::sprintf('COM_IMC_CREATE_TABLE_INDEX_SQL_STATEMENT', $db->quoteName((string) $index), $index);
+                $fields_definitions[] = JText::sprintf('INDEX %s (%s ASC)', $db->quoteName((string) $index), $index);
             }
 
-            $create_table_statement = JText::sprintf('COM_IMC_CREATE_TABLE_SQL_STATEMENT', $table['table_name'], implode(',', $fields_definitions));
+            $create_table_statement = JText::sprintf('CREATE TABLE IF NOT EXISTS %s (%s)', $table['table_name'], implode(',', $fields_definitions));
         }
 
         return $create_table_statement;
@@ -404,9 +409,9 @@ class com_imcInstallerScript {
                 case 'add':
                     $result = $this->addField($table_name, $field);
                     if ($result === MODIFIED) {
-                        $app->enqueueMessage(JText::sprintf('COM_IMC_ADDING_FIELD_ACTION_COMPLETED_SUCCESSFULLY', $field['field_name']));
+                        $app->enqueueMessage(JText::sprintf('Field `%s` has been succesfully added', $field['field_name']));
                     } else if ($result !== NOT_MODIFIED) {
-                        $app->enqueueMessage(JText::sprintf('COM_IMC_ADDING_FIELD_ACTION_AN_ERROR_OCCURRED', $field['field_name'], $result), 'error');
+                        $app->enqueueMessage(JText::sprintf('There was an error adding the field `%s`. Error: %s', $field['field_name'], $result), 'error');
                     }
                     break;
                 case 'change':
@@ -414,28 +419,28 @@ class com_imcInstallerScript {
                     if (isset($field['old_name']) && isset($field['new_name'])) {
 
                         if ($this->existsField($table_name, $field['old_name'])) {
-                            $renaming_statement = JText::sprintf('COM_IMC_RENAME_COLUMN_SQL_STATEMENT', $table_name, $field['old_name'], $field['new_name'], $this->getFieldType($field));
+                            $renaming_statement = JText::sprintf('ALTER TABLE %s CHANGE %s %s %s', $table_name, $field['old_name'], $field['new_name'], $this->getFieldType($field));
                             $db->setQuery($renaming_statement);
                             try {
                                 $db->execute();
-                                $app->enqueueMessage(JText::sprintf('COM_IMC_MODIFYING_FIELD_ACTION_COMPLETED_SUCCESSFULLY', $field['old_name']));
+                                $app->enqueueMessage(JText::sprintf('Field `%s` has been succesfully modified', $field['old_name']));
                             } catch (Exception $ex) {
-                                $app->enqueueMessage(JText::sprintf('COM_IMC_MODIFYING_FIELD_ACTION_AN_ERROR_OCCURRED', $field['field_name'], $ex->getMessage()), 'error');
+                                $app->enqueueMessage(JText::sprintf('There was an error modifying the field `%s`. Error: %s', $field['field_name'], $ex->getMessage()), 'error');
                             }
                         } else {
                             $result = $this->addField($table_name, $field);
                             if ($result === MODIFIED) {
-                                $app->enqueueMessage(JText::sprintf('COM_IMC_MODIFYING_FIELD_ACTION_COMPLETED_SUCCESSFULLY', $field['field_name']));
+                                $app->enqueueMessage(JText::sprintf('Field `%s` has been succesfully modified', $field['field_name']));
                             } else if ($result !== NOT_MODIFIED) {
-                                $app->enqueueMessage(JText::sprintf('COM_IMC_MODIFYING_FIELD_ACTION_AN_ERROR_OCCURRED', $field['field_name'], $result), 'error');
+                                $app->enqueueMessage(JText::sprintf('There was an error modifying the field `%s`. Error: %s', $field['field_name'], $result), 'error');
                             }
                         }
                     } else {
                         $result = $this->addField($table_name, $field);
                         if ($result === MODIFIED) {
-                            $app->enqueueMessage(JText::sprintf('COM_IMC_ADDING_FIELD_ACTION_COMPLETED_SUCCESSFULLY', $field['field_name']));
+                            $app->enqueueMessage(JText::sprintf('Field `%s` has been succesfully added', $field['field_name']));
                         } else if ($result !== NOT_MODIFIED) {
-                            $app->enqueueMessage(JText::sprintf('COM_IMC_ADDING_FIELD_ACTION_AN_ERROR_OCCURRED', $field['field_name'], $result), 'error');
+                            $app->enqueueMessage(JText::sprintf('There was an error adding the field `%s`. Error: %s', $field['field_name'], $result), 'error');
                         }
                     }
 
@@ -444,13 +449,13 @@ class com_imcInstallerScript {
 
                     //Check if the field exists first to prevent issue removing the field
                     if ($this->existsField($table_name, $field['field_name'])) {
-                        $drop_statement = JText::sprintf('COM_IMC_DROP_COLUMN_SQL_STATEMENT', $table_name, $db->quoteName((string) $field['field_name']));
+                        $drop_statement = JText::sprintf('ALTER TABLE %s DROP COLUMN %s', $table_name, $field['field_name']);
                         $db->setQuery($drop_statement);
                         try {
                             $db->execute();
-                            $app->enqueueMessage(JText::sprintf('COM_IMC_DROPPING_FIELD_ACTION_COMPLETED_SUCCESSFULLY', $field['field_name']));
+                            $app->enqueueMessage(JText::sprintf('Field `%s` has been succesfully deleted', $field['field_name']));
                         } catch (Exception $ex) {
-                            $app->enqueueMessage(JText::sprintf('COM_IMC_DROPPING_FIELD_ACTION_AN_ERROR_OCCURRED', $field['field_name'], $ex->getMessage()), 'error');
+                            $app->enqueueMessage(JText::sprintf('There was an error deleting the field `%s`. Error: %s', $field['field_name'], $ex->getMessage()), 'error');
                         }
                     }
 
@@ -459,9 +464,9 @@ class com_imcInstallerScript {
         } else {
             $result = $this->addField($table_name, $field);
             if ($result === MODIFIED) {
-                $app->enqueueMessage(JText::sprintf('COM_IMC_ADDING_FIELD_ACTION_COMPLETED_SUCCESSFULLY', $field['field_name']));
+                $app->enqueueMessage(JText::sprintf('Field `%s` has been succesfully added', $field['field_name']));
             } else if ($result !== NOT_MODIFIED) {
-                $app->enqueueMessage(JText::sprintf('COM_IMC_ADDING_FIELD_ACTION_AN_ERROR_OCCURRED', $field['field_name'], $result), 'error');
+                $app->enqueueMessage(JText::sprintf('There was an error adding the field `%s`. Error: %s', $field['field_name'], $result), 'error');
             }
         }
     }
@@ -510,7 +515,7 @@ class com_imcInstallerScript {
      */
     private function generateAddFieldStatement($table_name, $field) {
         $column_declaration = $this->generateColumnDeclaration($field);
-        return JText::sprintf('COM_IMC_ADD_COLUMN_SQL_STATEMENT', $table_name, $column_declaration);
+        return JText::sprintf('ALTER TABLE %s ADD %s', $table_name, $column_declaration);
     }
 
     /**
@@ -521,7 +526,7 @@ class com_imcInstallerScript {
      */
     private function generateChangeFieldStatement($table_name, $field) {
         $column_declaration = $this->generateColumnDeclaration($field);
-        return JText::sprintf('COM_IMC_CHANGE_COLUMN_TYPE_SQL_STATEMENT', $table_name, $column_declaration);
+        return JText::sprintf('ALTER TABLE %s MODIFY %s', $table_name, $column_declaration);
     }
 
     /**
@@ -550,7 +555,7 @@ class com_imcInstallerScript {
 
         $comment_value = (isset($field['description'])) ? 'COMMENT ' . $db->quote((string) $field['description']) : '';
 
-        return JText::sprintf('COM_IMC_CREATE_TABLE_COLUMN_DECLARATION_SQL_STATEMENT', $col_name, $data_type, $default_value, $other_data, $comment_value);
+        return JText::sprintf('%s %s NOT NULL %s %s %s', $col_name, $data_type, $default_value, $other_data, $comment_value);
     }
 
     /**
@@ -616,7 +621,7 @@ class com_imcInstallerScript {
     private function needsToUpdate($table_name, $field) {
         $db = JFactory::getDbo();
 
-        $query = JText::sprintf('COM_IMC_SHOW_COLUMNS_TABLE_SQL_STATEMENT', $table_name, $db->quote((string) $field['field_name']));
+        $query = JText::sprintf('SHOW FULL COLUMNS FROM %s WHERE Field LIKE %s', $table_name, $db->quote((string) $field['field_name']));
         $db->setQuery($query);
 
         $field_info = $db->loadObject();

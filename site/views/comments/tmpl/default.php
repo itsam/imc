@@ -67,9 +67,10 @@ $canDelete = $user->authorise('core.delete', 'com_imc');
         </tfoot>
         <tbody>
             <?php foreach ($this->items as $i => $item) : ?>
+                <?php $canEdit = $user->authorise('core.edit', 'com_imc'); ?>
 
                 				<?php if (!$canEdit && $user->authorise('core.edit.own', 'com_imc')): ?>
-					<?php $canEdit = JFactory::getUser()->id == $this->item->created_by; ?>
+					<?php $canEdit = JFactory::getUser()->id == $item->created_by; ?>
 				<?php endif; ?>
 
                 <tr class="row<?php echo $i % 2; ?>">
@@ -93,8 +94,7 @@ $canDelete = $user->authorise('core.delete', 'com_imc');
 				</td>
 				<td>
 
-					<?php echo $item->created_by; ?>
-				</td>
+							<?php echo JFactory::getUser($item->created_by)->name; ?>				</td>
 
 
                     <?php if (isset($this->items[0]->id)): ?>
