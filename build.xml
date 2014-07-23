@@ -66,6 +66,7 @@
             <fileset dir="${adminsrc}">
                 <modified/>
                 <exclude name="language/" />
+                <exclude name="installer/" />
             </fileset>
         </copy>
         <echo message="Copying admin language if modified..." />

@@ -78,7 +78,7 @@ if($this->item->id) {
 	</div>
 	<?php foreach((array)$this->item->stepid as $value): ?>
 		<?php if(!is_array($value)): ?>
-			<input type="hidden" class="stepid" name="jform[stepidhidden][<?php echo $value; ?>]" value="<?php echo $value; ?>" />';
+			<input type="hidden" class="stepid" name="jform[stepidhidden][<?php echo $value; ?>]" value="<?php echo $value; ?>" />
 		<?php endif; ?>
 	<?php endforeach; ?>
 	<div class="control-group">
