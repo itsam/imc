@@ -33,6 +33,7 @@ class JFormFieldMultiphoto extends JFormField
 	 */
 	protected function getInput()
 	{
+		JFactory::getDocument()->addStyleSheet('http://blueimp.github.io/Gallery/css/blueimp-gallery.min.css');
 		JFactory::getDocument()->addStyleSheet(JURI::root(true).'/administrator/components/com_imc/models/fields/css/jquery.fileupload.css');
 		JFactory::getDocument()->addStyleSheet(JURI::root(true).'/administrator/components/com_imc/models/fields/css/jquery.fileupload-ui.css');
 
@@ -196,11 +197,23 @@ class JFormFieldMultiphoto extends JFormField
         $html[] = '<!-- The table listing the files available for upload/download -->';
         $html[] = '<table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>';
 
-$html[] = implode("\n", $script);
-$html[] = implode("\n", $script2);
+		$html[] = implode("\n", $script);
+		$html[] = implode("\n", $script2);
 
-			JHtml::_('jquery.framework');
-			JHtml::_('script', 'system/html5fallback.js', false, true);
+		$html[] = '<!-- The blueimp Gallery widget -->';
+		$html[] = '<div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls" data-filter=":even">';
+		$html[] = '    <div class="slides"></div>';
+		$html[] = '    <h3 class="title"></h3>';
+		$html[] = '    <a class="prev">‹</a>';
+		$html[] = '    <a class="next">›</a>';
+		$html[] = '    <a class="close">×</a>';
+		$html[] = '    <a class="play-pause"></a>';
+		$html[] = '    <ol class="indicator"></ol>';
+		$html[] = '</div>';
+
+
+		JHtml::_('jquery.framework');
+		JHtml::_('script', 'system/html5fallback.js', false, true);
 
 		return implode("\n", $html);
 	}
