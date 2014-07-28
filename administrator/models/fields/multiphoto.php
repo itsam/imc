@@ -69,11 +69,7 @@ class JFormFieldMultiphoto extends JFormField
 		$script[] = '        </td>';
 		$script[] = '    </tr>';
 		$script[] = '{% } %}';
-		$script[] = '</script>		';
-
-
-
-		//JFactory::getDocument()->addScriptDeclaration(implode("\n", $script), 'text/x-tmpl');
+		$script[] = '</script>';
 
 		$script2 = array();
 		$script2[] = '<script id="template-download" type="text/x-tmpl">';
@@ -117,7 +113,7 @@ class JFormFieldMultiphoto extends JFormField
 		$script2[] = '        </td>';
 		$script2[] = '    </tr>';
 		$script2[] = '{% } %}';
-		$script2[] = '</script>		';
+		$script2[] = '</script>';
 
 		JFactory::getDocument()->addScript(JURI::root(true).'/administrator/components/com_imc/models/fields/js/vendor/jquery.ui.widget.js');		
 		JFactory::getDocument()->addScript('http://blueimp.github.io/JavaScript-Templates/js/tmpl.min.js');		
@@ -133,15 +129,17 @@ class JFormFieldMultiphoto extends JFormField
 
 		$init = array();
 		$init[] = "function init() {";
+		$init[] = "	   var form_id = jQuery('#".$this->id."').closest('form').attr('id');";
 		$init[] = "    'use strict';";
 		$init[] = "    // Initialize the jQuery File Upload widget:";
-		$init[] = "    jQuery('#issue-form').fileupload({";
+		$init[] = "    jQuery('#'+form_id).fileupload({";
 		$init[] = "        // Uncomment the following to send cross-domain cookies:";
 		$init[] = "        //xhrFields: {withCredentials: true},";
-		$init[] = "        url: '".JURI::root(true)."/administrator/components/com_imc/models/fields/server/php/'";
-		$init[] = "    });";
+		$init[] = "        //url: '".JURI::root(true)."/administrator/components/com_imc/models/fields/server/php/'";
+		$init[] = "    }).bind('fileuploaddone', function(e,data){console.log(data.result.files[0].name)}).";
+		$init[] = "    bind('fileuploaddestroy', function(e,data){console.log(data.url.substring(data.url.indexOf('=') + 1)        );});";
 		$init[] = "    // Enable iframe cross-domain access via redirect option:";
-		$init[] = "    jQuery('#issue-form').fileupload(";
+		$init[] = "    jQuery('#'+form_id).fileupload(";
 		$init[] = "        'option',";
 		$init[] = "        'redirect',";
 		$init[] = "        window.location.href.replace(";
@@ -149,17 +147,17 @@ class JFormFieldMultiphoto extends JFormField
 		$init[] = "            '/cors/result.html?%s'";
 		$init[] = "        )";
 		$init[] = "    );";
-		$init[] = "    jQuery('#issue-form').addClass('fileupload-processing');";
+		$init[] = "    jQuery('#'+form_id).addClass('fileupload-processing');";
 		$init[] = "    jQuery.ajax({";
 		$init[] = "        // Uncomment the following to send cross-domain cookies:";
 		$init[] = "        //xhrFields: {withCredentials: true},";
-		$init[] = "        url: jQuery('#issue-form').fileupload('option', 'url'),";
+		$init[] = "        url: jQuery('#'+form_id).fileupload('option', 'url'),";
 		$init[] = "        dataType: 'json',";
-		$init[] = "        context: jQuery('#issue-form')[0]";
+		$init[] = "        context: jQuery('#'+form_id)[0]";
 		$init[] = "    }).always(function () {";
 		$init[] = "        jQuery(this).removeClass('fileupload-processing');";
 		$init[] = "    }).done(function (result) {";
-		$init[] = " console.log(result);";
+		$init[] = "        console.log(result.files);";
 		$init[] = "        jQuery(this).fileupload('option', 'done')";
 		$init[] = "            .call(this, jQuery.Event('done'), {result: result});";
 		$init[] = "    });";
@@ -232,8 +230,9 @@ class JFormFieldMultiphoto extends JFormField
 		//JHtml::_('script', 'system/html5fallback.js', false, true);
 		//echo $this->getId('id', 'id');
 		//echo JPATH_COMPONENT;
-//echo JRequest::getVar('id');
-//print_r($this);
+		//echo JRequest::getVar('id');
+		//print_r($this);
+
 		return implode("\n", $html);
 	}
 }
