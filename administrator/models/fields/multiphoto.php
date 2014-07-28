@@ -127,6 +127,8 @@ class JFormFieldMultiphoto extends JFormField
 		JFactory::getDocument()->addScript(JURI::root(true).'/administrator/components/com_imc/models/fields/js/jquery.fileupload-validate.js');		
 		JFactory::getDocument()->addScript(JURI::root(true).'/administrator/components/com_imc/models/fields/js/jquery.fileupload-ui.js');		
 
+//http://www.noxidsoft.com/info/blog/316-connecting-a-frontend-helper-in-a-custom-joomla-3-component
+
 		$init = array();
 		$init[] = "function init() {";
 		$init[] = "	   var form_id = jQuery('#".$this->id."').closest('form').attr('id');";
@@ -135,7 +137,7 @@ class JFormFieldMultiphoto extends JFormField
 		$init[] = "    jQuery('#'+form_id).fileupload({";
 		$init[] = "        // Uncomment the following to send cross-domain cookies:";
 		$init[] = "        //xhrFields: {withCredentials: true},";
-		$init[] = "        //url: '".JURI::root(true)."/administrator/components/com_imc/models/fields/server/php/'";
+		$init[] = "        url: '".JURI::root(true)."/administrator/components/com_imc/models/fields/server/php/'";
 		$init[] = "    }).bind('fileuploaddone', function(e,data){console.log(data.result.files[0].name)}).";
 		$init[] = "    bind('fileuploaddestroy', function(e,data){console.log(data.url.substring(data.url.indexOf('=') + 1)        );});";
 		$init[] = "    // Enable iframe cross-domain access via redirect option:";
@@ -157,7 +159,7 @@ class JFormFieldMultiphoto extends JFormField
 		$init[] = "    }).always(function () {";
 		$init[] = "        jQuery(this).removeClass('fileupload-processing');";
 		$init[] = "    }).done(function (result) {";
-		$init[] = "        console.log(result.files);";
+		$init[] = "        if(result) console.log(result.files);";
 		$init[] = "        jQuery(this).fileupload('option', 'done')";
 		$init[] = "            .call(this, jQuery.Event('done'), {result: result});";
 		$init[] = "    });";
