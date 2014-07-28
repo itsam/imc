@@ -103,7 +103,7 @@ class ImcModelIssue extends JModelAdmin
 		if ($item = parent::getItem($pk)) {
 
 			//Do any procesing on fields here if needed
-
+			echo '<h1>'.$item->id.'</h1>';
 		}
 
 		return $item;

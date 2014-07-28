@@ -16,7 +16,7 @@ function init() {
     'use strict';
 
     // Initialize the jQuery File Upload widget:
-    $j('#issue-form').fileupload({
+    jQuery('#issue-form').fileupload({
         // Uncomment the following to send cross-domain cookies:
         //xhrFields: {withCredentials: true},
 
@@ -25,7 +25,7 @@ function init() {
     });
 
     // Enable iframe cross-domain access via redirect option:
-    $j('#issue-form').fileupload(
+    jQuery('#issue-form').fileupload(
         'option',
         'redirect',
         window.location.href.replace(
@@ -36,22 +36,22 @@ function init() {
 
 
     // Load existing files:
-/*    if ($j('.fileupload-buttonbar').length){
+/*    if (jQuery('.fileupload-buttonbar').length){
         alert('Found with Length');
     }   else {alert ('not found');}*/
 
-    $j('#issue-form').addClass('fileupload-processing');
-    $j.ajax({
+    jQuery('#issue-form').addClass('fileupload-processing');
+    jQuery.ajax({
         // Uncomment the following to send cross-domain cookies:
         //xhrFields: {withCredentials: true},
-        url: $j('#issue-form').fileupload('option', 'url'),
+        url: jQuery('#issue-form').fileupload('option', 'url'),
         dataType: 'json',
-        context: $j('#issue-form')[0]
+        context: jQuery('#issue-form')[0]
     }).always(function () {
-        $j(this).removeClass('fileupload-processing');
+        jQuery(this).removeClass('fileupload-processing');
     }).done(function (result) {
-        $j(this).fileupload('option', 'done')
-            .call(this, $j.Event('done'), {result: result});
+        jQuery(this).fileupload('option', 'done')
+            .call(this, jQuery.Event('done'), {result: result});
     });
     
 

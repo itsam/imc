@@ -17,7 +17,7 @@
             class="inputbox input-xxlarge input-large-text"
             filter="string" /> 
 
-        <field name="mycustomfield" type="multiphoto" label="Multi photos" default="" description="Upload and handle images with jQuery" />
+        <field name="photo" type="multiphoto" label="Multi photos" default="" description="Upload and handle images with jQuery" />
 
 		<field name="stepid" type="sql" label="Current Step" description="" query="SELECT id, title AS value FROM #__imc_steps ORDER BY ordering" key_field="id" value_field="value"  required="true" /> 
 
@@ -75,14 +75,6 @@
                 
             filter="string" /> 
 
-       <field name="photo" type="text" size="40" class="inputbox"
-        
-            label="COM_IMC_FORM_LBL_ISSUE_PHOTO"
-            description="COM_IMC_FORM_DESC_ISSUE_PHOTO" 
-        
-        
-        
-        filter="safehtml" /> 
 
        <field name="created" type="timecreated" default="" 
             label="COM_IMC_FORM_LBL_ISSUE_CREATED"

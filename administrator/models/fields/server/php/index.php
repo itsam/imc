@@ -12,4 +12,13 @@
 
 error_reporting(E_ALL | E_STRICT);
 require('UploadHandler.php');
+
+
+/* $options = array(
+            'upload_dir' => dirname($this->get_server_var('SCRIPT_FILENAME')).'/files2/',
+            'upload_url' => $this->get_full_url().'/files2/',
+        );
+*/
+
+
 $upload_handler = new UploadHandler();

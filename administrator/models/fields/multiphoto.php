@@ -119,9 +119,6 @@ class JFormFieldMultiphoto extends JFormField
 		$script2[] = '{% } %}';
 		$script2[] = '</script>		';
 
-
-		
-		//JFactory::getDocument()->addScript('http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js');		
 		JFactory::getDocument()->addScript(JURI::root(true).'/administrator/components/com_imc/models/fields/js/vendor/jquery.ui.widget.js');		
 		JFactory::getDocument()->addScript('http://blueimp.github.io/JavaScript-Templates/js/tmpl.min.js');		
 		JFactory::getDocument()->addScript('http://blueimp.github.io/JavaScript-Load-Image/js/load-image.min.js');		
@@ -133,29 +130,44 @@ class JFormFieldMultiphoto extends JFormField
 		JFactory::getDocument()->addScript(JURI::root(true).'/administrator/components/com_imc/models/fields/js/jquery.fileupload-image.js');		
 		JFactory::getDocument()->addScript(JURI::root(true).'/administrator/components/com_imc/models/fields/js/jquery.fileupload-validate.js');		
 		JFactory::getDocument()->addScript(JURI::root(true).'/administrator/components/com_imc/models/fields/js/jquery.fileupload-ui.js');		
-		JFactory::getDocument()->addScript(JURI::root(true).'/administrator/components/com_imc/models/fields/js/main.js');		
-
-		/*$foo = array();
-		$foo[] = 'if(window.attachEvent) {';
-		$foo[] = '    window.attachEvent(\'onload\', init);';
-		$foo[] = '} else {';
-		$foo[] = '    if(window.onload) {';
-		$foo[] = '        var curronload = window.onload;';
-		$foo[] = '        var newonload = function() {';
-		$foo[] = '            curronload();';
-		$foo[] = '            init();';
-		$foo[] = '        };';
-		$foo[] = '        window.onload = newonload;';
-		$foo[] = '    } else {';
-		$foo[] = '        window.onload = init;';
-		$foo[] = '    }';
-		$foo[] = '}';*/
 
 		$init = array();
-		$init[] = 'jQuery(document).ready(function() {';
-		$init[] = '	init();';
-		$init[] = '});';
+		$init[] = "function init() {";
+		$init[] = "    'use strict';";
+		$init[] = "    // Initialize the jQuery File Upload widget:";
+		$init[] = "    jQuery('#issue-form').fileupload({";
+		$init[] = "        // Uncomment the following to send cross-domain cookies:";
+		$init[] = "        //xhrFields: {withCredentials: true},";
+		$init[] = "        url: '".JURI::root(true)."/administrator/components/com_imc/models/fields/server/php/'";
+		$init[] = "    });";
+		$init[] = "    // Enable iframe cross-domain access via redirect option:";
+		$init[] = "    jQuery('#issue-form').fileupload(";
+		$init[] = "        'option',";
+		$init[] = "        'redirect',";
+		$init[] = "        window.location.href.replace(";
+		$init[] = "            /\/[^\/]*$/,";
+		$init[] = "            '/cors/result.html?%s'";
+		$init[] = "        )";
+		$init[] = "    );";
+		$init[] = "    jQuery('#issue-form').addClass('fileupload-processing');";
+		$init[] = "    jQuery.ajax({";
+		$init[] = "        // Uncomment the following to send cross-domain cookies:";
+		$init[] = "        //xhrFields: {withCredentials: true},";
+		$init[] = "        url: jQuery('#issue-form').fileupload('option', 'url'),";
+		$init[] = "        dataType: 'json',";
+		$init[] = "        context: jQuery('#issue-form')[0]";
+		$init[] = "    }).always(function () {";
+		$init[] = "        jQuery(this).removeClass('fileupload-processing');";
+		$init[] = "    }).done(function (result) {";
+		$init[] = " console.log(result);";
+		$init[] = "        jQuery(this).fileupload('option', 'done')";
+		$init[] = "            .call(this, jQuery.Event('done'), {result: result});";
+		$init[] = "    });";
+		$init[] = "};";
 
+		$init[] = 'jQuery(document).ready(function() {';
+		$init[] = '	init();';	//init() was initially set at main.js
+		$init[] = '});';
 
 		JFactory::getDocument()->addScriptDeclaration( implode("\n", $init));
 
@@ -211,10 +223,17 @@ class JFormFieldMultiphoto extends JFormField
 		$html[] = '    <ol class="indicator"></ol>';
 		$html[] = '</div>';
 
+		$attr = '';
+		//$this->value = 'itsam';
+		$html[] = '	<input type="text" name="' . $this->name . '" id="' . $this->id . '" value="'
+			. htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '" readonly="readonly"' . $attr . ' />';
 
-		JHtml::_('jquery.framework');
-		JHtml::_('script', 'system/html5fallback.js', false, true);
-
+		//JHtml::_('jquery.framework');
+		//JHtml::_('script', 'system/html5fallback.js', false, true);
+		//echo $this->getId('id', 'id');
+		//echo JPATH_COMPONENT;
+//echo JRequest::getVar('id');
+//print_r($this);
 		return implode("\n", $html);
 	}
 }
