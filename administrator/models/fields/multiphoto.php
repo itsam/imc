@@ -35,6 +35,7 @@ class JFormFieldMultiphoto extends JFormField
 	protected function getInput()
 	{
 		JFactory::getDocument()->addStyleSheet('http://blueimp.github.io/Gallery/css/blueimp-gallery.min.css');
+		JFactory::getDocument()->addStyleSheet(JURI::root(true).'/administrator/components/com_imc/models/fields/css/imc-style.css');
 		JFactory::getDocument()->addStyleSheet(JURI::root(true).'/administrator/components/com_imc/models/fields/css/jquery.fileupload.css');
 		JFactory::getDocument()->addStyleSheet(JURI::root(true).'/administrator/components/com_imc/models/fields/css/jquery.fileupload-ui.css');
 
@@ -57,13 +58,13 @@ class JFormFieldMultiphoto extends JFormField
 		$script[] = '        <td>';
 		$script[] = '            {% if (!i && !o.options.autoUpload) { %}';
 		$script[] = '                <button class="btn btn-primary start" disabled>';
-		$script[] = '                    <i class="glyphicon glyphicon-upload"></i>';
+		$script[] = '                    <i class="icon-upload"></i>';
 		$script[] = '                    <span>Start</span>';
 		$script[] = '                </button>';
 		$script[] = '            {% } %}';
 		$script[] = '            {% if (!i) { %}';
 		$script[] = '                <button class="btn btn-warning cancel">';
-		$script[] = '                    <i class="glyphicon glyphicon-ban-circle"></i>';
+		$script[] = '                    <i class="icon-remove"></i>';
 		$script[] = '                    <span>Cancel</span>';
 		$script[] = '                </button>';
 		$script[] = '            {% } %}';
@@ -101,13 +102,13 @@ class JFormFieldMultiphoto extends JFormField
 		$script2[] = '        <td>';
 		$script2[] = '            {% if (file.deleteUrl) { %}';
 		$script2[] = '                <button class="btn btn-danger delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields=\'{"withCredentials":true}\'{% } %}>';
-		$script2[] = '                    <i class="glyphicon glyphicon-trash"></i>';
+		$script2[] = '                    <i class="icon-trash"></i>';
 		$script2[] = '                    <span>Delete</span>';
 		$script2[] = '                </button>';
 		$script2[] = '                <input type="checkbox" name="delete" value="1" class="toggle">';
 		$script2[] = '            {% } else { %}';
 		$script2[] = '                <button class="btn btn-warning cancel">';
-		$script2[] = '                    <i class="glyphicon glyphicon-ban-circle"></i>';
+		$script2[] = '                    <i class="icon-ban-circle"></i>';
 		$script2[] = '                    <span>Cancel</span>';
 		$script2[] = '                </button>';
 		$script2[] = '            {% } %}';
@@ -140,6 +141,9 @@ isws me to session ?? or -->> http://developer.joomla.org/manual/ch01s04.html
 to url: 8a prepei na einai se controller tou joomla kai ekei mesa na fortwnw to JLoader:register...
 http://localhost/joomla3b/administrator/index.php?option=com_imc&task=issue.handler&format=json
 JSession::checkToken('request') or $this->sendResponse(new Exception(JText::_('JINVALID_TOKEN'), 403));
+
+
+*** to com_imc sto url na to pairnw apo to arguments sto field (xml) ***
 */
 		$init = array();
 		$init[] = "function init() {";
@@ -149,10 +153,10 @@ JSession::checkToken('request') or $this->sendResponse(new Exception(JText::_('J
 		$init[] = "    jQuery('#'+form_id).fileupload({";
 		$init[] = "        // Uncomment the following to send cross-domain cookies:";
 		$init[] = "        xhrFields: {withCredentials: true},";
-		//$init[] = "        url: '".JURI::root(true)."/administrator/components/com_imc/models/fields/server/php/'";
 		$init[] = "        url: '".JURI::root(true)."/administrator/index.php?option=com_imc&task=upload.handler&format=json'";
 		$init[] = "    }).bind('fileuploaddone', function(e,data){console.log(data.result.files[0].name)}).";
-		$init[] = "    bind('fileuploaddestroy', function(e,data){console.log(data.url.substring(data.url.indexOf('=') + 1)        );});";
+		$init[] = "    bind('fileuploaddestroy', function(e,data){console.log(data.url.substring(data.url.indexOf('=') + 1)  )}).";
+		$init[] = "    bind('fileuploadadd', function(e,data){jQuery('input[name=\"task\"]').val('upload.handler');jQuery('.drop-photos2').hide();});";
 		$init[] = "    // Enable iframe cross-domain access via redirect option:";
 		$init[] = "    jQuery('#'+form_id).fileupload(";
 		$init[] = "        'option',";
@@ -185,24 +189,24 @@ JSession::checkToken('request') or $this->sendResponse(new Exception(JText::_('J
 		JFactory::getDocument()->addScriptDeclaration( implode("\n", $init));
 
 		$html = array();
-        $html[] = '<div class="row fileupload-buttonbar">';
-        $html[] = '    <div class="col-lg-7">';
+        $html[] = '<div class="row fileupload-buttonbar" style="margin-left: 0;">';
+        $html[] = '    <div class="span7">';
         $html[] = '        <!-- The fileinput-button span is used to style the file input field as button -->';
         $html[] = '        <span class="btn btn-success fileinput-button">';
-        $html[] = '            <i class="glyphicon glyphicon-plus"></i>';
+        $html[] = '            <i class="icon-plus"></i>';
         $html[] = '            <span>Add files...</span>';
         $html[] = '            <input type="file" name="files[]" multiple>';
         $html[] = '        </span>';
         $html[] = '        <button type="submit" class="btn btn-primary start">';
-        $html[] = '            <i class="glyphicon glyphicon-upload"></i>';
+        $html[] = '            <i class="icon-upload"></i>';
         $html[] = '            <span>Start upload</span>';
         $html[] = '        </button>';
         $html[] = '        <button type="reset" class="btn btn-warning cancel">';
-        $html[] = '            <i class="glyphicon glyphicon-ban-circle"></i>';
+        $html[] = '            <i class="icon-remove"></i>';
         $html[] = '            <span>Cancel upload</span>';
         $html[] = '        </button>';
         $html[] = '        <button type="button" class="btn btn-danger delete">';
-        $html[] = '            <i class="glyphicon glyphicon-trash"></i>';
+        $html[] = '            <i class="icon-trash"></i>';
         $html[] = '            <span>Delete</span>';
         $html[] = '        </button>';
         $html[] = '        <input type="checkbox" class="toggle">';
@@ -210,7 +214,7 @@ JSession::checkToken('request') or $this->sendResponse(new Exception(JText::_('J
         $html[] = '        <span class="fileupload-process"></span>';
         $html[] = '    </div>';
         $html[] = '    <!-- The global progress state -->';
-        $html[] = '    <div class="col-lg-5 fileupload-progress fade">';
+        $html[] = '    <div class="span5 fileupload-progress fade">';
         $html[] = '        <!-- The global progress bar -->';
         $html[] = '        <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">';
         $html[] = '            <div class="progress-bar progress-bar-success" style="width:0%;"></div>';
@@ -220,7 +224,8 @@ JSession::checkToken('request') or $this->sendResponse(new Exception(JText::_('J
         $html[] = '    </div>';
         $html[] = '</div>';
         $html[] = '<!-- The table listing the files available for upload/download -->';
-        $html[] = '<table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>';
+        $html[] = '<div class="drop-photos"><span class="dptitle">Drop photos here</span>';
+        $html[] = '<table role="presentation" class="table table-striped"><tbody class="files"></tbody></table></div>';
 
 		$html[] = implode("\n", $script);
 		$html[] = implode("\n", $script2);
@@ -238,14 +243,14 @@ JSession::checkToken('request') or $this->sendResponse(new Exception(JText::_('J
 
 		$attr = '';
 		//$this->value = 'itsam';
-		$html[] = '	<input type="text" name="' . $this->name . '" id="' . $this->id . '" value="'
+		$html[] = '	<input type="hidden" name="' . $this->name . '" id="' . $this->id . '" value="'
 			. htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '" readonly="readonly"' . $attr . ' />';
 
-		JHtml::_('jquery.framework');
-		JHtml::_('script', 'system/html5fallback.js', false, true);
+		//JHtml::_('jquery.framework');
+		//JHtml::_('script', 'system/html5fallback.js', false, true);
 		//echo $this->getId('id', 'id');
 		//echo JPATH_COMPONENT;
-		//echo JRequest::getVar('id');
+		echo JRequest::getVar('id', 0);
 		//print_r($this);
 
 		return implode("\n", $html);
