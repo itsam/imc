@@ -150,7 +150,7 @@ JSession::checkToken('request') or $this->sendResponse(new Exception(JText::_('J
 		$init[] = "        // Uncomment the following to send cross-domain cookies:";
 		$init[] = "        xhrFields: {withCredentials: true},";
 		//$init[] = "        url: '".JURI::root(true)."/administrator/components/com_imc/models/fields/server/php/'";
-		$init[] = "        url: '".JURI::root(true)."/administrator/index.php?option=com_imc&task=issue.handler&format=json'";
+		$init[] = "        url: '".JURI::root(true)."/administrator/index.php?option=com_imc&task=upload.handler&format=json'";
 		$init[] = "    }).bind('fileuploaddone', function(e,data){console.log(data.result.files[0].name)}).";
 		$init[] = "    bind('fileuploaddestroy', function(e,data){console.log(data.url.substring(data.url.indexOf('=') + 1)        );});";
 		$init[] = "    // Enable iframe cross-domain access via redirect option:";

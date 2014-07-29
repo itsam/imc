@@ -16,7 +16,7 @@ jimport('joomla.application.component.controllerform');
 /**
  * Issue controller class.
  */
-class ImcControllerIssue extends JControllerLegacy /*ImcController*/
+class ImcControllerUpload extends JControllerForm /*ImcController*/
 {
 	
 	
@@ -30,8 +30,8 @@ class ImcControllerIssue extends JControllerLegacy /*ImcController*/
 	    require(JPATH_COMPONENT_ADMINISTRATOR . '/models/fields/server/php/UploadHandler.php');
 		//should send somehow the upload_dir and upload_url... ()
 		$options = array(
-		            'upload_dir' => JPATH_COMPONENT_ADMINISTRATOR . '/models/fields/server/php/files3/',
-		            'upload_url' => 'http://localhost/joomla3b/administrator/components/com_imc/models/fields/server/php/files3/'
+		            'upload_dir' => JPATH_COMPONENT_ADMINISTRATOR . '/models/fields/server/php/files4/',
+		            'upload_url' => 'http://localhost/joomla3b/administrator/components/com_imc/models/fields/server/php/files4/'
 		        );
 		$upload_handler = new UploadHandler($options);
 //print_r($_REQUEST);
