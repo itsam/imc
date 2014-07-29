@@ -7,11 +7,12 @@
  * @author      Ioannis Tsampoulatidis <tsampoulatidis@gmail.com> - https://github.com/itsam
  */
 
+
 defined('JPATH_BASE') or die;
 
 jimport('joomla.html.html');
 jimport('joomla.form.formfield');
-
+//JLoader::register('UploadHandler', JURI::root(true)."/administrator/components/com_imc/models/fields/server/php/UploadHandler.php");
 /**
  * Supports an HTML select list of categories
  */
@@ -128,7 +129,18 @@ class JFormFieldMultiphoto extends JFormField
 		JFactory::getDocument()->addScript(JURI::root(true).'/administrator/components/com_imc/models/fields/js/jquery.fileupload-ui.js');		
 
 //http://www.noxidsoft.com/info/blog/316-connecting-a-frontend-helper-in-a-custom-joomla-3-component
+/*
+if isNew: $value "folder":"timestamp", "files": "foo.png, moo.png"
+sto save (current issue_id) -> "folder", "directory/issue_id/", "files": "foo.png, moo.png"
+kai move files from /tmp/timestamp -> directory/issue_id/
 
+to mono pou menei einai na ginei joomla secure to /server/php/index.php ---> 8a prepei na parameinei omws sto /fields gia na einai full reusable
+isws me to session ?? or -->> http://developer.joomla.org/manual/ch01s04.html
+
+to url: 8a prepei na einai se controller tou joomla kai ekei mesa na fortwnw to JLoader:register...
+http://localhost/joomla3b/administrator/index.php?option=com_imc&task=issue.handler&format=json
+JSession::checkToken('request') or $this->sendResponse(new Exception(JText::_('JINVALID_TOKEN'), 403));
+*/
 		$init = array();
 		$init[] = "function init() {";
 		$init[] = "	   var form_id = jQuery('#".$this->id."').closest('form').attr('id');";
@@ -136,8 +148,9 @@ class JFormFieldMultiphoto extends JFormField
 		$init[] = "    // Initialize the jQuery File Upload widget:";
 		$init[] = "    jQuery('#'+form_id).fileupload({";
 		$init[] = "        // Uncomment the following to send cross-domain cookies:";
-		$init[] = "        //xhrFields: {withCredentials: true},";
-		$init[] = "        url: '".JURI::root(true)."/administrator/components/com_imc/models/fields/server/php/'";
+		$init[] = "        xhrFields: {withCredentials: true},";
+		//$init[] = "        url: '".JURI::root(true)."/administrator/components/com_imc/models/fields/server/php/'";
+		$init[] = "        url: '".JURI::root(true)."/administrator/index.php?option=com_imc&task=issue.handler&format=json'";
 		$init[] = "    }).bind('fileuploaddone', function(e,data){console.log(data.result.files[0].name)}).";
 		$init[] = "    bind('fileuploaddestroy', function(e,data){console.log(data.url.substring(data.url.indexOf('=') + 1)        );});";
 		$init[] = "    // Enable iframe cross-domain access via redirect option:";
@@ -228,8 +241,8 @@ class JFormFieldMultiphoto extends JFormField
 		$html[] = '	<input type="text" name="' . $this->name . '" id="' . $this->id . '" value="'
 			. htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '" readonly="readonly"' . $attr . ' />';
 
-		//JHtml::_('jquery.framework');
-		//JHtml::_('script', 'system/html5fallback.js', false, true);
+		JHtml::_('jquery.framework');
+		JHtml::_('script', 'system/html5fallback.js', false, true);
 		//echo $this->getId('id', 'id');
 		//echo JPATH_COMPONENT;
 		//echo JRequest::getVar('id');

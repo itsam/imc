@@ -9,17 +9,17 @@
  * Licensed under the MIT license:
  * http://www.opensource.org/licenses/MIT
  */
-defined('_JEXEC') or die('You are dead');
+//defined('_JEXEC') or die('You are dead');
 
 error_reporting(E_ALL | E_STRICT);
 require('UploadHandler.php');
 
 
-/* $options = array(
-            'upload_dir' => dirname($this->get_server_var('SCRIPT_FILENAME')).'/files2/',
-            'upload_url' => $this->get_full_url().'/files2/',
+$options = array(
+            'upload_dir' => '/var/www/joomla3b/administrator/components/com_imc/models/fields/server/php/files2/',
+            'upload_url' => 'http://localhost/joomla3b/administrator/components/com_imc/models/fields/server/php/files2/'
         );
-*/
 
 
-$upload_handler = new UploadHandler();
+
+$upload_handler = new UploadHandler($options);

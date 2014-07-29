@@ -9,7 +9,7 @@
  * Licensed under the MIT license:
  * http://www.opensource.org/licenses/MIT
  */
-
+//defined('_JEXEC') or die('How dare calling me directly!');
 class UploadHandler
 {
 

@@ -49,9 +49,9 @@
 
     <target name="_copy_site" description="Copies site files to dst project.">
         <echo message="Copying site files: ${sitesrc} --> ${sitedst}" />
-        <copy todir="${sitedst}">
+        <copy overwrite="true" todir="${sitedst}">
             <fileset dir="${sitesrc}">
-                <modified/>
+                   <modified /> 
                    <exclude name="language/" />
             </fileset>
         </copy>
@@ -62,9 +62,9 @@
 
     <target name="_copy_admin" description="Copies admin files to dst project.">
         <echo message="Copying admin files: ${adminsrc} --> ${admindst}" />
-        <copy todir="${admindst}">
+        <copy overwrite="true" todir="${admindst}">
             <fileset dir="${adminsrc}">
-                <modified/>
+                <modified />
                 <exclude name="language/" />
                 <exclude name="installer/" />
             </fileset>
