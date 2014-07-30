@@ -1,0 +1,7 @@
+.drop-photos {
+  text-align: center;
+  padding: 30px 5px;
+  border: 4px dashed #ccc;
+}
+
+.drop-photos span.dptitle {font-size: 20px; color: #ccc;}

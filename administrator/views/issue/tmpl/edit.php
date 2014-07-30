@@ -158,7 +158,7 @@ $document->addStyleSheet('components/com_imc/assets/css/imc.css');
 
         <?php echo JHtml::_('bootstrap.endTabSet'); ?>
 
-        <input type="text" name="task" value="" />
+        <input type="hidden" name="task" value="" />
         <?php echo JHtml::_('form.token'); ?>
 
     </div>
