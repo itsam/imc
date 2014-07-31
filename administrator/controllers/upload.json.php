@@ -22,18 +22,20 @@ class ImcControllerUpload extends JControllerForm /*ImcController*/
 	
 	public function handler()
 	{
-    	//JFactory::getDocument()->setMimeEncoding( 'application/json' );
-	    //JResponse::setHeader('Content-Disposition','attachment;filename="test.json"');
+		//TODO: http://docs.joomla.org/JSON_Responses_with_JResponseJson
+		
+    	JFactory::getDocument()->setMimeEncoding( 'application/json' );
+	    JResponse::setHeader('Content-Disposition','attachment;filename="test.json"');
 
 	    //require(JPATH_COMPONENT_ADMINISTRATOR . '/models/fields/server/php/UploadHandler.php');
 		//should send somehow the upload_dir and upload_url... ()
 		$options = array(
 		            'script_url' => JURI::root(true).'/administrator/index.php?option=com_imc&task=upload.handler&format=json',
 		            'upload_dir' => JPATH_COMPONENT_ADMINISTRATOR . '/models/fields/server/php/files4/',
-		            'upload_url' => 'http://localhost/joomla3/administrator/components/com_imc/models/fields/server/php/files4/'
+		            'upload_url' => JURI::root(true).'/administrator/components/com_imc/models/fields/server/php/files4/'
 		        );
 		$upload_handler = new UploadHandler($options);
-		//JFactory::getApplication()->close(); // or jexit();
+		JFactory::getApplication()->close(); // or jexit();
 	}
 
 }
