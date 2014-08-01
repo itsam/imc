@@ -30,9 +30,9 @@ class ImcControllerUpload extends JControllerForm /*ImcController*/
 	    //require(JPATH_COMPONENT_ADMINISTRATOR . '/models/fields/server/php/UploadHandler.php');
 		//should send somehow the upload_dir and upload_url... ()
 		$options = array(
-		            'script_url' => JURI::root(true).'/administrator/index.php?option=com_imc&task=upload.handler&format=json',
-		            'upload_dir' => JPATH_COMPONENT_ADMINISTRATOR . '/models/fields/server/php/files4/',
-		            'upload_url' => JURI::root(true).'/administrator/components/com_imc/models/fields/server/php/files4/'
+		            'script_url' => JURI::root(true).'/administrator/index.php?option=com_imc&task=upload.handler&format=json&id='.JRequest::getVar('id'),
+		            'upload_dir' => JPATH_COMPONENT_ADMINISTRATOR . '/models/fields/server/php/files/'.JRequest::getVar('id').'/',
+		            'upload_url' => JURI::root(true).'/administrator/components/com_imc/models/fields/server/php/files/'.JRequest::getVar('id').'/'
 		        );
 		$upload_handler = new UploadHandler($options);
 		JFactory::getApplication()->close(); // or jexit();

@@ -153,9 +153,9 @@ JSession::checkToken('request') or $this->sendResponse(new Exception(JText::_('J
 		$init[] = "    jQuery('#'+form_id).fileupload({";
 		$init[] = "        // Uncomment the following to send cross-domain cookies:";
 		$init[] = "        xhrFields: {withCredentials: true},";
-		$init[] = "        url: '".JURI::root(true)."/administrator/index.php?option=com_imc&task=upload.handler&format=json'";
+		$init[] = "        url: '".JURI::root(true)."/administrator/index.php?option=com_imc&task=upload.handler&format=json&id=".JRequest::getVar('id', 0)."'";
 		$init[] = "    }).bind('fileuploaddone', function(e,data){console.log(data.result.files[0].name)}).";
-		$init[] = "    bind('fileuploaddestroy', function(e,data){console.log(data.url.substring(data.url.indexOf('=') + 1)  )}).";
+		$init[] = "    bind('fileuploaddestroy', function(e,data){console.log(data.url.substring(data.url.indexOf('file=') + 5)  )}).";
 		$init[] = "    bind('fileuploadadd', function(e,data){jQuery('input[name=\"task\"]').val('upload.handler');jQuery('.drop-photos2').hide();});";
 		$init[] = "    // Enable iframe cross-domain access via redirect option:";
 		$init[] = "    jQuery('#'+form_id).fileupload(";
@@ -243,15 +243,17 @@ JSession::checkToken('request') or $this->sendResponse(new Exception(JText::_('J
 
 		$attr = '';
 		//$this->value = 'itsam';
-		$html[] = '	<input type="hidden" name="' . $this->name . '" id="' . $this->id . '" value="'
+		$html[] = '	<input type="text" name="' . $this->name . '" id="' . $this->id . '" value="'
 			. htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '" readonly="readonly"' . $attr . ' />';
 
 		//JHtml::_('jquery.framework');
 		//JHtml::_('script', 'system/html5fallback.js', false, true);
 		//echo $this->getId('id', 'id');
 		//echo JPATH_COMPONENT;
-		echo JRequest::getVar('id', 0);
-		//print_r($this);
+		
+		//echo JRequest::getVar('option');
+		//echo JRequest::getVar('id', 0);
+		
 
 		return implode("\n", $html);
 	}
