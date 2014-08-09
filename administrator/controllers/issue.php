@@ -24,7 +24,7 @@ class ImcControllerIssue extends JControllerForm
     }
     
     //override postSaveHook to move any images
-    public function postSaveHook($model, $validData)
+    protected function postSaveHook(JModelLegacy $model, $validData = array())
     {
         //check if record is new
     	if($validData['id'] > 0)

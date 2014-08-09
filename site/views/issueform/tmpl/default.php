@@ -172,6 +172,12 @@ if($this->item->id) {
                 </script>
              <?php endif; ?>
         <div class="control-group">
+        	<script type="text/javascript">
+        		jQuery.noConflict();
+				jQuery( "#form-issue" ).submit(function( event ) {
+					jQuery('input[name="task"]').val('issueform.save');
+				});        		
+        	</script>
             <div class="controls">
                 <button type="submit" class="validate btn btn-primary"><?php echo JText::_('JSUBMIT'); ?></button>
                 <a class="btn" href="<?php echo JRoute::_('index.php?option=com_imc&task=issueform.cancel'); ?>" title="<?php echo JText::_('JCANCEL'); ?>"><?php echo JText::_('JCANCEL'); ?></a>
@@ -179,7 +185,8 @@ if($this->item->id) {
         </div>
         
         <input type="hidden" name="option" value="com_imc" />
-        <input type="hidden" name="task" value="issueform.save" />
+        <input type="text" name="task" value="issueform.save" />
         <?php echo JHtml::_('form.token'); ?>
     </form>
 </div>
+
