@@ -33,6 +33,12 @@ class JFormFieldMultiphoto extends JFormField
 	protected $imagedir;
 
 	/**
+	* @var string
+	* instead of JRequest::getVar('id') use the userstate session (e.g. com_imc.edit.issue.id)
+	*/
+	protected $userstate;
+
+	/**
 	 * Method to get certain otherwise inaccessible properties from the form field object.
 	 *
 	 * @param   string  $name  The property name for which to the the value.
@@ -46,6 +52,7 @@ class JFormFieldMultiphoto extends JFormField
 		switch ($name)
 		{
 			case 'imagedir':
+			case 'userstate':
 				return $this->$name;
 		}
 
@@ -68,6 +75,7 @@ class JFormFieldMultiphoto extends JFormField
 		switch ($name)
 		{
 			case 'imagedir':
+			case 'userstate':
 				$this->$name = (string) $value;
 				break;
 			default:
@@ -83,7 +91,13 @@ class JFormFieldMultiphoto extends JFormField
 	 */
 	protected function getInput()
 	{
+		//echo 'JRequest id='.JRequest::getVar('id', 0) . '<br />';
+		//echo "id=".JFactory::getApplication()->input->getInt('id', null) . '<br />';
+		//print_r(JFactory::getApplication()->getUserState('com_imc.edit.issue.id'));
+		
 		$imagedir = (isset($this->element['imagedir']) ? $this->element['imagedir'] : 'images/imc');
+		$itemId   = (isset($this->element['userstate']) ? JFactory::getApplication()->getUserState($this->element['userstate']) : JRequest::getVar('id', 0));
+
 		JFactory::getDocument()->addStyleSheet(JURI::root(true).'/administrator/components/com_imc/models/fields/multiphoto/css/blueimp-gallery.min.css');
 		JFactory::getDocument()->addStyleSheet(JURI::root(true).'/administrator/components/com_imc/models/fields/multiphoto/css/imc-style.css');
 		JFactory::getDocument()->addStyleSheet(JURI::root(true).'/administrator/components/com_imc/models/fields/multiphoto/css/jquery.fileupload.css');
@@ -201,7 +215,7 @@ JSession::checkToken('request') or $this->sendResponse(new Exception(JText::_('J
 		$init[] = "    jQuery('#'+form_id).fileupload({";
 		$init[] = "        // Uncomment the following to send cross-domain cookies:";
 		$init[] = "        xhrFields: {withCredentials: true},";
-		$init[] = "        url: '".JURI::root(true)."/administrator/index.php?option=com_imc&task=upload.handler&format=json&id=".JRequest::getVar('id', 0)."&imagedir=".$imagedir."'";
+		$init[] = "        url: '".JURI::root(true)."/administrator/index.php?option=com_imc&task=upload.handler&format=json&id=".$itemId."&imagedir=".$imagedir."'";
 		$init[] = "    }).bind('fileuploaddone', function(e,data){console.log(data.result.files[0].name)}).";
 		$init[] = "    bind('fileuploaddestroy', function(e,data){console.log(data.url.substring(data.url.indexOf('file=') + 5)  )}).";
 		$init[] = "    bind('fileuploadadd', function(e,data){jQuery('input[name=\"task\"]').val('upload.handler');jQuery('.drop-photos2').hide();});";

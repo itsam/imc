@@ -46,7 +46,7 @@ class ImcControllerIssueForm extends ImcController {
         }
 
         // Redirect to the edit screen.
-        $this->setRedirect(JRoute::_('index.php?option=com_imc&view=issue&layout=edit', false));
+        $this->setRedirect(JRoute::_('index.php?option=com_imc&id=&view=issue&layout=edit', false));
     }
 
     /**

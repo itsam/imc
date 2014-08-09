@@ -36,7 +36,9 @@ if($this->item->id) {
 ?>
 </style>
 <script type="text/javascript">
-    getScript('//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js', function() {
+    
+
+    
         jQuery(document).ready(function() {
             jQuery('#form-issue').submit(function(event) {
                 
@@ -51,8 +53,8 @@ if($this->item->id) {
 			});
 					jQuery("#jform_stepid").trigger("liszt:updated");
         });
-    });
-
+    
+    
 </script>
 
 <div class="issue-edit front-end-edit">
