@@ -9,7 +9,7 @@
 error_reporting(E_ALL | E_STRICT);
 // No direct access
 defined('_JEXEC') or die;
-JLoader::register('UploadHandler', JPATH_COMPONENT_ADMINISTRATOR . '/models/fields/multiphoto/server/UploadHandler.php');
+JLoader::register('UploadHandler', JPATH_COMPONENT . '/models/fields/multiphoto/server/UploadHandler.php');
 
 jimport('joomla.application.component.controllerform');
 
@@ -28,7 +28,7 @@ class ImcControllerUpload extends JControllerForm /*ImcController*/
 
 	    //require(JPATH_COMPONENT_ADMINISTRATOR . '/models/fields/server/php/UploadHandler.php');
 		$options = array(
-		            'script_url' => JURI::root(true).'/administrator/index.php?option=com_imc&task=upload.handler&format=json&id='.JRequest::getVar('id').'&imagedir='.JRequest::getVar('imagedir'),
+		            'script_url' => JURI::root(true).'/index.php?option=com_imc&task=upload.handler&format=json&id='.JRequest::getVar('id').'&imagedir='.JRequest::getVar('imagedir'),
 		            'upload_dir' => JPATH_ROOT . '/'.JRequest::getVar('imagedir') . '/' . JRequest::getVar('id').'/',
 		            'upload_url' => JURI::root(true) . '/'.JRequest::getVar('imagedir') . '/'.JRequest::getVar('id').'/'
 		        );
