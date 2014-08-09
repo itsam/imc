@@ -79,11 +79,11 @@ class ImcModelIssueForm extends JModelForm
                 $user = JFactory::getUser();
                 $id = $table->id;
                 if($id){
-	$canEdit = $user->authorise('core.edit', 'com_imc.issue.'.$id) || $user->authorise('core.create', 'com_imc.issue.'.$id);
-}
-else{
-	$canEdit = $user->authorise('core.edit', 'com_imc') || $user->authorise('core.create', 'com_imc');
-}
+					$canEdit = $user->authorise('core.edit', 'com_imc.issue.'.$id) || $user->authorise('core.create', 'com_imc.issue.'.$id);
+				}
+				else{
+					$canEdit = $user->authorise('core.edit', 'com_imc') || $user->authorise('core.create', 'com_imc');
+				}
                 if (!$canEdit && $user->authorise('core.edit.own', 'com_imc.issue.'.$id)) {
                     $canEdit = $user->id == $table->created_by;
                 }
@@ -250,6 +250,8 @@ else{
         
         $table = $this->getTable();
         if ($table->save($data) === true) {
+        	//set insertid to simulate postHook in controller
+        	JFactory::getApplication()->setUserState('com_imc.edit.issue.insertid', $table->get('id'));
             return $id;
         } else {
             return false;
@@ -273,5 +275,5 @@ else{
         
         return true;
     }
-    
+
 }

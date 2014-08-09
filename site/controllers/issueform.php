@@ -240,21 +240,23 @@ class ImcControllerIssueForm extends ImcController {
         $app->setUserState('com_imc.edit.issue.data', null);
     }
 
-    //override postSaveHook to move any images
-    protected function postSaveHook(JModelLegacy $model, $validData = array())
+    //simulate postSaveHook to move any images to the correct directory
+    protected function postSaveHook(JModelLegacy $model, $data = array())
     {
+        
+        $insertid = JFactory::getApplication()->getUserState('com_imc.edit.issue.insertid');
 
         //check if record is new
-        if($validData['id'] > 0)
+        if($data['id'] > 0)
             return;
 
         //check if any files uploaded
-        $obj = json_decode( $validData['photo'] );
+        $obj = json_decode( $data['photo'] );
         if(empty($obj->files))
             return;
 
         $srcDir = JPATH_ROOT . '/' . $obj->imagedir . '/' . $obj->id;
-        $dstDir = JPATH_ROOT . '/' . $obj->imagedir . '/' . $model->getItem()->get('id');
+        $dstDir = JPATH_ROOT . '/' . $obj->imagedir . '/' . $insertid;
 
         $success = rename ( $srcDir , $dstDir );
 
