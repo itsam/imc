@@ -257,7 +257,7 @@ else{
         
 	}
     
-     function delete($data)
+    function delete($data)
     {
         $id = (!empty($data['id'])) ? $data['id'] : (int)$this->getState('issue.id');
         if(JFactory::getUser()->authorise('core.delete', 'com_imc.issue.'.$id) !== true){

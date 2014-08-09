@@ -95,6 +95,12 @@ class JFormFieldMultiphoto extends JFormField
 		
 		$imagedir = (isset($this->element['imagedir']) ? $this->element['imagedir'] : 'images/imc');
 		$itemId   = (isset($this->element['userstate']) ? JFactory::getApplication()->getUserState($this->element['userstate']) : JRequest::getVar('id', 0));
+		$isNew    = 0;
+		//if isnew set timestamp as id
+		if($itemId == 0){
+			$itemId = time();
+			$isNew = 1;
+		}
 
 		JFactory::getDocument()->addStyleSheet(JURI::root(true).'/administrator/components/com_imc/models/fields/multiphoto/css/blueimp-gallery.min.css');
 		JFactory::getDocument()->addStyleSheet(JURI::root(true).'/administrator/components/com_imc/models/fields/multiphoto/css/imc-style.css');
@@ -237,7 +243,7 @@ JSession::checkToken('request') or $this->sendResponse(new Exception(JText::_('J
 		$init[] = "    }).always(function () {";
 		$init[] = "        jQuery(this).removeClass('fileupload-processing');";
 		$init[] = "    }).done(function (result) {";
-		$init[] = "        if(result) onInit(result.files,".$this->id.",".$itemId.");";
+		$init[] = "        if(result) onInit(result.files,".$this->id.",".$itemId.",".$isNew.",'".$imagedir."');";
 		$init[] = "        jQuery(this).fileupload('option', 'done')";
 		$init[] = "            .call(this, jQuery.Event('done'), {result: result});";
 		$init[] = "    });";
@@ -303,7 +309,7 @@ JSession::checkToken('request') or $this->sendResponse(new Exception(JText::_('J
 		$html[] = '</div>';
 
 		$attr = '';
-		$html[] = '	<input type="text" name="' . $this->name . '" id="' . $this->id . '" value="'
+		$html[] = '	<input type="hidden" name="' . $this->name . '" id="' . $this->id . '" value="'
 			. htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '" readonly="readonly"' . $attr . ' />';
 
 		//JHtml::_('jquery.framework');
