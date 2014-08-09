@@ -35,6 +35,7 @@ class JFormFieldMultiphoto extends JFormField
 	/**
 	* @var string
 	* instead of JRequest::getVar('id') use the userstate session (e.g. com_imc.edit.issue.id)
+	* mainly used on front-end edit forms
 	*/
 	protected $userstate;
 
@@ -91,9 +92,6 @@ class JFormFieldMultiphoto extends JFormField
 	 */
 	protected function getInput()
 	{
-		//echo 'JRequest id='.JRequest::getVar('id', 0) . '<br />';
-		//echo "id=".JFactory::getApplication()->input->getInt('id', null) . '<br />';
-		//print_r(JFactory::getApplication()->getUserState('com_imc.edit.issue.id'));
 		
 		$imagedir = (isset($this->element['imagedir']) ? $this->element['imagedir'] : 'images/imc');
 		$itemId   = (isset($this->element['userstate']) ? JFactory::getApplication()->getUserState($this->element['userstate']) : JRequest::getVar('id', 0));
@@ -192,6 +190,7 @@ class JFormFieldMultiphoto extends JFormField
 		JFactory::getDocument()->addScript(JURI::root(true).'/administrator/components/com_imc/models/fields/multiphoto/js/jquery.fileupload-image.js');		
 		JFactory::getDocument()->addScript(JURI::root(true).'/administrator/components/com_imc/models/fields/multiphoto/js/jquery.fileupload-validate.js');		
 		JFactory::getDocument()->addScript(JURI::root(true).'/administrator/components/com_imc/models/fields/multiphoto/js/jquery.fileupload-ui.js');		
+		JFactory::getDocument()->addScript(JURI::root(true).'/administrator/components/com_imc/models/fields/multiphoto/js/multiphoto.js');
 
 //http://www.noxidsoft.com/info/blog/316-connecting-a-frontend-helper-in-a-custom-joomla-3-component
 /*
@@ -216,9 +215,9 @@ JSession::checkToken('request') or $this->sendResponse(new Exception(JText::_('J
 		$init[] = "        // Uncomment the following to send cross-domain cookies:";
 		$init[] = "        xhrFields: {withCredentials: true},";
 		$init[] = "        url: '".JURI::root(true)."/administrator/index.php?option=com_imc&task=upload.handler&format=json&id=".$itemId."&imagedir=".$imagedir."'";
-		$init[] = "    }).bind('fileuploaddone', function(e,data){console.log(data.result.files[0].name)}).";
-		$init[] = "    bind('fileuploaddestroy', function(e,data){console.log(data.url.substring(data.url.indexOf('file=') + 5)  )}).";
-		$init[] = "    bind('fileuploadadd', function(e,data){jQuery('input[name=\"task\"]').val('upload.handler');jQuery('.drop-photos2').hide();});";
+		$init[] = "    }).bind('fileuploaddone',    function(e,data){onDone(data.result.files,".$this->id." )}).";
+		$init[] = "       bind('fileuploaddestroy', function(e,data){onDestroy(data.url.substring(data.url.indexOf('file=') + 5),".$this->id."  )}).";
+		$init[] = "       bind('fileuploadadd',     function(e,data){jQuery('input[name=\"task\"]').val('upload.handler');});";
 		$init[] = "    // Enable iframe cross-domain access via redirect option:";
 		$init[] = "    jQuery('#'+form_id).fileupload(";
 		$init[] = "        'option',";
@@ -238,7 +237,7 @@ JSession::checkToken('request') or $this->sendResponse(new Exception(JText::_('J
 		$init[] = "    }).always(function () {";
 		$init[] = "        jQuery(this).removeClass('fileupload-processing');";
 		$init[] = "    }).done(function (result) {";
-		$init[] = "        if(result) console.log(result.files);";
+		$init[] = "        if(result) onInit(result.files,".$this->id.",".$itemId.");";
 		$init[] = "        jQuery(this).fileupload('option', 'done')";
 		$init[] = "            .call(this, jQuery.Event('done'), {result: result});";
 		$init[] = "    });";
@@ -304,7 +303,6 @@ JSession::checkToken('request') or $this->sendResponse(new Exception(JText::_('J
 		$html[] = '</div>';
 
 		$attr = '';
-		//$this->value = 'itsam';
 		$html[] = '	<input type="text" name="' . $this->name . '" id="' . $this->id . '" value="'
 			. htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '" readonly="readonly"' . $attr . ' />';
 

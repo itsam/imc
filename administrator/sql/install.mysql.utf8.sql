@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS `#__imc_issues` (
 `address` TEXT NOT NULL ,
 `latitude` VARCHAR(255)  NOT NULL ,
 `longitude` VARCHAR(255)  NOT NULL ,
-`photo` VARCHAR(2048)  NOT NULL ,
+`photo` TEXT  NOT NULL ,
 `ordering` INT(11)  NOT NULL ,
 `state` TINYINT(1)  NOT NULL ,
 `checked_out` INT(11)  NOT NULL ,
