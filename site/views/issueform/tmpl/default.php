@@ -185,7 +185,7 @@ if($this->item->id) {
         </div>
         
         <input type="hidden" name="option" value="com_imc" />
-        <input type="text" name="task" value="issueform.save" />
+        <input type="hidden" name="task" value="issueform.save" />
         <?php echo JHtml::_('form.token'); ?>
     </form>
 </div>
