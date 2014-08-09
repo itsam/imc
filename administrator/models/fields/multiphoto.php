@@ -83,7 +83,7 @@ class JFormFieldMultiphoto extends JFormField
 	 */
 	protected function getInput()
 	{
-		echo $this->element['imagedir'];
+		$imagedir = (isset($this->element['imagedir']) ? $this->element['imagedir'] : 'images/imc');
 		JFactory::getDocument()->addStyleSheet(JURI::root(true).'/administrator/components/com_imc/models/fields/multiphoto/css/blueimp-gallery.min.css');
 		JFactory::getDocument()->addStyleSheet(JURI::root(true).'/administrator/components/com_imc/models/fields/multiphoto/css/imc-style.css');
 		JFactory::getDocument()->addStyleSheet(JURI::root(true).'/administrator/components/com_imc/models/fields/multiphoto/css/jquery.fileupload.css');
@@ -191,10 +191,8 @@ isws me to session ?? or -->> http://developer.joomla.org/manual/ch01s04.html
 to url: 8a prepei na einai se controller tou joomla kai ekei mesa na fortwnw to JLoader:register...
 http://localhost/joomla3b/administrator/index.php?option=com_imc&task=issue.handler&format=json
 JSession::checkToken('request') or $this->sendResponse(new Exception(JText::_('JINVALID_TOKEN'), 403));
-
-
-*** to com_imc sto url na to pairnw apo to arguments sto field (xml) ***
 */
+		//TODO:  get `com_imc` as field argument `component`
 		$init = array();
 		$init[] = "function init() {";
 		$init[] = "	   var form_id = jQuery('#".$this->id."').closest('form').attr('id');";
@@ -203,7 +201,7 @@ JSession::checkToken('request') or $this->sendResponse(new Exception(JText::_('J
 		$init[] = "    jQuery('#'+form_id).fileupload({";
 		$init[] = "        // Uncomment the following to send cross-domain cookies:";
 		$init[] = "        xhrFields: {withCredentials: true},";
-		$init[] = "        url: '".JURI::root(true)."/administrator/index.php?option=com_imc&task=upload.handler&format=json&id=".JRequest::getVar('id', 0)."'";
+		$init[] = "        url: '".JURI::root(true)."/administrator/index.php?option=com_imc&task=upload.handler&format=json&id=".JRequest::getVar('id', 0)."&imagedir=".$imagedir."'";
 		$init[] = "    }).bind('fileuploaddone', function(e,data){console.log(data.result.files[0].name)}).";
 		$init[] = "    bind('fileuploaddestroy', function(e,data){console.log(data.url.substring(data.url.indexOf('file=') + 5)  )}).";
 		$init[] = "    bind('fileuploadadd', function(e,data){jQuery('input[name=\"task\"]').val('upload.handler');jQuery('.drop-photos2').hide();});";

@@ -30,11 +30,14 @@ class ImcControllerUpload extends JControllerForm /*ImcController*/
 	    //require(JPATH_COMPONENT_ADMINISTRATOR . '/models/fields/server/php/UploadHandler.php');
 		//should send somehow the upload_dir and upload_url... ()
 		$options = array(
-		            'script_url' => JURI::root(true).'/administrator/index.php?option=com_imc&task=upload.handler&format=json&id='.JRequest::getVar('id'),
-		            'upload_dir' => JPATH_COMPONENT_ADMINISTRATOR . '/models/fields/server/php/files/'.JRequest::getVar('id').'/',
-		            'upload_url' => JURI::root(true).'/administrator/components/com_imc/models/fields/server/php/files/'.JRequest::getVar('id').'/'
+		            'script_url' => JURI::root(true).'/administrator/index.php?option=com_imc&task=upload.handler&format=json&id='.JRequest::getVar('id').'&imagedir='.JRequest::getVar('imagedir'),
+		            //'upload_dir' => JPATH_COMPONENT_ADMINISTRATOR . '/models/fields/server/php/files/'.JRequest::getVar('id').'/',
+		            //'upload_url' => JURI::root(true).'/administrator/components/com_imc/models/fields/server/php/files/'.JRequest::getVar('id').'/'
+		            'upload_dir' => JPATH_ROOT . '/'.JRequest::getVar('imagedir') . '/' . JRequest::getVar('id').'/',
+		            'upload_url' => JURI::root(true) . '/'.JRequest::getVar('imagedir') . '/'.JRequest::getVar('id').'/'
 		        );
 		$upload_handler = new UploadHandler($options);
+		//echo new JResponseJson($upload_handler);
 		JFactory::getApplication()->close(); // or jexit();
 	}
 
