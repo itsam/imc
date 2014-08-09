@@ -12,7 +12,7 @@ defined('JPATH_BASE') or die;
 
 jimport('joomla.html.html');
 jimport('joomla.form.formfield');
-//JLoader::register('UploadHandler', JURI::root(true)."/administrator/components/com_imc/models/fields/server/php/UploadHandler.php");
+
 /**
  * Supports an HTML select list of categories
  */
@@ -27,6 +27,55 @@ class JFormFieldMultiphoto extends JFormField
 	protected $type = 'Multiphoto';
 
 	/**
+	* @var string
+	* relative to joomla root (e.g. images/imc)
+	*/
+	protected $imagedir;
+
+	/**
+	 * Method to get certain otherwise inaccessible properties from the form field object.
+	 *
+	 * @param   string  $name  The property name for which to the the value.
+	 *
+	 * @return  mixed  The property value or null.
+	 *
+	 * @since   3.2
+	 */
+	public function __get($name)
+	{
+		switch ($name)
+		{
+			case 'imagedir':
+				return $this->$name;
+		}
+
+		return parent::__get($name);
+	}
+
+
+/**
+	 * Method to set certain otherwise inaccessible properties of the form field object.
+	 *
+	 * @param   string  $name   The property name for which to the the value.
+	 * @param   mixed   $value  The value of the property.
+	 *
+	 * @return  void
+	 *
+	 * @since   3.2
+	 */
+	public function __set($name, $value)
+	{
+		switch ($name)
+		{
+			case 'imagedir':
+				$this->$name = (string) $value;
+				break;
+			default:
+				parent::__set($name, $value);
+		}
+	}
+
+	/**
 	 * Method to get the field input markup.
 	 *
 	 * @return	string	The field input markup.
@@ -34,10 +83,11 @@ class JFormFieldMultiphoto extends JFormField
 	 */
 	protected function getInput()
 	{
-		JFactory::getDocument()->addStyleSheet('http://blueimp.github.io/Gallery/css/blueimp-gallery.min.css');
-		JFactory::getDocument()->addStyleSheet(JURI::root(true).'/administrator/components/com_imc/models/fields/css/imc-style.css');
-		JFactory::getDocument()->addStyleSheet(JURI::root(true).'/administrator/components/com_imc/models/fields/css/jquery.fileupload.css');
-		JFactory::getDocument()->addStyleSheet(JURI::root(true).'/administrator/components/com_imc/models/fields/css/jquery.fileupload-ui.css');
+		echo $this->element['imagedir'];
+		JFactory::getDocument()->addStyleSheet(JURI::root(true).'/administrator/components/com_imc/models/fields/multiphoto/css/blueimp-gallery.min.css');
+		JFactory::getDocument()->addStyleSheet(JURI::root(true).'/administrator/components/com_imc/models/fields/multiphoto/css/imc-style.css');
+		JFactory::getDocument()->addStyleSheet(JURI::root(true).'/administrator/components/com_imc/models/fields/multiphoto/css/jquery.fileupload.css');
+		JFactory::getDocument()->addStyleSheet(JURI::root(true).'/administrator/components/com_imc/models/fields/multiphoto/css/jquery.fileupload-ui.css');
 
 		$script = array();
 		$script[] = '<!-- The template to display files available for upload -->';
@@ -108,7 +158,7 @@ class JFormFieldMultiphoto extends JFormField
 		$script2[] = '                <input type="checkbox" name="delete" value="1" class="toggle">';
 		$script2[] = '            {% } else { %}';
 		$script2[] = '                <button class="btn btn-warning cancel">';
-		$script2[] = '                    <i class="icon-ban-circle"></i>';
+		$script2[] = '                    <i class="icon-remove"></i>';
 		$script2[] = '                    <span>Cancel</span>';
 		$script2[] = '                </button>';
 		$script2[] = '            {% } %}';
@@ -117,17 +167,17 @@ class JFormFieldMultiphoto extends JFormField
 		$script2[] = '{% } %}';
 		$script2[] = '</script>';
 
-		JFactory::getDocument()->addScript(JURI::root(true).'/administrator/components/com_imc/models/fields/js/vendor/jquery.ui.widget.js');		
-		JFactory::getDocument()->addScript('http://blueimp.github.io/JavaScript-Templates/js/tmpl.min.js');		
-		JFactory::getDocument()->addScript('http://blueimp.github.io/JavaScript-Load-Image/js/load-image.min.js');		
-		JFactory::getDocument()->addScript('http://blueimp.github.io/JavaScript-Canvas-to-Blob/js/canvas-to-blob.min.js');		
-		JFactory::getDocument()->addScript('http://blueimp.github.io/Gallery/js/jquery.blueimp-gallery.min.js');		
-		JFactory::getDocument()->addScript(JURI::root(true).'/administrator/components/com_imc/models/fields/js/jquery.iframe-transport.js');		
-		JFactory::getDocument()->addScript(JURI::root(true).'/administrator/components/com_imc/models/fields/js/jquery.fileupload.js');		
-		JFactory::getDocument()->addScript(JURI::root(true).'/administrator/components/com_imc/models/fields/js/jquery.fileupload-process.js');		
-		JFactory::getDocument()->addScript(JURI::root(true).'/administrator/components/com_imc/models/fields/js/jquery.fileupload-image.js');		
-		JFactory::getDocument()->addScript(JURI::root(true).'/administrator/components/com_imc/models/fields/js/jquery.fileupload-validate.js');		
-		JFactory::getDocument()->addScript(JURI::root(true).'/administrator/components/com_imc/models/fields/js/jquery.fileupload-ui.js');		
+		JFactory::getDocument()->addScript(JURI::root(true).'/administrator/components/com_imc/models/fields/multiphoto/js/vendor/jquery.ui.widget.js');		
+		JFactory::getDocument()->addScript(JURI::root(true).'/administrator/components/com_imc/models/fields/multiphoto/js/tmpl.min.js');		
+		JFactory::getDocument()->addScript(JURI::root(true).'/administrator/components/com_imc/models/fields/multiphoto/js/load-image.min.js');		
+		JFactory::getDocument()->addScript(JURI::root(true).'/administrator/components/com_imc/models/fields/multiphoto/js/canvas-to-blob.min.js');		
+		JFactory::getDocument()->addScript(JURI::root(true).'/administrator/components/com_imc/models/fields/multiphoto/js/jquery.blueimp-gallery.min.js');		
+		JFactory::getDocument()->addScript(JURI::root(true).'/administrator/components/com_imc/models/fields/multiphoto/js/jquery.iframe-transport.js');		
+		JFactory::getDocument()->addScript(JURI::root(true).'/administrator/components/com_imc/models/fields/multiphoto/js/jquery.fileupload.js');		
+		JFactory::getDocument()->addScript(JURI::root(true).'/administrator/components/com_imc/models/fields/multiphoto/js/jquery.fileupload-process.js');		
+		JFactory::getDocument()->addScript(JURI::root(true).'/administrator/components/com_imc/models/fields/multiphoto/js/jquery.fileupload-image.js');		
+		JFactory::getDocument()->addScript(JURI::root(true).'/administrator/components/com_imc/models/fields/multiphoto/js/jquery.fileupload-validate.js');		
+		JFactory::getDocument()->addScript(JURI::root(true).'/administrator/components/com_imc/models/fields/multiphoto/js/jquery.fileupload-ui.js');		
 
 //http://www.noxidsoft.com/info/blog/316-connecting-a-frontend-helper-in-a-custom-joomla-3-component
 /*
