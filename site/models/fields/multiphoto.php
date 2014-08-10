@@ -54,6 +54,7 @@ class JFormFieldMultiphoto extends JFormField
 		{
 			case 'imagedir':
 			case 'userstate':
+			case 'side':
 				return $this->$name;
 		}
 
@@ -77,6 +78,7 @@ class JFormFieldMultiphoto extends JFormField
 		{
 			case 'imagedir':
 			case 'userstate':
+			case 'side':
 				$this->$name = (string) $value;
 				break;
 			default:
@@ -198,20 +200,13 @@ class JFormFieldMultiphoto extends JFormField
 		JFactory::getDocument()->addScript(JURI::root(true).'/components/com_imc/models/fields/multiphoto/js/jquery.fileupload-ui.js');		
 		JFactory::getDocument()->addScript(JURI::root(true).'/components/com_imc/models/fields/multiphoto/js/multiphoto.js');
 
-//http://www.noxidsoft.com/info/blog/316-connecting-a-frontend-helper-in-a-custom-joomla-3-component
-/*
-if isNew: $value "folder":"timestamp", "files": "foo.png, moo.png"
-sto save (current issue_id) -> "folder", "directory/issue_id/", "files": "foo.png, moo.png"
-kai move files from /tmp/timestamp -> directory/issue_id/
 
-to mono pou menei einai na ginei joomla secure to /server/php/index.php ---> 8a prepei na parameinei omws sto /fields gia na einai full reusable
-isws me to session ?? or -->> http://developer.joomla.org/manual/ch01s04.html
+		$url = JRoute::_(  JURI::root(true)."/administrator/index.php?option=com_imc&task=upload.handler&format=json&id=".$itemId."&imagedir=".$imagedir."&".JSession::getFormToken()."=1" );
+		//change controller url if accessed from backend to work with secure JSession token
+		if($this->element['side'] == 'frontend'){
+			$url = JRoute::_(  JURI::root(true)."/index.php?option=com_imc&task=upload.handler&format=json&id=".$itemId."&imagedir=".$imagedir."&".JSession::getFormToken()."=1" );
+		}
 
-to url: 8a prepei na einai se controller tou joomla kai ekei mesa na fortwnw to JLoader:register...
-http://localhost/joomla3b/administrator/index.php?option=com_imc&task=issue.handler&format=json
-JSession::checkToken('request') or $this->sendResponse(new Exception(JText::_('JINVALID_TOKEN'), 403));
-*/
-		$url = JRoute::_(  JURI::root(true)."/index.php?option=com_imc&task=upload.handler&format=json&id=".$itemId."&imagedir=".$imagedir."&".JSession::getFormToken()."=1" );
 		//TODO:  get `com_imc` as field argument `component`
 		$init = array();
 		$init[] = "function init() {";

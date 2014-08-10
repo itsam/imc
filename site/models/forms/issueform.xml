@@ -63,7 +63,8 @@
             label="Multi photos" 
             description="Upload and handle images" 
             imagedir="images/imc"
-            userstate="com_imc.edit.issue.id" />
+            userstate="com_imc.edit.issue.id" 
+            side="frontend" />
 
 
         <field name="created" type="timecreated" default="" 

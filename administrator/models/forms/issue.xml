@@ -20,7 +20,7 @@
             label="Multi photos" 
             description="Upload and handle images" 
             imagedir="images/imc"
-            />
+            side="backend" />
 
 		<field name="stepid" type="sql" label="Current Step" description="" query="SELECT id, title AS value FROM #__imc_steps ORDER BY ordering" key_field="id" value_field="value"  required="true" /> 
 
