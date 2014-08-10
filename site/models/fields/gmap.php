@@ -123,7 +123,6 @@ class JFormFieldGmap extends JFormField
 		$script[] = "var notfound='".JText::_('COM_IMC_ADDRESS_NOT_FOUND')."';";
 		JFactory::getDocument()->addScriptDeclaration(implode("\n", $script));
 
-
 		//initialize map
 		$script = array();
 		$script[] = "google.maps.event.addDomListener(window, 'load', initialize);";
@@ -145,6 +144,21 @@ class JFormFieldGmap extends JFormField
 		$html[] = '		<button id="lockaddress" class="btn btn-mini" type="button"><i class="icon-lock"></i></button><br /><br /><br />';
 		$html[] = '	</div>';
 		$html[] = '</div>';		
+	 
+		$html[] = '<!-- Modal -->';
+		$html[] = '<div id="searchModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">';
+		$html[] = '	<div class="modal-header">';
+		$html[] = '		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>';
+		$html[] = '		<h3 id="searchModalLabel">Search Results</h3>';
+		$html[] = '	</div>';
+		$html[] = '	<div class="modal-body">';
+		$html[] = '		<p id="searchBody">One fine body…</p>';
+		$html[] = '	</div>';
+		$html[] = '	<div class="modal-footer">';
+		$html[] = '		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>';
+		$html[] = '	</div>';
+		$html[] = '</div>';
+
 
 		//$html[] = '	<input type="text" name="' . $this->name . '" id="' . $this->id . '" value="'
 		//	. htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '" readonly="readonly" />';
