@@ -149,17 +149,17 @@ class JFormFieldGmap extends JFormField
 
 		//set html
 		$html = array();
-        $html[] = '<div id="map-canvas"></div>';
+        $html[] = '<div id="imc-map-canvas"></div>';
         $html[] = '<br />';
         $html[] = '<div class="row-fluid">';
-        $html[] = '	<div class="span1" style="text-align: right;">';
+        $html[] = '	<div class="span1">';
 		$html[] = '		<button id="locateposition" class="btn btn-mini" type="button"><i class="icon-home"></i></button><br /><br />';
 		$html[] = '		<button id="searchaddress" class="btn btn-mini" type="button"><i class="icon-search icon-white"></i></button>';
 		$html[] = '	</div>';
         $html[] = '	<div class="span10">';
-		$html[] = '		<textarea style="width:100%;resize:none;" rows="3" cols="75" id="' . $this->id . '" name="' . $this->name . '">'.htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8').'</textarea>';
+		$html[] = '		<textarea class="imc-gmap-textarea" rows="3" cols="75" id="' . $this->id . '" name="' . $this->name . '">'.htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8').'</textarea>';
 		$html[] = '	</div>';
-        $html[] = '	<div class="span1" style="text-align: right;">';
+        $html[] = '	<div class="span1 imc-text-right">';
 		$html[] = '		<button id="lockaddress" class="btn btn-mini" type="button"><i class="icon-lock"></i></button><br /><br /><br />';
 		$html[] = '	</div>';
 		$html[] = '</div>';		

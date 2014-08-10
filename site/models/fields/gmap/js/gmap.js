@@ -143,7 +143,7 @@ function initialize() {
 		center: center,
 		zoom: zoom
 	}
-	map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+	map = new google.maps.Map(document.getElementById('imc-map-canvas'), mapOptions);
 
 	marker = new google.maps.Marker({
 		position: center,
