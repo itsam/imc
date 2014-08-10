@@ -1,3 +1,10 @@
+var map;
+var marker;
+var	infowindow = new google.maps.InfoWindow({
+		content: ''
+	});
+var geocoder = new google.maps.Geocoder();
+
 jQuery(document).ready(function() {
 	jQuery( "#locateposition" ).click(function() {
 	  // Try HTML5 geolocation
@@ -7,7 +14,11 @@ jQuery(document).ready(function() {
 	                                       position.coords.longitude);
 
 
+	      updateMarkerPosition(pos);
+	      geocodePosition(pos)
 	      map.setCenter(pos);
+	      marker.setPosition(pos);
+
 	    }, function() {
 	      handleNoGeolocation(true);
 	    });
@@ -26,9 +37,11 @@ jQuery(document).ready(function() {
 		jQuery(this).button('toggle');
 		if ( jQuery(this).hasClass('active') ){
 			jQuery(this).addClass( "btn-danger" );
+			infowindow.setContent(info+'<br />'+info_unlock);
 		}
 		else {
 			jQuery(this).removeClass( "btn-danger" );	
+			google.maps.event.trigger(marker, 'dragend', null);	//trigger to display current address	
 		}
 	});
 
@@ -36,10 +49,6 @@ jQuery(document).ready(function() {
 	jQuery("#lockaddress").click();	
 });	
 
-var map;
-var marker;
-var infowindow;
-var geocoder = new google.maps.Geocoder();
 
 function handleNoGeolocation(errorFlag) {
   if (errorFlag) {
@@ -54,7 +63,7 @@ function handleNoGeolocation(errorFlag) {
 
 			
 function codeAddress() {
-	var address = document.getElementById('jform_address').value + ' ".$this->searchterm."';
+	var address = document.getElementById('jform_address').value + hiddenterm;
 	geocoder.geocode( { 'address': address, 'language': '".$this->language."'}, function(results, status) {
 	  if (status == google.maps.GeocoderStatus.OK) {
 		map.setCenter(results[0].geometry.location);
@@ -116,8 +125,8 @@ function initialize() {
 	marker.setMap(map);
 
 	infowindow = new google.maps.InfoWindow({
-		content: info
-	});	
+		content: info+'<br />'+info_unlock
+	});
 
 	// Update current position info.
 	updateMarkerPosition(center);
@@ -134,10 +143,14 @@ function initialize() {
 
 	google.maps.event.addListener(marker, 'dragend', function() {
 		updateMarkerPosition(marker.getPosition());
-		infowindow.setContent(info);
+		if ( jQuery("#lockaddress").hasClass('active') ){
+			infowindow.setContent(info+'<br />'+info_unlock); //if geolocation failed
+		}
+		else{
+			infowindow.setContent(info); //if geolocation failed	
+		}
 		infowindow.open(map, marker);
 		geocodePosition(marker.getPosition());
-		//blink();
 	});
 
 	infowindow.open(map, marker);

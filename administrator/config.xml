@@ -48,7 +48,7 @@
         description="COM_IMC_SETTINGS_MAP_REGION_DESC"
       />
       <field
-        name="searchterm"
+        name="hiddenterm"
         type="text"
         default=""
         label="COM_IMC_SETTINGS_HIDDEN_SEARCH_TERM_LABEL"

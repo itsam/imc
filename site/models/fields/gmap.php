@@ -105,18 +105,21 @@ class JFormFieldGmap extends JFormField
 		JFactory::getDocument()->addScript(JURI::root(true).'/components/com_imc/models/fields/gmap/js/gmap.js');
 
 		//get google maps options
-		$Lat      = $params->get('latitude');
-		$Lng      = $params->get('longitude');
-		$zoom 	  = $params->get('zoom');
-		$language = $params->get('maplanguage');
+		$lat        = $params->get('latitude');
+		$lng        = $params->get('longitude');
+		$zoom 	    = $params->get('zoom');
+		$language   = $params->get('maplanguage');
+		$hiddenterm = $params->get('hiddenterm');
 
 		//set js variables
 		$script = array();
-		$script[] = "var Lat=".$Lat.";";
-		$script[] = "var Lng=".$Lng.";";
+		$script[] = "var Lat=".$lat.";";
+		$script[] = "var Lng=".$lng.";";
 		$script[] = "var zoom=".$zoom.";";
 		$script[] = "var language='".$language."';";
+		$script[] = "var hiddenterm='".$hiddenterm."';";
 		$script[] = "var info='".JText::_('COM_IMC_DRAG_MARKER')."';";
+		$script[] = "var info_unlock='".JText::_('COM_IMC_UNLOCK_ADDRESS')."';";
 		$script[] = "var notfound='".JText::_('COM_IMC_ADDRESS_NOT_FOUND')."';";
 		JFactory::getDocument()->addScriptDeclaration(implode("\n", $script));
 
