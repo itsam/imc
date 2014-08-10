@@ -33,6 +33,7 @@ CREATE TABLE IF NOT EXISTS `#__imc_steps` (
 
 `title` VARCHAR(255)  NOT NULL ,
 `description` TEXT NOT NULL ,
+`stepcolor` VARCHAR(10) NOT NULL ,
 `ordering` INT(11)  NOT NULL ,
 `state` TINYINT(1)  NOT NULL ,
 `created` DATETIME NOT NULL ,

@@ -26,6 +26,12 @@
             rows="8"
             filter="safehtml" /> 
 
+
+        <field name="stepcolor" type="color" default="#eee"
+        label="COM_IMC_FORM_LBL_STEP_STEPCOLOR"
+        description="COM_IMC_FORM_DESC_STEP_STEPCOLOR" />
+
+
        <field name="created" type="timecreated" default="" 
             label="COM_IMC_FORM_LBL_STEP_CREATED"
             description="COM_IMC_FORM_DESC_STEP_CREATED"  /> 
