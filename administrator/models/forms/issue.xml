@@ -6,8 +6,7 @@
             readonly="true" class="readonly"
             description="JGLOBAL_FIELD_ID_DESC" /> 
 
-       <field name="title" type="text"
-                
+        <field name="title" type="text"
             label="COM_IMC_FORM_LBL_ISSUE_TITLE"
             description="COM_IMC_FORM_DESC_ISSUE_TITLE" 
             required="true" 
@@ -24,7 +23,7 @@
 
 		<field name="stepid" type="sql" label="Current Step" description="" query="SELECT id, title AS value FROM #__imc_steps ORDER BY ordering" key_field="id" value_field="value"  required="true" /> 
 
-       <field name="catid" type="category"
+        <field name="catid" type="category"
             label="COM_IMC_FORM_LBL_ISSUE_CATID"
             description="COM_IMC_FORM_DESC_ISSUE_CATID" 
             required="true" 
@@ -37,7 +36,7 @@
             show_root="1" 
             onchange="this.form.submit();" /> 
 
-       <field name="description" 
+        <field name="description" 
             type="textarea"
             label="COM_IMC_FORM_LBL_ISSUE_DESCRIPTION"
             description="COM_IMC_FORM_DESC_ISSUE_DESCRIPTION" 
@@ -45,57 +44,57 @@
             rows="8"
             filter="safehtml" /> 
 
-       <field name="address" type="textarea"
-            label="COM_IMC_FORM_LBL_ISSUE_ADDRESS"
-            description="COM_IMC_FORM_DESC_ISSUE_ADDRESS" 
-            cols="100"
-            rows="8"
+        <field name="address" type="gmap" 
+            label="COM_IMC_FORM_LBL_ISSUE_ADDRESS" 
+            latitudefield="latitude" 
+            longitudefield="longitude" 
+            required="true" 
             filter="safehtml" /> 
 
-       <field name="latitude" type="text"
+        <field name="latitude" type="text"
             label="COM_IMC_FORM_LBL_ISSUE_LATITUDE"
             description="COM_IMC_FORM_DESC_ISSUE_LATITUDE" 
             filter="string" /> 
 
-       <field name="longitude" type="text"
+        <field name="longitude" type="text"
             label="COM_IMC_FORM_LBL_ISSUE_LONGITUDE"
             description="COM_IMC_FORM_DESC_ISSUE_LONGITUDE" 
             filter="string" /> 
 
-       <field name="created" type="timecreated" default="" 
+        <field name="created" type="timecreated" default="" 
             label="COM_IMC_FORM_LBL_ISSUE_CREATED"
             description="COM_IMC_FORM_DESC_ISSUE_CREATED"  /> 
 
-       <field name="updated" type="timeupdated" default="" 
+        <field name="updated" type="timeupdated" default="" 
             label="COM_IMC_FORM_LBL_ISSUE_UPDATED"
             description="COM_IMC_FORM_DESC_ISSUE_UPDATED"  /> 
 
-       <field name="created_by" type="createdby" default="" 
+        <field name="created_by" type="createdby" default="" 
             label="COM_IMC_FORM_LBL_ISSUE_CREATED_BY"
             description="COM_IMC_FORM_DESC_ISSUE_CREATED_BY"  /> 
 
-       <field name="language" type="language"
+        <field name="language" type="language"
             label="COM_IMC_FORM_LBL_ISSUE_LANGUAGE"
             description="COM_IMC_FORM_DESC_ISSUE_LANGUAGE" 
             client="administrator" /> 
 
-       <field name="hits" type="text" size="40" class="inputbox"
+        <field name="hits" type="text" size="40" class="inputbox"
             label="COM_IMC_FORM_LBL_ISSUE_HITS"
             description="COM_IMC_FORM_DESC_ISSUE_HITS" 
             default="0" 
             filter="safehtml" /> 
 
-       <field name="userid" type="text" size="40" class="inputbox"
+        <field name="userid" type="text" size="40" class="inputbox"
             label="COM_IMC_FORM_LBL_ISSUE_USERID"
             description="COM_IMC_FORM_DESC_ISSUE_USERID" 
             filter="safehtml" /> 
 
-       <field name="votes" type="text" size="40" class="inputbox"
+        <field name="votes" type="text" size="40" class="inputbox"
             label="COM_IMC_FORM_LBL_ISSUE_VOTES"
             description="COM_IMC_FORM_DESC_ISSUE_VOTES" 
             filter="safehtml" /> 
 
-       <field name="modality" type="text" size="40" class="inputbox"
+        <field name="modality" type="text" size="40" class="inputbox"
             label="COM_IMC_FORM_LBL_ISSUE_MODALITY"
             description="COM_IMC_FORM_DESC_ISSUE_MODALITY" 
             filter="safehtml" /> 
