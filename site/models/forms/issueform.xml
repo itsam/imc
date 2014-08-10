@@ -54,12 +54,12 @@
             longitudefield="longitude" 
             addressfield="address" /> 
 
-        <field name="latitude" type="hidden"
+        <field name="latitude" type="text"
             label="COM_IMC_FORM_LBL_ISSUE_LATITUDE"
             description="COM_IMC_FORM_DESC_ISSUE_LATITUDE" 
             filter="string" /> 
 
-        <field name="longitude" type="hidden"
+        <field name="longitude" type="text"
             label="COM_IMC_FORM_LBL_ISSUE_LONGITUDE"
             description="COM_IMC_FORM_DESC_ISSUE_LONGITUDE" 
             filter="string" /> 

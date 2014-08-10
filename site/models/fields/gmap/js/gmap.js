@@ -63,15 +63,16 @@ function handleNoGeolocation(errorFlag) {
 
 			
 function codeAddress() {
-	var address = document.getElementById('jform_address').value + hiddenterm;
-	geocoder.geocode( { 'address': address, 'language': '".$this->language."'}, function(results, status) {
+	var address = jQuery('#jform_address').val() + hiddenterm;
+	geocoder.geocode( { 'address': address, 'language': language}, function(results, status) {
 	  if (status == google.maps.GeocoderStatus.OK) {
+		console.log(results);
 		map.setCenter(results[0].geometry.location);
 		marker.setPosition(results[0].geometry.location);
 		
 		if(true){	//check linker checkbox here
-			document.getElementById('jform_latitude').value = results[0].geometry.location.lat();
-			document.getElementById('jform_longitude').value = results[0].geometry.location.lng();					
+			jQuery('#jform_latitude').val(results[0].geometry.location.lat());
+			jQuery('#jform_longitude').val(results[0].geometry.location.lng());
 		}
 		
 		updateMarkerAddress(results[0].formatted_address);			
@@ -96,14 +97,14 @@ function geocodePosition(pos) {
 }
 
 function updateMarkerPosition(latLng) {
-	//update fields
-	document.getElementById('jform_latitude').value = latLng.lat();
-	document.getElementById('jform_longitude').value = latLng.lng();
+	//update Lat Lng fields
+	jQuery('#jform_latitude').val(latLng.lat());
+	jQuery('#jform_longitude').val(latLng.lng());
 }
 
 function updateMarkerAddress(str) {
 	if ( !(jQuery("#lockaddress").hasClass('active')) ){
-		document.getElementById('jform_address').value = str;
+		jQuery('#jform_address').val(str);
 	}
 }
 
