@@ -45,7 +45,10 @@
             latitudefield="latitude" 
             longitudefield="longitude" 
             required="true" 
-            filter="safehtml" /> 
+            filter="safehtml"
+            width="100%"
+            height="300px" /> 
+            
 
         <field name="latitude" type="hidden"
             label="COM_IMC_FORM_LBL_ISSUE_LATITUDE"

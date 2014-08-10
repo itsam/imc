@@ -1,4 +1,4 @@
-#imc-map-canvas { width: 100%; height: 300px; }
+#imc-map-canvas { width: 100%; height: 100%; }
 .imc-gmap-textarea {width:100%; resize:none; }
 .imc-text-right {text-align: right;}
 .imc-text-left {text-align: left;}

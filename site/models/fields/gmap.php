@@ -38,6 +38,9 @@ class JFormFieldGmap extends JFormField
 	*/
 	protected $longitudefield;
 
+	protected $width;
+	protected $height;
+
 	/**
 	 * Method to get certain otherwise inaccessible properties from the form field object.
 	 *
@@ -53,6 +56,8 @@ class JFormFieldGmap extends JFormField
 		{
 			case 'latitudefield':
 			case 'longitudefield':
+			case 'width':
+			case 'height':
 				return $this->$name;
 		}
 
@@ -76,6 +81,8 @@ class JFormFieldGmap extends JFormField
 		{
 			case 'latitudefield':
 			case 'longitudefield':
+			case 'width':
+			case 'height':
 				$this->$name = (string) $value;
 				break;
 			default:
@@ -147,21 +154,30 @@ class JFormFieldGmap extends JFormField
 		$script[] = "google.maps.event.addDomListener(window, 'load', initialize);";
 		JFactory::getDocument()->addScriptDeclaration(implode("\n", $script));
 
+		//style
+		$style = array();
+		$style[] = (isset($this->element['width']) ? 'width:'.$this->element['width'].';' : '');
+		$style[] = (isset($this->element['height']) ? 'height:'.$this->element['height'].';' : '');
+
+
+
 		//set html
 		$html = array();
-        $html[] = '<div id="imc-map-canvas"></div>';
-        $html[] = '<br />';
-        $html[] = '<div class="row-fluid">';
-        $html[] = '	<div class="span1">';
-		$html[] = '		<button id="locateposition" class="btn btn-mini" type="button"><i class="icon-home"></i></button><br /><br />';
-		$html[] = '		<button id="searchaddress" class="btn btn-mini" type="button"><i class="icon-search icon-white"></i></button>';
-		$html[] = '	</div>';
-        $html[] = '	<div class="span10">';
-		$html[] = '		<textarea class="imc-gmap-textarea" rows="3" cols="75" id="' . $this->id . '" name="' . $this->name . '">'.htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8').'</textarea>';
-		$html[] = '	</div>';
-        $html[] = '	<div class="span1 imc-text-right">';
-		$html[] = '		<button id="lockaddress" class="btn btn-mini" type="button"><i class="icon-lock"></i></button><br /><br /><br />';
-		$html[] = '	</div>';
+        $html[] = '<div style="'.implode("", $style).'">';
+        $html[] = '	<div id="imc-map-canvas"></div>';
+        $html[] = '	<br />';
+        $html[] = '	<div class="row-fluid">';
+        $html[] = '		<div class="span1">';
+		$html[] = '			<button id="locateposition" class="btn btn-mini" type="button"><i class="icon-home"></i></button><br /><br />';
+		$html[] = '			<button id="searchaddress" class="btn btn-mini" type="button"><i class="icon-search icon-white"></i></button>';
+		$html[] = '		</div>';
+        $html[] = '		<div class="span10">';
+		$html[] = '			<textarea class="imc-gmap-textarea" rows="3" cols="75" id="' . $this->id . '" name="' . $this->name . '">'.htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8').'</textarea>';
+		$html[] = '		</div>';
+        $html[] = '		<div class="span1 imc-text-right">';
+		$html[] = '			<button id="lockaddress" class="btn btn-mini" type="button"><i class="icon-lock"></i></button><br /><br /><br />';
+		$html[] = '		</div>';
+		$html[] = '	</div>';		
 		$html[] = '</div>';		
 	 
 		$html[] = '<!-- Modal -->';

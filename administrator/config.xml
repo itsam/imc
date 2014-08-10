@@ -1,16 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config>
 
-  <fieldset name="map"
+  <fieldset addfieldpath="/components/com_imc/models/fields" name="map"
     label="COM_IMC_SETTINGS_GOOGLE_MAP_LABEL">
 
       <field
         name="api_key"
         type="text"
         default=""
+        class="inputbox input-xxlarge"
         label="COM_IMC_SETTINGS_APIKEY_LABEL"
-        description="COM_IMC_SETTINGS_APIKEY_DESC"
-      />
+        description="COM_IMC_SETTINGS_APIKEY_DESC" />
+
+      <field name="address" type="gmap" 
+            label="COM_IMC_FORM_LBL_ISSUE_ADDRESS" 
+            latitudefield="latitude" 
+            longitudefield="longitude" 
+            width="50%"
+            height="300px" /> 
 
       <field
         name="latitude"
