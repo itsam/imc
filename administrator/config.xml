@@ -1,27 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config>
-    <fieldset description="COM_IMC_CONFIGURATION" label="COM_IMC" name="imc">
-              <field name="latitude" type="text"
-                
-            label="COM_IMC_FORM_LBL_LATITUDE"
-            description="COM_IMC_FORM_DESC_LATITUDE" 
-                
-                
-                
-            class="imc_param_map"
-            filter="float" />
-    </fieldset>
-    <fieldset 
-        name="permissions"
-	description="JCONFIG_PERMISSIONS_DESC"
-	label="JCONFIG_PERMISSIONS_LABEL">
 
-		<field 
-                    name="rules" type="rules" component="com_imc"
-                    class="inputbox" filter="rules" validate="rules"
-                    label="JCONFIG_PERMISSIONS_LABEL"
-                    section="component" />
+  <fieldset name="map"
+    label="COM_IMC_SETTINGS_GOOGLE_MAP_LABEL">
+
+      <field
+        name="api_key"
+        type="text"
+        default=""
+        label="COM_IMC_SETTINGS_APIKEY_LABEL"
+        description="COM_IMC_SETTINGS_APIKEY_DESC"
+      />
+
+      <field
+        name="latitude"
+        type="text"
+        default="40.626449"
+        label="COM_IMC_SETTINGS_INITIAL_LATITUDE_LABEL"
+        description="COM_IMC_SETTINGS_INITIAL_LATITUDE_DESC"
+      />
+      <field
+        name="longitude"
+        type="text"
+        default="22.948426"        
+        label="COM_IMC_SETTINGS_INITIAL_LONGITUDE_LABEL"
+        description="COM_IMC_SETTINGS_INITIAL_LONGITUDE_DESC"
+      />
+      <field
+        name="zoom"
+        type="text"
+        default="14"        
+        label="COM_IMC_SETTINGS_INITIAL_MAP_ZOOM_LABEL"
+        description="COM_IMC_SETTINGS_INITIAL_MAP_ZOOM_DESC"
+      />
+      <field
+        name="maplanguage"
+        type="text"
+        default="en"
+        label="COM_IMC_SETTINGS_MAP_LANGUAGE_LABEL"
+        description="COM_IMC_SETTINGS_MAP_LANGUAGE_DESC"
+      />      
+      <field
+        name="mapregion"
+        type="text"
+        default="GB"
+        label="COM_IMC_SETTINGS_MAP_REGION_LABEL"
+        description="COM_IMC_SETTINGS_MAP_REGION_DESC"
+      />
+      <field
+        name="searchterm"
+        type="text"
+        default=""
+        label="COM_IMC_SETTINGS_HIDDEN_SEARCH_TERM_LABEL"
+        description="COM_IMC_SETTINGS_HIDDEN_SEARCH_TERM_DESC"
+      />
+  </fieldset>
+
+    
+  <fieldset name="permissions"
+      	    description="JCONFIG_PERMISSIONS_DESC"
+	          label="JCONFIG_PERMISSIONS_LABEL">
+
+		<field name="rules" type="rules" component="com_imc"
+           class="inputbox" filter="rules" validate="rules"
+           label="JCONFIG_PERMISSIONS_LABEL"
+           section="component" />
+
 	</fieldset>
+
 </config>
 <!--
 ########################################################################################

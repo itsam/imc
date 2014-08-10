@@ -34,7 +34,7 @@ class ImcControllerUpload extends ImcController
 		$options = array(
 		            'script_url' => JRoute::_( JURI::root(true).'/index.php?option=com_imc&task=upload.handler&format=json&id='.JRequest::getVar('id').'&imagedir='.JRequest::getVar('imagedir').'&'.JSession::getFormToken() .'=1' ),
 		            'upload_dir' => JPATH_ROOT . '/'.JRequest::getVar('imagedir') . '/' . JRequest::getVar('id').'/',
-		            'upload_url' => JURI::root(true) . '/'.JRequest::getVar('imagedir') . '/'.JRequest::getVar('id').'/'
+		            'upload_url' => JRequest::getVar('imagedir') . '/'.JRequest::getVar('id').'/'
 		        );
 		$upload_handler = new UploadHandler($options);
 		JFactory::getApplication()->close();

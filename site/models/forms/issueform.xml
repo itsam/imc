@@ -39,7 +39,7 @@
             cols="100"
             rows="8"
             filter="safehtml" /> 
-
+<!--
         <field name="address" 
             type="textarea"
             label="COM_IMC_FORM_LBL_ISSUE_ADDRESS"
@@ -47,6 +47,12 @@
             cols="100"
             rows="8"
             filter="safehtml" /> 
+-->
+        <field name="address" type="gmap" 
+            label="Map" 
+            latitudefield="latitude" 
+            longitudefield="longitude" 
+            addressfield="address" /> 
 
         <field name="latitude" type="text"
             label="COM_IMC_FORM_LBL_ISSUE_LATITUDE"
