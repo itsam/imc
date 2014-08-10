@@ -28,16 +28,15 @@ class JFormFieldGmap extends JFormField
 
 	/**
 	* @var string
-	* relative to joomla root (e.g. images/imc)
+	* the field that holds the latitude
 	*/
-	protected $imagedir;
+	protected $latitudefield;
 
 	/**
 	* @var string
-	* instead of JRequest::getVar('id') use the userstate session (e.g. com_imc.edit.issue.id)
-	* mainly used on front-end edit forms
+	* the field that holds the longitude
 	*/
-	protected $userstate;
+	protected $longitudefield;
 
 	/**
 	 * Method to get certain otherwise inaccessible properties from the form field object.
@@ -52,9 +51,8 @@ class JFormFieldGmap extends JFormField
 	{
 		switch ($name)
 		{
-			case 'imagedir':
-			case 'userstate':
-			case 'side':
+			case 'latitudefield':
+			case 'longitudefield':
 				return $this->$name;
 		}
 
@@ -76,9 +74,8 @@ class JFormFieldGmap extends JFormField
 	{
 		switch ($name)
 		{
-			case 'imagedir':
-			case 'userstate':
-			case 'side':
+			case 'latitudefield':
+			case 'longitudefield':
 				$this->$name = (string) $value;
 				break;
 			default:
@@ -96,7 +93,12 @@ class JFormFieldGmap extends JFormField
 	{
 		JFactory::getDocument()->addStyleSheet(JURI::root(true).'/components/com_imc/models/fields/gmap/css/gmap.css');
 		
-		//$api_key = (isset($this->element['api_key']) ? $this->element['api_key'] : '');
+		//(isset($this->element['api_key']) ? $this->element['api_key'] : '');
+		if(!isset($this->element['latitudefield']))
+			return '<strong>GMap field argument `latitudefield` is not set</strong>';
+		if(!isset($this->element['longitudefield']))
+			return '<strong>GMap field argument `longitudefield` is not set</strong>';
+
 		$params = JComponentHelper::getParams('com_imc');
 		$api_key = $params->get('api_key');
 		if($api_key == '')
@@ -104,9 +106,10 @@ class JFormFieldGmap extends JFormField
 		JFactory::getDocument()->addScript('https://maps.googleapis.com/maps/api/js?key='.$api_key);
 		JFactory::getDocument()->addScript(JURI::root(true).'/components/com_imc/models/fields/gmap/js/gmap.js');
 
-		//get google maps options
+		//get google maps default options if no value is set (e.g. new record)
 		$lat        = $params->get('latitude');
 		$lng        = $params->get('longitude');
+
 		$zoom 	    = $params->get('zoom');
 		$language   = $params->get('maplanguage');
 		$hiddenterm = $params->get('hiddenterm');
@@ -114,7 +117,23 @@ class JFormFieldGmap extends JFormField
 		//set js variables
 		$script = array();
 		$script[] = "var Lat=".$lat.";";
+		
+		//$script[] = "if( jQuery('#jform_".$this->element['latitudefield']."').val() ) {";
+		//$script[] = "	Lat = jQuery('#jform_".$this->element['latitudefield']."').val();";
+		//$script[] = "}";
+
+		//$script[] = "alert(jQuery('#jform_".$this->element['latitudefield']."').val());";
+		
 		$script[] = "var Lng=".$lng.";";
+
+		//$script[] = "if( jQuery('#jform_".$this->element['longitudefield']."').val() ) {";
+		//$script[] = "	Lng = jQuery('#jform_".$this->element['longitudefield']."').val();";
+		//$script[] = "}";
+
+		
+		$script[] = "var latfield='jform_".$this->element['latitudefield']."';";
+		$script[] = "var lngfield='jform_".$this->element['longitudefield']."';";
+		$script[] = "var addrfield='".$this->id."';";
 		$script[] = "var zoom=".$zoom.";";
 		$script[] = "var language='".$language."';";
 		$script[] = "var hiddenterm='".$hiddenterm."';";
@@ -158,11 +177,6 @@ class JFormFieldGmap extends JFormField
 		$html[] = '		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>';
 		$html[] = '	</div>';
 		$html[] = '</div>';
-
-
-		//$html[] = '	<input type="text" name="' . $this->name . '" id="' . $this->id . '" value="'
-		//	. htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '" readonly="readonly" />';
-
 
 		return implode("\n", $html);
 	}

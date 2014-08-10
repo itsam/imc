@@ -15,7 +15,7 @@ jQuery(document).ready(function() {
 
 
 	      updateMarkerPosition(pos);
-	      geocodePosition(pos)
+	      reverseGeocodePosition(pos)
 	      map.setCenter(pos);
 	      marker.setPosition(pos);
 
@@ -61,7 +61,7 @@ function handleNoGeolocation(errorFlag) {
   infowindow.open(map, marker);
 }
 
-			
+
 function codeAddress() {
 	var address = jQuery('#jform_address').val() + hiddenterm;
 	geocoder.geocode( { 'address': address, 'language': language}, function(results, status) {
@@ -105,21 +105,21 @@ function applySearchResult(lat, lng, addr){
 	updateMarkerAddress(addr);
 }
 			
-function geocodePosition(pos) {
+function reverseGeocodePosition(pos) {
 	geocoder.geocode({
 		latLng: pos,
 		language: language
 	}, function(responses) {
 		if (responses && responses.length > 0) {
 		  updateMarkerAddress(responses[0].formatted_address);
-		} else {
+		} 
+		else {
 		  updateMarkerAddress(notfound);
 		}
 	});
 }
 
 function updateMarkerPosition(pos) {
-	//update Lat Lng fields
 	jQuery('#jform_latitude').val(pos.lat());
 	jQuery('#jform_longitude').val(pos.lng());
 }
@@ -132,6 +132,11 @@ function updateMarkerAddress(str) {
 
 
 function initialize() {
+	if(jQuery('#jform_latitude').val())
+		Lat = jQuery('#jform_latitude').val();
+	if(jQuery('#jform_longitude').val())
+		Lng = jQuery('#jform_longitude').val();
+	
 	var center = new google.maps.LatLng(Lat, Lng);
 
 	var mapOptions = {
@@ -153,7 +158,7 @@ function initialize() {
 
 	// Update current position info.
 	updateMarkerPosition(center);
-	geocodePosition(center);
+	reverseGeocodePosition(center);
 
 	// Add dragging event listeners.
 	google.maps.event.addListener(marker, 'dragstart', function() {
@@ -173,7 +178,7 @@ function initialize() {
 			infowindow.setContent(info); //if geolocation failed	
 		}
 		infowindow.open(map, marker);
-		geocodePosition(marker.getPosition());
+		reverseGeocodePosition(marker.getPosition());
 	});
 
 	infowindow.open(map, marker);
