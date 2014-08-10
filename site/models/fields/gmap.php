@@ -105,16 +105,19 @@ class JFormFieldGmap extends JFormField
 		JFactory::getDocument()->addScript(JURI::root(true).'/components/com_imc/models/fields/gmap/js/gmap.js');
 
 		//get google maps options
-		$Lat  = $params->get('latitude');
-		$Lng  = $params->get('longitude');
-		$zoom = $params->get('zoom');
+		$Lat      = $params->get('latitude');
+		$Lng      = $params->get('longitude');
+		$zoom 	  = $params->get('zoom');
+		$language = $params->get('maplanguage');
 
 		//set js variables
 		$script = array();
-		$script[] = "var zoom=".$zoom.";";
 		$script[] = "var Lat=".$Lat.";";
 		$script[] = "var Lng=".$Lng.";";
+		$script[] = "var zoom=".$zoom.";";
+		$script[] = "var language='".$language."';";
 		$script[] = "var info='".JText::_('COM_IMC_DRAG_MARKER')."';";
+		$script[] = "var notfound='".JText::_('COM_IMC_ADDRESS_NOT_FOUND')."';";
 		JFactory::getDocument()->addScriptDeclaration(implode("\n", $script));
 
 
@@ -127,8 +130,21 @@ class JFormFieldGmap extends JFormField
 		$html = array();
         $html[] = '<div id="map-canvas"></div>';
         $html[] = '<br />';
-		$html[] = '	<input type="text" name="' . $this->name . '" id="' . $this->id . '" value="'
-			. htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '" readonly="readonly" />';
+        $html[] = '<div class="row-fluid">';
+        $html[] = '	<div class="span1" style="text-align: right;">';
+		$html[] = '		<button id="locateposition" class="btn btn-mini" type="button"><i class="icon-home"></i></button><br /><br />';
+		$html[] = '		<button id="searchaddress" class="btn btn-mini" type="button"><i class="icon-search icon-white"></i></button>';
+		$html[] = '	</div>';
+        $html[] = '	<div class="span10">';
+		$html[] = '		<textarea style="width:100%;resize:none;" rows="3" cols="75" id="' . $this->id . '" name="' . $this->name . '">'.htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8').'</textarea>';
+		$html[] = '	</div>';
+        $html[] = '	<div class="span1" style="text-align: right;">';
+		$html[] = '		<button id="lockaddress" class="btn btn-mini" type="button"><i class="icon-lock"></i></button><br /><br /><br />';
+		$html[] = '	</div>';
+		$html[] = '</div>';		
+
+		//$html[] = '	<input type="text" name="' . $this->name . '" id="' . $this->id . '" value="'
+		//	. htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '" readonly="readonly" />';
 
 
 		return implode("\n", $html);

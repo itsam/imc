@@ -15,7 +15,7 @@
             description="COM_IMC_FORM_DESC_ISSUE_TITLE" 
             required="true" 
             menu_published="0"
-            class="inputbox input-xxlarge input-large-text"
+            
             filter="string" /> 
 
      
@@ -49,17 +49,17 @@
             filter="safehtml" /> 
 -->
         <field name="address" type="gmap" 
-            label="Map" 
+            label="COM_IMC_FORM_LBL_ISSUE_ADDRESS" 
             latitudefield="latitude" 
             longitudefield="longitude" 
             addressfield="address" /> 
 
-        <field name="latitude" type="text"
+        <field name="latitude" type="hidden"
             label="COM_IMC_FORM_LBL_ISSUE_LATITUDE"
             description="COM_IMC_FORM_DESC_ISSUE_LATITUDE" 
             filter="string" /> 
 
-        <field name="longitude" type="text"
+        <field name="longitude" type="hidden"
             label="COM_IMC_FORM_LBL_ISSUE_LONGITUDE"
             description="COM_IMC_FORM_DESC_ISSUE_LONGITUDE" 
             filter="string" /> 
