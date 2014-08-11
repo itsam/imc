@@ -112,18 +112,64 @@ class ImcViewIssues extends JViewLegacy {
 			JText::_("JOPTION_SELECT_CATEGORY"),
 			'filter_catid',
 			JHtml::_('select.options', JHtml::_('category.options', 'com_imc'), "value", "text", $this->state->get('filter.catid'))
-
 		);
 
 		JHtmlSidebar::addFilter(
-
 			JText::_('JOPTION_SELECT_PUBLISHED'),
-
 			'filter_published',
-
 			JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), "value", "text", $this->state->get('filter.state'), true)
-
 		);
+
+
+
+
+        //Set sidebar action - New in 3.0
+        JHtmlSidebar::setAction('index.php?option=com_imc&view=issues');
+
+        $this->extra_sidebar = '';
+          
+        jimport('joomla.form.form');
+        $options = array();
+        JForm::addFormPath(JPATH_COMPONENT . '/models/forms');
+        $form = JForm::getInstance('com_imc.issue', 'issue');
+
+        $field = $form->getField('stepid');
+
+        $query = $form->getFieldAttribute('stepid','query');
+        //$query = "SELECT 0 AS `id`, '- Please select step -' AS `value` UNION SELECT id, title AS value FROM #__imc_steps ";
+        $key = $form->getFieldAttribute('stepid','key_field');
+        $value = $form->getFieldAttribute('stepid','value_field');
+
+        
+        // Get the database object.
+        $db = JFactory::getDBO();
+
+        // Set the query and get the result list.
+        $db->setQuery($query);
+        $items = $db->loadObjectlist();
+
+
+        // Build the field options.
+        if (!empty($items))
+        {
+            foreach ($items as $item)
+            {
+                $options[] = JHtml::_('select.option', $item->$key, $item->$value);
+
+            }
+        }
+
+        JHtmlSidebar::addFilter(
+            '- Please select step -',
+            'filter_stepid',
+            JHtml::_('select.options', $options, "value", "text", $this->state->get('filter.stepid'), true)
+            
+        );
+
+
+
+
+
 
     }
 

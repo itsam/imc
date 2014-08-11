@@ -149,6 +149,7 @@ class ImcViewEvolutions extends JViewLegacy {
             JHtml::_('select.options', $options, "value", "text", $this->state->get('filter.issueid')),
             true
         );
+        
 		JHtmlSidebar::addFilter(
 
 			JText::_('JOPTION_SELECT_PUBLISHED'),

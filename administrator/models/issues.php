@@ -178,6 +178,11 @@ class ImcModelIssues extends JModelList {
 
 
 		//Filtering stepid
+        if ($stepid = $this->getState('filter.stepid'))
+        {
+            $query->where('a.stepid = ' . (int) $stepid);
+        }
+
 
 		//Filtering catid
 		$filter_catid = $this->state->get("filter.catid");
