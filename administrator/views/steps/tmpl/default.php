@@ -189,6 +189,7 @@ if (!empty($this->extra_sidebar)) {
 				<?php if (isset($item->checked_out) && $item->checked_out) : ?>
 					<?php echo JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, 'steps.', $canCheckin); ?>
 				<?php endif; ?>
+				<span style="font-size: 20px;color: <?php echo $item->stepcolor; ?>">&marker;</span>
 				<?php if ($canEdit) : ?>
 					<a href="<?php echo JRoute::_('index.php?option=com_imc&task=step.edit&id='.(int) $item->id); ?>">
 					<?php echo $this->escape($item->title); ?></a>
