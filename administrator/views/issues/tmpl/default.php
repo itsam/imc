@@ -207,7 +207,9 @@ if (!empty($this->extra_sidebar)) {
 				</td>
 				<td>
 
-					<?php echo $item->stepid; ?>
+					<?php //echo $item->stepid; ?>
+					<span style="font-size: 20px;color: <?php echo $item->stepid_color; ?>">&marker;</span><?php echo $item->stepid_title; ?>
+
 				</td>
 				<td>
 
@@ -226,8 +228,11 @@ if (!empty($this->extra_sidebar)) {
 					<?php echo $item->created_by; ?>
 				</td>
 				<td>
-
-					<?php echo $item->language; ?>
+					<?php if ($item->language == '*'):?>
+						<?php echo JText::alt('JALL', 'language'); ?>
+					<?php else:?>
+						<?php echo $item->language; ?>
+					<?php endif;?>
 				</td>
 
 

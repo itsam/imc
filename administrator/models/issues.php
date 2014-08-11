@@ -139,6 +139,9 @@ class ImcModelIssues extends JModelList {
         // Join over the asset groups.
         $query->select('ag.title AS access_level')
             ->join('LEFT', '#__viewlevels AS ag ON ag.id = a.access');
+        // Join over the imc steps.
+        $query->select('st.title AS stepid_title, st.stepcolor AS stepid_color')
+            ->join('LEFT', '#__imc_steps AS st ON st.id = a.stepid');
         
 
 		// Filter by published state
@@ -202,6 +205,8 @@ class ImcModelIssues extends JModelList {
     public function getItems() {
         $items = parent::getItems();
         
+        /*
+        it's better to set this on JOIN instead of parsing again ... doh CC !!!!
 		foreach ($items as $oneItem) {
 
 			if (isset($oneItem->stepid)) {
@@ -211,7 +216,7 @@ class ImcModelIssues extends JModelList {
 				foreach ($values as $value){
 					if(!empty($value)){
 						$db = JFactory::getDbo();
-						$query = "SELECT id, title AS value FROM #__imc_steps HAVING id LIKE '" . $value . "'";
+						$query = "SELECT id, color, title AS value FROM #__imc_steps HAVING id LIKE '" . $value . "'";
 						$db->setQuery($query);
 						$results = $db->loadObject();
 						if ($results) {
@@ -224,11 +229,12 @@ class ImcModelIssues extends JModelList {
 
 			}
 		}
-
+        */
 
 //////////////////////////
         if (JFactory::getApplication()->isSite())
         {
+            echo('ITSAM');die();
             $user = JFactory::getUser();
             $groups = $user->getAuthorisedViewLevels();
 

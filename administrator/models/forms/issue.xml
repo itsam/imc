@@ -48,7 +48,6 @@
             label="COM_IMC_FORM_LBL_ISSUE_ADDRESS" 
             latitudefield="latitude" 
             longitudefield="longitude" 
-            required="true" 
             filter="safehtml" 
             width="50%"
             height="300px" /> 
