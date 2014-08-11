@@ -159,20 +159,20 @@ class JFormFieldGmap extends JFormField
         $html[] = '	<div id="imc-map-canvas"></div>';
         $html[] = '	<br />';
         $html[] = '	<div class="row-fluid">';
-        $html[] = '		<div class="span1">';
         if(!$disabled) {
+        $html[] = '		<div class="span1">';
 		$html[] = '			<button id="locateposition" class="btn btn-mini" type="button"><i class="icon-home"></i></button><br /><br />';
 		$html[] = '			<button id="searchaddress" class="btn btn-mini" type="button"><i class="icon-search icon-white"></i></button>';
+		$html[] = '		</div>';
 		}
+        $html[] = '		<div class="'. ($disabled ? "span12" : "span10").'">';
+		$html[] = '			<textarea '. ($disabled ? "disabled=\"\"" : "").' class="imc-gmap-textarea" rows="3" cols="75" id="' . $this->id . '" name="' . $this->name . '">'.htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8').'</textarea>';
 		$html[] = '		</div>';
-        $html[] = '		<div class="span10">';
-		$html[] = '			<textarea '. ($disabled ? "disabled=\"\"" : "").'class="imc-gmap-textarea" rows="3" cols="75" id="' . $this->id . '" name="' . $this->name . '">'.htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8').'</textarea>';
-		$html[] = '		</div>';
-        $html[] = '		<div class="span1 imc-text-right">';
 		if(!$disabled) {
+        $html[] = '		<div class="span1 imc-text-right">';
 		$html[] = '			<button id="lockaddress" class="btn btn-mini" type="button"><i class="icon-lock"></i></button><br /><br /><br />';
-		}
 		$html[] = '		</div>';
+		}
 		$html[] = '	</div>';		
 		$html[] = '</div>';		
 	 
