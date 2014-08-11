@@ -124,20 +124,7 @@ class JFormFieldGmap extends JFormField
 		//set js variables
 		$script = array();
 		$script[] = "var Lat=".$lat.";";
-		
-		//$script[] = "if( jQuery('#jform_".$this->element['latitudefield']."').val() ) {";
-		//$script[] = "	Lat = jQuery('#jform_".$this->element['latitudefield']."').val();";
-		//$script[] = "}";
-
-		//$script[] = "alert(jQuery('#jform_".$this->element['latitudefield']."').val());";
-		
 		$script[] = "var Lng=".$lng.";";
-
-		//$script[] = "if( jQuery('#jform_".$this->element['longitudefield']."').val() ) {";
-		//$script[] = "	Lng = jQuery('#jform_".$this->element['longitudefield']."').val();";
-		//$script[] = "}";
-
-		
 		$script[] = "var latfield='jform_".$this->element['latitudefield']."';";
 		$script[] = "var lngfield='jform_".$this->element['longitudefield']."';";
 		$script[] = "var addrfield='".$this->id."';";

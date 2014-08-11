@@ -63,7 +63,7 @@ function handleNoGeolocation(errorFlag) {
 
 
 function codeAddress() {
-	var address = jQuery('#jform_address').val() + hiddenterm;
+	var address = jQuery('#'+addrfield).val() + hiddenterm;
 	geocoder.geocode( { 'address': address, 'language': language}, function(results, status) {
 	  if (status == google.maps.GeocoderStatus.OK) {
 
@@ -100,8 +100,8 @@ function applySearchResult(lat, lng, addr){
 	var pos = new google.maps.LatLng(lat, lng);
 	map.setCenter(pos);
 	marker.setPosition(pos);
-	jQuery('#jform_latitude').val(lat);
-	jQuery('#jform_longitude').val(lng);
+	jQuery('#'+latfield).val(lat);
+	jQuery('#'+lngfield).val(lng);
 	updateMarkerAddress(addr);
 }
 			
@@ -120,22 +120,22 @@ function reverseGeocodePosition(pos) {
 }
 
 function updateMarkerPosition(pos) {
-	jQuery('#jform_latitude').val(pos.lat());
-	jQuery('#jform_longitude').val(pos.lng());
+	jQuery('#'+latfield).val(pos.lat());
+	jQuery('#'+lngfield).val(pos.lng());
 }
 
 function updateMarkerAddress(str) {
 	if ( !(jQuery("#lockaddress").hasClass('active')) ){
-		jQuery('#jform_address').val(str);
+		jQuery('#'+addrfield).val(str);
 	}
 }
 
 
 function initialize() {
-	if(jQuery('#jform_latitude').val())
-		Lat = jQuery('#jform_latitude').val();
-	if(jQuery('#jform_longitude').val())
-		Lng = jQuery('#jform_longitude').val();
+	if(jQuery('#'+latfield).val())
+		Lat = jQuery('#'+latfield).val();
+	if(jQuery('#'+lngfield).val())
+		Lng = jQuery('#'+lngfield).val();
 	
 	var center = new google.maps.LatLng(Lat, Lng);
 
