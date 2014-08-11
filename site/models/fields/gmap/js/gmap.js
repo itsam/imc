@@ -145,11 +145,20 @@ function initialize() {
 	}
 	map = new google.maps.Map(document.getElementById('imc-map-canvas'), mapOptions);
 
-	marker = new google.maps.Marker({
-		position: center,
-		animation: google.maps.Animation.DROP,
-		draggable: true
-	});
+	if(disabled){
+		marker = new google.maps.Marker({
+			position: center,
+			animation: google.maps.Animation.DROP,
+		});
+	}
+	else {
+		marker = new google.maps.Marker({
+			position: center,
+			animation: google.maps.Animation.DROP,
+			draggable: true
+		});
+	}
+
 	marker.setMap(map);
 
 	infowindow = new google.maps.InfoWindow({
@@ -181,5 +190,6 @@ function initialize() {
 		reverseGeocodePosition(marker.getPosition());
 	});
 
-	infowindow.open(map, marker);
+	if(!disabled)
+		infowindow.open(map, marker);
 }

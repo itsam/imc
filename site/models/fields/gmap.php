@@ -98,6 +98,10 @@ class JFormFieldGmap extends JFormField
 	 */
 	protected function getInput()
 	{
+		$disabled = false;
+		if(isset($this->element['disabled'])){
+			$disabled = $this->element['disabled'];
+		}
 		JFactory::getDocument()->addStyleSheet(JURI::root(true).'/components/com_imc/models/fields/gmap/css/gmap.css');
 		
 		//(isset($this->element['api_key']) ? $this->element['api_key'] : '');
@@ -123,6 +127,7 @@ class JFormFieldGmap extends JFormField
 
 		//set js variables
 		$script = array();
+		$script[] = "var disabled=".$disabled.";";
 		$script[] = "var Lat=".$lat.";";
 		$script[] = "var Lng=".$lng.";";
 		$script[] = "var latfield='jform_".$this->element['latitudefield']."';";
@@ -155,14 +160,18 @@ class JFormFieldGmap extends JFormField
         $html[] = '	<br />';
         $html[] = '	<div class="row-fluid">';
         $html[] = '		<div class="span1">';
+        if(!$disabled) {
 		$html[] = '			<button id="locateposition" class="btn btn-mini" type="button"><i class="icon-home"></i></button><br /><br />';
 		$html[] = '			<button id="searchaddress" class="btn btn-mini" type="button"><i class="icon-search icon-white"></i></button>';
+		}
 		$html[] = '		</div>';
         $html[] = '		<div class="span10">';
-		$html[] = '			<textarea class="imc-gmap-textarea" rows="3" cols="75" id="' . $this->id . '" name="' . $this->name . '">'.htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8').'</textarea>';
+		$html[] = '			<textarea '. ($disabled ? "disabled=\"\"" : "").'class="imc-gmap-textarea" rows="3" cols="75" id="' . $this->id . '" name="' . $this->name . '">'.htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8').'</textarea>';
 		$html[] = '		</div>';
         $html[] = '		<div class="span1 imc-text-right">';
+		if(!$disabled) {
 		$html[] = '			<button id="lockaddress" class="btn btn-mini" type="button"><i class="icon-lock"></i></button><br /><br /><br />';
+		}
 		$html[] = '		</div>';
 		$html[] = '	</div>';		
 		$html[] = '</div>';		
