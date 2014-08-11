@@ -127,7 +127,10 @@ class JFormFieldGmap extends JFormField
 
 		//set js variables
 		$script = array();
-		$script[] = "var disabled=".$disabled.";";
+		if($disabled)
+			$script[] = "var disabled=".$disabled.";";
+		else
+			$script[] = "var disabled=false;";
 		$script[] = "var Lat=".$lat.";";
 		$script[] = "var Lng=".$lng.";";
 		$script[] = "var latfield='jform_".$this->element['latitudefield']."';";

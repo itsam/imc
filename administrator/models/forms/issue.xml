@@ -23,6 +23,9 @@
 
 		<field name="stepid" type="sql" label="Current Step" description="" query="SELECT id, title AS value FROM #__imc_steps ORDER BY ordering" key_field="id" value_field="value"  required="true" /> 
 
+        <field name="test" type="text" label="testing" />
+
+
         <field name="catid" type="category"
             label="COM_IMC_FORM_LBL_ISSUE_CATID"
             description="COM_IMC_FORM_DESC_ISSUE_CATID" 
@@ -42,6 +45,7 @@
             description="COM_IMC_FORM_DESC_ISSUE_DESCRIPTION" 
             cols="100"
             rows="8"
+            class="input-xxlarge"
             filter="safehtml" /> 
 
         <field name="address" type="gmap" 
@@ -49,8 +53,8 @@
             latitudefield="latitude" 
             longitudefield="longitude" 
             filter="safehtml" 
-            width="50%"
-            height="300px" /> 
+            width="100%"
+            height="400px" /> 
 
 
         <field name="latitude" type="hidden"
@@ -71,7 +75,7 @@
             label="COM_IMC_FORM_LBL_ISSUE_UPDATED"
             description="COM_IMC_FORM_DESC_ISSUE_UPDATED"  /> 
 
-        <field name="created_by" type="user" default="" 
+        <field name="created_by" type="createdby" default="" 
             label="COM_IMC_FORM_LBL_ISSUE_CREATED_BY"
             description="COM_IMC_FORM_DESC_ISSUE_CREATED_BY"  /> 
 
@@ -86,19 +90,16 @@
             label="COM_IMC_FORM_LBL_ISSUE_HITS"
             description="COM_IMC_FORM_DESC_ISSUE_HITS" 
             default="0" 
-            filter="safehtml" /> 
-
-        <field name="userid" type="text" size="40" class="inputbox"
-            label="COM_IMC_FORM_LBL_ISSUE_USERID"
-            description="COM_IMC_FORM_DESC_ISSUE_USERID" 
+            disabled="true"
             filter="safehtml" /> 
 
         <field name="votes" type="text" size="40" class="inputbox"
             label="COM_IMC_FORM_LBL_ISSUE_VOTES"
             description="COM_IMC_FORM_DESC_ISSUE_VOTES" 
+            disabled="true"
             filter="safehtml" /> 
 
-        <field name="modality" type="text" size="40" class="inputbox"
+        <field name="modality" type="hidden" size="40" class="inputbox"
             label="COM_IMC_FORM_LBL_ISSUE_MODALITY"
             description="COM_IMC_FORM_DESC_ISSUE_MODALITY" 
             filter="safehtml" /> 

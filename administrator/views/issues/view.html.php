@@ -121,13 +121,7 @@ class ImcViewIssues extends JViewLegacy {
 		);
 
 
-
-
-        //Set sidebar action - New in 3.0
-        JHtmlSidebar::setAction('index.php?option=com_imc&view=issues');
-
-        $this->extra_sidebar = '';
-          
+  
         jimport('joomla.form.form');
         $options = array();
         JForm::addFormPath(JPATH_COMPONENT . '/models/forms');
@@ -136,7 +130,7 @@ class ImcViewIssues extends JViewLegacy {
         $field = $form->getField('stepid');
 
         $query = $form->getFieldAttribute('stepid','query');
-        //$query = "SELECT 0 AS `id`, '- Please select step -' AS `value` UNION SELECT id, title AS value FROM #__imc_steps ";
+        //$query = "SELECT 0 AS `id`, '- Select step -' AS `value` UNION SELECT id, title AS value FROM #__imc_steps ";
         $key = $form->getFieldAttribute('stepid','key_field');
         $value = $form->getFieldAttribute('stepid','value_field');
 
@@ -160,16 +154,10 @@ class ImcViewIssues extends JViewLegacy {
         }
 
         JHtmlSidebar::addFilter(
-            '- Please select step -',
+            '- Select step -',
             'filter_stepid',
             JHtml::_('select.options', $options, "value", "text", $this->state->get('filter.stepid'), true)
-            
         );
-
-
-
-
-
 
     }
 

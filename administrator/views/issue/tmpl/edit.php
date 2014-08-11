@@ -52,109 +52,122 @@ $document->addStyleSheet('components/com_imc/assets/css/imc.css');
 
 <form action="<?php echo JRoute::_('index.php?option=com_imc&layout=edit&id=' . (int) $this->item->id); ?>" method="post" enctype="multipart/form-data" name="adminForm" id="issue-form" class="form-validate">
 
+	<?php echo JLayoutHelper::render('joomla.edit.title_alias', $this); ?>
     <div class="form-horizontal">
         <?php echo JHtml::_('bootstrap.startTabSet', 'myTab', array('active' => 'general')); ?>
 
         <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'general', JText::_('COM_IMC_TITLE_ISSUE', true)); ?>
         <div class="row-fluid">
-            <div class="span10 form-horizontal">
+            <div class="span6 form-horizontal">
                 <fieldset class="adminform">
+		            <div class="control-group">
+						<div class="control-label"><?php echo $this->form->getLabel('test'); ?></div>
+						<div class="controls"><?php echo $this->form->getInput('test'); ?></div>
+					</div>
 
-                    			<div class="control-group">
-				<div class="control-label"><?php echo $this->form->getLabel('id'); ?></div>
-				<div class="controls"><?php echo $this->form->getInput('id'); ?></div>
-			</div>
-			<div class="control-group">
-				<div class="control-label"><?php echo $this->form->getLabel('title'); ?></div>
-				<div class="controls"><?php echo $this->form->getInput('title'); ?></div>
-			</div>
-			<div class="control-group">
-				<div class="control-label"><?php echo $this->form->getLabel('stepid'); ?></div>
-				<div class="controls"><?php echo $this->form->getInput('stepid'); ?></div>
-			</div>
+		            <div class="control-group">
+						<div class="control-label"><?php echo $this->form->getLabel('id'); ?></div>
+						<div class="controls"><?php echo $this->form->getInput('id'); ?></div>
+					</div>
 
-			<?php
-				foreach((array)$this->item->stepid as $value): 
-					if(!is_array($value)):
-						echo '<input type="hidden" class="stepid" name="jform[stepidhidden]['.$value.']" value="'.$value.'" />';
-					endif;
-				endforeach;
-			?>			<div class="control-group">
-				<div class="control-label"><?php echo $this->form->getLabel('catid'); ?></div>
-				<div class="controls"><?php echo $this->form->getInput('catid'); ?></div>
-			</div>
-			<div class="control-group">
-				<div class="control-label"><?php echo $this->form->getLabel('description'); ?></div>
-				<div class="controls"><?php echo $this->form->getInput('description'); ?></div>
-			</div>
-			<div class="control-group">
-				<div class="control-label"><?php echo $this->form->getLabel('address'); ?></div>
-				<div class="controls"><?php echo $this->form->getInput('address'); ?></div>
-			</div>
-			<div class="control-group">
-				<div class="control-label"><?php echo $this->form->getLabel('latitude'); ?></div>
-				<div class="controls"><?php echo $this->form->getInput('latitude'); ?></div>
-			</div>
-			<div class="control-group">
-				<div class="control-label"><?php echo $this->form->getLabel('longitude'); ?></div>
-				<div class="controls"><?php echo $this->form->getInput('longitude'); ?></div>
-			</div>
-			<div class="control-group">
-				<div class="control-label"><?php echo $this->form->getLabel('photo'); ?></div>
-				<div class="controls"><?php echo $this->form->getInput('photo'); ?></div>
-			</div>
-			<div class="control-group">
-				<div class="control-label"><?php echo $this->form->getLabel('state'); ?></div>
-				<div class="controls"><?php echo $this->form->getInput('state'); ?></div>
-			</div>
-			<div class="control-group">
-				<div class="control-label"><?php echo $this->form->getLabel('access'); ?></div>
-				<div class="controls"><?php echo $this->form->getInput('access'); ?></div>
-			</div>
-			<div class="control-group">
-				<div class="control-label"><?php echo $this->form->getLabel('created'); ?></div>
-				<div class="controls"><?php echo $this->form->getInput('created'); ?></div>
-			</div>
-			<div class="control-group">
-				<div class="control-label"><?php echo $this->form->getLabel('updated'); ?></div>
-				<div class="controls"><?php echo $this->form->getInput('updated'); ?></div>
-			</div>
-			<div class="control-group">
-				<div class="control-label"><?php echo $this->form->getLabel('created_by'); ?></div>
-				<div class="controls"><?php echo $this->form->getInput('created_by'); ?></div>
-			</div>
-			<div class="control-group">
-				<div class="control-label"><?php echo $this->form->getLabel('language'); ?></div>
-				<div class="controls"><?php echo $this->form->getInput('language'); ?></div>
-			</div>
-			<div class="control-group">
-				<div class="control-label"><?php echo $this->form->getLabel('hits'); ?></div>
-				<div class="controls"><?php echo $this->form->getInput('hits'); ?></div>
-			</div>
-			<div class="control-group">
-				<div class="control-label"><?php echo $this->form->getLabel('userid'); ?></div>
-				<div class="controls"><?php echo $this->form->getInput('userid'); ?></div>
-			</div>
-			<div class="control-group">
-				<div class="control-label"><?php echo $this->form->getLabel('votes'); ?></div>
-				<div class="controls"><?php echo $this->form->getInput('votes'); ?></div>
-			</div>
-			<div class="control-group">
-				<div class="control-label"><?php echo $this->form->getLabel('modality'); ?></div>
-				<div class="controls"><?php echo $this->form->getInput('modality'); ?></div>
-			</div>
+					<div class="control-group">
+						<div class="control-label"><?php echo $this->form->getLabel('stepid'); ?></div>
+						<div class="controls"><?php echo $this->form->getInput('stepid'); ?></div>
+					</div>
 
-
+					<?php
+						foreach((array)$this->item->stepid as $value): 
+							if(!is_array($value)):
+								echo '<input type="hidden" class="stepid" name="jform[stepidhidden]['.$value.']" value="'.$value.'" />';
+							endif;
+						endforeach;
+					?>			
+					<div class="control-group">
+						<div class="control-label"><?php echo $this->form->getLabel('catid'); ?></div>
+						<div class="controls"><?php echo $this->form->getInput('catid'); ?></div>
+					</div>
+					<div class="control-group">
+						<div class="control-label"><?php echo $this->form->getLabel('description'); ?></div>
+						<div class="controls"><?php echo $this->form->getInput('description'); ?></div>
+					</div>
+					<div class="control-group">
+						<div class="control-label"><?php echo $this->form->getLabel('photo'); ?></div>
+						<div class="controls"><?php echo $this->form->getInput('photo'); ?></div>
+					</div>
                 </fieldset>
             </div>
+            <div class="span6 form-horizontal">
+                <fieldset class="adminform">
+					<div class="control-group">
+						
+						<div class="controls"><?php echo $this->form->getInput('address'); ?></div>
+					</div>
+					<div class="control-group">
+						<div class="control-label"><?php echo $this->form->getLabel('latitude'); ?></div>
+						<div class="controls"><?php echo $this->form->getInput('latitude'); ?></div>
+					</div>
+					<div class="control-group">
+						<div class="control-label"><?php echo $this->form->getLabel('longitude'); ?></div>
+						<div class="controls"><?php echo $this->form->getInput('longitude'); ?></div>
+					</div>
+                </fieldset>	
+			</div>
+
         </div>
         <?php echo JHtml::_('bootstrap.endTab'); ?>
-        
+        <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'publishing', JText::_('JGLOBAL_FIELDSET_PUBLISHING', true)); ?>
+            <div class="span6 form-horizontal">
+                <fieldset class="adminform">
+					<div class="control-group">
+						<div class="control-label"><?php echo $this->form->getLabel('state'); ?></div>
+						<div class="controls"><?php echo $this->form->getInput('state'); ?></div>
+					</div>
+					<div class="control-group">
+						<div class="control-label"><?php echo $this->form->getLabel('access'); ?></div>
+						<div class="controls"><?php echo $this->form->getInput('access'); ?></div>
+					</div>
+					<div class="control-group">
+						<div class="control-label"><?php echo $this->form->getLabel('language'); ?></div>
+						<div class="controls"><?php echo $this->form->getInput('language'); ?></div>
+					</div>
+					<div class="control-group">
+						<div class="control-label"><?php echo $this->form->getLabel('hits'); ?></div>
+						<div class="controls"><?php echo $this->form->getInput('hits'); ?></div>
+					</div>
+					<div class="control-group">
+						<div class="control-label"><?php echo $this->form->getLabel('votes'); ?></div>
+						<div class="controls"><?php echo $this->form->getInput('votes'); ?></div>
+					</div>
+					<div class="control-group">
+						<div class="control-label"><?php echo $this->form->getLabel('modality'); ?></div>
+						<div class="controls"><?php echo $this->form->getInput('modality'); ?></div>
+					</div>
+                </fieldset>	
+			</div>		
+            <div class="span6 form-horizontal">
+                <fieldset class="adminform">
+					<div class="control-group">
+						<div class="control-label"><?php echo $this->form->getLabel('created'); ?></div>
+						<div class="controls"><?php echo $this->form->getInput('created'); ?></div>
+					</div>
+					<div class="control-group">
+						<div class="control-label"><?php echo $this->form->getLabel('created_by'); ?></div>
+						<div class="controls"><?php echo $this->form->getInput('created_by'); ?></div>
+					</div>
+					<div class="control-group">
+						<div class="control-label"><?php echo $this->form->getLabel('updated'); ?></div>
+						<div class="controls"><?php echo $this->form->getInput('updated'); ?></div>
+					</div>
+                </fieldset>	
+			</div>	
+		<?php echo JHtml::_('bootstrap.endTab'); ?>
+
         <?php if (JFactory::getUser()->authorise('core.admin','imc')) : ?>
-	<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'permissions', JText::_('JGLOBAL_ACTION_PERMISSIONS_LABEL', true)); ?>
-		<?php echo $this->form->getInput('rules'); ?>
-	<?php echo JHtml::_('bootstrap.endTab'); ?>
-<?php endif; ?>
+			<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'permissions', JText::_('JGLOBAL_ACTION_PERMISSIONS_LABEL', true)); ?>
+			<?php echo $this->form->getInput('rules'); ?>
+			<?php echo JHtml::_('bootstrap.endTab'); ?>
+		<?php endif; ?>
+
 
         <?php echo JHtml::_('bootstrap.endTabSet'); ?>
 

@@ -75,8 +75,6 @@ class ImcModelIssue extends JModelAdmin
 		}
 
 		$user = JFactory::getUser();
-			$form->setFieldAttribute('description', 'disabled', 'true');
-			$form->setFieldAttribute('address', 'disabled', 'true');
 
 		// Modify the form based on Edit State access controls.
 		if ($id != 0 && (!$user->authorise('core.edit.state', 'com_imc.issue.' . (int) $id))
@@ -91,6 +89,8 @@ class ImcModelIssue extends JModelAdmin
 			//$form->setFieldAttribute('publish_up', 'disabled', 'true');
 			//$form->setFieldAttribute('publish_down', 'disabled', 'true');
 			$form->setFieldAttribute('state', 'disabled', 'true');
+			$form->setFieldAttribute('description', 'disabled', 'true');
+			$form->setFieldAttribute('address', 'disabled', 'true');
 
 			
 			// Disable fields while saving.
@@ -174,5 +174,21 @@ class ImcModelIssue extends JModelAdmin
 
 		}
 	}
+
+
+	public function save($data) {
+		JFactory::getApplication()->enqueueMessage('Hello I am going to save '. $data['test'] .' to another table...');	
+
+
+		
+		if (parent::save($data))
+		{
+			return true;
+		}
+
+		return false;
+
+	}
+
 
 }

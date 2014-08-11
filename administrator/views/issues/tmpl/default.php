@@ -120,19 +120,17 @@ if (!empty($this->extra_sidebar)) {
 				<?php echo JHtml::_('grid.sort',  'COM_IMC_ISSUES_CATID', 'a.catid', $listDirn, $listOrder); ?>
 				</th>
 				<th class='left'>
-				<?php echo JHtml::_('grid.sort',  'JFIELD_ACCESS_LABEL', 'a.access', $listDirn, $listOrder); ?>
-				</th>
-				<th class='left'>
 				<?php echo JHtml::_('grid.sort',  'COM_IMC_ISSUES_CREATED', 'a.created', $listDirn, $listOrder); ?>
 				</th>
 				<th class='left'>
 				<?php echo JHtml::_('grid.sort',  'COM_IMC_ISSUES_CREATED_BY', 'a.created_by', $listDirn, $listOrder); ?>
 				</th>
 				<th class='left'>
+				<?php echo JHtml::_('grid.sort',  'JFIELD_ACCESS_LABEL', 'a.access', $listDirn, $listOrder); ?>
+				</th>
+				<th class='left'>
 				<?php echo JHtml::_('grid.sort',  'COM_IMC_ISSUES_LANGUAGE', 'a.language', $listDirn, $listOrder); ?>
 				</th>
-                    
-                    
                 <?php if (isset($this->items[0]->id)): ?>
 					<th width="1%" class="nowrap center hidden-phone">
 						<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'a.id', $listDirn, $listOrder); ?>
@@ -217,15 +215,15 @@ if (!empty($this->extra_sidebar)) {
 				</td>
 				<td>
 
-					<?php echo $item->access_level; ?>
-				</td>
-				<td>
-
 					<?php echo $item->created; ?>
 				</td>
 				<td>
 
 					<?php echo $item->created_by; ?>
+				</td>
+				<td>
+
+					<?php echo $item->access_level; ?>
 				</td>
 				<td>
 					<?php if ($item->language == '*'):?>
