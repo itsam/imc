@@ -69,10 +69,6 @@ $document->addStyleSheet('components/com_imc/assets/css/imc.css');
 				<div class="controls"><?php echo $this->form->getInput('title'); ?></div>
 			</div>
 			<div class="control-group">
-				<div class="control-label"><?php echo $this->form->getLabel('mycustomfield'); ?></div>
-				<div class="controls"><?php echo $this->form->getInput('mycustomfield'); ?></div>
-			</div>			
-			<div class="control-group">
 				<div class="control-label"><?php echo $this->form->getLabel('stepid'); ?></div>
 				<div class="controls"><?php echo $this->form->getInput('stepid'); ?></div>
 			</div>
@@ -110,6 +106,10 @@ $document->addStyleSheet('components/com_imc/assets/css/imc.css');
 			<div class="control-group">
 				<div class="control-label"><?php echo $this->form->getLabel('state'); ?></div>
 				<div class="controls"><?php echo $this->form->getInput('state'); ?></div>
+			</div>
+			<div class="control-group">
+				<div class="control-label"><?php echo $this->form->getLabel('access'); ?></div>
+				<div class="controls"><?php echo $this->form->getInput('access'); ?></div>
 			</div>
 			<div class="control-group">
 				<div class="control-label"><?php echo $this->form->getLabel('created'); ?></div>
@@ -151,7 +151,7 @@ $document->addStyleSheet('components/com_imc/assets/css/imc.css');
         <?php echo JHtml::_('bootstrap.endTab'); ?>
         
         <?php if (JFactory::getUser()->authorise('core.admin','imc')) : ?>
-	<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'permissions', JText::_('COM_IMC_FIELDSET_RULES', true)); ?>
+	<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'permissions', JText::_('JGLOBAL_ACTION_PERMISSIONS_LABEL', true)); ?>
 		<?php echo $this->form->getInput('rules'); ?>
 	<?php echo JHtml::_('bootstrap.endTab'); ?>
 <?php endif; ?>

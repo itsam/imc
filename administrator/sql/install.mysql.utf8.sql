@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS `#__imc_issues` (
 `state` TINYINT(1)  NOT NULL ,
 `checked_out` INT(11)  NOT NULL ,
 `checked_out_time` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+`access` INT(11)  NOT NULL ,
 `created` DATETIME NOT NULL ,
 `updated` DATETIME NOT NULL ,
 `created_by` INT(11)  NOT NULL ,

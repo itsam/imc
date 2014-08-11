@@ -53,10 +53,50 @@ class ImcModelIssue extends JModelAdmin
 
 		// Get the form.
 		$form = $this->loadForm('com_imc.issue', 'issue', array('control' => 'jform', 'load_data' => $loadData));
-        
-        
 		if (empty($form)) {
 			return false;
+		}
+
+		
+
+
+
+		$jinput = JFactory::getApplication()->input;
+
+		// The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
+		if ($jinput->get('a_id'))
+		{
+			$id = $jinput->get('a_id', 0);
+		}
+		// The back end uses id so we use that the rest of the time and set it to 0 by default.
+		else
+		{
+			$id = $jinput->get('id', 0);
+		}
+
+		$user = JFactory::getUser();
+		
+		// Modify the form based on Edit State access controls.
+		if ($id != 0 && (!$user->authorise('core.edit.state', 'com_imc.issue.' . (int) $id))
+			|| ($id == 0 && !$user->authorise('core.edit.state', 'com_imc'))
+		)
+		{
+			// Disable fields for display.
+			$form->setFieldAttribute('stepid', 'disabled', 'true');
+			//$form->setFieldAttribute('featured', 'disabled', 'true');
+			//$form->setFieldAttribute('ordering', 'disabled', 'true');
+			//$form->setFieldAttribute('publish_up', 'disabled', 'true');
+			//$form->setFieldAttribute('publish_down', 'disabled', 'true');
+			//$form->setFieldAttribute('state', 'disabled', 'true');
+
+			// Disable fields while saving.
+			// The controller has already verified this is an article you can edit.
+			$form->setFieldAttribute('stepid', 'filter', 'unset');
+			//$form->setFieldAttribute('featured', 'filter', 'unset');
+			//$form->setFieldAttribute('ordering', 'filter', 'unset');
+			//$form->setFieldAttribute('publish_up', 'filter', 'unset');
+			//$form->setFieldAttribute('publish_down', 'filter', 'unset');
+			//$form->setFieldAttribute('state', 'filter', 'unset');
 		}
 
 		return $form;

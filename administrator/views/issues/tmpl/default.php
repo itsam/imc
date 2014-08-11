@@ -120,6 +120,12 @@ if (!empty($this->extra_sidebar)) {
 				<?php echo JHtml::_('grid.sort',  'COM_IMC_ISSUES_CATID', 'a.catid', $listDirn, $listOrder); ?>
 				</th>
 				<th class='left'>
+				<?php echo JHtml::_('grid.sort',  'JFIELD_ACCESS_LABEL', 'a.access', $listDirn, $listOrder); ?>
+				</th>
+				<th class='left'>
+				<?php echo JHtml::_('grid.sort',  'COM_IMC_ISSUES_CREATED', 'a.created', $listDirn, $listOrder); ?>
+				</th>
+				<th class='left'>
 				<?php echo JHtml::_('grid.sort',  'COM_IMC_ISSUES_CREATED_BY', 'a.created_by', $listDirn, $listOrder); ?>
 				</th>
 				<th class='left'>
@@ -206,6 +212,14 @@ if (!empty($this->extra_sidebar)) {
 				<td>
 
 					<?php echo $item->catid; ?>
+				</td>
+				<td>
+
+					<?php echo $item->access_level; ?>
+				</td>
+				<td>
+
+					<?php echo $item->created; ?>
 				</td>
 				<td>
 

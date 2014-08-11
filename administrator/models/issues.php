@@ -35,6 +35,7 @@ class ImcModelIssues extends JModelList {
                 'latitude', 'a.latitude',
                 'longitude', 'a.longitude',
                 'photo', 'a.photo',
+                'access', 'a.access', 'access_level',
                 'ordering', 'a.ordering',
                 'state', 'a.state',
                 'created', 'a.created',
@@ -68,7 +69,9 @@ class ImcModelIssues extends JModelList {
         $published = $app->getUserStateFromRequest($this->context . '.filter.state', 'filter_published', '', 'string');
         $this->setState('filter.state', $published);
 
-        
+        $access = $app->getUserStateFromRequest($this->context . '.filter.access', 'filter_access');
+        $this->setState('filter.access', $access);
+
 		//Filtering stepid
 		$this->setState('filter.stepid', $app->getUserStateFromRequest($this->context.'.filter.stepid', 'filter_stepid', '', 'string'));
 
@@ -81,7 +84,7 @@ class ImcModelIssues extends JModelList {
         $this->setState('params', $params);
 
         // List state information.
-        parent::populateState('a.title', 'asc');
+        parent::populateState('a.id', 'desc');
     }
 
     /**
@@ -99,7 +102,7 @@ class ImcModelIssues extends JModelList {
         // Compile the store id.
         $id.= ':' . $this->getState('filter.search');
         $id.= ':' . $this->getState('filter.state');
-
+        $id .= ':' . $this->getState('filter.access');
         return parent::getStoreId($id);
     }
 
@@ -110,6 +113,7 @@ class ImcModelIssues extends JModelList {
      * @since	1.6
      */
     protected function getListQuery() {
+        $user = JFactory::getUser();
         // Create a new query object.
         $db = $this->getDbo();
         $query = $db->getQuery(true);
@@ -132,7 +136,9 @@ class ImcModelIssues extends JModelList {
 		// Join over the user field 'created_by'
 		$query->select('created_by.name AS created_by');
 		$query->join('LEFT', '#__users AS created_by ON created_by.id = a.created_by');
-
+        // Join over the asset groups.
+        $query->select('ag.title AS access_level')
+            ->join('LEFT', '#__viewlevels AS ag ON ag.id = a.access');
         
 
 		// Filter by published state
@@ -154,7 +160,19 @@ class ImcModelIssues extends JModelList {
             }
         }
 
-        
+        // Filter by access level.
+        if ($access = $this->getState('filter.access'))
+        {
+            $query->where('a.access = ' . (int) $access);
+        }
+
+        // Implement View Level Access
+        if (!$user->authorise('core.admin'))
+        {
+            $groups = implode(',', $user->getAuthorisedViewLevels());
+            $query->where('a.access IN (' . $groups . ')');
+        }
+
 
 		//Filtering stepid
 
@@ -168,6 +186,12 @@ class ImcModelIssues extends JModelList {
         // Add the list ordering clause.
         $orderCol = $this->state->get('list.ordering');
         $orderDirn = $this->state->get('list.direction');
+       
+        if ($orderCol == 'access_level')
+        {
+            $orderCol = 'ag.title';
+        }
+
         if ($orderCol && $orderDirn) {
             $query->order($db->escape($orderCol . ' ' . $orderDirn));
         }
@@ -200,7 +224,28 @@ class ImcModelIssues extends JModelList {
 
 			}
 		}
+
+
+//////////////////////////
+        if (JFactory::getApplication()->isSite())
+        {
+            $user = JFactory::getUser();
+            $groups = $user->getAuthorisedViewLevels();
+
+            for ($x = 0, $count = count($items); $x < $count; $x++)
+            {
+                // Check the access level. Remove articles the user shouldn't see
+                if (!in_array($items[$x]->access, $groups))
+                {
+                    unset($items[$x]);
+                }
+            }
+        }
+////////////////////////////
+
+
         return $items;
     }
+
 
 }

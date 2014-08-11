@@ -16,7 +16,7 @@
 
         <field name="photo" 
             type="multiphoto" 
-            label="Multi photos" 
+            label="Photos" 
             description="Upload and handle images" 
             imagedir="images/imc"
             side="backend" />
@@ -54,12 +54,12 @@
             height="300px" /> 
 
 
-        <field name="latitude" type="text"
+        <field name="latitude" type="hidden"
             label="COM_IMC_FORM_LBL_ISSUE_LATITUDE"
             description="COM_IMC_FORM_DESC_ISSUE_LATITUDE" 
             filter="string" /> 
 
-        <field name="longitude" type="text"
+        <field name="longitude" type="hidden"
             label="COM_IMC_FORM_LBL_ISSUE_LONGITUDE"
             description="COM_IMC_FORM_DESC_ISSUE_LONGITUDE" 
             filter="string" /> 
@@ -72,14 +72,16 @@
             label="COM_IMC_FORM_LBL_ISSUE_UPDATED"
             description="COM_IMC_FORM_DESC_ISSUE_UPDATED"  /> 
 
-        <field name="created_by" type="createdby" default="" 
+        <field name="created_by" type="user" default="" 
             label="COM_IMC_FORM_LBL_ISSUE_CREATED_BY"
             description="COM_IMC_FORM_DESC_ISSUE_CREATED_BY"  /> 
 
-        <field name="language" type="language"
-            label="COM_IMC_FORM_LBL_ISSUE_LANGUAGE"
-            description="COM_IMC_FORM_DESC_ISSUE_LANGUAGE" 
-            client="administrator" /> 
+
+        <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL"
+            description="COM_CONTENT_FIELD_LANGUAGE_DESC"
+        >
+            <option value="*">JALL</option>
+        </field>
 
         <field name="hits" type="text" size="40" class="inputbox"
             label="COM_IMC_FORM_LBL_ISSUE_HITS"
@@ -102,17 +104,20 @@
             description="COM_IMC_FORM_DESC_ISSUE_MODALITY" 
             filter="safehtml" /> 
         
-        <field name="state"
-            type="list"
-            label="JSTATUS"
-            description="JFIELD_PUBLISHED_DESC"
-            class="inputbox"
-            size="1"
-            default="1">
-            <option value="1">JPUBLISHED</option>
-            <option value="0">JUNPUBLISHED</option>
-        </field> 
         
+        <field name="state" type="list" label="JSTATUS"
+            description="JFIELD_PUBLISHED_DESC" class="chzn-color-state"
+            filter="intval" size="1" default="1"
+        >
+            <option value="1">
+                JPUBLISHED</option>
+            <option value="0">
+                JUNPUBLISHED</option>
+        </field>
+
+        <field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL"
+            description="JFIELD_ACCESS_DESC" size="1" />
+
         <field name="checked_out" type="hidden" filter="unset" />
         
         <field name="checked_out_time" type="hidden" filter="unset" /> 

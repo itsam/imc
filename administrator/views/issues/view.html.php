@@ -127,18 +127,19 @@ class ImcViewIssues extends JViewLegacy {
 
     }
 
-	protected function getSortFields()
-	{
-		return array(
-		'a.id' => JText::_('JGRID_HEADING_ID'),
-		'a.title' => JText::_('COM_IMC_ISSUES_TITLE'),
-		'a.stepid' => JText::_('COM_IMC_ISSUES_STEPID'),
-		'a.catid' => JText::_('COM_IMC_ISSUES_CATID'),
-		'a.ordering' => JText::_('JGRID_HEADING_ORDERING'),
-		'a.state' => JText::_('JSTATUS'),
-		'a.created_by' => JText::_('COM_IMC_ISSUES_CREATED_BY'),
-		'a.language' => JText::_('JGRID_HEADING_LANGUAGE'),
-		);
-	}
-
+    protected function getSortFields()
+    {
+        return array(
+        'a.id' => JText::_('JGRID_HEADING_ID'),
+        'a.title' => JText::_('COM_IMC_ISSUES_TITLE'),
+        'a.stepid' => JText::_('COM_IMC_ISSUES_STEPID'),
+        'a.catid' => JText::_('COM_IMC_ISSUES_CATID'),
+        'a.ordering' => JText::_('JGRID_HEADING_ORDERING'),
+        'a.state' => JText::_('JSTATUS'),
+        'a.access' => JText::_('JGRID_HEADING_ACCESS'),
+        'a.created' => JText::_('COM_IMC_ISSUES_CREATED'),
+        'a.created_by' => JText::_('COM_IMC_ISSUES_CREATED_BY'),
+        'a.language' => JText::_('JGRID_HEADING_LANGUAGE'),
+        );
+    }
 }
