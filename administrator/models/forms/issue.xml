@@ -21,7 +21,11 @@
             imagedir="images/imc"
             side="backend" />
 
-		<field name="stepid" type="step" label="Current Step" description="" query="SELECT id, title AS value FROM #__imc_steps ORDER BY ordering" key_field="id" value_field="value"  required="true" /> 
+		<field name="stepid" 
+            type="step" 
+            label="Current Step" 
+            description="" 
+            required="true" /> 
 
         <field name="test" type="text" label="testing" />
 
@@ -81,8 +85,7 @@
 
 
         <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL"
-            description="COM_CONTENT_FIELD_LANGUAGE_DESC"
-        >
+            description="COM_CONTENT_FIELD_LANGUAGE_DESC">
             <option value="*">JALL</option>
         </field>
 

@@ -33,9 +33,10 @@ class ImcControllerIssue extends JControllerForm
             $log = JTable::getInstance('Log', 'ImcTable', array());
 
             $data2['state'] = 1;
+            $data2['action'] = JText::_('COM_IMC_LOGS_ACTION_INITIAL_COMMIT');
             $data2['issueid'] = $model->getItem()->get('id');
             $data2['stepid'] = $validData['stepid'];
-            $data2['description'] = 'Issue created';
+            $data2['description'] = JText::_('COM_IMC_LOGS_ACTION_INITIAL_COMMIT');
             $data2['created'] = $validData['created'];
             $data2['created_by'] = $validData['created_by'];
             $data2['updated'] = $validData['created'];
@@ -51,8 +52,6 @@ class ImcControllerIssue extends JControllerForm
             {
                 JFactory::getApplication()->enqueueMessage('Cannot save data to log table', 'error'); 
             }
-
-
         }
 
         //B: move any images only if record is new

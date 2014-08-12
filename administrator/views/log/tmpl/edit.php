@@ -67,9 +67,13 @@ $document->addStyleSheet('components/com_imc/assets/css/imc.css');
             <div class="span10 form-horizontal">
                 <fieldset class="adminform">
 
-                    			<div class="control-group">
+            <div class="control-group">
 				<div class="control-label"><?php echo $this->form->getLabel('id'); ?></div>
 				<div class="controls"><?php echo $this->form->getInput('id'); ?></div>
+			</div>
+			<div class="control-group">
+				<div class="control-label"><?php echo $this->form->getLabel('action'); ?></div>
+				<div class="controls"><?php echo $this->form->getInput('action'); ?></div>
 			</div>
 			<div class="control-group">
 				<div class="control-label"><?php echo $this->form->getLabel('issueid'); ?></div>

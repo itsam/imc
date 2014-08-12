@@ -60,7 +60,8 @@ class ImcViewLogs extends JViewLegacy {
         if (file_exists($formPath)) {
 
             if ($canDo->get('core.create')) {
-                JToolBarHelper::addNew('log.add', 'JTOOLBAR_NEW');
+                ///JToolBarHelper::addNew('log.add', 'JTOOLBAR_NEW');
+
             }
 
             if ($canDo->get('core.edit') && isset($this->items[0])) {
@@ -144,20 +145,26 @@ class ImcViewLogs extends JViewLegacy {
         }
 
         JHtmlSidebar::addFilter(
-            'Issue',
+            '- Select Issue -',
             'filter_issueid',
-            JHtml::_('select.options', $options, "value", "text", $this->state->get('filter.issueid')),
-            true
+            JHtml::_('select.options', $options, "value", "text", $this->state->get('filter.issueid'), true)
+
         );
         
+        //Get custom field
+        JFormHelper::addFieldPath(JPATH_ROOT . '/components/com_imc/models/fields');
+        $steps = JFormHelper::loadFieldType('Step', false);
+        $options = $steps->getOptions();
+        JHtmlSidebar::addFilter(
+            '- Select Step -',
+            'filter_stepid',
+            JHtml::_('select.options', $options, "value", "text", $this->state->get('filter.stepid'), true)
+        );
+
 		JHtmlSidebar::addFilter(
-
 			JText::_('JOPTION_SELECT_PUBLISHED'),
-
 			'filter_published',
-
 			JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), "value", "text", $this->state->get('filter.state'), true)
-
 		);
 
     }
@@ -166,6 +173,7 @@ class ImcViewLogs extends JViewLegacy {
 	{
 		return array(
 		'a.id' => JText::_('JGRID_HEADING_ID'),
+        'a.action' => JText::_('COM_IMC_LOGS_ACTION'),
 		'a.issueid' => JText::_('COM_IMC_LOGS_ISSUEID'),
 		'a.stepid' => JText::_('COM_IMC_LOGS_STEPID'),
 		'a.ordering' => JText::_('JGRID_HEADING_ORDERING'),

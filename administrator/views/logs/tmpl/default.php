@@ -109,12 +109,20 @@ if (!empty($this->extra_sidebar)) {
 						<?php echo JHtml::_('grid.sort', 'JSTATUS', 'a.state', $listDirn, $listOrder); ?>
 					</th>
                 <?php endif; ?>
-                    
 				<th class='left'>
 				<?php echo JHtml::_('grid.sort',  'COM_IMC_LOGS_ISSUEID', 'a.issueid', $listDirn, $listOrder); ?>
 				</th>
 				<th class='left'>
+				<?php echo JHtml::_('grid.sort',  'COM_IMC_LOGS_ACTION', 'a.action', $listDirn, $listOrder); ?>
+				</th>
+				<th class='left'>
+				<?php echo JHtml::_('grid.sort',  'COM_IMC_LOGS_CREATED', 'a.created', $listDirn, $listOrder); ?>
+				</th>				
+				<th class='left'>
 				<?php echo JHtml::_('grid.sort',  'COM_IMC_LOGS_STEPID', 'a.stepid', $listDirn, $listOrder); ?>
+				</th>
+				<th class='left'>
+				<?php echo JHtml::_('grid.sort',  'COM_IMC_LOGS_DESCRIPTION', 'a.description', $listDirn, $listOrder); ?>
 				</th>
 				<th class='left'>
 				<?php echo JHtml::_('grid.sort',  'COM_IMC_LOGS_CREATED_BY', 'a.created_by', $listDirn, $listOrder); ?>
@@ -181,14 +189,35 @@ if (!empty($this->extra_sidebar)) {
 						<?php echo JHtml::_('jgrid.published', $item->state, $i, 'logs.', $canChange, 'cb'); ?>
 					</td>
                 <?php endif; ?>
-                    
+                <td>
+					<?php if (isset($item->checked_out) && $item->checked_out) : ?>
+						<?php echo JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, 'logs.', $canCheckin); ?>
+					<?php endif; ?>
+					<?php if ($canEdit) : ?>
+						<a href="<?php echo JRoute::_('index.php?option=com_imc&task=log.edit&id='.(int) $item->id); ?>">
+						<?php echo $this->escape($item->issueid); ?></a>
+					<?php else : ?>
+						<?php echo $this->escape($item->issueid); ?>
+					<?php endif; ?>
+                	
+                </td>
+
 				<td>
 
-					<?php echo $item->issueid; ?>
+					<?php echo $item->action; ?>
 				</td>
 				<td>
 
-					<?php echo $item->stepid; ?>
+					<?php echo $item->created; ?>
+				</td>				
+				<td>
+
+					<?php //echo $item->stepid; ?>
+					<span style="font-size: 20px;color: <?php echo $item->stepid_color; ?>">&marker;</span><?php echo $item->stepid_title; ?>
+				</td>
+				<td>
+
+					<?php echo $item->description; ?>
 				</td>
 				<td>
 

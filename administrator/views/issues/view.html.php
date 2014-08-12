@@ -114,22 +114,23 @@ class ImcViewIssues extends JViewLegacy {
 			JHtml::_('select.options', JHtml::_('category.options', 'com_imc'), "value", "text", $this->state->get('filter.catid'))
 		);
 
-		JHtmlSidebar::addFilter(
-			JText::_('JOPTION_SELECT_PUBLISHED'),
-			'filter_published',
-			JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), "value", "text", $this->state->get('filter.state'), true)
-		);
-
         //Get custom field
         JFormHelper::addFieldPath(JPATH_ROOT . '/components/com_imc/models/fields');
         $steps = JFormHelper::loadFieldType('Step', false);
         $options = $steps->getOptions();
 
         JHtmlSidebar::addFilter(
-            '- Select step -',
+            '- Select Step -',
             'filter_stepid',
             JHtml::_('select.options', $options, "value", "text", $this->state->get('filter.stepid'), true)
         );
+
+        JHtmlSidebar::addFilter(
+            JText::_('JOPTION_SELECT_PUBLISHED'),
+            'filter_published',
+            JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), "value", "text", $this->state->get('filter.state'), true)
+        );
+
 
     }
 

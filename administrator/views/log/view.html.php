@@ -62,11 +62,11 @@ class ImcViewLog extends JViewLegacy {
             JToolBarHelper::save('log.save', 'JTOOLBAR_SAVE');
         }
         if (!$checkedOut && ($canDo->get('core.create'))) {
-            JToolBarHelper::custom('log.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
+            //JToolBarHelper::custom('log.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
         }
         // If an existing item, can save to a copy.
         if (!$isNew && $canDo->get('core.create')) {
-            JToolBarHelper::custom('log.save2copy', 'save-copy.png', 'save-copy_f2.png', 'JTOOLBAR_SAVE_AS_COPY', false);
+            //JToolBarHelper::custom('log.save2copy', 'save-copy.png', 'save-copy_f2.png', 'JTOOLBAR_SAVE_AS_COPY', false);
         }
         if (empty($this->item->id)) {
             JToolBarHelper::cancel('log.cancel', 'JTOOLBAR_CANCEL');

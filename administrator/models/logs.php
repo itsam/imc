@@ -26,7 +26,8 @@ class ImcModelLogs extends JModelList {
     public function __construct($config = array()) {
         if (empty($config['filter_fields'])) {
             $config['filter_fields'] = array(
-                                'id', 'a.id',
+                'id', 'a.id',
+                'action', 'a.action',
                 'issueid', 'a.issueid',
                 'stepid', 'a.stepid',
                 'description', 'a.description',
@@ -59,7 +60,9 @@ class ImcModelLogs extends JModelList {
         $published = $app->getUserStateFromRequest($this->context . '.filter.state', 'filter_published', '', 'string');
         $this->setState('filter.state', $published);
 
-        
+        //Filtering stepid
+        $this->setState('filter.stepid', $app->getUserStateFromRequest($this->context.'.filter.stepid', 'filter_stepid', '', 'string'));
+
 		//Filtering issueid
 		$this->setState('filter.issueid', $app->getUserStateFromRequest($this->context.'.filter.issueid', 'filter_issueid', '', 'string'));
 
@@ -69,7 +72,7 @@ class ImcModelLogs extends JModelList {
         $this->setState('params', $params);
 
         // List state information.
-        parent::populateState('a.id', 'asc');
+        parent::populateState('a.created', 'desc');
     }
 
     /**
@@ -120,7 +123,9 @@ class ImcModelLogs extends JModelList {
 		// Join over the user field 'created_by'
 		$query->select('created_by.name AS created_by');
 		$query->join('LEFT', '#__users AS created_by ON created_by.id = a.created_by');
-
+        // Join over the imc steps.
+        $query->select('st.title AS stepid_title, st.stepcolor AS stepid_color')
+            ->join('LEFT', '#__imc_steps AS st ON st.id = a.stepid');
         
 
 		// Filter by published state
@@ -142,14 +147,17 @@ class ImcModelLogs extends JModelList {
             }
         }
 
-        
-
 		//Filtering issueid
 		$filter_issueid = $this->state->get("filter.issueid");
 		if ($filter_issueid) {
 			$query->where("a.issueid = '".$db->escape($filter_issueid)."'");
 		}
 
+        //Filtering stepid
+        if ($stepid = $this->getState('filter.stepid'))
+        {
+            $query->where('a.stepid = ' . (int) $stepid);
+        }
 
         // Add the list ordering clause.
         $orderCol = $this->state->get('list.ordering');
@@ -158,6 +166,7 @@ class ImcModelLogs extends JModelList {
             $query->order($db->escape($orderCol . ' ' . $orderDirn));
         }
 
+        
         return $query;
     }
 
@@ -188,6 +197,7 @@ class ImcModelLogs extends JModelList {
 
 			}
 
+            /* doh
 			if (isset($oneItem->stepid)) {
 				$values = explode(',', $oneItem->stepid);
 
@@ -207,6 +217,7 @@ class ImcModelLogs extends JModelList {
 			$oneItem->stepid = !empty($textValue) ? implode(', ', $textValue) : $oneItem->stepid;
 
 			}
+            */
 		}
         return $items;
     }

@@ -191,12 +191,44 @@ class ImcModelIssue extends JModelAdmin
             $log = JTable::getInstance('Log', 'ImcTable', array());
 
             $data2['state'] = 1;
+            $data2['action'] = JText::_('COM_IMC_LOGS_ACTION_STEP_MODIFIED');
             $data2['issueid'] = $data['id'];
             $data2['stepid'] = $data['stepid'];
-            $data2['description'] = $data['test'];
-            $data2['created'] = $data['created'];
+            $data2['description'] = 'description from admin here. '.$data['test'];
+            $data2['created'] = $data['updated'];
             $data2['created_by'] = $user->id;
-            $data2['updated'] = $data['created'];
+            $data2['updated'] = $data['updated'];
+            $data2['language'] = $data['language'];
+            $data2['rules'] = $data['rules'];
+
+            if (!$log->bind($data2))
+            {
+                JFactory::getApplication()->enqueueMessage('Cannot bind data to log table', 'error'); 
+            }
+
+            if (!$log->save($data2))
+            {
+                JFactory::getApplication()->enqueueMessage('Cannot save data to log table', 'error'); 
+            }
+
+
+
+
+
+
+
+
+
+            $log = JTable::getInstance('Log', 'ImcTable', array());
+
+            $data2['state'] = 1;
+            $data2['action'] = JText::_('COM_IMC_LOGS_ACTION_STEP_MODIFIED');
+            $data2['issueid'] = $data['id'];
+            $data2['stepid'] = $data['stepid'];
+            $data2['description'] = 'SUPER DOUBLE';
+            $data2['created'] = $data['updated'];
+            $data2['created_by'] = $user->id;
+            $data2['updated'] = $data['updated'];
             $data2['language'] = $data['language'];
             $data2['rules'] = $data['rules'];
 
