@@ -176,7 +176,7 @@ class ModImcHelper {
 		break;
 		}
 		break;
-		case '#__imc_evolution':
+		case '#__imc_log':
 		switch($field_name){
 		case 'id':
 		$result = $field_value;

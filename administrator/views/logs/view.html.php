@@ -15,7 +15,7 @@ jimport('joomla.application.component.view');
 /**
  * View class for a list of Imc.
  */
-class ImcViewEvolutions extends JViewLegacy {
+class ImcViewLogs extends JViewLegacy {
 
     protected $items;
     protected $pagination;
@@ -34,7 +34,7 @@ class ImcViewEvolutions extends JViewLegacy {
             throw new Exception(implode("\n", $errors));
         }
 
-        ImcHelper::addSubmenu('evolutions');
+        ImcHelper::addSubmenu('logs');
 
         $this->addToolbar();
 
@@ -53,18 +53,18 @@ class ImcViewEvolutions extends JViewLegacy {
         $state = $this->get('State');
         $canDo = ImcHelper::getActions($state->get('filter.category_id'));
 
-        JToolBarHelper::title(JText::_('COM_IMC_TITLE_EVOLUTIONS'), 'evolutions.png');
+        JToolBarHelper::title(JText::_('COM_IMC_TITLE_LOGS'), 'logs.png');
 
         //Check if the form exists before showing the add/edit buttons
-        $formPath = JPATH_COMPONENT_ADMINISTRATOR . '/views/evolution';
+        $formPath = JPATH_COMPONENT_ADMINISTRATOR . '/views/log';
         if (file_exists($formPath)) {
 
             if ($canDo->get('core.create')) {
-                JToolBarHelper::addNew('evolution.add', 'JTOOLBAR_NEW');
+                JToolBarHelper::addNew('log.add', 'JTOOLBAR_NEW');
             }
 
             if ($canDo->get('core.edit') && isset($this->items[0])) {
-                JToolBarHelper::editList('evolution.edit', 'JTOOLBAR_EDIT');
+                JToolBarHelper::editList('log.edit', 'JTOOLBAR_EDIT');
             }
         }
 
@@ -72,29 +72,29 @@ class ImcViewEvolutions extends JViewLegacy {
 
             if (isset($this->items[0]->state)) {
                 JToolBarHelper::divider();
-                JToolBarHelper::custom('evolutions.publish', 'publish.png', 'publish_f2.png', 'JTOOLBAR_PUBLISH', true);
-                JToolBarHelper::custom('evolutions.unpublish', 'unpublish.png', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH', true);
+                JToolBarHelper::custom('logs.publish', 'publish.png', 'publish_f2.png', 'JTOOLBAR_PUBLISH', true);
+                JToolBarHelper::custom('logs.unpublish', 'unpublish.png', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH', true);
             } else if (isset($this->items[0])) {
                 //If this component does not use state then show a direct delete button as we can not trash
-                JToolBarHelper::deleteList('', 'evolutions.delete', 'JTOOLBAR_DELETE');
+                JToolBarHelper::deleteList('', 'logs.delete', 'JTOOLBAR_DELETE');
             }
 
             if (isset($this->items[0]->state)) {
                 JToolBarHelper::divider();
-                JToolBarHelper::archiveList('evolutions.archive', 'JTOOLBAR_ARCHIVE');
+                JToolBarHelper::archiveList('logs.archive', 'JTOOLBAR_ARCHIVE');
             }
             if (isset($this->items[0]->checked_out)) {
-                JToolBarHelper::custom('evolutions.checkin', 'checkin.png', 'checkin_f2.png', 'JTOOLBAR_CHECKIN', true);
+                JToolBarHelper::custom('logs.checkin', 'checkin.png', 'checkin_f2.png', 'JTOOLBAR_CHECKIN', true);
             }
         }
 
         //Show trash and delete for components that uses the state field
         if (isset($this->items[0]->state)) {
             if ($state->get('filter.state') == -2 && $canDo->get('core.delete')) {
-                JToolBarHelper::deleteList('', 'evolutions.delete', 'JTOOLBAR_EMPTY_TRASH');
+                JToolBarHelper::deleteList('', 'logs.delete', 'JTOOLBAR_EMPTY_TRASH');
                 JToolBarHelper::divider();
             } else if ($canDo->get('core.edit.state')) {
-                JToolBarHelper::trash('evolutions.trash', 'JTOOLBAR_TRASH');
+                JToolBarHelper::trash('logs.trash', 'JTOOLBAR_TRASH');
                 JToolBarHelper::divider();
             }
         }
@@ -104,14 +104,14 @@ class ImcViewEvolutions extends JViewLegacy {
         }
 
         //Set sidebar action - New in 3.0
-        JHtmlSidebar::setAction('index.php?option=com_imc&view=evolutions');
+        JHtmlSidebar::setAction('index.php?option=com_imc&view=logs');
 
         $this->extra_sidebar = '';
                 //Filter for the field ".issueid;
         jimport('joomla.form.form');
         $options = array();
         JForm::addFormPath(JPATH_COMPONENT . '/models/forms');
-        $form = JForm::getInstance('com_imc.evolution', 'evolution');
+        $form = JForm::getInstance('com_imc.log', 'log');
 
         $field = $form->getField('issueid');
 
@@ -166,13 +166,13 @@ class ImcViewEvolutions extends JViewLegacy {
 	{
 		return array(
 		'a.id' => JText::_('JGRID_HEADING_ID'),
-		'a.issueid' => JText::_('COM_IMC_EVOLUTIONS_ISSUEID'),
-		'a.stepid' => JText::_('COM_IMC_EVOLUTIONS_STEPID'),
+		'a.issueid' => JText::_('COM_IMC_LOGS_ISSUEID'),
+		'a.stepid' => JText::_('COM_IMC_LOGS_STEPID'),
 		'a.ordering' => JText::_('JGRID_HEADING_ORDERING'),
 		'a.state' => JText::_('JSTATUS'),
-		'a.checked_out' => JText::_('COM_IMC_EVOLUTIONS_CHECKED_OUT'),
-		'a.checked_out_time' => JText::_('COM_IMC_EVOLUTIONS_CHECKED_OUT_TIME'),
-		'a.created_by' => JText::_('COM_IMC_EVOLUTIONS_CREATED_BY'),
+		'a.checked_out' => JText::_('COM_IMC_LOGS_CHECKED_OUT'),
+		'a.checked_out_time' => JText::_('COM_IMC_LOGS_CHECKED_OUT_TIME'),
+		'a.created_by' => JText::_('COM_IMC_LOGS_CREATED_BY'),
 		);
 	}
 

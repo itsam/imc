@@ -41,14 +41,14 @@ $document->addStyleSheet('components/com_imc/assets/css/imc.css');
 
     Joomla.submitbutton = function(task)
     {
-        if (task == 'evolution.cancel') {
-            Joomla.submitform(task, document.getElementById('evolution-form'));
+        if (task == 'log.cancel') {
+            Joomla.submitform(task, document.getElementById('log-form'));
         }
         else {
             
-            if (task != 'evolution.cancel' && document.formvalidator.isValid(document.id('evolution-form'))) {
+            if (task != 'log.cancel' && document.formvalidator.isValid(document.id('log-form'))) {
                 
-                Joomla.submitform(task, document.getElementById('evolution-form'));
+                Joomla.submitform(task, document.getElementById('log-form'));
             }
             else {
                 alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED')); ?>');
@@ -57,12 +57,12 @@ $document->addStyleSheet('components/com_imc/assets/css/imc.css');
     }
 </script>
 
-<form action="<?php echo JRoute::_('index.php?option=com_imc&layout=edit&id=' . (int) $this->item->id); ?>" method="post" enctype="multipart/form-data" name="adminForm" id="evolution-form" class="form-validate">
+<form action="<?php echo JRoute::_('index.php?option=com_imc&layout=edit&id=' . (int) $this->item->id); ?>" method="post" enctype="multipart/form-data" name="adminForm" id="log-form" class="form-validate">
 
     <div class="form-horizontal">
         <?php echo JHtml::_('bootstrap.startTabSet', 'myTab', array('active' => 'general')); ?>
 
-        <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'general', JText::_('COM_IMC_TITLE_EVOLUTION', true)); ?>
+        <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'general', JText::_('COM_IMC_TITLE_LOG', true)); ?>
         <div class="row-fluid">
             <div class="span10 form-horizontal">
                 <fieldset class="adminform">

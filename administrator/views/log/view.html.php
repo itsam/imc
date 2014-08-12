@@ -15,7 +15,7 @@ jimport('joomla.application.component.view');
 /**
  * View to edit
  */
-class ImcViewEvolution extends JViewLegacy {
+class ImcViewLog extends JViewLegacy {
 
     protected $state;
     protected $item;
@@ -53,25 +53,25 @@ class ImcViewEvolution extends JViewLegacy {
         }
         $canDo = ImcHelper::getActions();
 
-        JToolBarHelper::title(JText::_('COM_IMC_TITLE_EVOLUTION'), 'evolution.png');
+        JToolBarHelper::title(JText::_('COM_IMC_TITLE_LOG'), 'log.png');
 
         // If not checked out, can save the item.
         if (!$checkedOut && ($canDo->get('core.edit') || ($canDo->get('core.create')))) {
 
-            JToolBarHelper::apply('evolution.apply', 'JTOOLBAR_APPLY');
-            JToolBarHelper::save('evolution.save', 'JTOOLBAR_SAVE');
+            JToolBarHelper::apply('log.apply', 'JTOOLBAR_APPLY');
+            JToolBarHelper::save('log.save', 'JTOOLBAR_SAVE');
         }
         if (!$checkedOut && ($canDo->get('core.create'))) {
-            JToolBarHelper::custom('evolution.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
+            JToolBarHelper::custom('log.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
         }
         // If an existing item, can save to a copy.
         if (!$isNew && $canDo->get('core.create')) {
-            JToolBarHelper::custom('evolution.save2copy', 'save-copy.png', 'save-copy_f2.png', 'JTOOLBAR_SAVE_AS_COPY', false);
+            JToolBarHelper::custom('log.save2copy', 'save-copy.png', 'save-copy_f2.png', 'JTOOLBAR_SAVE_AS_COPY', false);
         }
         if (empty($this->item->id)) {
-            JToolBarHelper::cancel('evolution.cancel', 'JTOOLBAR_CANCEL');
+            JToolBarHelper::cancel('log.cancel', 'JTOOLBAR_CANCEL');
         } else {
-            JToolBarHelper::cancel('evolution.cancel', 'JTOOLBAR_CLOSE');
+            JToolBarHelper::cancel('log.cancel', 'JTOOLBAR_CLOSE');
         }
     }
 

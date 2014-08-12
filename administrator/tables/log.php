@@ -11,9 +11,9 @@
 defined('_JEXEC') or die;
 
 /**
- * evolution Table class
+ * log Table class
  */
-class ImcTableevolution extends JTable {
+class ImcTablelog extends JTable {
 
     /**
      * Constructor
@@ -21,7 +21,7 @@ class ImcTableevolution extends JTable {
      * @param JDatabase A database connector object
      */
     public function __construct(&$db) {
-        parent::__construct('#__imc_evolution', 'id', $db);
+        parent::__construct('#__imc_log', 'id', $db);
     }
 
     /**
@@ -67,7 +67,7 @@ class ImcTableevolution extends JTable {
 		}
 		$input = JFactory::getApplication()->input;
 		$task = $input->getString('task', '');
-		if(($task == 'save' || $task == 'apply') && (!JFactory::getUser()->authorise('core.edit.state','com_imc.evolution.'.$array['id']) && $array['state'] == 1)){
+		if(($task == 'save' || $task == 'apply') && (!JFactory::getUser()->authorise('core.edit.state','com_imc.log.'.$array['id']) && $array['state'] == 1)){
 			$array['state'] = 0;
 		}
 
@@ -82,9 +82,9 @@ class ImcTableevolution extends JTable {
             $registry->loadArray($array['metadata']);
             $array['metadata'] = (string) $registry;
         }
-        if (!JFactory::getUser()->authorise('core.admin', 'com_imc.evolution.' . $array['id'])) {
-            $actions = JFactory::getACL()->getActions('com_imc', 'evolution');
-            $default_actions = JFactory::getACL()->getAssetRules('com_imc.evolution.' . $array['id'])->getData();
+        if (!JFactory::getUser()->authorise('core.admin', 'com_imc.log.' . $array['id'])) {
+            $actions = JFactory::getACL()->getActions('com_imc', 'log');
+            $default_actions = JFactory::getACL()->getAssetRules('com_imc.log.' . $array['id'])->getData();
             $array_jaccess = array();
             foreach ($actions as $action) {
                 $array_jaccess[$action->name] = $default_actions[$action->name];
@@ -211,7 +211,7 @@ class ImcTableevolution extends JTable {
      */
     protected function _getAssetName() {
         $k = $this->_tbl_key;
-        return 'com_imc.evolution.' . (int) $this->$k;
+        return 'com_imc.log.' . (int) $this->$k;
     }
 
     /**

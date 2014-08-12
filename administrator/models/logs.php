@@ -14,7 +14,7 @@ jimport('joomla.application.component.modellist');
 /**
  * Methods supporting a list of Imc records.
  */
-class ImcModelEvolutions extends JModelList {
+class ImcModelLogs extends JModelList {
 
     /**
      * Constructor.
@@ -108,7 +108,7 @@ class ImcModelEvolutions extends JModelList {
                         'list.select', 'DISTINCT a.*'
                 )
         );
-        $query->from('`#__imc_evolution` AS a');
+        $query->from('`#__imc_log` AS a');
 
         
 		// Join over the users for the checked out user

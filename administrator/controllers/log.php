@@ -13,13 +13,13 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.controllerform');
 
 /**
- * Evolution controller class.
+ * Log controller class.
  */
-class ImcControllerEvolution extends JControllerForm
+class ImcControllerLog extends JControllerForm
 {
 
     function __construct() {
-        $this->view_list = 'evolutions';
+        $this->view_list = 'logs';
         parent::__construct();
     }
 

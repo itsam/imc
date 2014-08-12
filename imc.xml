@@ -51,7 +51,7 @@
 
 			<menu link="option=com_imc&amp;view=keys" view="keys" img="components/com_imc/assets/images/s_keys.png" alt="Imc/Keys">COM_IMC_TITLE_KEYS</menu>
 
-			<menu link="option=com_imc&amp;view=evolutions" view="evolutions" img="components/com_imc/assets/images/s_evolutions.png" alt="Imc/Evolutions">COM_IMC_TITLE_EVOLUTIONS</menu>
+			<menu link="option=com_imc&amp;view=logs" view="logs" img="components/com_imc/assets/images/s_logs.png" alt="Imc/Logs">COM_IMC_TITLE_LOGS</menu>
 
 			<menu link="option=com_imc&amp;view=votes" view="votes" img="components/com_imc/assets/images/s_votes.png" alt="Imc/Votes">COM_IMC_TITLE_VOTES</menu>
 

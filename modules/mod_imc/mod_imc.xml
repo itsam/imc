@@ -59,7 +59,7 @@
 	<option value="#__imc_issues">#__imc_issues</option>
 	<option value="#__imc_steps">#__imc_steps</option>
 	<option value="#__imc_keys">#__imc_keys</option>
-	<option value="#__imc_evolution">#__imc_evolution</option>
+	<option value="#__imc_log">#__imc_log</option>
 	<option value="#__imc_votes">#__imc_votes</option>
 	<option value="#__imc_comments">#__imc_comments</option>
                 </field>
@@ -104,7 +104,7 @@
 		<option value="created">created</option>
 		<option value="updated">updated</option>
 	</group>
-	<group label="#__imc_evolution">
+	<group label="#__imc_log">
 		<option value="id">id</option>
 		<option value="issueid">issueid</option>
 		<option value="stepid">stepid</option>
@@ -154,7 +154,7 @@
 	<option value="#__imc_issues">#__imc_issues</option>
 	<option value="#__imc_steps">#__imc_steps</option>
 	<option value="#__imc_keys">#__imc_keys</option>
-	<option value="#__imc_evolution">#__imc_evolution</option>
+	<option value="#__imc_log">#__imc_log</option>
 	<option value="#__imc_votes">#__imc_votes</option>
 	<option value="#__imc_comments">#__imc_comments</option>
                 </field>

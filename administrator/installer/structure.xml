@@ -50,7 +50,7 @@
     <field action="add" field_name="created" field_type="DATETIME" description=""/>
     <field action="add" field_name="updated" field_type="DATETIME" description=""/>
   </table>
-  <table action="add" table_name="#__imc_evolution" storage_engine="" collation="utf8_general_ci">
+  <table action="add" table_name="#__imc_log" storage_engine="" collation="utf8_general_ci">
     <field field_name="id" field_type="INT" field_length="11" is_autoincrement="1" index="primary" description=""/>
     <field action="add" field_name="issueid" field_type="INT" field_length="11" description=""/>
     <field action="add" field_name="stepid" field_type="TEXT" description=""/>
@@ -64,7 +64,7 @@
     <field field_name="created_by" field_type="INT" field_length="11" index="index" description=""/>
     <field action="add" field_name="language" field_type="VARCHAR" field_length="255" description=""/>
   </table>
-  <table action="change" old_name="#__imc_evolution_copy_1" new_name="#__imc_votes" table_name="#__imc_votes" storage_engine="" collation="utf8_general_ci">
+  <table action="change" old_name="#__imc_log_copy_1" new_name="#__imc_votes" table_name="#__imc_votes" storage_engine="" collation="utf8_general_ci">
     <field field_name="id" field_type="INT" field_length="11" is_autoincrement="1" index="primary" description=""/>
     <field field_name="issueid" field_type="INT" field_length="11" description=""/>
     <field field_name="created" field_type="DATETIME" description=""/>
@@ -75,7 +75,7 @@
     <field field_name="checked_out_time" field_type="DATETIME" description=""/>
     <field field_name="created_by" field_type="INT" field_length="11" index="index" description=""/>
   </table>
-  <table action="change" old_name="#__imc_evolution_copy_1" new_name="#__imc_comments" table_name="#__imc_comments" storage_engine="" collation="utf8_general_ci">
+  <table action="change" old_name="#__imc_log_copy_1" new_name="#__imc_comments" table_name="#__imc_comments" storage_engine="" collation="utf8_general_ci">
     <field field_name="id" field_type="INT" field_length="11" is_autoincrement="1" index="primary" description=""/>
     <field field_name="issueid" field_type="INT" field_length="11" description=""/>
     <field action="add" field_name="parentid" field_type="INT" field_length="11" description=""/>

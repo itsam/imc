@@ -2,13 +2,13 @@
 <form>
 	<fieldset>
 
-              <field name="id" type="text" default="0" label="COM_IMC_FORM_LBL_EVOLUTION_ID"
+              <field name="id" type="text" default="0" label="COM_IMC_FORM_LBL_LOG_ID"
             readonly="true" class="readonly"
             description="JGLOBAL_FIELD_ID_DESC" /> 
 
  <field name="issueid" type="foreignkey" class="inputbox"
-            label="COM_IMC_FORM_LBL_EVOLUTION_ISSUEID"
-            description="COM_IMC_FORM_DESC_EVOLUTION_ISSUEID" input_type="list" table="#__imc_issues" key_field="id" value_field="title"  required="true"  /> 
+            label="COM_IMC_FORM_LBL_LOG_ISSUEID"
+            description="COM_IMC_FORM_DESC_LOG_ISSUEID" input_type="list" table="#__imc_issues" key_field="id" value_field="title"  required="true"  /> 
 
        <field name="filter_issueid" type="sql" class="inputbox"
             onchange="this.form.submit();"
@@ -20,8 +20,8 @@
 
        <field name="description" type="textarea"
                 
-            label="COM_IMC_FORM_LBL_EVOLUTION_DESCRIPTION"
-            description="COM_IMC_FORM_DESC_EVOLUTION_DESCRIPTION" 
+            label="COM_IMC_FORM_LBL_LOG_DESCRIPTION"
+            description="COM_IMC_FORM_DESC_LOG_DESCRIPTION" 
                 
                 
                 
@@ -29,21 +29,21 @@
             rows="8" /> 
 
        <field name="created" type="timecreated" default="" 
-            label="COM_IMC_FORM_LBL_EVOLUTION_CREATED"
-            description="COM_IMC_FORM_DESC_EVOLUTION_CREATED"  /> 
+            label="COM_IMC_FORM_LBL_LOG_CREATED"
+            description="COM_IMC_FORM_DESC_LOG_CREATED"  /> 
 
        <field name="updated" type="timeupdated" default="" 
-            label="COM_IMC_FORM_LBL_EVOLUTION_UPDATED"
-            description="COM_IMC_FORM_DESC_EVOLUTION_UPDATED"  /> 
+            label="COM_IMC_FORM_LBL_LOG_UPDATED"
+            description="COM_IMC_FORM_DESC_LOG_UPDATED"  /> 
 
        <field name="created_by" type="createdby" default="" 
-            label="COM_IMC_FORM_LBL_EVOLUTION_CREATED_BY"
-            description="COM_IMC_FORM_DESC_EVOLUTION_CREATED_BY"  /> 
+            label="COM_IMC_FORM_LBL_LOG_CREATED_BY"
+            description="COM_IMC_FORM_DESC_LOG_CREATED_BY"  /> 
 
        <field name="language" type="language"
                 
-            label="COM_IMC_FORM_LBL_EVOLUTION_LANGUAGE"
-            description="COM_IMC_FORM_DESC_EVOLUTION_LANGUAGE" 
+            label="COM_IMC_FORM_LBL_LOG_LANGUAGE"
+            description="COM_IMC_FORM_DESC_LOG_LANGUAGE" 
                  default="*" 
                 
                 
@@ -77,7 +77,7 @@
                             validate="rules"
                             class="inputbox"
                             component="com_imc"
-                            section="evolution"
+                            section="log"
                         />
 
 	</fieldset>

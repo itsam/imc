@@ -15,7 +15,7 @@ jimport('joomla.application.component.modeladmin');
 /**
  * Imc model.
  */
-class ImcModelEvolution extends JModelAdmin
+class ImcModelLog extends JModelAdmin
 {
 	/**
 	 * @var		string	The prefix to use with controller messages.
@@ -33,7 +33,7 @@ class ImcModelEvolution extends JModelAdmin
 	 * @return	JTable	A database object
 	 * @since	1.6
 	 */
-	public function getTable($type = 'Evolution', $prefix = 'ImcTable', $config = array())
+	public function getTable($type = 'Log', $prefix = 'ImcTable', $config = array())
 	{
 		return JTable::getInstance($type, $prefix, $config);
 	}
@@ -52,7 +52,7 @@ class ImcModelEvolution extends JModelAdmin
 		$app	= JFactory::getApplication();
 
 		// Get the form.
-		$form = $this->loadForm('com_imc.evolution', 'evolution', array('control' => 'jform', 'load_data' => $loadData));
+		$form = $this->loadForm('com_imc.log', 'log', array('control' => 'jform', 'load_data' => $loadData));
         
         
 		if (empty($form)) {
@@ -71,7 +71,7 @@ class ImcModelEvolution extends JModelAdmin
 	protected function loadFormData()
 	{
 		// Check the session for previously entered form data.
-		$data = JFactory::getApplication()->getUserState('com_imc.edit.evolution.data', array());
+		$data = JFactory::getApplication()->getUserState('com_imc.edit.log.data', array());
 
 		if (empty($data)) {
 			$data = $this->getItem();
@@ -123,7 +123,7 @@ class ImcModelEvolution extends JModelAdmin
 			// Set ordering to the last item if not set
 			if (@$table->ordering === '') {
 				$db = JFactory::getDbo();
-				$db->setQuery('SELECT MAX(ordering) FROM #__imc_evolution');
+				$db->setQuery('SELECT MAX(ordering) FROM #__imc_log');
 				$max = $db->loadResult();
 				$table->ordering = $max+1;
 			}

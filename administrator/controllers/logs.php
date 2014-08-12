@@ -13,15 +13,15 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.controlleradmin');
 
 /**
- * Evolutions list controller class.
+ * Logs list controller class.
  */
-class ImcControllerEvolutions extends JControllerAdmin
+class ImcControllerLogs extends JControllerAdmin
 {
 	/**
 	 * Proxy for getModel.
 	 * @since	1.6
 	 */
-	public function getModel($name = 'evolution', $prefix = 'ImcModel')
+	public function getModel($name = 'log', $prefix = 'ImcModel')
 	{
 		$model = parent::getModel($name, $prefix, array('ignore_request' => true));
 		return $model;

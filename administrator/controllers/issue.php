@@ -27,10 +27,10 @@ class ImcControllerIssue extends JControllerForm
     protected function postSaveHook(JModelLegacy $model, $validData = array())
     {
 
-        //A: inform evolution table about the new issue
+        //A: inform log table about the new issue
         if($validData['id'] == 0){
         
-            $evolution = JTable::getInstance('Evolution', 'ImcTable', array());
+            $log = JTable::getInstance('Log', 'ImcTable', array());
 
             $data2['state'] = 1;
             $data2['issueid'] = $model->getItem()->get('id');
@@ -42,14 +42,14 @@ class ImcControllerIssue extends JControllerForm
             $data2['language'] = $validData['language'];
             $data2['rules'] = $validData['rules'];
 
-            if (!$evolution->bind($data2))
+            if (!$log->bind($data2))
             {
-                JFactory::getApplication()->enqueueMessage('Cannot bind data to evolution table', 'error'); 
+                JFactory::getApplication()->enqueueMessage('Cannot bind data to log table', 'error'); 
             }
 
-            if (!$evolution->save($data2))
+            if (!$log->save($data2))
             {
-                JFactory::getApplication()->enqueueMessage('Cannot save data to evolution table', 'error'); 
+                JFactory::getApplication()->enqueueMessage('Cannot save data to log table', 'error'); 
             }
 
 

@@ -27,8 +27,8 @@ $canOrder	= $user->authorise('core.edit.state', 'com_imc');
 $saveOrder	= $listOrder == 'a.ordering';
 if ($saveOrder)
 {
-	$saveOrderingUrl = 'index.php?option=com_imc&task=evolutions.saveOrderAjax&tmpl=component';
-	JHtml::_('sortablelist.sortable', 'evolutionList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
+	$saveOrderingUrl = 'index.php?option=com_imc&task=logs.saveOrderAjax&tmpl=component';
+	JHtml::_('sortablelist.sortable', 'logList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
 }
 $sortFields = $this->getSortFields();
 ?>
@@ -53,7 +53,7 @@ if (!empty($this->extra_sidebar)) {
 }
 ?>
 
-<form action="<?php echo JRoute::_('index.php?option=com_imc&view=evolutions'); ?>" method="post" name="adminForm" id="adminForm">
+<form action="<?php echo JRoute::_('index.php?option=com_imc&view=logs'); ?>" method="post" name="adminForm" id="adminForm">
 <?php if(!empty($this->sidebar)): ?>
 	<div id="j-sidebar-container" class="span2">
 		<?php echo $this->sidebar; ?>
@@ -93,7 +93,7 @@ if (!empty($this->extra_sidebar)) {
 			</div>
 		</div>        
 		<div class="clearfix"> </div>
-		<table class="table table-striped" id="evolutionList">
+		<table class="table table-striped" id="logList">
 			<thead>
 				<tr>
                 <?php if (isset($this->items[0]->ordering)): ?>
@@ -111,13 +111,13 @@ if (!empty($this->extra_sidebar)) {
                 <?php endif; ?>
                     
 				<th class='left'>
-				<?php echo JHtml::_('grid.sort',  'COM_IMC_EVOLUTIONS_ISSUEID', 'a.issueid', $listDirn, $listOrder); ?>
+				<?php echo JHtml::_('grid.sort',  'COM_IMC_LOGS_ISSUEID', 'a.issueid', $listDirn, $listOrder); ?>
 				</th>
 				<th class='left'>
-				<?php echo JHtml::_('grid.sort',  'COM_IMC_EVOLUTIONS_STEPID', 'a.stepid', $listDirn, $listOrder); ?>
+				<?php echo JHtml::_('grid.sort',  'COM_IMC_LOGS_STEPID', 'a.stepid', $listDirn, $listOrder); ?>
 				</th>
 				<th class='left'>
-				<?php echo JHtml::_('grid.sort',  'COM_IMC_EVOLUTIONS_CREATED_BY', 'a.created_by', $listDirn, $listOrder); ?>
+				<?php echo JHtml::_('grid.sort',  'COM_IMC_LOGS_CREATED_BY', 'a.created_by', $listDirn, $listOrder); ?>
 				</th>
                     
                     
@@ -178,7 +178,7 @@ if (!empty($this->extra_sidebar)) {
 					</td>
                 <?php if (isset($this->items[0]->state)): ?>
 					<td class="center">
-						<?php echo JHtml::_('jgrid.published', $item->state, $i, 'evolutions.', $canChange, 'cb'); ?>
+						<?php echo JHtml::_('jgrid.published', $item->state, $i, 'logs.', $canChange, 'cb'); ?>
 					</td>
                 <?php endif; ?>
                     

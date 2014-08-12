@@ -175,7 +175,7 @@ class ImcModelIssue extends JModelAdmin
 		}
 	}
 
-	//override save to insert record to evolution table
+	//override save to insert record to log table
 	public function save($data) {
 
 		if (!parent::save($data))
@@ -186,7 +186,7 @@ class ImcModelIssue extends JModelAdmin
 		if($data['id'] > 0){
 			
 			$user = JFactory::getUser();
-            $evolution = JTable::getInstance('Evolution', 'ImcTable', array());
+            $log = JTable::getInstance('Log', 'ImcTable', array());
 
             $data2['state'] = 1;
             $data2['issueid'] = $data['id'];
@@ -198,14 +198,14 @@ class ImcModelIssue extends JModelAdmin
             $data2['language'] = $data['language'];
             $data2['rules'] = $data['rules'];
 
-            if (!$evolution->bind($data2))
+            if (!$log->bind($data2))
             {
-                JFactory::getApplication()->enqueueMessage('Cannot bind data to evolution table', 'error'); 
+                JFactory::getApplication()->enqueueMessage('Cannot bind data to log table', 'error'); 
             }
 
-            if (!$evolution->save($data2))
+            if (!$log->save($data2))
             {
-                JFactory::getApplication()->enqueueMessage('Cannot save data to evolution table', 'error'); 
+                JFactory::getApplication()->enqueueMessage('Cannot save data to log table', 'error'); 
             }
 
 		}	

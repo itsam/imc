@@ -43,9 +43,9 @@ class ImcHelper {
 			$vName == 'keys'
 		);
 		JHtmlSidebar::addEntry(
-			JText::_('COM_IMC_TITLE_EVOLUTIONS'),
-			'index.php?option=com_imc&view=evolutions',
-			$vName == 'evolutions'
+			JText::_('COM_IMC_TITLE_LOGS'),
+			'index.php?option=com_imc&view=logs',
+			$vName == 'logs'
 		);
 		JHtmlSidebar::addEntry(
 			JText::_('COM_IMC_TITLE_VOTES'),

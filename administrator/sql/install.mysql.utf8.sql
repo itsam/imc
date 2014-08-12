@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS `#__imc_keys` (
 PRIMARY KEY (`id`)
 ) DEFAULT COLLATE=utf8_general_ci;
 
-CREATE TABLE IF NOT EXISTS `#__imc_evolution` (
+CREATE TABLE IF NOT EXISTS `#__imc_log` (
 `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
 
 `asset_id` INT(10) UNSIGNED NOT NULL DEFAULT '0',
