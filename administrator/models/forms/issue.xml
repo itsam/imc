@@ -90,13 +90,13 @@
             label="COM_IMC_FORM_LBL_ISSUE_HITS"
             description="COM_IMC_FORM_DESC_ISSUE_HITS" 
             default="0" 
-            disabled="true"
+            readonly="true"
             filter="safehtml" /> 
 
         <field name="votes" type="text" size="40" class="inputbox"
             label="COM_IMC_FORM_LBL_ISSUE_VOTES"
             description="COM_IMC_FORM_DESC_ISSUE_VOTES" 
-            disabled="true"
+            readonly="true"
             filter="safehtml" /> 
 
         <field name="modality" type="hidden" size="40" class="inputbox"

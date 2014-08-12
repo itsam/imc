@@ -23,10 +23,39 @@ class ImcControllerIssue extends JControllerForm
         parent::__construct();
     }
     
-    //override postSaveHook to move any images
+    //override postSaveHook
     protected function postSaveHook(JModelLegacy $model, $validData = array())
     {
-        //check if record is new
+
+        //A: inform evolution table about the new issue
+        if($validData['id'] == 0){
+        
+            $evolution = JTable::getInstance('Evolution', 'ImcTable', array());
+
+            $data2['state'] = 1;
+            $data2['issueid'] = $model->getItem()->get('id');
+            $data2['stepid'] = $validData['stepid'];
+            $data2['description'] = 'Issue created';
+            $data2['created'] = $validData['created'];
+            $data2['created_by'] = $validData['created_by'];
+            $data2['updated'] = $validData['created'];
+            $data2['language'] = $validData['language'];
+            $data2['rules'] = $validData['rules'];
+
+            if (!$evolution->bind($data2))
+            {
+                JFactory::getApplication()->enqueueMessage('Cannot bind data to evolution table', 'error'); 
+            }
+
+            if (!$evolution->save($data2))
+            {
+                JFactory::getApplication()->enqueueMessage('Cannot save data to evolution table', 'error'); 
+            }
+
+
+        }
+
+        //B: move any images only if record is new
     	if($validData['id'] > 0)
     		return;
 

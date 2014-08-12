@@ -175,19 +175,41 @@ class ImcModelIssue extends JModelAdmin
 		}
 	}
 
-
+	//override save to insert record to evolution table
 	public function save($data) {
-		JFactory::getApplication()->enqueueMessage('Hello I am going to save '. $data['test'] .' to another table...');	
 
-
-		
-		if (parent::save($data))
+		if (!parent::save($data))
 		{
-			return true;
+			return false;
 		}
 
-		return false;
+		if($data['id'] > 0){
 
+            $evolution = JTable::getInstance('Evolution', 'ImcTable', array());
+
+            $data2['state'] = 1;
+            $data2['issueid'] = $data['id'];
+            $data2['stepid'] = $data['stepid'];
+            $data2['description'] = $data['test'];
+            $data2['created'] = $data['created'];
+            $data2['created_by'] = $data['created_by'];
+            $data2['updated'] = $data['created'];
+            $data2['language'] = $data['language'];
+            $data2['rules'] = $data['rules'];
+
+            if (!$evolution->bind($data2))
+            {
+                JFactory::getApplication()->enqueueMessage('Cannot bind data to evolution table', 'error'); 
+            }
+
+            if (!$evolution->save($data2))
+            {
+                JFactory::getApplication()->enqueueMessage('Cannot save data to evolution table', 'error'); 
+            }
+
+		}	
+
+		return true;
 	}
 
 

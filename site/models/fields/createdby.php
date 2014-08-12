@@ -40,12 +40,13 @@ class JFormFieldCreatedby extends JFormField
 		$user_id = $this->value;
 		if ($user_id) {
 			$user = JFactory::getUser($user_id);
+			$html[] = '<input type="hidden" name="'.$this->name.'" value="'.$user_id.'" />';
 		} else {
 			$user = JFactory::getUser();
 			$html[] = '<input type="hidden" name="'.$this->name.'" value="'.$user->id.'" />';
 		}
 		$html[] = "<div>".$user->name." (".$user->username.")</div>";
         
-		return implode($html);
+		return implode("\n", $html);
 	}
 }
