@@ -142,6 +142,10 @@ $document->addStyleSheet('components/com_imc/assets/css/imc.css');
 						<div class="control-label"><?php echo $this->form->getLabel('modality'); ?></div>
 						<div class="controls"><?php echo $this->form->getInput('modality'); ?></div>
 					</div>
+					<div class="control-group">
+						<div class="control-label"><?php echo $this->form->getLabel('note'); ?></div>
+						<div class="controls"><?php echo $this->form->getInput('note'); ?></div>
+					</div>
                 </fieldset>	
 			</div>		
             <div class="span6 form-horizontal">

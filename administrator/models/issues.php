@@ -43,7 +43,7 @@ class ImcModelIssues extends JModelList {
                 'created_by', 'a.created_by',
                 'language', 'a.language',
                 'hits', 'a.hits',
-                'userid', 'a.userid',
+                'note', 'a.note',
                 'votes', 'a.votes',
                 'modality', 'a.modality',
 

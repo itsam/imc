@@ -116,7 +116,7 @@ class ModImcHelper {
 		case 'hits':
 		$result = $field_value;
 		break;
-		case 'userid':
+		case 'note':
 		$result = $field_value;
 		break;
 		case 'votes':

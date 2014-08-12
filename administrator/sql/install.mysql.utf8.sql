@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS `#__imc_issues` (
 `created_by` INT(11)  NOT NULL ,
 `language` VARCHAR(255)  NOT NULL ,
 `hits` MEDIUMINT(8)  NOT NULL ,
-`userid` INT(11)  NOT NULL ,
+`note` VARCHAR(512)  NOT NULL ,
 `votes` MEDIUMINT(8)  NOT NULL ,
 `modality` SMALLINT(6)  NOT NULL ,
 PRIMARY KEY (`id`)

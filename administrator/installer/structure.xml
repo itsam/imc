@@ -19,7 +19,7 @@
     <field field_name="created_by" field_type="INT" field_length="11" index="index" description=""/>
     <field action="change" field_name="language" field_type="VARCHAR" field_length="255" description=""/>
     <field action="add" field_name="hits" field_type="MEDIUMINT" field_length="8" description=""/>
-    <field action="add" field_name="userid" field_type="INT" field_length="11" description=""/>
+    <field action="add" field_name="note" field_type="VARCHAR" field_length="512" description=""/>
     <field action="add" field_name="votes" field_type="MEDIUMINT" field_length="8" description=""/>
     <field action="add" field_name="modality" field_type="SMALLINT" field_length="6" description=""/>
     <field action="remove" field_name="alias"/>

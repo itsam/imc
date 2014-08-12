@@ -83,8 +83,8 @@ if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_imc' . $th
 			<td><?php echo $this->item->hits; ?></td>
 </tr>
 <tr>
-			<th><?php echo JText::_('COM_IMC_FORM_LBL_ISSUE_USERID'); ?></th>
-			<td><?php echo $this->item->userid; ?></td>
+			<th><?php echo JText::_('COM_IMC_FORM_LBL_ISSUE_NOTE'); ?></th>
+			<td><?php echo $this->item->note; ?></td>
 </tr>
 <tr>
 			<th><?php echo JText::_('COM_IMC_FORM_LBL_ISSUE_VOTES'); ?></th>

@@ -104,7 +104,12 @@
             description="COM_IMC_FORM_DESC_ISSUE_MODALITY" 
             filter="safehtml" /> 
         
-        
+        <field name="note" type="text" size="40" class="inputbox"
+            label="COM_IMC_FORM_LBL_ISSUE_NOTE"
+            description="COM_IMC_FORM_DESC_NOTE_HITS" 
+            default="0" 
+            filter="safehtml" /> 
+
         <field name="state" type="list" label="JSTATUS"
             description="JFIELD_PUBLISHED_DESC" class="chzn-color-state"
             filter="intval" size="1" default="1"

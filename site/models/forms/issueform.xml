@@ -92,9 +92,9 @@
             default="0" 
             filter="safehtml" /> 
 
-        <field name="userid" type="text" size="40" class="inputbox"
-            label="COM_IMC_FORM_LBL_ISSUE_USERID"
-            description="COM_IMC_FORM_DESC_ISSUE_USERID" 
+        <field name="note" type="text" size="40" class="inputbox"
+            label="COM_IMC_FORM_LBL_ISSUE_NOTE"
+            description="COM_IMC_FORM_DESC_ISSUE_NOTE" 
             filter="safehtml" /> 
 
         <field name="votes" type="text" size="40" class="inputbox"

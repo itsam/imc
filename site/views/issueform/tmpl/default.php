@@ -139,8 +139,8 @@ if($this->item->id) {
 		<div class="controls"><?php echo $this->form->getInput('hits'); ?></div>
 	</div>
 	<div class="control-group">
-		<div class="control-label"><?php echo $this->form->getLabel('userid'); ?></div>
-		<div class="controls"><?php echo $this->form->getInput('userid'); ?></div>
+		<div class="control-label"><?php echo $this->form->getLabel('note'); ?></div>
+		<div class="controls"><?php echo $this->form->getInput('note'); ?></div>
 	</div>
 	<div class="control-group">
 		<div class="control-label"><?php echo $this->form->getLabel('votes'); ?></div>

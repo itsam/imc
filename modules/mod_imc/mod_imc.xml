@@ -83,7 +83,7 @@
 		<option value="created_by">created_by</option>
 		<option value="language">language</option>
 		<option value="hits">hits</option>
-		<option value="userid">userid</option>
+		<option value="note">note</option>
 		<option value="votes">votes</option>
 		<option value="modality">modality</option>
 	</group>
