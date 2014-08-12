@@ -122,6 +122,7 @@ class ImcModelIssue extends JModelAdmin
             
 
 			//Support for multiple or not foreign key field: stepid
+			/* itsam
 			$array = array();
 			foreach((array)$data->stepid as $value): 
 				if(!is_array($value)):
@@ -129,6 +130,7 @@ class ImcModelIssue extends JModelAdmin
 				endif;
 			endforeach;
 			$data->stepid = implode(',',$array);
+			*/
 		}
 
 		return $data;

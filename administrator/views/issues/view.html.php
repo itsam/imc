@@ -120,38 +120,10 @@ class ImcViewIssues extends JViewLegacy {
 			JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), "value", "text", $this->state->get('filter.state'), true)
 		);
 
-
-  
-        jimport('joomla.form.form');
-        $options = array();
-        JForm::addFormPath(JPATH_COMPONENT . '/models/forms');
-        $form = JForm::getInstance('com_imc.issue', 'issue');
-
-        $field = $form->getField('stepid');
-
-        $query = $form->getFieldAttribute('stepid','query');
-        //$query = "SELECT 0 AS `id`, '- Select step -' AS `value` UNION SELECT id, title AS value FROM #__imc_steps ";
-        $key = $form->getFieldAttribute('stepid','key_field');
-        $value = $form->getFieldAttribute('stepid','value_field');
-
-        
-        // Get the database object.
-        $db = JFactory::getDBO();
-
-        // Set the query and get the result list.
-        $db->setQuery($query);
-        $items = $db->loadObjectlist();
-
-
-        // Build the field options.
-        if (!empty($items))
-        {
-            foreach ($items as $item)
-            {
-                $options[] = JHtml::_('select.option', $item->$key, $item->$value);
-
-            }
-        }
+        //Get custom field
+        JFormHelper::addFieldPath(JPATH_ROOT . '/components/com_imc/models/fields');
+        $steps = JFormHelper::loadFieldType('Step', false);
+        $options = $steps->getOptions();
 
         JHtmlSidebar::addFilter(
             '- Select step -',
