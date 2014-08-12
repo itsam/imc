@@ -184,7 +184,8 @@ class ImcModelIssue extends JModelAdmin
 		}
 
 		if($data['id'] > 0){
-
+			
+			$user = JFactory::getUser();
             $evolution = JTable::getInstance('Evolution', 'ImcTable', array());
 
             $data2['state'] = 1;
@@ -192,7 +193,7 @@ class ImcModelIssue extends JModelAdmin
             $data2['stepid'] = $data['stepid'];
             $data2['description'] = $data['test'];
             $data2['created'] = $data['created'];
-            $data2['created_by'] = $data['created_by'];
+            $data2['created_by'] = $user->id;
             $data2['updated'] = $data['created'];
             $data2['language'] = $data['language'];
             $data2['rules'] = $data['rules'];
