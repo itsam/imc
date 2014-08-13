@@ -33,29 +33,32 @@ class ImcHelper {
 			JToolBarHelper::title('Improve My City: Categories (Issues)');
 		}
 		JHtmlSidebar::addEntry(
-			JText::_('COM_IMC_TITLE_STEPS'),
-			'index.php?option=com_imc&view=steps',
-			$vName == 'steps'
-		);
-		JHtmlSidebar::addEntry(
-			JText::_('COM_IMC_TITLE_KEYS'),
-			'index.php?option=com_imc&view=keys',
-			$vName == 'keys'
-		);
-		JHtmlSidebar::addEntry(
 			JText::_('COM_IMC_TITLE_LOGS'),
 			'index.php?option=com_imc&view=logs',
 			$vName == 'logs'
 		);
+		/*
 		JHtmlSidebar::addEntry(
 			JText::_('COM_IMC_TITLE_VOTES'),
 			'index.php?option=com_imc&view=votes',
 			$vName == 'votes'
 		);
+		*/
 		JHtmlSidebar::addEntry(
 			JText::_('COM_IMC_TITLE_COMMENTS'),
 			'index.php?option=com_imc&view=comments',
 			$vName == 'comments'
+		);
+		JHtmlSidebar::addEntry(
+			JText::_('COM_IMC_TITLE_STEPS'),
+			'index.php?option=com_imc&view=steps',
+			$vName == 'steps'
+		);
+		JHtmlSidebar::addEntry(
+			//JText::_('COM_IMC_TITLE_KEYS'),
+			'API/REST',
+			'index.php?option=com_imc&view=keys',
+			$vName == 'keys'
 		);
 
     }
