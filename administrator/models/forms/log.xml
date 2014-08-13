@@ -14,7 +14,7 @@
 
         <field name="issueid" type="foreignkey" class="inputbox"
             label="COM_IMC_FORM_LBL_LOG_ISSUEID"
-            description="COM_IMC_FORM_DESC_LOG_ISSUEID" input_type="list" table="#__imc_issues" key_field="id" value_field="title"  required="true"  /> 
+            description="COM_IMC_FORM_DESC_LOG_ISSUEID" input_type="list" table="#__imc_issues" key_field="id" value_field="title"  required="true"  readonly="true" /> 
 
         <field name="filter_issueid" type="sql" class="inputbox"
             onchange="this.form.submit();"
@@ -25,7 +25,8 @@
         <field name="stepid" 
             type="step" 
             label="Step" 
-            description="" 
+            description=""
+            readonly="true" 
             required="true" /> 
  
         <field name="description" 
@@ -33,7 +34,8 @@
             label="COM_IMC_FORM_LBL_LOG_DESCRIPTION"
             description="COM_IMC_FORM_DESC_LOG_DESCRIPTION" 
             cols="100"
-            rows="8" /> 
+            rows="8" 
+            readonly="true" /> 
 
         <field name="created" type="timecreated" default="" 
             label="COM_IMC_FORM_LBL_LOG_CREATED"

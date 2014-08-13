@@ -93,9 +93,25 @@ class JFormFieldStep extends JFormField
         $results = $db->loadObjectList();		
         $options = array();
 	    foreach ($results as $result) {
-	        $options[] = JHtml::_('select.option', $result->id, $result->value);
+	        $tmp = JHtml::_('select.option', $result->id, $result->value);
+			//$tmp->class = 'myclass';
+	        $options[] = $tmp;
+	        //$options[] = JHtml::_('select.option', $result->id, $result->value, array('class'=>'arts'));
 	    }
 		return $options;
+	}
+
+	private function getStepById($id)
+	{
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query->select('title, stepcolor')
+              ->from('#__imc_steps')
+              ->where('id='.$id);
+        $db->setQuery($query);
+        $results = $db->loadAssoc();		
+		return $results;
+
 	}
 
 	/**
@@ -106,16 +122,33 @@ class JFormFieldStep extends JFormField
 	 */
 	protected function getInput()
 	{
-		if(!isset($this->element['descriptionfield']))
-			return '<strong>Step field argument `descriptionfield` is not set</strong>';
-		if(!isset($this->element['flagfield']))
-			return '<strong>Step field argument `flagfield` is not set</strong>';
 
 		$disabled = false;
 		if(isset($this->element['disabled'])){
 			$disabled = $this->element['disabled'];
 		}
-		
+		$readonly = false;
+		if(isset($this->element['readonly'])){
+			$readonly = $this->element['readonly'];
+		}		
+
+	
+		if($readonly){
+			$s = $this->getStepById($this->value);
+			$html = array();
+			$html[] = '<div><span style="font-size: 20px; color:'.$s['stepcolor'].'">&marker;</span>';
+			$html[] = $s['title'];
+			$html[] = '</div>';
+			$html[] = '<input type="hidden" name="'.$this->name.'" id="'.$this->id. '" value="'.$this->value.'" />';
+			return implode("\n", $html);
+
+		}else{
+			if(!isset($this->element['descriptionfield']))
+				return '<strong>Step field argument `descriptionfield` is not set</strong>';
+			if(!isset($this->element['flagfield']))
+				return '<strong>Step field argument `flagfield` is not set</strong>';
+		}
+		//JFactory::getDocument()->addStyleSheet(JURI::root(true).'/components/com_imc/models/fields/step/css/step.css');
 
 		$script = array();
 		$script[] = "var descriptionfield='".$this->element['descriptionfield']."';";
@@ -125,7 +158,10 @@ class JFormFieldStep extends JFormField
 
 	    $html = array();
 	    $input_options = 'class="' . $this->getAttribute('class') . '" onchange="'.'stepChange('.$this->value.', this.value );'.'"';
+		
 		$html[] = JHtml::_('select.genericlist', $this->getOptions(), $this->name, $input_options, 'value', 'text', $this->value);
+
+		
 
 		$html[] = '<input id="jform_is_step_modified" type="hidden" value="false" name="jform[is_step_modified]">';
 
