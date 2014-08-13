@@ -222,4 +222,33 @@ class ImcModelLogs extends JModelList {
         return $items;
     }
 
+
+    public getItemsByIssue($issueId)
+    {
+        $db = $this->getDbo();
+        $query = $db->getQuery(true);
+
+        // Select the required fields from the table.
+        $query->select('a.*')->from('`#__imc_log` AS a');
+
+        // Join over the foreign key 'issueid'
+        $query->select('#__imc_issues_1382355.title AS issues_title_1382355');
+        $query->join('LEFT', '#__imc_issues AS #__imc_issues_1382355 ON #__imc_issues_1382355.id = a.issueid');
+
+        // Join over the user field 'created_by'
+        $query->select('created_by.name AS created_by');
+        $query->join('LEFT', '#__users AS created_by ON created_by.id = a.created_by');
+
+        // Join over the imc steps.
+        $query->select('st.title AS stepid_title, st.stepcolor AS stepid_color')
+            ->join('LEFT', '#__imc_steps AS st ON st.id = a.stepid');
+        
+        $query->order('a.created', 'desc');
+        $query->where('a.issueid = '.$issueId);
+
+
+        $db->setQuery($query);
+        $results = $db->loadAssoc();        
+        return $results;
+    }
 }
