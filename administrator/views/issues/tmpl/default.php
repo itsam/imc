@@ -199,8 +199,10 @@ if (!empty($this->extra_sidebar)) {
 				<?php if ($canEdit) : ?>
 					<a href="<?php echo JRoute::_('index.php?option=com_imc&task=issue.edit&id='.(int) $item->id); ?>">
 					<?php echo $this->escape($item->title); ?></a>
+					<br /><span class="small">(<?php echo $this->escape($item->address); ?>)</span>
 				<?php else : ?>
 					<?php echo $this->escape($item->title); ?>
+					<br /><span class="small">(<?php echo $this->escape($item->address); ?>)</span>
 				<?php endif; ?>
 				</td>
 				<td>

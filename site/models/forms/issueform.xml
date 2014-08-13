@@ -44,6 +44,7 @@
             label="COM_IMC_FORM_LBL_ISSUE_ADDRESS" 
             latitudefield="latitude" 
             longitudefield="longitude" 
+            userstate="com_imc.edit.issue.id"
             required="true" 
             filter="safehtml"
             width="100%"
