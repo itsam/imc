@@ -186,61 +186,60 @@ class ImcModelIssue extends JModelAdmin
 		}
 
 		if($data['id'] > 0){
-			
-			$user = JFactory::getUser();
-            $log = JTable::getInstance('Log', 'ImcTable', array());
 
-            $data2['state'] = 1;
-            $data2['action'] = JText::_('COM_IMC_LOGS_ACTION_STEP_MODIFIED');
-            $data2['issueid'] = $data['id'];
-            $data2['stepid'] = $data['stepid'];
-            $data2['description'] = 'description from admin here. '.$data['test'];
-            $data2['created'] = $data['updated'];
-            $data2['created_by'] = $user->id;
-            $data2['updated'] = $data['updated'];
-            $data2['language'] = $data['language'];
-            $data2['rules'] = $data['rules'];
+			//a. check for step modification
+			if($data['is_step_modified'] === 'true'){
+				$user = JFactory::getUser();
+	            $log = JTable::getInstance('Log', 'ImcTable', array());
 
-            if (!$log->bind($data2))
-            {
-                JFactory::getApplication()->enqueueMessage('Cannot bind data to log table', 'error'); 
-            }
+	            $data2['state'] = 1;
+	            $data2['action'] = JText::_('COM_IMC_LOGS_ACTION_STEP_MODIFIED');
+	            $data2['issueid'] = $data['id'];
+	            $data2['stepid'] = $data['stepid'];
+	            $data2['description'] = $data['step_modified_description'];
+	            $data2['created'] = $data['updated'];
+	            $data2['created_by'] = $user->id;
+	            $data2['updated'] = $data['updated'];
+	            $data2['language'] = $data['language'];
+	            $data2['rules'] = $data['rules'];
 
-            if (!$log->save($data2))
-            {
-                JFactory::getApplication()->enqueueMessage('Cannot save data to log table', 'error'); 
-            }
+	            if (!$log->bind($data2))
+	            {
+	                JFactory::getApplication()->enqueueMessage('Cannot bind data to log table', 'error'); 
+	            }
 
+	            if (!$log->save($data2))
+	            {
+	                JFactory::getApplication()->enqueueMessage('Cannot save data to log table', 'error'); 
+	            }
+			}
 
+			//b. check for category modification
+			if($data['is_category_modified'] === 'true'){
 
+	            $log = JTable::getInstance('Log', 'ImcTable', array());
 
+	            $data2['state'] = 1;
+	            $data2['action'] = JText::_('COM_IMC_LOGS_ACTION_CATEGORY_MODIFIED');
+	            $data2['issueid'] = $data['id'];
+	            $data2['stepid'] = $data['stepid'];
+	            $data2['description'] = $data['category_modified_description'];
+	            $data2['created'] = $data['updated'];
+	            $data2['created_by'] = $user->id;
+	            $data2['updated'] = $data['updated'];
+	            $data2['language'] = $data['language'];
+	            $data2['rules'] = $data['rules'];
 
+	            if (!$log->bind($data2))
+	            {
+	                JFactory::getApplication()->enqueueMessage('Cannot bind data to log table', 'error'); 
+	            }
 
-
-
-
-            $log = JTable::getInstance('Log', 'ImcTable', array());
-
-            $data2['state'] = 1;
-            $data2['action'] = JText::_('COM_IMC_LOGS_ACTION_STEP_MODIFIED');
-            $data2['issueid'] = $data['id'];
-            $data2['stepid'] = $data['stepid'];
-            $data2['description'] = 'SUPER DOUBLE';
-            $data2['created'] = $data['updated'];
-            $data2['created_by'] = $user->id;
-            $data2['updated'] = $data['updated'];
-            $data2['language'] = $data['language'];
-            $data2['rules'] = $data['rules'];
-
-            if (!$log->bind($data2))
-            {
-                JFactory::getApplication()->enqueueMessage('Cannot bind data to log table', 'error'); 
-            }
-
-            if (!$log->save($data2))
-            {
-                JFactory::getApplication()->enqueueMessage('Cannot save data to log table', 'error'); 
-            }
+	            if (!$log->save($data2))
+	            {
+	                JFactory::getApplication()->enqueueMessage('Cannot save data to log table', 'error'); 
+	            }
+			}
 
 		}	
 

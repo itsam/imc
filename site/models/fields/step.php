@@ -26,18 +26,8 @@ class JFormFieldStep extends JFormField
 	 */
 	protected $type = 'Step';
 
-	/**
-	* @var string
-	* the field that holds the latitude
-	*/
 	protected $latitudefield;
-
-	/**
-	* @var string
-	* the field that holds the longitude
-	*/
 	protected $longitudefield;
-
 	protected $width;
 	protected $height;
 
@@ -116,107 +106,47 @@ class JFormFieldStep extends JFormField
 	 */
 	protected function getInput()
 	{
-	    $input_options = 'class="imc-step"';
-		$html[] = JHtml::_('select.genericlist', $this->getOptions(), $this->name, $input_options, 'value', 'text', $this->value);
-
-		//$html[] = '	<input type="text" name="' . $this->name . '" id="' . $this->id . '" value="' . htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '" />';
-/*
+		if(!isset($this->element['descriptionfield']))
+			return '<strong>Step field argument `descriptionfield` is not set</strong>';
+		if(!isset($this->element['flagfield']))
+			return '<strong>Step field argument `flagfield` is not set</strong>';
 
 		$disabled = false;
 		if(isset($this->element['disabled'])){
 			$disabled = $this->element['disabled'];
 		}
-		JFactory::getDocument()->addStyleSheet(JURI::root(true).'/components/com_imc/models/fields/step/css/step.css');
 		
-		
-		if(!isset($this->element['latitudefield']))
-			return '<strong>GMap field argument `latitudefield` is not set</strong>';
-		if(!isset($this->element['longitudefield']))
-			return '<strong>GMap field argument `longitudefield` is not set</strong>';
 
-		$params = JComponentHelper::getParams('com_imc');
-		$api_key = $params->get('api_key');
-		if($api_key == '')
-			return '<strong>Google Maps API KEY missing</strong>';
-		JFactory::getDocument()->addScript('https://maps.googleapis.com/maps/api/js?key='.$api_key);
-		JFactory::getDocument()->addScript(JURI::root(true).'/components/com_imc/models/fields/gmap/js/gmap.js');
-
-		//get google maps default options if no value is set (e.g. new record)
-		$lat        = $params->get('latitude');
-		$lng        = $params->get('longitude');
-
-		$zoom 	    = $params->get('zoom');
-		$language   = $params->get('maplanguage');
-		$hiddenterm = $params->get('hiddenterm');
-
-		//set js variables
 		$script = array();
-		if($disabled)
-			$script[] = "var disabled=".$disabled.";";
-		else
-			$script[] = "var disabled=false;";
-		$script[] = "var Lat=".$lat.";";
-		$script[] = "var Lng=".$lng.";";
-		$script[] = "var latfield='jform_".$this->element['latitudefield']."';";
-		$script[] = "var lngfield='jform_".$this->element['longitudefield']."';";
-		$script[] = "var addrfield='".$this->id."';";
-		$script[] = "var zoom=".$zoom.";";
-		$script[] = "var language='".$language."';";
-		$script[] = "var hiddenterm='".$hiddenterm."';";
-		$script[] = "var info='".JText::_('COM_IMC_DRAG_MARKER')."';";
-		$script[] = "var info_unlock='".JText::_('COM_IMC_UNLOCK_ADDRESS')."';";
-		$script[] = "var notfound='".JText::_('COM_IMC_ADDRESS_NOT_FOUND')."';";
+		$script[] = "var descriptionfield='".$this->element['descriptionfield']."';";
+		$script[] = "var flagfield='".$this->element['flagfield']."';";
 		JFactory::getDocument()->addScriptDeclaration(implode("\n", $script));
+		JFactory::getDocument()->addScript(JURI::root(true).'/components/com_imc/models/fields/step/js/step.js');		
 
-		//initialize map
-		$script = array();
-		$script[] = "google.maps.event.addDomListener(window, 'load', initialize);";
-		JFactory::getDocument()->addScriptDeclaration(implode("\n", $script));
+	    $html = array();
+	    $input_options = 'class="' . $this->getAttribute('class') . '" onchange="'.'stepChange('.$this->value.', this.value );'.'"';
+		$html[] = JHtml::_('select.genericlist', $this->getOptions(), $this->name, $input_options, 'value', 'text', $this->value);
 
-		//style
-		$style = array();
-		$style[] = (isset($this->element['width']) ? 'width:'.$this->element['width'].';' : '');
-		$style[] = (isset($this->element['height']) ? 'height:'.$this->element['height'].';' : '');
+		$html[] = '<input id="jform_is_step_modified" type="hidden" value="false" name="jform[is_step_modified]">';
 
+		$html[] = '<a id="step_reason_btn" href="#stepModal" role="button" class="btn btn-mini hide" data-toggle="modal">Reason</a>';
 
-
-		//set html
-		$html = array();
-        $html[] = '<div style="'.implode("", $style).'">';
-        $html[] = '	<div id="imc-map-canvas"></div>';
-        $html[] = '	<br />';
-        $html[] = '	<div class="row-fluid">';
-        if(!$disabled) {
-        $html[] = '		<div class="span1">';
-		$html[] = '			<button id="locateposition" class="btn btn-mini" type="button"><i class="icon-home"></i></button><br /><br />';
-		$html[] = '			<button id="searchaddress" class="btn btn-mini" type="button"><i class="icon-search icon-white"></i></button>';
-		$html[] = '		</div>';
-		}
-        $html[] = '		<div class="'. ($disabled ? "span12" : "span10").'">';
-		$html[] = '			<textarea '. ($disabled ? "disabled=\"\"" : "").' class="imc-gmap-textarea" rows="3" cols="75" id="' . $this->id . '" name="' . $this->name . '">'.htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8').'</textarea>';
-		$html[] = '		</div>';
-		if(!$disabled) {
-        $html[] = '		<div class="span1 imc-text-right">';
-		$html[] = '			<button id="lockaddress" class="btn btn-mini" type="button"><i class="icon-lock"></i></button><br /><br /><br />';
-		$html[] = '		</div>';
-		}
-		$html[] = '	</div>';		
-		$html[] = '</div>';		
-	 
-		$html[] = '<!-- Modal -->';
-		$html[] = '<div id="searchModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">';
+		$html[] = '<!-- Step Modal -->';
+		$html[] = '<div id="stepModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="stepModalLabel" aria-hidden="true">';
 		$html[] = '	<div class="modal-header">';
 		$html[] = '		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>';
-		$html[] = '		<h3 id="searchModalLabel">Search Results</h3>';
+		$html[] = '		<h3 id="stepModalLabel">Step Modification: Reason Description</h3>';
 		$html[] = '	</div>';
 		$html[] = '	<div class="modal-body">';
-		$html[] = '		<p id="searchBody">One fine body…</p>';
+		$html[] = '		<p id="stepBody">';
+		$html[] = '		<textarea style="width:98%;resize:none;" rows="6" cols="75" id="jform_step_modified_description" name="jform[step_modified_description]"></textarea>';
+		$html[] = '		</p>';
+		$html[] = '		<p>(if set on options, notifications will be sent on save)</p>';
 		$html[] = '	</div>';
 		$html[] = '	<div class="modal-footer">';
-		$html[] = '		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>';
+		$html[] = '		<button id="save_step_reason" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">OK</button>';
 		$html[] = '	</div>';
 		$html[] = '</div>';
-*/
 		return implode("\n", $html);
 	}
 }

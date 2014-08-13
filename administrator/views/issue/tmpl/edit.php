@@ -61,11 +61,6 @@ $document->addStyleSheet('components/com_imc/assets/css/imc.css');
             <div class="span6 form-horizontal">
                 <fieldset class="adminform">
 		            <div class="control-group">
-						<div class="control-label"><?php echo $this->form->getLabel('test'); ?></div>
-						<div class="controls"><?php echo $this->form->getInput('test'); ?></div>
-					</div>
-
-		            <div class="control-group">
 						<div class="control-label"><?php echo $this->form->getLabel('id'); ?></div>
 						<div class="controls"><?php echo $this->form->getInput('id'); ?></div>
 					</div>
@@ -172,8 +167,12 @@ $document->addStyleSheet('components/com_imc/assets/css/imc.css');
 			<?php echo JHtml::_('bootstrap.endTab'); ?>
 		<?php endif; ?>
 
-
         <?php echo JHtml::_('bootstrap.endTabSet'); ?>
+
+		<?php //echo $this->form->getInput('is_step_modified'); ?>
+		<?php //echo $this->form->getInput('step_modified_description'); ?>
+		<?php echo $this->form->getInput('is_category_modified'); ?>
+		<?php echo $this->form->getInput('category_modified_description'); ?>
 
         <input type="hidden" name="task" value="" />
         <?php echo JHtml::_('form.token'); ?>
