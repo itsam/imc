@@ -45,8 +45,9 @@ jQuery(document).ready(function() {
 		}
 	});
 
-	//lock address initially
-	jQuery("#lockaddress").click();	
+	//initially lock address for existing records
+	if(itemId > 0)
+		jQuery("#lockaddress").click();	
 });	
 
 
@@ -162,7 +163,7 @@ function initialize() {
 	marker.setMap(map);
 
 	infowindow = new google.maps.InfoWindow({
-		content: info+'<br />'+info_unlock
+		content: info+'<br />'+(itemId > 0 ? info_unlock : '')
 	});
 
 	// Update current position info.

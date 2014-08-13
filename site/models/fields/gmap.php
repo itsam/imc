@@ -126,11 +126,15 @@ class JFormFieldGmap extends JFormField
 		$hiddenterm = $params->get('hiddenterm');
 
 		//set js variables
+		$itemId   = (isset($this->element['userstate']) ? JFactory::getApplication()->getUserState($this->element['userstate']) : JRequest::getVar('id', 0));
+
 		$script = array();
 		if($disabled)
 			$script[] = "var disabled=".$disabled.";";
 		else
 			$script[] = "var disabled=false;";
+
+		$script[] = "var itemId=".$itemId.";";
 		$script[] = "var Lat=".$lat.";";
 		$script[] = "var Lng=".$lng.";";
 		$script[] = "var latfield='jform_".$this->element['latitudefield']."';";
