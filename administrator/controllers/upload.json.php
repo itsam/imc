@@ -10,7 +10,7 @@ error_reporting(E_ALL | E_STRICT);
 // No direct access
 defined('_JEXEC') or die;
 
-JLoader::register('UploadHandler', JPATH_COMPONENT . '/models/fields/multiphoto/server/UploadHandler.php');
+JLoader::register('UploadHandler', JPATH_ROOT . '/components/com_imc/models/fields/multiphoto/server/UploadHandler.php');
 
 jimport('joomla.application.component.controllerform');
 
