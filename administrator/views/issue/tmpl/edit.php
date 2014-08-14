@@ -20,6 +20,7 @@ $document = JFactory::getDocument();
 $document->addStyleSheet('components/com_imc/assets/css/imc.css');
 ?>
 <script type="text/javascript">
+    /*
     js = jQuery.noConflict();
     js(document).ready(function() {
         
@@ -31,7 +32,7 @@ $document->addStyleSheet('components/com_imc/assets/css/imc.css');
 	});
 	js("#jform_stepid").trigger("liszt:updated");
     });
-
+    */
     Joomla.submitbutton = function(task)
     {
         if (task == 'issue.cancel') {
@@ -105,6 +106,36 @@ $document->addStyleSheet('components/com_imc/assets/css/imc.css');
 						<div class="control-label"><?php echo $this->form->getLabel('longitude'); ?></div>
 						<div class="controls"><?php echo $this->form->getInput('longitude'); ?></div>
 					</div>
+					<div class="control-group">
+						<div class="controls">
+							<legend>Progress</legend>
+							<table class="table table-striped">
+								<thead>
+									<tr>
+										<th>Date</th>
+										<th>Action</th>
+										<th>By</th>
+										<th>Step</th>
+										<th>Description</th>
+										</tr>
+								</thead>
+								<tbody>
+									<?php foreach ($this->logs as $log) : ?>
+									<tr>
+										<td><?php echo $log['created']; ?></td>
+										<td><?php echo $log['action']; ?></td>
+										<td><?php echo $log['created_by']; ?></td>
+										<td>
+											<span style="font-size: 20px;color: <?php echo $log['stepid_color']; ?>">&marker;</span>
+											<?php echo $log['stepid_title']; ?>
+										</td>
+										<td><?php echo $log['description']; ?></td>
+									</tr>
+									<?php endforeach; ?>
+								</tbody>
+							</table>
+						</div>
+					</div>
                 </fieldset>	
 			</div>
 
@@ -174,7 +205,6 @@ $document->addStyleSheet('components/com_imc/assets/css/imc.css');
 		<?php echo $this->form->getInput('is_category_modified'); ?>
 		<?php echo $this->form->getInput('category_modified_description'); ?>
 
-<?php print_r($this->logs); ?>
 
         <input type="hidden" name="task" value="" />
         <?php echo JHtml::_('form.token'); ?>

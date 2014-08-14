@@ -229,11 +229,12 @@ class ImcModelLogs extends JModelList {
         $query = $db->getQuery(true);
 
         // Select the required fields from the table.
-        $query->select('a.*')->from('`#__imc_log` AS a');
+        $query->select('a.action, a.description, a.created');
+        $query->from('`#__imc_log` AS a');
 
         // Join over the foreign key 'issueid'
-        $query->select('#__imc_issues.title AS issue_title');
-        $query->join('LEFT', '#__imc_issues ON #__imc_issues.id = a.issueid');
+        //$query->select('#__imc_issues.title AS issue_title');
+        //$query->join('LEFT', '#__imc_issues ON #__imc_issues.id = a.issueid');
 
         // Join over the user field 'created_by'
         $query->select('created_by.name AS created_by');
