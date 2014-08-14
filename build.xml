@@ -114,7 +114,7 @@
         </zip>
     </target>
 
-    <target name="build" depends="_copy_site,_copy_admin"
+    <target name="build" depends="_copy_site,_copy_admin,_copy_search_plugin"
             description="Copies to appropriate directories in Joomla site" >
     </target>   
 

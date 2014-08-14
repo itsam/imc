@@ -138,7 +138,6 @@ $document->addStyleSheet('components/com_imc/assets/css/imc.css');
 					</div>
                 </fieldset>	
 			</div>
-
         </div>
         <?php echo JHtml::_('bootstrap.endTab'); ?>
         <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'publishing', JText::_('JGLOBAL_FIELDSET_PUBLISHING', true)); ?>

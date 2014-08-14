@@ -13,9 +13,6 @@ defined('JPATH_BASE') or die;
 jimport('joomla.html.html');
 jimport('joomla.form.formfield');
 
-/**
- * Supports an HTML select list of categories
- */
 class JFormFieldStep extends JFormField
 {
 	/**
@@ -167,9 +164,7 @@ class JFormFieldStep extends JFormField
 		
 		$html[] = JHtml::_('select.genericlist', $this->getOptions(), $this->name, $input_options, 'value', 'text', $this->value);
 
-
 		$html[] = '<input id="jform_'.$this->element['flagfield'].'" type="hidden" value="false" name="jform['.$this->element['flagfield'].']">';
-
 		$html[] = '<a id="'.$this->type.'_reason_btn" href="#'.$this->type.'Modal" role="button" class="btn btn-mini hide" data-toggle="modal">Reason</a>';
 
 		$html[] = '<!-- Modal -->';

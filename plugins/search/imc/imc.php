@@ -18,8 +18,9 @@ require_once JPATH_SITE . '/components/com_imc/router.php';
  * @subpackage  Search.content
  * @since       1.6
  */
-class PlgSearchImc extends JPlugin {
-
+class PlgSearchImc extends JPlugin
+{
+    
     /**
      * Determine areas searchable by this plugin.
      *
@@ -28,13 +29,10 @@ class PlgSearchImc extends JPlugin {
      * @since   1.6
      */
     public function onContentSearchAreas() {
-        static $areas = array(
-            'imc' => 'Imc'
-        );
-
+        static $areas = array('imc' => 'Improve My City');
         return $areas;
     }
-
+    
     /**
      * Search content (articles).
      * The SQL must return the following fields that are used in a common display
@@ -51,94 +49,76 @@ class PlgSearchImc extends JPlugin {
      */
     public function onContentSearch($text, $phrase = '', $ordering = '', $areas = null) {
         $db = JFactory::getDbo();
-
+        
         if (is_array($areas)) {
             if (!array_intersect($areas, array_keys($this->onContentSearchAreas()))) {
                 return array();
             }
         }
-
+        
         $limit = $this->params->def('search_limit', 50);
-
+        
         $text = trim($text);
-
+        
         if ($text == '') {
             return array();
         }
-
-        $rows = array();
-
         
-//Search Issues.
-if ($limit > 0) {
-    switch ($phrase) {
-        case 'exact':
-            $text = $db->quote('%' . $db->escape($text, true) . '%', false);
-            $wheres2 = array();
-            $wheres2[] = 'a.title LIKE ' . $text;
-$wheres2[] = 'a.catid LIKE ' . $text;
-            $where = '(' . implode(') OR (', $wheres2) . ')';
-            break;
+        $rows = array();
+        
+        //Search Issues.
+        if ($limit > 0) {
+            switch ($phrase) {
+                case 'exact':
+                    $text = $db->quote('%' . $db->escape($text, true) . '%', false);
+                    $wheres2 = array();
+                    $wheres2[] = 'a.title LIKE ' . $text;
+                    $wheres2[] = 'a.catid LIKE ' . $text;
+                    $where = '(' . implode(') OR (', $wheres2) . ')';
+                    break;
 
-        case 'all':
-        case 'any':
-        default:
-            $words = explode(' ', $text);
-            $wheres = array();
-
-            foreach ($words as $word) {
-                $word = $db->quote('%' . $db->escape($word, true) . '%', false);
-                $wheres2 = array();
-                $wheres2[] = 'a.title LIKE ' . $word;
-$wheres2[] = 'a.catid LIKE ' . $word;
-                $wheres[] = implode(' OR ', $wheres2);
+                case 'all':
+                case 'any':
+                default:
+                    $words = explode(' ', $text);
+                    $wheres = array();
+                    
+                    foreach ($words as $word) {
+                        $word = $db->quote('%' . $db->escape($word, true) . '%', false);
+                        $wheres2 = array();
+                        $wheres2[] = 'a.title LIKE ' . $word;
+                        $wheres2[] = 'a.catid LIKE ' . $word;
+                        $wheres[] = implode(' OR ', $wheres2);
+                    }
+                    
+                    $where = '(' . implode(($phrase == 'all' ? ') AND (' : ') OR ('), $wheres) . ')';
+                    break;
             }
-
-            $where = '(' . implode(($phrase == 'all' ? ') AND (' : ') OR ('), $wheres) . ')';
-            break;
-    }
-
-    switch ($ordering) {
-        default:
-            $order = 'a.id DESC';
-            break;
-    }
-
-    $rows = array();
-    $query = $db->getQuery(true);
-
-    $query
-            ->clear()
-            ->select(
-                    array(
-                        'a.id',
-                        'title AS title',
-                        'created AS created',
-                        'title AS text',
-                        '"Issue" AS section',
-                        '1 AS browsernav'
-                    )
-            )
-            ->from('#__imc_issues AS a')
             
-            ->where('(' . $where . ')')
-            ->group('a.id')
-            ->order($order);
-
-    $db->setQuery($query, 0, $limit);
-    $list = $db->loadObjectList();
-    $limit -= count($list);
-
-    if (isset($list)) {
-        foreach ($list as $key => $item) {
-            $list[$key]->href = JRoute::_('index.php?option=com_imc&view=issue&id=' . $item->id, false, 2);
+            switch ($ordering) {
+                default:
+                    $order = 'a.id DESC';
+                    break;
+            }
+            
+            $rows = array();
+            $query = $db->getQuery(true);
+            
+            $query->clear()->select(array('a.id', 'title AS title', 'created AS created', 'title AS text', '"Issue" AS section', '1 AS browsernav'))->from('#__imc_issues AS a')->where('(' . $where . ')')->group('a.id')->order($order);
+            
+            $db->setQuery($query, 0, $limit);
+            $list = $db->loadObjectList();
+            $limit-= count($list);
+            
+            if (isset($list)) {
+                foreach ($list as $key => $item) {
+                    $list[$key]->href = JRoute::_('index.php?option=com_imc&view=issue&id=' . $item->id, false, 2);
+                }
+            }
+            
+            $rows = array_merge($list, $rows);
         }
-    }
-
-    $rows = array_merge($list, $rows);
-}
-
+        
         return $rows;
     }
-
 }
