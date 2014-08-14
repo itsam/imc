@@ -1,12 +1,13 @@
 <?php
 
 /**
- * @package     Joomla.Plugin
- * @subpackage  Search.content
- *
- * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
- * @license     GNU General Public License version 2 or later; see LICENSE.txt
+ * @version     3.0.0
+ * @package     plg_search_imc
+ * @copyright   Copyright (C) 2014. All rights reserved.
+ * @license     GNU AFFERO GENERAL PUBLIC LICENSE Version 3; see LICENSE
+ * @author      Ioannis Tsampoulatidis <tsampoulatidis@gmail.com> - https://github.com/itsam
  */
+
 defined('_JEXEC') or die;
 
 require_once JPATH_SITE . '/components/com_imc/router.php';

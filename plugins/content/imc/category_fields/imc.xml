@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- name="params" for categories and name="attribs" for articles-->
+<form>
+	<fields name="params" >
+		<fieldset name="imc" label="Notifications" addfieldpath="/components/com_imc/models/fields">
+			<field name="imc_emails"
+				type="text"
+				label="A nice field"
+				description="A nice field to set emails and persons..."	
+				id="imc_emails"	/>
+
+		</fieldset>
+	</fields>
+</form>

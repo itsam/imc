@@ -8,25 +8,30 @@
     <authorEmail>tsampoulatidis@gmail.com</authorEmail>
     <authorUrl>https://github.com/itsam</authorUrl>
     <version>3.0.0</version>
-    <description>PLG_SEARCH_COM_IMC_XML_DESCRIPTION</description>
+    <description>PLG_SEARCH_IMC_XML_DESCRIPTION</description>
+
     <files>
         <filename plugin="imc">imc.php</filename>
         <filename>index.html</filename>
+        <filename>language/en-GB/en-GB.plg_search_imc.sys.ini</filename>
+        <filename>language/el-GR/el-GR.plg_search_imc.sys.ini</filename>
     </files>
-    <languages>
+
+    <languages folder="language">
         
-			<language tag="en-GB">language/en-GB.plg_search_imc.ini</language>
-			<language tag="en-GB">language/en-GB.plg_search_imc.sys.ini</language>
-			<language tag="el-GR">language/el-GR.plg_search_imc.ini</language>
-			<language tag="el-GR">language/el-GR.plg_search_imc.sys.ini</language>
+			<language tag="en-GB">en-GB/en-GB.plg_search_imc.ini</language>
+			<language tag="en-GB">en-GB/en-GB.plg_search_imc.sys.ini</language>
+			<language tag="el-GR">el-GR/el-GR.plg_search_imc.ini</language>
+			<language tag="el-GR">el-GR/el-GR.plg_search_imc.sys.ini</language>
     </languages>
+
     <config>
         <fields name="params">
 
             <fieldset name="basic">
                 <field name="search_limit" type="text" default="50" size="5"
-                       description="PLG_SEARCH_COM_IMC_FIELD_SEARCHLIMIT_DESC"
-                       label="PLG_SEARCH_COM_IMC_FIELD_SEARCHLIMIT_LABEL" />
+                       description="PLG_SEARCH_IMC_FIELD_SEARCHLIMIT_DESC"
+                       label="PLG_SEARCH_IMC_FIELD_SEARCHLIMIT_LABEL" />
             </fieldset>
 
         </fields>

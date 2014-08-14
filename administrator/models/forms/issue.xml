@@ -28,7 +28,6 @@
             required="true"
             descriptionfield="step_modified_description"
             flagfield="is_step_modified" 
-            
             /> 
         <field name="step_modified_description"
             type="text"
