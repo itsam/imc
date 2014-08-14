@@ -26,10 +26,9 @@ class JFormFieldStep extends JFormField
 	 */
 	protected $type = 'Step';
 
-	protected $latitudefield;
-	protected $longitudefield;
-	protected $width;
-	protected $height;
+	protected $descriptionfield;
+	protected $flagfield;
+
 
 	/**
 	 * Method to get certain otherwise inaccessible properties from the form field object.
@@ -44,10 +43,8 @@ class JFormFieldStep extends JFormField
 	{
 		switch ($name)
 		{
-			case 'latitudefield':
-			case 'longitudefield':
-			case 'width':
-			case 'height':
+			case 'descriptionfield':
+			case 'flagfield':
 				return $this->$name;
 		}
 
@@ -69,10 +66,8 @@ class JFormFieldStep extends JFormField
 	{
 		switch ($name)
 		{
-			case 'latitudefield':
-			case 'longitudefield':
-			case 'width':
-			case 'height':
+			case 'descriptionfield':
+			case 'flagfield':
 				$this->$name = (string) $value;
 				break;
 			default:
@@ -96,7 +91,6 @@ class JFormFieldStep extends JFormField
 	        $tmp = JHtml::_('select.option', $result->id, $result->value);
 			//$tmp->class = 'myclass';
 	        $options[] = $tmp;
-	        //$options[] = JHtml::_('select.option', $result->id, $result->value, array('class'=>'arts'));
 	    }
 		return $options;
 	}
@@ -151,8 +145,8 @@ class JFormFieldStep extends JFormField
 		//JFactory::getDocument()->addStyleSheet(JURI::root(true).'/components/com_imc/models/fields/step/css/step.css');
 
 		$script = array();
-		$script[] = "var descriptionfield='".$this->element['descriptionfield']."';";
-		$script[] = "var flagfield='".$this->element['flagfield']."';";
+		$script[] = "var descriptionfield='jform_".$this->element['descriptionfield']."';";
+		$script[] = "var flagfield='jform_".$this->element['flagfield']."';";
 		JFactory::getDocument()->addScriptDeclaration(implode("\n", $script));
 		JFactory::getDocument()->addScript(JURI::root(true).'/components/com_imc/models/fields/step/js/step.js');		
 
@@ -163,7 +157,7 @@ class JFormFieldStep extends JFormField
 
 		
 
-		$html[] = '<input id="jform_is_step_modified" type="hidden" value="false" name="jform[is_step_modified]">';
+		$html[] = '<input id="jform_'.$this->element['flagfield'].'" type="hidden" value="false" name="jform['.$this->element['flagfield'].']">';
 
 		$html[] = '<a id="step_reason_btn" href="#stepModal" role="button" class="btn btn-mini hide" data-toggle="modal">Reason</a>';
 
@@ -175,7 +169,7 @@ class JFormFieldStep extends JFormField
 		$html[] = '	</div>';
 		$html[] = '	<div class="modal-body">';
 		$html[] = '		<p id="stepBody">';
-		$html[] = '		<textarea style="width:98%;resize:none;" rows="6" cols="75" id="jform_step_modified_description" name="jform[step_modified_description]"></textarea>';
+		$html[] = '		<textarea style="width:98%;resize:none;" rows="6" cols="75" id="jform_'.$this->element['descriptionfield'].'" name="jform['.$this->element['descriptionfield'].']"></textarea>';
 		$html[] = '		</p>';
 		$html[] = '		<p>(if set on options, notifications will be sent on save)</p>';
 		$html[] = '	</div>';
