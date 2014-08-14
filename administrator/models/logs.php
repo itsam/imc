@@ -232,8 +232,8 @@ class ImcModelLogs extends JModelList {
         $query->select('a.*')->from('`#__imc_log` AS a');
 
         // Join over the foreign key 'issueid'
-        $query->select('#__imc_issues_1382355.title AS issues_title_1382355');
-        $query->join('LEFT', '#__imc_issues AS #__imc_issues_1382355 ON #__imc_issues_1382355.id = a.issueid');
+        $query->select('#__imc_issues.title AS issue_title');
+        $query->join('LEFT', '#__imc_issues ON #__imc_issues.id = a.issueid');
 
         // Join over the user field 'created_by'
         $query->select('created_by.name AS created_by');
@@ -244,7 +244,7 @@ class ImcModelLogs extends JModelList {
             ->join('LEFT', '#__imc_steps AS st ON st.id = a.stepid');
         
         $query->order('a.created', 'desc');
-        $query->where('a.issueid = '.$this->getState('id'));
+        $query->where('a.issueid = '.$this->getState('issue.id'));
 
 
         $db->setQuery($query);
