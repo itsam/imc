@@ -8,12 +8,13 @@ var geocoder = new google.maps.Geocoder();
 jQuery(document).ready(function() {
 	jQuery( "#locateposition" ).click(function() {
 	  // Try HTML5 geolocation
+	  infowindow.setContent('Locating your position...<br /><span style="color: red">Please wait</span>');
 	  if(navigator.geolocation) {
 	    navigator.geolocation.getCurrentPosition(function(position) {
 	      var pos = new google.maps.LatLng(position.coords.latitude,
 	                                       position.coords.longitude);
 
-
+		  infowindow.setContent('Your approximate location');
 	      updateMarkerPosition(pos);
 	      reverseGeocodePosition(pos)
 	      map.setCenter(pos);
