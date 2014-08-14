@@ -95,7 +95,7 @@ class JFormFieldStep extends JFormField
 		return $options;
 	}
 
-	private function getStepById($id)
+	protected function getItemById($id)
 	{
         $db = JFactory::getDbo();
         $query = $db->getQuery(true);
@@ -103,9 +103,8 @@ class JFormFieldStep extends JFormField
               ->from('#__imc_steps')
               ->where('id='.$id);
         $db->setQuery($query);
-        $results = $db->loadAssoc();		
+        $results = $db->loadRow();		
 		return $results;
-
 	}
 
 	/**
@@ -128,10 +127,13 @@ class JFormFieldStep extends JFormField
 
 	
 		if($readonly){
-			$s = $this->getStepById($this->value);
+			$s = $this->getItemById($this->value);
 			$html = array();
-			$html[] = '<div><span style="font-size: 20px; color:'.$s['stepcolor'].'">&marker;</span>';
-			$html[] = $s['title'];
+			$html[] = '<div>';
+			if(isset($s[1]))
+				$html[] = '<span style="font-size: 20px; color:'.$s[1].'">&marker;</span>';
+			
+			$html[] = $s[0];
 			$html[] = '</div>';
 			$html[] = '<input type="hidden" name="'.$this->name.'" id="'.$this->id. '" value="'.$this->value.'" />';
 			return implode("\n", $html);
@@ -145,36 +147,45 @@ class JFormFieldStep extends JFormField
 		//JFactory::getDocument()->addStyleSheet(JURI::root(true).'/components/com_imc/models/fields/step/css/step.css');
 
 		$script = array();
-		$script[] = "var descriptionfield='jform_".$this->element['descriptionfield']."';";
-		$script[] = "var flagfield='jform_".$this->element['flagfield']."';";
+		$script[] = "jQuery(document).ready(function() {";
+		$script[] = "	var descriptionfield='jform_".$this->element['descriptionfield']."';";
+		$script[] = "	var flagfield='jform_".$this->element['flagfield']."';";
+		$script[] = "	var instance_type='".$this->type."';";
+		$script[] = "	jQuery( '#save_'+instance_type+'_reason' ).click(function() {";
+		$script[] = "		if (!jQuery.trim(jQuery('#'+descriptionfield).val()))";
+		$script[] = "			jQuery('#'+instance_type+'_reason_btn').addClass('btn-danger');";
+		$script[] = "		else";
+		$script[] = "			jQuery('#'+instance_type+'_reason_btn').removeClass('btn-danger');";
+		$script[] = "	});";
+		$script[] = "});";
+
 		JFactory::getDocument()->addScriptDeclaration(implode("\n", $script));
 		JFactory::getDocument()->addScript(JURI::root(true).'/components/com_imc/models/fields/step/js/step.js');		
 
 	    $html = array();
-	    $input_options = 'class="' . $this->getAttribute('class') . '" onchange="'.'stepChange('.$this->value.', this.value );'.'"';
+	    $input_options = 'class="' . $this->getAttribute('class') . '" onchange="stepChange('.$this->value.', this.value, \''.$this->type.'\',\'jform_'.$this->element['flagfield'].'\',\'jform_'.$this->element['descriptionfield'].'\');"';
 		
 		$html[] = JHtml::_('select.genericlist', $this->getOptions(), $this->name, $input_options, 'value', 'text', $this->value);
 
-		
 
 		$html[] = '<input id="jform_'.$this->element['flagfield'].'" type="hidden" value="false" name="jform['.$this->element['flagfield'].']">';
 
-		$html[] = '<a id="step_reason_btn" href="#stepModal" role="button" class="btn btn-mini hide" data-toggle="modal">Reason</a>';
+		$html[] = '<a id="'.$this->type.'_reason_btn" href="#'.$this->type.'Modal" role="button" class="btn btn-mini hide" data-toggle="modal">Reason</a>';
 
-		$html[] = '<!-- Step Modal -->';
-		$html[] = '<div id="stepModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="stepModalLabel" aria-hidden="true">';
+		$html[] = '<!-- Modal -->';
+		$html[] = '<div id="'.$this->type.'Modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="'.$this->type.'ModalLabel" aria-hidden="true">';
 		$html[] = '	<div class="modal-header">';
 		$html[] = '		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>';
-		$html[] = '		<h3 id="stepModalLabel">Step Modification: Reason Description</h3>';
+		$html[] = '		<h3 id="'.$this->type.'ModalLabel">'.$this->type.' Modification: Reason Description</h3>';
 		$html[] = '	</div>';
 		$html[] = '	<div class="modal-body">';
-		$html[] = '		<p id="stepBody">';
+		$html[] = '		<p id="'.$this->type.'Body">';
 		$html[] = '		<textarea style="width:98%;resize:none;" rows="6" cols="75" id="jform_'.$this->element['descriptionfield'].'" name="jform['.$this->element['descriptionfield'].']"></textarea>';
 		$html[] = '		</p>';
 		$html[] = '		<p>(if set on options, notifications will be sent on save)</p>';
 		$html[] = '	</div>';
 		$html[] = '	<div class="modal-footer">';
-		$html[] = '		<button id="save_step_reason" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">OK</button>';
+		$html[] = '		<button id="save_'.$this->type.'_reason" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">OK</button>';
 		$html[] = '	</div>';
 		$html[] = '</div>';
 		return implode("\n", $html);

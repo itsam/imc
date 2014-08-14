@@ -28,6 +28,7 @@
             required="true"
             descriptionfield="step_modified_description"
             flagfield="is_step_modified" 
+            
             /> 
         <field name="step_modified_description"
             type="text"
@@ -40,13 +41,17 @@
             label="Step modified?" />
 
 
-        <field name="catid" type="category"
+        <field name="catid" 
+            type="cat"
             label="COM_IMC_FORM_LBL_ISSUE_CATID"
             description="COM_IMC_FORM_DESC_ISSUE_CATID" 
             required="true" 
             extension="com_imc" 
-            onchange="alert('category changed');"
+            descriptionfield="category_modified_description"
+            flagfield="is_category_modified" 
+            
             /> 
+
         <field name="category_modified_description"
             type="hidden"
             default=""
