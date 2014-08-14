@@ -174,6 +174,8 @@ $document->addStyleSheet('components/com_imc/assets/css/imc.css');
 		<?php echo $this->form->getInput('is_category_modified'); ?>
 		<?php echo $this->form->getInput('category_modified_description'); ?>
 
+<?php print_r($this->logs); ?>
+
         <input type="hidden" name="task" value="" />
         <?php echo JHtml::_('form.token'); ?>
 

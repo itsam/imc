@@ -20,6 +20,7 @@ class ImcViewIssue extends JViewLegacy {
     protected $state;
     protected $item;
     protected $form;
+    protected $logs;
 
     /**
      * Display the view
@@ -28,6 +29,7 @@ class ImcViewIssue extends JViewLegacy {
         $this->state = $this->get('State');
         $this->item = $this->get('Item');
         $this->form = $this->get('Form');
+        $this->logs = $this->get('Logs');
 
         // Check for errors.
         if (count($errors = $this->get('Errors'))) {

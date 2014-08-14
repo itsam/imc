@@ -222,9 +222,9 @@ class ImcModelLogs extends JModelList {
         return $items;
     }
 
-
-    public getItemsByIssue($issueId)
+    public function getItemsByIssue()
     {
+
         $db = $this->getDbo();
         $query = $db->getQuery(true);
 
@@ -244,11 +244,12 @@ class ImcModelLogs extends JModelList {
             ->join('LEFT', '#__imc_steps AS st ON st.id = a.stepid');
         
         $query->order('a.created', 'desc');
-        $query->where('a.issueid = '.$issueId);
+        $query->where('a.issueid = '.$this->getState('id'));
 
 
         $db->setQuery($query);
-        $results = $db->loadAssoc();        
+        $results = $db->loadAssocList();        
         return $results;
     }
+
 }
