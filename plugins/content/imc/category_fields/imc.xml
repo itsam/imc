@@ -2,13 +2,16 @@
 <!-- name="params" for categories and name="attribs" for articles-->
 <form>
 	<fields name="params" >
-		<fieldset name="imc" label="Notifications" addfieldpath="/components/com_imc/models/fields">
-			<field name="imc_emails"
-				type="text"
-				label="A nice field"
-				description="A nice field to set emails and persons..."	
-				id="imc_emails"	/>
-
+		<fieldset name="imc" label="PLG_CONTENT_IMC_TAB_LABEL" addfieldpath="/components/com_imc/models/fields">
+			<field name="imc_category_emails"
+				type="textarea"
+				label="PLG_CONTENT_IMC_FIELD_CATEGORY_EMAILS_LABEL"
+				description="PLG_CONTENT_IMC_FIELD_CATEGORY_EMAILS_DESC"
+				id="imc_category_emails" 
+	            cols="100"
+	            rows="8"
+	            class="input-xxlarge"
+	            filter="safehtml" />
 		</fieldset>
 	</fields>
 </form>
