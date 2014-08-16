@@ -187,6 +187,18 @@ $document->addStyleSheet('components/com_imc/assets/css/imc.css');
 						<div class="control-label"><?php echo $this->form->getLabel('updated'); ?></div>
 						<div class="controls"><?php echo $this->form->getInput('updated'); ?></div>
 					</div>
+
+					<?php if(!empty($this->item->notification_emails)) : ?>
+						<div class="alert alert-info">
+							<p><strong>Notification to:</strong></p>
+							<?php 
+								foreach ($this->item->notification_emails as $email) {
+									echo $email.'<br />';
+								}
+							?>
+						</div>
+					<?php endif; ?>
+
                 </fieldset>	
 			</div>	
 		<?php echo JHtml::_('bootstrap.endTab'); ?>

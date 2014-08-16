@@ -149,7 +149,13 @@ class ImcModelIssue extends JModelAdmin
 		if ($item = parent::getItem($pk)) {
 
 			//Do any procesing on fields here if needed
-			//echo '<h1>'.$item->id.'</h1>';
+	        $category = JCategories::getInstance('Imc')->get($item->catid);
+	        $params = json_decode($category->params);
+	        if(isset($params->imc_category_emails))
+	        	$item->notification_emails = explode("\n", $params->imc_category_emails);
+	        else
+	        	$item->notification_emails = array();
+	        $item->category_image = $params->image;
 		}
 
 		return $item;
@@ -262,6 +268,5 @@ class ImcModelIssue extends JModelAdmin
 		$results = $logsModel->getItemsByIssue();
 
 		return $results;
-      
     }
 }
