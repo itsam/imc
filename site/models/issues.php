@@ -26,7 +26,7 @@ class ImcModelIssues extends JModelList {
     public function __construct($config = array()) {
         if (empty($config['filter_fields'])) {
             $config['filter_fields'] = array(
-                                'id', 'a.id',
+                'id', 'a.id',
                 'title', 'a.title',
                 'stepid', 'a.stepid',
                 'catid', 'a.catid',
