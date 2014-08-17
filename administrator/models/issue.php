@@ -224,7 +224,7 @@ class ImcModelIssue extends JModelAdmin
 
 			//b. check for category modification
 			if($data['is_category_modified'] === 'true'){
-
+				$user = JFactory::getUser();
 	            $log = JTable::getInstance('Log', 'ImcTable', array());
 
 	            $data2['state'] = 1;
