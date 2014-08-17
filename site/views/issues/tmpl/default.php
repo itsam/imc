@@ -76,18 +76,19 @@ $canDelete = $user->authorise('core.delete', 'com_imc');
         </tfoot>
         <tbody>
             <?php foreach ($this->items as $i => $item) : ?>
+                <?php print_r($item); ?>
                 <?php $canEdit = $user->authorise('core.edit', 'com_imc'); ?>
 
-                				<?php if (!$canEdit && $user->authorise('core.edit.own', 'com_imc')): ?>
+                <?php if (!$canEdit && $user->authorise('core.edit.own', 'com_imc')): ?>
 					<?php $canEdit = JFactory::getUser()->id == $item->created_by; ?>
 				<?php endif; ?>
 
                 <tr class="row<?php echo $i % 2; ?>">
 
                     <?php if (isset($this->items[0]->state)): ?>
-                        <?php $class = ($canEdit || $canChange) ? 'active' : 'disabled'; ?>
+                        <?php $class = ($canChange) ? 'active' : 'disabled'; ?>
                         <td class="center">
-                            <a class="btn btn-micro <?php echo $class; ?>" href="<?php echo ($canEdit || $canChange) ? JRoute::_('index.php?option=com_imc&task=issue.publish&id=' . $item->id . '&state=' . (($item->state + 1) % 2), false, 2) : '#'; ?>">
+                            <a class="btn btn-micro <?php echo $class; ?>" href="<?php echo ($canChange) ? JRoute::_('index.php?option=com_imc&task=issue.publish&id=' . $item->id . '&state=' . (($item->state + 1) % 2), false, 2) : '#'; ?>">
                                 <?php if ($item->state == 1): ?>
                                     <i class="icon-publish"></i>
                                 <?php else: ?>
@@ -111,11 +112,11 @@ $canDelete = $user->authorise('core.delete', 'com_imc');
 				</td>
 				<td>
 
-					<?php echo $item->stepid; ?>
+					<?php echo $item->stepid_title; ?>
 				</td>
 				<td>
 
-					<?php echo $item->catid; ?>
+					<?php echo $item->catid_title; ?>
 				</td>
 				<td>
 

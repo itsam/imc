@@ -86,7 +86,8 @@ class ImcControllerIssue extends ImcController {
             $this->setMessage(JText::_('COM_IMC_ITEM_SAVED_SUCCESSFULLY'));
             $menu = & JSite::getMenu();
             $item = $menu->getActive();
-            $this->setRedirect(JRoute::_($item->link, false));
+            if(isset($item->link))
+                $this->setRedirect(JRoute::_($item->link, false));
         } else {
             throw new Exception(500);
         }

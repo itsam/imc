@@ -35,6 +35,7 @@ class ImcModelIssues extends JModelList {
                 'latitude', 'a.latitude',
                 'longitude', 'a.longitude',
                 'photo', 'a.photo',
+                'access', 'a.access', 'access_level',
                 'ordering', 'a.ordering',
                 'state', 'a.state',
                 'created', 'a.created',
@@ -71,6 +72,32 @@ class ImcModelIssues extends JModelList {
         $this->setState('list.start', $limitstart);
 
         
+///
+
+        // Load the filter state.
+        $search = $app->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
+        $this->setState('filter.search', $search);
+
+        $published = $app->getUserStateFromRequest($this->context . '.filter.state', 'filter_published', '', 'string');
+        $this->setState('filter.state', $published);
+
+        $access = $app->getUserStateFromRequest($this->context . '.filter.access', 'filter_access');
+        $this->setState('filter.access', $access);
+
+        //Filtering stepid
+        $this->setState('filter.stepid', $app->getUserStateFromRequest($this->context.'.filter.stepid', 'filter_stepid', '', 'string'));
+
+        //Filtering catid
+        $this->setState('filter.catid', $app->getUserStateFromRequest($this->context.'.filter.catid', 'filter_catid', '', 'string'));
+
+
+///        
+
+
+
+
+
+
 		if(empty($ordering)) {
 			$ordering = 'a.ordering';
 		}
@@ -86,6 +113,7 @@ class ImcModelIssues extends JModelList {
      * @since	1.6
      */
     protected function getListQuery() {
+        $user = JFactory::getUser();
         // Create a new query object.
         $db = $this->getDbo();
         $query = $db->getQuery(true);
@@ -100,16 +128,28 @@ class ImcModelIssues extends JModelList {
         $query->from('`#__imc_issues` AS a');
 
         
-    // Join over the users for the checked out user.
-    $query->select('uc.name AS editor');
-    $query->join('LEFT', '#__users AS uc ON uc.id=a.checked_out');
-    
+        // Join over the users for the checked out user.
+        $query->select('uc.name AS editor');
+        $query->join('LEFT', '#__users AS uc ON uc.id=a.checked_out');
 		// Join over the category 'catid'
-		$query->select('catid.title AS catid_title');
+		$query->select('catid.params AS catid_params, catid.title AS catid_title');
 		$query->join('LEFT', '#__categories AS catid ON catid.id = a.catid');
 		// Join over the created by field 'created_by'
 		$query->join('LEFT', '#__users AS created_by ON created_by.id = a.created_by');
+        // Join over the asset groups.
+        $query->select('ag.title AS access_level')
+            ->join('LEFT', '#__viewlevels AS ag ON ag.id = a.access');
+        // Join over the imc steps.
+        $query->select('st.title AS stepid_title, st.stepcolor AS stepid_color')
+            ->join('LEFT', '#__imc_steps AS st ON st.id = a.stepid');
         
+        // Filter by published state
+        $published = $this->getState('filter.state');
+        if (is_numeric($published)) {
+            $query->where('a.state = ' . (int) $published);
+        } else if ($published === '') {
+            $query->where('(a.state IN (0, 1))');
+        }        
 
         // Filter by search in title
         $search = $this->getState('filter.search');
@@ -122,9 +162,25 @@ class ImcModelIssues extends JModelList {
             }
         }
 
-        
 
-		//Filtering stepid
+        // Filter by access level.
+        if ($access = $this->getState('filter.access'))
+        {
+            $query->where('a.access = ' . (int) $access);
+        }
+
+        // Implement View Level Access
+        if (!$user->authorise('core.admin'))
+        {
+            $groups = implode(',', $user->getAuthorisedViewLevels());
+            $query->where('a.access IN (' . $groups . ')');
+        }        
+
+        //Filtering stepid
+        if ($stepid = $this->getState('filter.stepid'))
+        {
+            $query->where('a.stepid = ' . (int) $stepid);
+        }
 
 		//Filtering catid
 		$filter_catid = $this->state->get("filter.catid");
@@ -135,6 +191,12 @@ class ImcModelIssues extends JModelList {
         // Add the list ordering clause.
         $orderCol = $this->state->get('list.ordering');
         $orderDirn = $this->state->get('list.direction');
+
+        if ($orderCol == 'access_level')
+        {
+            $orderCol = 'ag.title';
+        }
+
         if ($orderCol && $orderDirn) {
             $query->order($db->escape($orderCol . ' ' . $orderDirn));
         }
@@ -144,39 +206,60 @@ class ImcModelIssues extends JModelList {
 
     public function getItems() {
         $items = parent::getItems();
+
+/*        
         foreach($items as $item){
-	
-
-			if (isset($item->stepid) && $item->stepid != '') {
-				if(is_object($item->stepid)){
-					$item->stepid = JArrayHelper::fromObject($item->stepid);
-				}
-				$values = (is_array($item->stepid)) ? $item->stepid : explode(',',$item->stepid);
-
-				$textValue = array();
-				foreach ($values as $value){
-					$db = JFactory::getDbo();
-					$query = "SELECT id, title AS value FROM #__imc_steps  WHERE id LIKE '" . $value . "'";
-					$db->setQuery($query);
-					$results = $db->loadObject();
-					if ($results) {
-						$textValue[] = $results->value;
-					}
-				}
-
-			$item->stepid = !empty($textValue) ? implode(', ', $textValue) : $item->stepid;
-
-			}
-
 			if ( isset($item->catid) ) {
-
 				// Get the title of that particular template
-					$title = ImcFrontendHelper::getCategoryNameByCategoryId($item->catid);
+				$title = ImcFrontendHelper::getCategoryNameByCategoryId($item->catid);
+				// Finally replace the data object with proper information
+				$item->catid = !empty($title) ? $title : $item->catid;
+			}
+        }
 
-					// Finally replace the data object with proper information
-					$item->catid = !empty($title) ? $title : $item->catid;
-				}
-}
+*/
+        if (JFactory::getApplication()->isSite()) {
+
+            $user = JFactory::getUser();
+            $canChange = $user->authorise('core.edit.state', 'com_imc');
+            $groups = $user->getAuthorisedViewLevels();
+            for ($x = 0, $count = count($items); $x < $count; $x++) {
+
+                // Set category image (for marker icon)...avoid using JCategories, just get category params in the main query
+                $prms = json_decode($items[$x]->catid_params);
+                unset($items[$x]->catid_params);
+                if(isset($prms->imc_category_emails))
+                    $items[$x]->notification_emails = explode("\n", $prms->imc_category_emails);
+                else
+                    $items[$x]->notification_emails = array();
+
+                if(isset($prms->image))
+                    $items[$x]->category_image = $prms->image;
+                else
+                    $items[$x]->category_image = '';
+
+
+                // Check the access level. Remove issues the user shouldn't see
+                if (!in_array($items[$x]->access, $groups)) {
+                    unset($items[$x]);
+                    continue;
+                }
+
+                //Check the state. Remove issues that are not not published but keep own (unless is privileged)
+                if ( ($items[$x]->created_by != $user->id) && ($items[$x]->state != 1) && (!$canChange) ) {
+                    unset($items[$x]);
+                    continue;
+                }
+
+                //Remove anonymous unpublished
+                if ( ($items[$x]->created_by == 0) && ($items[$x]->state != 1) ) {
+                    unset($items[$x]);
+                    continue;
+                }
+
+                
+            }
+        }
         return $items;
     }
 
