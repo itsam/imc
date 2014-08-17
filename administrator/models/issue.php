@@ -147,7 +147,6 @@ class ImcModelIssue extends JModelAdmin
 	public function getItem($pk = null)
 	{
 		if ($item = parent::getItem($pk)) {
-
 			//Do any procesing on fields here if needed
 	        $category = JCategories::getInstance('Imc')->get($item->catid);
 	        $params = json_decode($category->params);
@@ -155,7 +154,10 @@ class ImcModelIssue extends JModelAdmin
 	        	$item->notification_emails = explode("\n", $params->imc_category_emails);
 	        else
 	        	$item->notification_emails = array();
-	        $item->category_image = $params->image;
+	        if(isset($params->image))
+	        	$item->category_image = $params->image;
+	        else
+	        	$item->category_image = '';
 		}
 
 		return $item;

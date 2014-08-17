@@ -97,7 +97,7 @@ $canDelete = $user->authorise('core.delete', 'com_imc');
                         </td>
                     <?php endif; ?>
 
-                    				<td>
+                <td>
 				<?php if (isset($item->checked_out) && $item->checked_out) : ?>
 					<?php echo JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, 'issues.', $canCheckin); ?>
 				<?php endif; ?>
@@ -107,6 +107,7 @@ $canDelete = $user->authorise('core.delete', 'com_imc');
 				<?php else : ?>
 					<?php echo $this->escape($item->title); ?>
 				<?php endif; ?>
+                <a href="<?php echo JRoute::_('index.php?option=com_imc&view=issue&id='.(int) $item->id); ?>">view details</a>
 				</td>
 				<td>
 
