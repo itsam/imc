@@ -213,7 +213,7 @@ if (!empty($this->extra_sidebar)) {
 				</td>
 				<td>
 
-					<?php echo $item->catid; ?>
+					<?php echo $item->catid_title; ?>
 				</td>
 				<td>
 

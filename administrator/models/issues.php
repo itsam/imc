@@ -26,7 +26,7 @@ class ImcModelIssues extends JModelList {
     public function __construct($config = array()) {
         if (empty($config['filter_fields'])) {
             $config['filter_fields'] = array(
-                                'id', 'a.id',
+                'id', 'a.id',
                 'title', 'a.title',
                 'stepid', 'a.stepid',
                 'catid', 'a.catid',
@@ -131,7 +131,7 @@ class ImcModelIssues extends JModelList {
 		$query->select("uc.name AS editor");
 		$query->join("LEFT", "#__users AS uc ON uc.id=a.checked_out");
 		// Join over the category 'catid'
-		$query->select('catid.title AS catid');
+		$query->select('catid.title AS catid_title');
 		$query->join('LEFT', '#__categories AS catid ON catid.id = a.catid');
 		// Join over the user field 'created_by'
 		$query->select('created_by.name AS created_by');

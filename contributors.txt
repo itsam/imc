@@ -12,6 +12,7 @@ Sublime3 packages for joomla development
 8) SyncedSideBar
 9) Superlime
 10) Print To HTML
+11) syncviewscroll
 
 http://stackoverflow.com/questions/17856631/joomla-3-0-mvc-file-upload-in-custom-component-backend
 http://stackoverflow.com/questions/12556028/file-to-extend-jformfield
