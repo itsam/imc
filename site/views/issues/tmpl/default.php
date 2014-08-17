@@ -18,10 +18,8 @@ $user = JFactory::getUser();
 $userId = $user->get('id');
 $listOrder = $this->state->get('list.ordering');
 $listDirn = $this->state->get('list.direction');
-$canCreate = $user->authorise('core.create', 'com_imc');
+
 $canEdit = $user->authorise('core.edit', 'com_imc');
-$canCheckin = $user->authorise('core.manage', 'com_imc');
-$canChange = $user->authorise('core.edit.state', 'com_imc');
 $canDelete = $user->authorise('core.delete', 'com_imc');
 ?>
 
@@ -36,7 +34,7 @@ $canDelete = $user->authorise('core.delete', 'com_imc');
                     </th>
                 <?php endif; ?>
 
-                				<th class='left'>
+                <th class='left'>
 				<?php echo JHtml::_('grid.sort',  'COM_IMC_ISSUES_TITLE', 'a.title', $listDirn, $listOrder); ?>
 				</th>
 				<th class='left'>
@@ -59,9 +57,9 @@ $canDelete = $user->authorise('core.delete', 'com_imc');
                     </th>
                 <?php endif; ?>
 
-                				<?php if ($canEdit || $canDelete): ?>
+                <?php if ($canEdit || $canDelete): ?>
 					<th class="center">
-				<?php echo JText::_('COM_IMC_ISSUES_ACTIONS'); ?>
+				    <?php echo JText::_('COM_IMC_ISSUES_ACTIONS'); ?>
 				</th>
 				<?php endif; ?>
 
@@ -78,10 +76,19 @@ $canDelete = $user->authorise('core.delete', 'com_imc');
 
         <a href="index.php?option=com_imc&task=issues.markers&format=json">ISSUES MARKERS JSON</a><br />
             <?php foreach ($this->items as $i => $item) : ?>
-                <?php $canEdit = $user->authorise('core.edit', 'com_imc'); ?>
 
-                <?php if (!$canEdit && $user->authorise('core.edit.own', 'com_imc')): ?>
-					<?php $canEdit = JFactory::getUser()->id == $item->created_by; ?>
+                <?php 
+                $canCreate = $user->authorise('core.create', 'com_imc.issue.'.$item->id);
+                $canEdit = $user->authorise('core.edit', 'com_imc.issue.'.$item->id);
+                $canCheckin = $user->authorise('core.manage', 'com_imc.issue.'.$item->id);
+                $canChange = $user->authorise('core.edit.state', 'com_imc.issue.'.$item->id);
+                $canDelete = $user->authorise('core.delete', 'com_imc.issue.'.$item->id);
+                $canEditOwn = $user->authorise('core.edit.own', 'com_imc.issue.' . $item->id);
+                ?>
+
+
+                <?php if (!$canEdit && $user->authorise('core.edit.own', 'com_imc.issue.'.$item->id)): ?>
+                    <?php $canEdit = JFactory::getUser()->id == $item->created_by; ?>
 				<?php endif; ?>
 
                 <tr class="row<?php echo $i % 2; ?>">
@@ -121,20 +128,20 @@ $canDelete = $user->authorise('core.delete', 'com_imc');
 				</td>
 				<td>
 
-							<?php echo JFactory::getUser($item->created_by)->name; ?>				</td>
+					<?php echo JFactory::getUser($item->created_by)->name; ?>
 				<td>
 
 					<?php echo $item->language; ?>
 				</td>
 
 
-                    <?php if (isset($this->items[0]->id)): ?>
-                        <td class="center hidden-phone">
-                            <?php echo (int) $item->id; ?>
-                        </td>
-                    <?php endif; ?>
+                <?php if (isset($this->items[0]->id)): ?>
+                    <td class="center hidden-phone">
+                        <?php echo (int) $item->id; ?>
+                    </td>
+                <?php endif; ?>
 
-                    				<?php if ($canEdit || $canDelete): ?>
+                <?php if ($canEdit || $canDelete): ?>
 					<td class="center">
 						<?php if ($canEdit): ?>
 							<a href="<?php echo JRoute::_('index.php?option=com_imc&task=issue.edit&id=' . $item->id, false, 2); ?>" class="btn btn-mini" type="button"><i class="icon-edit" ></i></a>
@@ -150,6 +157,7 @@ $canDelete = $user->authorise('core.delete', 'com_imc');
         </tbody>
     </table>
 
+    <?php $canCreate = $user->authorise('core.create', 'com_imc'); ?>
     <?php if ($canCreate): ?>
         <a href="<?php echo JRoute::_('index.php?option=com_imc&task=issue.edit&id=0', false, 2); ?>" class="btn btn-success btn-small"><i class="icon-plus"></i> <?php echo JText::_('COM_IMC_ADD_ITEM'); ?></a>
     <?php endif; ?>

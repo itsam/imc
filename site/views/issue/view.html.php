@@ -30,12 +30,17 @@ class ImcViewIssue extends JViewLegacy {
         $app = JFactory::getApplication();
         $user = JFactory::getUser();
 
+
+
+
         $this->state = $this->get('State');
         $this->item = $this->get('Data');
         $this->params = $app->getParams('com_imc');
 
         if (!empty($this->item)) {
             
+
+
 		$this->item->catid_title = $this->getModel()->getCategoryName($this->item->catid)->title;
 		$this->form		= $this->get('Form');
         }
@@ -99,6 +104,7 @@ class ImcViewIssue extends JViewLegacy {
         if ($this->params->get('robots')) {
             $this->document->setMetadata('robots', $this->params->get('robots'));
         }
+
     }
 
 }
