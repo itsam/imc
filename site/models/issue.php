@@ -86,7 +86,6 @@ class ImcModelIssue extends JModelItem {
             $this->_item->stepid_title = $step['stepid_title'];
             $this->_item->stepid_color = $step['stepid_color'];
         }
-        
 
 		if ( isset($this->_item->created_by) ) {
 			$this->_item->created_by_name = JFactory::getUser($this->_item->created_by)->name;
@@ -104,13 +103,6 @@ class ImcModelIssue extends JModelItem {
             $this->_item->category_image = '';
 
         $this->_item->catid_title = $category->title;
-
-
-
-
-
-
-
 
 
         return $this->_item;
@@ -178,21 +170,6 @@ class ImcModelIssue extends JModelItem {
         }
 
         return true;
-    }
-
-    public function getLogs($id = null) {
-        if($id == null){
-            $jinput = JFactory::getApplication()->input;
-            if ($jinput->get('a_id'))
-                $id = $jinput->get('a_id', 0);
-            else
-                $id = $jinput->get('id', 0);            
-        }
-        
-        JModelLegacy::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/models');
-        $logsModel = JModelLegacy::getInstance( 'Logs', 'ImcModel' );
-        $results = $logsModel->getItemsByIssue($id);
-        return $results;
     }
 
     public function publish($id, $state) {

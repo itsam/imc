@@ -19,7 +19,7 @@ class ImcViewIssue extends JViewLegacy {
 
     protected $state;
     protected $item;
-    protected $form;
+    ///protected $form;
     protected $params;
 
     /**
@@ -35,15 +35,13 @@ class ImcViewIssue extends JViewLegacy {
         $this->params = $app->getParams('com_imc');
 
         if (!empty($this->item)) {
-            $this->logs = $this->getModel()->getLogs($this->item->id);
-            $this->form = $this->get('Form');
+            ///$this->form = $this->get('Form');
 
-
-// JModelLegacy::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/models');
-// $issueModel = JModelLegacy::getInstance( 'Issue', 'ImcModel' );
-
-// $results = $issueModel->getItem($id);
-// print_r($results);
+            // JModelLegacy::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/models');
+            // $issueModel = JModelLegacy::getInstance( 'Issue', 'ImcModel' );
+            // $results = $issueModel->getItem($id);
+            // print_r($results);
+            $this->logs = $this->getModel('Logs')->getItemsByIssue($this->item->id);
 
         }
 

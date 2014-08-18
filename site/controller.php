@@ -26,7 +26,7 @@ class ImcController extends JControllerLegacy {
         echo 'WOW';
     }
 */
-    
+
     /**
      * Method to display a view.
      *
@@ -42,13 +42,26 @@ class ImcController extends JControllerLegacy {
         $view = JFactory::getApplication()->input->getCmd('view', 'issues');
         JFactory::getApplication()->input->set('view', $view);
 
-        parent::display($cachable, $urlparams);
         // testing some practices
-        // $v = & $this->getView($view, 'html');
-        // $v->setModel($this->getModel($view), true); //the default model (true) :: $view is either issues or issue
-        // $v->setModel($this->getModel('logs'));
-        // $v->display();
+        $v = &$this->getView($view, 'html');
+        $v->setModel($this->getModel($view), true); //the default model (true)
 
+        JModelLegacy::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/models');
+        $logsModel = $this->getModel('Logs', 'ImcModel');
+        $v->setModel($logsModel, false);
+
+        //$foo = $logsModel->getItemsByIssue(1);
+        //print_r($foo);
+
+        //$issueModel = $this->getModel('Issue', 'ImcModel');
+        //$v->setModel($issueModel, false);
+
+        //$moo = $issueModel->getItem(1);
+        //print_r($moo);
+
+
+        //$v->display();
+        parent::display($cachable, $urlparams);
 
         return $this;
     }
