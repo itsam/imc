@@ -14,6 +14,19 @@ jimport('joomla.application.component.controller');
 
 class ImcController extends JControllerLegacy {
 
+/*  // testing some practices  
+    private $view;
+    public function __construct($config = array())
+    {
+        parent::__construct($config);
+        $this->model = $this->getModel();
+        $this->view = $this->getView(JFactory::getApplication()->input->get('view', 'issue'), 'html');
+        $this->view->setModel($this->model, true);
+        $this->view->setModel($this->getModel('Logs', 'ImcModel'), false);
+        echo 'WOW';
+    }
+*/
+    
     /**
      * Method to display a view.
      *
@@ -30,6 +43,12 @@ class ImcController extends JControllerLegacy {
         JFactory::getApplication()->input->set('view', $view);
 
         parent::display($cachable, $urlparams);
+        // testing some practices
+        // $v = & $this->getView($view, 'html');
+        // $v->setModel($this->getModel($view), true); //the default model (true) :: $view is either issues or issue
+        // $v->setModel($this->getModel('logs'));
+        // $v->display();
+
 
         return $this;
     }

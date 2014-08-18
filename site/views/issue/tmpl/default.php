@@ -37,7 +37,7 @@ if (!$canEdit && $user->authorise('core.edit.own', 'com_imc.issue.' . $this->ite
 			</tr>
 			<tr>
 			<th><?php echo JText::_('COM_IMC_FORM_LBL_ISSUE_STEPID'); ?></th>
-			<td><?php echo $this->item->stepid; ?></td>
+			<td><?php echo $this->item->stepid_title; ?></td>
 			</tr>
 			<tr>
 			<th><?php echo JText::_('COM_IMC_FORM_LBL_ISSUE_CATID'); ?></th>
@@ -100,6 +100,12 @@ if (!$canEdit && $user->authorise('core.edit.own', 'com_imc.issue.' . $this->ite
 			<th><?php echo JText::_('COM_IMC_FORM_LBL_ISSUE_MODALITY'); ?></th>
 			<td><?php echo $this->item->modality; ?></td>
 			</tr>
+			<tr>
+			<th>Logs</th>
+			<td><?php print_r($this->logs); ?></td>
+			</tr>
+
+
         </table>
         
         

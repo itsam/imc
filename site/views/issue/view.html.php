@@ -30,19 +30,21 @@ class ImcViewIssue extends JViewLegacy {
         $app = JFactory::getApplication();
         $user = JFactory::getUser();
 
-
-
-
         $this->state = $this->get('State');
         $this->item = $this->get('Data');
         $this->params = $app->getParams('com_imc');
 
         if (!empty($this->item)) {
-            
+            $this->logs = $this->getModel()->getLogs($this->item->id);
+            $this->form = $this->get('Form');
 
 
-		$this->item->catid_title = $this->getModel()->getCategoryName($this->item->catid)->title;
-		$this->form		= $this->get('Form');
+// JModelLegacy::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/models');
+// $issueModel = JModelLegacy::getInstance( 'Issue', 'ImcModel' );
+
+// $results = $issueModel->getItem($id);
+// print_r($results);
+
         }
 
 

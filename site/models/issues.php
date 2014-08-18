@@ -93,11 +93,6 @@ class ImcModelIssues extends JModelList {
 
 ///        
 
-
-
-
-
-
 		if(empty($ordering)) {
 			$ordering = 'a.ordering';
 		}

@@ -82,7 +82,7 @@ class ImcModelIssue extends JModelItem {
         }
 
         
-
+/*
 			if (isset($this->_item->stepid) && $this->_item->stepid != '') {
 				if(is_object($this->_item->stepid)){
 					$this->_item->stepid = JArrayHelper::fromObject($this->_item->stepid);
@@ -103,9 +103,39 @@ class ImcModelIssue extends JModelItem {
 			$this->_item->stepid = !empty($textValue) ? implode(', ', $textValue) : $this->_item->stepid;
 
 			}
+*/
+
+        $step = ImcFrontendHelper::getStepByStepId($this->_item->stepid);
+        if($step){
+            $this->_item->stepid_title = $step['stepid_title'];
+            $this->_item->stepid_color = $step['stepid_color'];
+        }
+        
+
 		if ( isset($this->_item->created_by) ) {
 			$this->_item->created_by_name = JFactory::getUser($this->_item->created_by)->name;
 		}
+
+        $category = JCategories::getInstance('Imc')->get($this->_item->catid);
+        $prms = json_decode($category->params);
+        if(isset($prms->imc_category_emails))
+            $this->_item->notification_emails = explode("\n", $prms->imc_category_emails);
+        else
+            $this->_item->notification_emails = array();
+        if(isset($prms->image))
+            $this->_item->category_image = $prms->image;
+        else
+            $this->_item->category_image = '';
+
+        $this->_item->catid_title = $category->title;
+
+
+
+
+
+
+
+
 
         return $this->_item;
     }
@@ -174,15 +204,19 @@ class ImcModelIssue extends JModelItem {
         return true;
     }
 
-    public function getCategoryName($id) {
-        $db = JFactory::getDbo();
-        $query = $db->getQuery(true);
-        $query
-                ->select('title')
-                ->from('#__categories')
-                ->where('id = ' . $id);
-        $db->setQuery($query);
-        return $db->loadObject();
+    public function getLogs($id = null) {
+        if($id == null){
+            $jinput = JFactory::getApplication()->input;
+            if ($jinput->get('a_id'))
+                $id = $jinput->get('a_id', 0);
+            else
+                $id = $jinput->get('id', 0);            
+        }
+        
+        JModelLegacy::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/models');
+        $logsModel = JModelLegacy::getInstance( 'Logs', 'ImcModel' );
+        $results = $logsModel->getItemsByIssue($id);
+        return $results;
     }
 
     public function publish($id, $state) {

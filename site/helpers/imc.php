@@ -14,7 +14,7 @@ class ImcFrontendHelper {
 	/**
 	* Get category name using category ID
 	* @param integer $category_id Category ID
-	* @return mixed category name if the category was found, null otherwise
+	* @return mixed category name if category is found, null otherwise
 	*/
 	public static function getCategoryNameByCategoryId($category_id) {
 		$db = JFactory::getDbo();
@@ -28,4 +28,23 @@ class ImcFrontendHelper {
 		$db->setQuery($query);
 		return $db->loadResult();
 	}
+
+	/**
+	* Get step name using step ID
+	* @param integer $stepid Step ID
+	* @return step name and color if step is found, null otherwise
+	*/
+	public static function getStepByStepId($stepid) {
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+
+		$query
+			->select('a.title AS stepid_title, a.stepcolor AS stepid_color')
+			->from('#__imc_steps AS a')
+			->where('a.id = ' . intval($stepid));
+
+		$db->setQuery($query);
+		return $db->loadAssoc();
+	}
+
 }

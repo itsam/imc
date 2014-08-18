@@ -36,6 +36,7 @@ class ImcControllerIssues extends ImcController
 			foreach ($items as $item) {
 				$marker = new StdClass();
 				$marker->id = $item->id;
+				$marker->state = $item->state;
 				$marker->title = $item->title;
 				$marker->latitude = $item->latitude;
 				$marker->longitude = $item->longitude;

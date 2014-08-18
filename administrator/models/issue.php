@@ -254,14 +254,15 @@ class ImcModelIssue extends JModelAdmin
 		return true;
 	}
 
-    public function getLogs()
+    public function getLogs($id = null)
     {
-		$jinput = JFactory::getApplication()->input;
-		if ($jinput->get('a_id'))
-			$id = $jinput->get('a_id', 0);
-		else
-			$id = $jinput->get('id', 0);
-
+		if ($id == null){
+			$jinput = JFactory::getApplication()->input;
+			if ($jinput->get('a_id'))
+				$id = $jinput->get('a_id', 0);
+			else
+				$id = $jinput->get('id', 0);
+		}
 		
 		$logsModel = $this->getInstance( 'Logs', 'ImcModel' );
 
