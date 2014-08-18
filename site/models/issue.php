@@ -81,30 +81,6 @@ class ImcModelIssue extends JModelItem {
             }
         }
 
-        
-/*
-			if (isset($this->_item->stepid) && $this->_item->stepid != '') {
-				if(is_object($this->_item->stepid)){
-					$this->_item->stepid = JArrayHelper::fromObject($this->_item->stepid);
-				}
-				$values = (is_array($this->_item->stepid)) ? $this->_item->stepid : explode(',',$this->_item->stepid);
-
-				$textValue = array();
-				foreach ($values as $value){
-					$db = JFactory::getDbo();
-					$query = "SELECT id, title AS value FROM #__imc_steps  WHERE id LIKE '" . $value . "'";
-					$db->setQuery($query);
-					$results = $db->loadObject();
-					if ($results) {
-						$textValue[] = $results->value;
-					}
-				}
-
-			$this->_item->stepid = !empty($textValue) ? implode(', ', $textValue) : $this->_item->stepid;
-
-			}
-*/
-
         $step = ImcFrontendHelper::getStepByStepId($this->_item->stepid);
         if($step){
             $this->_item->stepid_title = $step['stepid_title'];
