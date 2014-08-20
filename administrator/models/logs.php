@@ -232,6 +232,7 @@ class ImcModelLogs extends JModelList {
         $query->select('a.action, a.description, a.created');
         $query->from('`#__imc_log` AS a');
 
+        //-- no point to get the issue title...
         // Join over the foreign key 'issueid'
         //$query->select('#__imc_issues.title AS issue_title');
         //$query->join('LEFT', '#__imc_issues ON #__imc_issues.id = a.issueid');

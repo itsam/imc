@@ -42,27 +42,24 @@ class ImcController extends JControllerLegacy {
         $view = JFactory::getApplication()->input->getCmd('view', 'issues');
         JFactory::getApplication()->input->set('view', $view);
 
-        // testing some practices
-        $v = &$this->getView($view, 'html');
-        $v->setModel($this->getModel($view), true); //the default model (true)
+        // testing some good practices
+        if($view == 'issue'){
+            $v = $this->getView($view, 'html');
+            $v->setModel($this->getModel($view), true); //the default model (true)
 
-        JModelLegacy::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/models');
-        $logsModel = $this->getModel('Logs', 'ImcModel');
-        $v->setModel($logsModel, false);
+            JModelLegacy::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/models');
+            $logsModel = $this->getModel('Logs', 'ImcModel');
+            $v->setModel($logsModel, false);
 
-        //$foo = $logsModel->getItemsByIssue(1);
-        //print_r($foo);
-
-        //$issueModel = $this->getModel('Issue', 'ImcModel');
-        //$v->setModel($issueModel, false);
-
-        //$moo = $issueModel->getItem(1);
-        //print_r($moo);
-
-
-        //$v->display();
+            //$foo = $logsModel->getItemsByIssue(1);
+            //print_r($foo);
+            //$issueModel = $this->getModel('Issue', 'ImcModel');
+            //$v->setModel($issueModel, false);
+            //$moo = $issueModel->getItem(1);
+            //print_r($moo);
+            //$v->display();
+        }    
         parent::display($cachable, $urlparams);
-
         return $this;
     }
 
