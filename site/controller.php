@@ -58,7 +58,7 @@ class ImcController extends JControllerLegacy {
             //$moo = $issueModel->getItem(1);
             //print_r($moo);
             //$v->display();
-        }    
+        }
         parent::display($cachable, $urlparams);
         return $this;
     }

@@ -246,7 +246,38 @@ class ImcControllerIssueForm extends ImcController {
         
         $insertid = JFactory::getApplication()->getUserState('com_imc.edit.issue.insertid');
 
-        //check if record is new
+        //A: inform log table about the new issue
+        if($data['id'] == 0){
+            
+
+            JTable::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/tables');
+            $log = JTable::getInstance('Log', 'ImcTable', array());
+
+            $data2['state'] = 1;
+            $data2['action'] = JText::_('COM_IMC_LOGS_ACTION_INITIAL_COMMIT');
+            $data2['issueid'] = $insertid; //$model->getItem()->get('id');
+            $data2['stepid'] = $data['stepid'];
+            $data2['description'] = JText::_('COM_IMC_LOGS_ACTION_INITIAL_COMMIT');
+            $data2['created'] = $data['created'];
+            $data2['created_by'] = $data['created_by'];
+            $data2['updated'] = $data['created'];
+            $data2['language'] = $data['language'];
+            $data2['rules'] = $data['rules'];
+
+            
+            if (!$log->bind($data2))
+            {
+                JFactory::getApplication()->enqueueMessage('Cannot bind data to log table', 'error'); 
+            }
+
+            if (!$log->save($data2))
+            {
+                JFactory::getApplication()->enqueueMessage('Cannot save data to log table', 'error'); 
+            }
+            
+        }
+
+        //B: move any images only if record is new
         if($data['id'] > 0)
             return;
 

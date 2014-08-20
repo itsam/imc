@@ -19,14 +19,44 @@
             filter="string" /> 
 
      
-    	<field name="stepid" type="sql" label="Current Step" description="" query="SELECT id, title AS value FROM #__imc_steps ORDER BY ordering" key_field="id" value_field="value"  required="true" /> 
+        <field name="stepid" 
+            type="step" 
+            label="Current Step" 
+            description="" 
+            required="true"
+            descriptionfield="step_modified_description"
+            flagfield="is_step_modified" 
+            /> 
+        <field name="step_modified_description"
+            type="text"
+            default=""
+            required="false"
+            label="Step modified reason" />
+        <field name="is_step_modified"
+            type="text"
+            default="false"
+            label="Step modified?" /> 
 
         <field name="catid" 
-            type="category"
+            type="cat"
             label="COM_IMC_FORM_LBL_ISSUE_CATID"
             description="COM_IMC_FORM_DESC_ISSUE_CATID" 
             required="true" 
-            extension="com_imc" /> 
+            extension="com_imc" 
+            descriptionfield="category_modified_description"
+            flagfield="is_category_modified" 
+            
+            /> 
+
+        <field name="category_modified_description"
+            type="text"
+            default=""
+            required="false"
+            label="Category modified reason" />            
+        <field name="is_category_modified"
+            type="hidden"
+            default="false"
+            label="Category modified?" /> 
 
      
     	<field name="filter_catid" type="category"
