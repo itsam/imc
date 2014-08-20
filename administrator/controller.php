@@ -28,8 +28,6 @@ class ImcController extends JControllerLegacy {
         JFactory::getApplication()->input->set('view', $view);
         
         if($view == 'issue'){
-            //$layout = JFactory::getApplication()->input->getCmd('layout', '');
-            //JFactory::getApplication()->input->set('layout', $layout);
             $v = $this->getView($view, 'html');
             $v->setModel($this->getModel($view), true); //the default model (true)
             

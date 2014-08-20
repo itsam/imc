@@ -16,9 +16,6 @@ require_once JPATH_COMPONENT . '/controller.php';
  * Issue controller class.
  */
 class ImcControllerIssue extends ImcController {
-    public function __construct($config = array()) {
-        echo 'DISPLAY';die;
-    }
 
     /**
      * Method to check out an item for editing and redirect to the edit form.

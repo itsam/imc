@@ -31,7 +31,7 @@ class ImcViewIssue extends JViewLegacy {
         $this->form = $this->get('Form');
         //$this->logs = $this->get('Logs');
         $this->logs = $this->getModel('Logs')->getItemsByIssue($this->item->id);
-        
+
         // Check for errors.
         if (count($errors = $this->get('Errors'))) {
             throw new Exception(implode("\n", $errors));
