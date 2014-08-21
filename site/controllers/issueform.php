@@ -241,13 +241,13 @@ class ImcControllerIssueForm extends ImcController {
     }
 
     //simulate postSaveHook to move any images to the correct directory
-    protected function postSaveHook(JModelLegacy $model, $data = array())
+    protected function postSaveHook (JModelLegacy $model, $validData = array())
     {
         
         $insertid = JFactory::getApplication()->getUserState('com_imc.edit.issue.insertid');
 
         //A: inform log table about the new issue
-        if($data['id'] == 0){
+        if($validData['id'] == 0){
             
 
             JTable::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/tables');
@@ -256,13 +256,13 @@ class ImcControllerIssueForm extends ImcController {
             $data2['state'] = 1;
             $data2['action'] = JText::_('COM_IMC_LOGS_ACTION_INITIAL_COMMIT');
             $data2['issueid'] = $insertid; //$model->getItem()->get('id');
-            $data2['stepid'] = $data['stepid'];
+            $data2['stepid'] = $validData['stepid'];
             $data2['description'] = JText::_('COM_IMC_LOGS_ACTION_INITIAL_COMMIT');
-            $data2['created'] = $data['created'];
-            $data2['created_by'] = $data['created_by'];
-            $data2['updated'] = $data['created'];
-            $data2['language'] = $data['language'];
-            $data2['rules'] = $data['rules'];
+            $data2['created'] = $validData['created'];
+            $data2['created_by'] = $validData['created_by'];
+            $data2['updated'] = $validData['created'];
+            $data2['language'] = $validData['language'];
+            $data2['rules'] = $validData['rules'];
 
             
             if (!$log->bind($data2))
