@@ -278,22 +278,22 @@ class ImcControllerIssueForm extends ImcController {
         }
 
         //B: move any images only if record is new
-        if($data['id'] > 0)
-            return;
+        if($validData['id'] == 0){
+            //check if any files uploaded
+            $obj = json_decode( $data['photo'] );
+            if(empty($obj->files))
+                return;
 
-        //check if any files uploaded
-        $obj = json_decode( $data['photo'] );
-        if(empty($obj->files))
-            return;
+            $srcDir = JPATH_ROOT . '/' . $obj->imagedir . '/' . $obj->id;
+            $dstDir = JPATH_ROOT . '/' . $obj->imagedir . '/' . $insertid;
 
-        $srcDir = JPATH_ROOT . '/' . $obj->imagedir . '/' . $obj->id;
-        $dstDir = JPATH_ROOT . '/' . $obj->imagedir . '/' . $insertid;
+            $success = rename ( $srcDir , $dstDir );
 
-        $success = rename ( $srcDir , $dstDir );
-
-        if(!$success){
-            JFactory::getApplication()->enqueueMessage('Cannot move '.$srcDir.' to '.$dstDir.'. Check folder rights', 'error'); 
+            if(!$success){
+                JFactory::getApplication()->enqueueMessage('Cannot move '.$srcDir.' to '.$dstDir.'. Check folder rights', 'error'); 
+            }
         }
-        
+
+
     }
 }

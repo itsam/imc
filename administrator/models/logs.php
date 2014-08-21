@@ -238,12 +238,12 @@ class ImcModelLogs extends JModelList {
         //$query->join('LEFT', '#__imc_issues ON #__imc_issues.id = a.issueid');
 
         // Join over the user field 'created_by'
-        $query->select('created_by.name AS created_by');
-        $query->join('LEFT', '#__users AS created_by ON created_by.id = a.created_by');
+        $query->select('u.name AS created_by');
+        $query->join('LEFT', '#__users AS u ON u.id = a.created_by');
 
         // Join over the imc steps.
         $query->select('st.title AS stepid_title, st.stepcolor AS stepid_color')
-            ->join('LEFT', '#__imc_steps AS st ON st.id = a.stepid');
+              ->join('LEFT', '#__imc_steps AS st ON st.id = a.stepid');
         
         $query->order('a.created', 'desc');
         $query->where('a.issueid = '.($id == null ? $this->getState('issue.id') : $id) );
