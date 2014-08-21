@@ -275,9 +275,6 @@ class ImcControllerIssueForm extends ImcController {
             }
             
         }
-
-
-
         else {
 
             //a. check for step modification
