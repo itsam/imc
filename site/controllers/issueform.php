@@ -248,7 +248,6 @@ class ImcControllerIssueForm extends ImcController {
 
         //A: inform log table about the new issue
         if($validData['id'] == 0){
-            
 
             JTable::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/tables');
             $log = JTable::getInstance('Log', 'ImcTable', array());
@@ -276,6 +275,71 @@ class ImcControllerIssueForm extends ImcController {
             }
             
         }
+
+
+
+        else {
+
+            //a. check for step modification
+            if($validData['is_step_modified'] === 'true'){
+                $user = JFactory::getUser();
+                $log = JTable::getInstance('Log', 'ImcTable', array());
+
+                $data2['state'] = 1;
+                $data2['action'] = JText::_('COM_IMC_LOGS_ACTION_STEP_MODIFIED');
+                $data2['issueid'] = $validData['id'];
+                $data2['stepid'] = $validData['stepid'];
+                $data2['description'] = $validData['step_modified_description'];
+                $data2['created'] = $validData['updated'];
+                $data2['created_by'] = $user->id;
+                $data2['updated'] = $validData['updated'];
+                $data2['language'] = $validData['language'];
+                $data2['rules'] = $validData['rules'];
+
+                if (!$log->bind($data2))
+                {
+                    JFactory::getApplication()->enqueueMessage('Cannot bind data to log table', 'error'); 
+                }
+
+                if (!$log->save($data2))
+                {
+                    JFactory::getApplication()->enqueueMessage('Cannot save data to log table', 'error'); 
+                }
+            }
+
+            //b. check for category modification
+            if($validData['is_category_modified'] === 'true'){
+                $user = JFactory::getUser();
+                $log = JTable::getInstance('Log', 'ImcTable', array());
+
+                $data2['state'] = 1;
+                $data2['action'] = JText::_('COM_IMC_LOGS_ACTION_CATEGORY_MODIFIED');
+                $data2['issueid'] = $validData['id'];
+                $data2['stepid'] = $validData['stepid'];
+                $data2['description'] = $validData['category_modified_description'];
+                $data2['created'] = $validData['updated'];
+                $data2['created_by'] = $user->id;
+                $data2['updated'] = $validData['updated'];
+                $data2['language'] = $validData['language'];
+                $data2['rules'] = $validData['rules'];
+
+                if (!$log->bind($data2))
+                {
+                    JFactory::getApplication()->enqueueMessage('Cannot bind data to log table', 'error'); 
+                }
+
+                if (!$log->save($data2))
+                {
+                    JFactory::getApplication()->enqueueMessage('Cannot save data to log table', 'error'); 
+                }
+            }
+
+
+        }    
+
+
+
+
 
         //B: move any images only if record is new
         if($validData['id'] == 0){
