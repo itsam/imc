@@ -103,6 +103,21 @@ class ImcModelIssueForm extends JModelForm
 				// Convert the JTable to a clean JObject.
 				$properties = $table->getProperties(1);
 				$this->_item = JArrayHelper::toObject($properties, 'JObject');
+
+
+                //get category properties
+		        $category = JCategories::getInstance('Imc')->get($this->_item->catid);
+		        $params = json_decode($category->params);
+		        if(isset($params->imc_category_emails))
+		        	$this->_item->notification_emails = explode("\n", $params->imc_category_emails);
+		        else
+		        	$this->_item->notification_emails = array();
+		        if(isset($params->image))
+		        	$this->_item->category_image = $params->image;
+		        else
+		        	$this->_item->category_image = ''; 
+
+
 			} elseif ($error = $table->getError()) {
 				$this->setError($error);
 			}

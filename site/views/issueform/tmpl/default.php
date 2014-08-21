@@ -149,44 +149,61 @@ if($this->item->id) {
 	<div class="control-group">
 		<div class="control-label"><?php echo $this->form->getLabel('modality'); ?></div>
 		<div class="controls"><?php echo $this->form->getInput('modality'); ?></div>
-	</div>				<div class="fltlft" <?php if (!JFactory::getUser()->authorise('core.admin','imc')): ?> style="display:none;" <?php endif; ?> >
-                <?php echo JHtml::_('sliders.start', 'permissions-sliders-'.$this->item->id, array('useCookie'=>1)); ?>
-                <?php echo JHtml::_('sliders.panel', JText::_('ACL Configuration'), 'access-rules'); ?>
-                <fieldset class="panelform">
-                    <?php echo $this->form->getLabel('rules'); ?>
-                    <?php echo $this->form->getInput('rules'); ?>
-                </fieldset>
-                <?php echo JHtml::_('sliders.end'); ?>
-            </div>
-				<?php if (!JFactory::getUser()->authorise('core.admin','imc')): ?>
-                <script type="text/javascript">
-                    jQuery.noConflict();
-                    jQuery('.tab-pane select').each(function(){
-                       var option_selected = jQuery(this).find(':selected');
-                       var input = document.createElement("input");
-                       input.setAttribute("type", "hidden");
-                       input.setAttribute("name", jQuery(this).attr('name'));
-                       input.setAttribute("value", option_selected.val());
-                       document.getElementById("form-issue").appendChild(input);
-                    });
-                </script>
-             <?php endif; ?>
-        <div class="control-group">
-        	<script type="text/javascript">
-        		jQuery.noConflict();
-				jQuery( "#form-issue" ).submit(function( event ) {
-					jQuery('input[name="task"]').val('issueform.save');
-				});        		
-        	</script>
-            <div class="controls">
-                <button type="submit" class="validate btn btn-primary"><?php echo JText::_('JSUBMIT'); ?></button>
-                <a class="btn" href="<?php echo JRoute::_('index.php?option=com_imc&task=issueform.cancel'); ?>" title="<?php echo JText::_('JCANCEL'); ?>"><?php echo JText::_('JCANCEL'); ?></a>
-            </div>
+	</div>				
+
+					<?php if(!empty($this->item->notification_emails)) : ?>
+						<div class="alert alert-info">
+							<p><strong>Notification to:</strong></p>
+							<?php 
+								foreach ($this->item->notification_emails as $email) {
+									echo $email.'<br />';
+								}
+							?>
+						</div>
+					<?php endif; ?>
+
+
+
+	<div class="fltlft" <?php if (!JFactory::getUser()->authorise('core.admin','imc')): ?> style="display:none;" <?php endif; ?> >
+        <?php echo JHtml::_('sliders.start', 'permissions-sliders-'.$this->item->id, array('useCookie'=>1)); ?>
+        <?php echo JHtml::_('sliders.panel', JText::_('ACL Configuration'), 'access-rules'); ?>
+        <fieldset class="panelform">
+            <?php echo $this->form->getLabel('rules'); ?>
+            <?php echo $this->form->getInput('rules'); ?>
+        </fieldset>
+        <?php echo JHtml::_('sliders.end'); ?>
+    </div>
+	<?php if (!JFactory::getUser()->authorise('core.admin','imc')): ?>
+	    <script type="text/javascript">
+	        jQuery.noConflict();
+	        jQuery('.tab-pane select').each(function(){
+	           var option_selected = jQuery(this).find(':selected');
+	           var input = document.createElement("input");
+	           input.setAttribute("type", "hidden");
+	           input.setAttribute("name", jQuery(this).attr('name'));
+	           input.setAttribute("value", option_selected.val());
+	           document.getElementById("form-issue").appendChild(input);
+	        });
+	    </script>
+	<?php endif; ?>
+
+    <div class="control-group">
+    	<script type="text/javascript">
+    		jQuery.noConflict();
+			jQuery( "#form-issue" ).submit(function( event ) {
+				jQuery('input[name="task"]').val('issueform.save');
+			});        		
+    	</script>
+        <div class="controls">
+            <button type="submit" class="validate btn btn-primary"><?php echo JText::_('JSUBMIT'); ?></button>
+            <a class="btn" href="<?php echo JRoute::_('index.php?option=com_imc&task=issueform.cancel'); ?>" title="<?php echo JText::_('JCANCEL'); ?>"><?php echo JText::_('JCANCEL'); ?></a>
         </div>
-        
-        <input type="hidden" name="option" value="com_imc" />
-        <input type="hidden" name="task" value="issueform.save" />
-        <?php echo JHtml::_('form.token'); ?>
+    </div>
+    
+    <input type="hidden" name="option" value="com_imc" />
+    <input type="hidden" name="task" value="issueform.save" />
+    <?php echo JHtml::_('form.token'); ?>
+
     </form>
 </div>
 
