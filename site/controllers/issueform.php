@@ -338,9 +338,6 @@ class ImcControllerIssueForm extends ImcController {
         }    
 
 
-
-
-
         //B: move any images only if record is new
         if($validData['id'] == 0){
             //check if any files uploaded
