@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="module" version="3.0" method="upgrade" client="site">
+    <name>MOD_IMCFILTERS_NAME</name>
+    <creationDate>2014-08-23</creationDate>
+    <copyright>Copyright (C) 2014. All rights reserved.</copyright>
+    <license>GNU AFFERO GENERAL PUBLIC LICENSE Version 3; see LICENSE</license>
+    <author>Ioannis Tsampoulatidis</author>
+    <authorEmail>tsampoulatidis@gmail.com</authorEmail>
+    <authorUrl>https://github.com/itsam</authorUrl>
+    <version>3.0.0</version>
+    <description>MOD_IMCFILTERS_DESCRIPTION</description>
+    
+    <files>
+        <filename module="mod_imcfilters">mod_imcfilters.php</filename>
+        <filename>helper.php</filename>
+        <filename>index.html</filename>
+        <folder>tmpl</folder>
+    </files>
+    <languages folder="language">
+			<language tag="en-GB">en-GB/en-GB.mod_imcfilters.ini</language>
+			<language tag="en-GB">en-GB/en-GB.mod_imcfilters.sys.ini</language>
+			<language tag="el-GR">el-GR/el-GR.mod_imcfilters.ini</language>
+			<language tag="el-GR">el-GR/el-GR.mod_imcfilters.sys.ini</language>
+    </languages>
+    <config>
+        <fields name="params">
+            <fieldset name="content_type" label="MOD_IMC_CONTENT_TYPE_TAB_LBL">
+                <field name="content_type" 
+                    type="list"
+                    label="MOD_IMC_CONTENT_TYPE_LBL"
+                    description="MOD_IMC_CONTENT_TYPE_DESC">
+                    <option value="blank">MOD_IMC_CUSTOM_CONTENT</option>
+                    <option value="list">MOD_IMC_LIST</option>
+                    <option value="item">MOD_IMC_ITEM</option>
+                </field>
+
+            </fieldset>
+            <fieldset 
+                name="blank_content" 
+                label="MOD_IMC_CUSTOM_CONTENT_TAB_LBL"
+                description="MOD_IMC_CUSTOM_CONTENT_TAB_DESC">
+                <field 
+                    name="html_content" type="editor" filter="safehtml"
+                    label="MOD_IMC_HTML_LBL"
+                    description="MOD_IMC_HTML_DESC" />
+            </fieldset>            
+        </fields>
+    </config>
+</extension>

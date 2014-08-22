@@ -7,13 +7,15 @@
     <property name="adminsrc" location="administrator"/>
     <property name="mediasrc" location="media"/>
     <property name="sitesrc" location="site"/>
-    <property name="modulesrc" location="modules/mod_{$module.name}"/>
+    <property name="modulesrc" location="modules/mod_${module.name}"/>
+    <property name="modulefilterssrc" location="modules/mod_${modulefilters.name}"/>
     <property name="searchpluginsrc" location="plugins/search/${search.plugin.name}"/>
     <property name="contentpluginsrc" location="plugins/content/${content.plugin.name}"/>
     <property name="build" location="package"/>
     
     <property name="sitedst"  value="${copy.src.target}/components/com_${name}" />
     <property name="moduledst"  value="${copy.src.target}/modules/mod_${module.name}" />
+    <property name="modulefiltersdst"  value="${copy.src.target}/modules/mod_${modulefilters.name}" />
     <property name="admindst"  value="${copy.src.target}/administrator/components/com_${name}" />
     <property name="mediadst"  value="${copy.src.target}/media/com_${name}" />
     <property name="searchplugindst"  value="${copy.src.target}/plugins/search/${search.plugin.name}" />
@@ -30,6 +32,7 @@
         <echo message="Search Plugin Name: ${search.plugin.name} "/>
         <echo message="Content Plugin Name: ${content.plugin.name} "/>
         <echo message="Module Name: ${module.name} "/>
+        <echo message="Module Filters Name: ${modulefilters.name} "/>
         <echo message="------------------" />
         <echo message="SiteSrc var:  ${sitesrc} "/>
         <echo message="SiteDst var:  ${sitedst} "/>
@@ -45,6 +48,9 @@
         <echo message="------------------" />
         <echo message="ModuleSrc var:  ${modulesrc} "/>
         <echo message="ModuleDst var:  ${moduledst} "/>
+        <echo message="------------------" />
+        <echo message="ModuleFiltersSrc var:  ${modulefilterssrc} "/>
+        <echo message="ModuleFiltresDst var:  ${modulefiltersdst} "/>
         <echo message="------------------" />
         <echo message="Manifest:  ${manifest} "/>
         <echo message="Build zip at: ${build} "/>
@@ -125,6 +131,31 @@
         
     </target>
 
+    <target name="copy_modfilters" description="Copies filters module files to dst project.">
+        <echo message="Running build.xml...." />
+        <echo message="${modulefilterssrc}" />
+        <echo message="${modulefiltersdst}" />
+        <copy todir="${modulefiltersdst}">
+            <fileset dir="${modulefilterssrc}">
+                <modified/>
+                <exclude name="**/*.git/"/>
+                <exclude name="**/package/**"/>
+                <exclude name="language/" />
+            </fileset>
+        </copy>
+        <copy file="${modulefilterssrc}/language/en-GB/en-GB.mod_${modulefilters.name}.ini" todir="${copy.src.target}/language/en-GB"/>
+        <copy file="${modulefilterssrc}/language/el-GR/el-GR.mod_${modulefilters.name}.ini" todir="${copy.src.target}/language/el-GR"/>
+        <copy file="${modulefilterssrc}/language/en-GB/en-GB.mod_${modulefilters.name}.sys.ini" todir="${copy.src.target}/language/en-GB"/>
+        <copy file="${modulefilterssrc}/language/el-GR/el-GR.mod_${modulefilters.name}.sys.ini" todir="${copy.src.target}/language/el-GR"/>
+
+        <!--
+        <copy file="${modulefilterssrc}/language/en-GB/en-GB.mod_${modulefilters.name}.sys.ini" todir="${copy.src.target}/modules/mod_imcfilters/language/en-GB"/>
+        <copy file="${modulefilterssrc}/language/el-GR/el-GR.mod_${modulefilters.name}.sys.ini" todir="${copy.src.target}/modules/mod_imcfilters/language/el-GR"/>
+        -->
+        
+    </target>
+
+
     <target name="_copy_media" description="Copies files to dst project.">
         <echo message="Running build.xml...." />
         <copy todir="${mediadst}">
@@ -143,7 +174,7 @@
         </zip>
     </target>
 
-    <target name="build" depends="_copy_site,_copy_admin,_copy_search_plugin,_copy_content_plugin"
+    <target name="build" depends="_copy_site,_copy_admin,_copy_search_plugin,_copy_content_plugin,copy_modfilters"
             description="Copies to appropriate directories in Joomla site" >
     </target>   
 
