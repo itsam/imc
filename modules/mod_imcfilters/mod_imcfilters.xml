@@ -24,26 +24,17 @@
     </languages>
     <config>
         <fields name="params">
-            <fieldset name="content_type" label="MOD_IMC_CONTENT_TYPE_TAB_LBL">
-                <field name="content_type" 
+            <fieldset name="layout_type" label="MOD_IMCFILTERS_LAYOUT_TAB_LBL">
+                <field name="layout_type" 
                     type="list"
-                    label="MOD_IMC_CONTENT_TYPE_LBL"
-                    description="MOD_IMC_CONTENT_TYPE_DESC">
-                    <option value="blank">MOD_IMC_CUSTOM_CONTENT</option>
-                    <option value="list">MOD_IMC_LIST</option>
-                    <option value="item">MOD_IMC_ITEM</option>
+                    label="MOD_IMCFILTERS_LAYOUT_TYPE_LBL">
+                    <option value="default">MOD_IMCFILTERS_LAYOUT_DEFAULT</option>
+                    <option value="search">MOD_IMCFILTERS_LAYOUT_SEARCH</option>
+                    <option value="category">MOD_IMCFILTERS_LAYOUT_CATEGORY</option>
                 </field>
 
             </fieldset>
-            <fieldset 
-                name="blank_content" 
-                label="MOD_IMC_CUSTOM_CONTENT_TAB_LBL"
-                description="MOD_IMC_CUSTOM_CONTENT_TAB_DESC">
-                <field 
-                    name="html_content" type="editor" filter="safehtml"
-                    label="MOD_IMC_HTML_LBL"
-                    description="MOD_IMC_HTML_DESC" />
-            </fieldset>            
+     
         </fields>
     </config>
 </extension>

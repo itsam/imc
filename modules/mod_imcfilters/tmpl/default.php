@@ -17,7 +17,12 @@ $safe_htmltags = array(
     'br', 'p', 'table', 'th', 'td', 'tr', 'pre',
     'blockquote', 'nowiki', 'h1', 'h2', 'h3',
     'h4', 'h5', 'h6', 'hr');
-
+// Check for component
+if (!JComponentHelper::getComponent('com_imc', true)->enabled)
+{
+	echo 'Improve My City component is not enabled';
+	return;
+}
 /* @var $params Joomla\Registry\Registry */
 $filter = JFilterInput::getInstance($safe_htmltags);
 echo $filter->clean($params->get('html_content'));

@@ -97,7 +97,6 @@
             <fileset dir="${searchpluginsrc}">
                 <modified/>
                 <exclude name="**/*.git/"/>
-                <exclude name="**/package/**"/>
                 <exclude name="language/" />
             </fileset>
         </copy>
@@ -117,7 +116,6 @@
             <fileset dir="${contentpluginsrc}">
                 <modified/>
                 <exclude name="**/*.git/"/>
-                <exclude name="**/package/**"/>
                 <exclude name="language/" />
             </fileset>
         </copy>
@@ -131,15 +129,12 @@
         
     </target>
 
-    <target name="copy_modfilters" description="Copies filters module files to dst project.">
-        <echo message="Running build.xml...." />
-        <echo message="${modulefilterssrc}" />
-        <echo message="${modulefiltersdst}" />
+    <target name="_copy_modfilters" description="Copies filters module files to dst project.">
+        <echo message="Copying modulefilters files: ${modulefilterssrc} --> ${modulefiltersdst}" />
         <copy todir="${modulefiltersdst}">
             <fileset dir="${modulefilterssrc}">
                 <modified/>
                 <exclude name="**/*.git/"/>
-                <exclude name="**/package/**"/>
                 <exclude name="language/" />
             </fileset>
         </copy>
@@ -162,8 +157,6 @@
             <fileset dir="${mediasrc}">
                 <modified/>
                 <exclude name="**/*.git/"/>
-                <exclude name="**/package/**"/>
-               
             </fileset>
         </copy>
         
@@ -174,7 +167,7 @@
         </zip>
     </target>
 
-    <target name="build" depends="_copy_site,_copy_admin,_copy_search_plugin,_copy_content_plugin,copy_modfilters"
+    <target name="build" depends="_copy_site,_copy_admin,_copy_search_plugin,_copy_content_plugin,_copy_modfilters"
             description="Copies to appropriate directories in Joomla site" >
     </target>   
 
