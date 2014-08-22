@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @version     3.0.0
  * @package     com_imc
@@ -8,16 +9,13 @@
  * @author      Ioannis Tsampoulatidis <tsampoulatidis@gmail.com> - https://github.com/itsam
  */
 defined('_JEXEC') or die;
-$elements = ModImcHelper::getList($params);
+
+// Check for component
+if (!JComponentHelper::getComponent('com_imc', true)->enabled)
+{
+	echo '<div class="alert alert-danger">Improve My City component is not enabled</div>';
+	return;
+}
 ?>
 
-<?php if (!empty($elements)) : ?>
-    <table class="table">
-        <?php foreach ($elements as $element): ?>
-            <tr>
-                <th><?php echo ModImcHelper::renderTranslatableHeader($params, $params->get('field')); ?></th>
-                <td><?php echo ModImcHelper::renderElement($params->get('table'), $params->get('field'), $element->{$params->get('field')}); ?></td>
-            </tr>
-        <?php endforeach; ?>
-    </table>
-<?php endif; ?>
+<h1>Category only filters</h1>
