@@ -16,9 +16,22 @@ if (!JComponentHelper::getComponent('com_imc', true)->enabled)
 	echo '<div class="alert alert-danger">Improve My City component is not enabled</div>';
 	return;
 }
+
+$jinput = JFactory::getApplication()->input;
+$option = $jinput->get('option', null);
+$view = $jinput->get('view', null);
+
+if ($option == 'com_imc' && $view != 'issues'){
+	$module->showtitle = false;
+	return;
+}
+
+
+
+
 /* @var $params Joomla\Registry\Registry */
 //$filter = JFilterInput::getInstance($safe_htmltags);
 //echo $filter->clean($params->get('html_content'));
 ?>
 
-<h1>Default filters</h1>
+<h4>Default filters</h4>
