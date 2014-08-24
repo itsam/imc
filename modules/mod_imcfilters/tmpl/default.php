@@ -26,12 +26,19 @@ if ($option == 'com_imc' && $view != 'issues'){
 	return;
 }
 
-
-
-
-/* @var $params Joomla\Registry\Registry */
-//$filter = JFilterInput::getInstance($safe_htmltags);
-//echo $filter->clean($params->get('html_content'));
+$app = JFactory::getApplication();
+$search = $app->getUserStateFromRequest('com_imc.issues.filter.search', 'filter_search');
+$owned = $app->getUserStateFromRequest('com_imc.issues.filter.owned', 'filter_owned');
 ?>
 
-<h4>Default filters</h4>
+<form class="form-search form-inline" action="<?php echo JRoute::_('index.php?option=com_imc&view=issues'); ?>" method="post" name="imc_filter_form" id="imc_filter_form">
+
+	<input type="hidden" id="filter_owned_hidden" name="filter_owned" value="no" />
+    <label class="checkbox inline">
+		<input type="checkbox" id="filter_owned" name="filter_owned" value="yes" <?php echo ($owned == 'yes' ? 'checked="checked"' : ''); ?> > Show only my issues
+	</label>
+
+    <input type="text" class="input-medium search-query" name="filter_search" value="<?php echo $search; ?>">
+    
+    <button type="submit" class="btn">Apply</button>
+</form>

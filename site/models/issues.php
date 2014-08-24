@@ -72,7 +72,7 @@ class ImcModelIssues extends JModelList {
         $this->setState('list.start', $limitstart);
 
         
-///
+///.
 
         // Load the filter state.
         $search = $app->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
@@ -90,7 +90,8 @@ class ImcModelIssues extends JModelList {
         //Filtering catid
         $this->setState('filter.catid', $app->getUserStateFromRequest($this->context.'.filter.catid', 'filter_catid', '', 'string'));
 
-
+        //Filtering owned
+        $this->setState('filter.owned', $app->getUserStateFromRequest($this->context.'.filter.owned', 'filter_owned', 'no', 'string'));
 ///        
 
 		if(empty($ordering)) {
@@ -182,6 +183,12 @@ class ImcModelIssues extends JModelList {
 		if ($filter_catid) {
 			$query->where("a.catid = '".$filter_catid."'");
 		}
+
+        //Filtering owned
+        $filter_owned = $this->state->get("filter.owned");
+        if ($filter_owned == 'yes' && $user->id > 0) {
+            $query->where("a.created_by = '".$user->id."'");
+        }
 
         // Add the list ordering clause.
         $orderCol = $this->state->get('list.ordering');
