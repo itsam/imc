@@ -9,13 +9,6 @@
  * @author      Ioannis Tsampoulatidis <tsampoulatidis@gmail.com> - https://github.com/itsam
  */
 defined('_JEXEC') or die;
-
-// Check for component
-if (!JComponentHelper::getComponent('com_imc', true)->enabled)
-{
-	echo '<div class="alert alert-danger">Improve My City component is not enabled</div>';
-	return;
-}
 ?>
 
 <h1>Category only filters</h1>

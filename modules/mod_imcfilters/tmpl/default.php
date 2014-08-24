@@ -10,21 +10,7 @@
  */
 defined('_JEXEC') or die;
 
-// Check for component
-if (!JComponentHelper::getComponent('com_imc', true)->enabled)
-{
-	echo '<div class="alert alert-danger">Improve My City component is not enabled</div>';
-	return;
-}
 
-$jinput = JFactory::getApplication()->input;
-$option = $jinput->get('option', null);
-$view = $jinput->get('view', null);
-
-if ($option == 'com_imc' && $view != 'issues'){
-	$module->showtitle = false;
-	return;
-}
 
 $app = JFactory::getApplication();
 $search = $app->getUserStateFromRequest('com_imc.issues.filter.search', 'filter_search');
