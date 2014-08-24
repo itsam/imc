@@ -9,7 +9,7 @@
  */
 defined('_JEXEC') or die;
 
-class ModImcHelper {
+class ModImcfiltersHelper {
 
     /**
      * Retrieve component items

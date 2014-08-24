@@ -193,7 +193,7 @@
         </zip>
     </target>
 
-    <target name="build" depends="_copy_site,_copy_admin,_copy_search_plugin,_copy_content_plugin,_copy_modfilters"
+    <target name="build" depends="_copy_site,_copy_admin,_copy_search_plugin,_copy_content_plugin,_copy_modfilters,_copy_modmap"
             description="Copies to appropriate directories in Joomla site" >
     </target>   
 
