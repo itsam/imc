@@ -9,6 +9,7 @@
     <property name="sitesrc" location="site"/>
     <property name="modulesrc" location="modules/mod_${module.name}"/>
     <property name="modulefilterssrc" location="modules/mod_${modulefilters.name}"/>
+    <property name="modulemapsrc" location="modules/mod_${modulemap.name}"/>
     <property name="searchpluginsrc" location="plugins/search/${search.plugin.name}"/>
     <property name="contentpluginsrc" location="plugins/content/${content.plugin.name}"/>
     <property name="build" location="package"/>
@@ -16,6 +17,7 @@
     <property name="sitedst"  value="${copy.src.target}/components/com_${name}" />
     <property name="moduledst"  value="${copy.src.target}/modules/mod_${module.name}" />
     <property name="modulefiltersdst"  value="${copy.src.target}/modules/mod_${modulefilters.name}" />
+    <property name="modulemapdst"  value="${copy.src.target}/modules/mod_${modulemap.name}" />
     <property name="admindst"  value="${copy.src.target}/administrator/components/com_${name}" />
     <property name="mediadst"  value="${copy.src.target}/media/com_${name}" />
     <property name="searchplugindst"  value="${copy.src.target}/plugins/search/${search.plugin.name}" />
@@ -33,6 +35,7 @@
         <echo message="Content Plugin Name: ${content.plugin.name} "/>
         <echo message="Module Name: ${module.name} "/>
         <echo message="Module Filters Name: ${modulefilters.name} "/>
+        <echo message="Module Map Name: ${modulemap.name} "/>
         <echo message="------------------" />
         <echo message="SiteSrc var:  ${sitesrc} "/>
         <echo message="SiteDst var:  ${sitedst} "/>
@@ -51,6 +54,9 @@
         <echo message="------------------" />
         <echo message="ModuleFiltersSrc var:  ${modulefilterssrc} "/>
         <echo message="ModuleFiltresDst var:  ${modulefiltersdst} "/>
+        <echo message="------------------" />
+        <echo message="ModuleMapSrc var:  ${modulemapsrc} "/>
+        <echo message="ModuleMapDst var:  ${modulemapdst} "/>
         <echo message="------------------" />
         <echo message="Manifest:  ${manifest} "/>
         <echo message="Build zip at: ${build} "/>
@@ -150,6 +156,26 @@
         
     </target>
 
+    <target name="_copy_modmap" description="Copies map module files to dst project.">
+        <echo message="Copying modulemap files: ${modulemapsrc} --> ${modulemapdst}" />
+        <copy todir="${modulemapdst}">
+            <fileset dir="${modulemapsrc}">
+                <modified/>
+                <exclude name="**/*.git/"/>
+                <exclude name="language/" />
+            </fileset>
+        </copy>
+        <copy file="${modulemapsrc}/language/en-GB/en-GB.mod_${modulemap.name}.ini" todir="${copy.src.target}/language/en-GB"/>
+        <copy file="${modulemapsrc}/language/el-GR/el-GR.mod_${modulemap.name}.ini" todir="${copy.src.target}/language/el-GR"/>
+        <copy file="${modulemapsrc}/language/en-GB/en-GB.mod_${modulemap.name}.sys.ini" todir="${copy.src.target}/language/en-GB"/>
+        <copy file="${modulemapsrc}/language/el-GR/el-GR.mod_${modulemap.name}.sys.ini" todir="${copy.src.target}/language/el-GR"/>
+
+        <!--
+        <copy file="${modulefilterssrc}/language/en-GB/en-GB.mod_${modulefilters.name}.sys.ini" todir="${copy.src.target}/modules/mod_imcfilters/language/en-GB"/>
+        <copy file="${modulefilterssrc}/language/el-GR/el-GR.mod_${modulefilters.name}.sys.ini" todir="${copy.src.target}/modules/mod_imcfilters/language/el-GR"/>
+        -->
+        
+    </target>
 
     <target name="_copy_media" description="Copies files to dst project.">
         <echo message="Running build.xml...." />

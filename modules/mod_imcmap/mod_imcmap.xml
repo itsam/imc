@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="module" version="3.0" method="upgrade" client="site">
+    <name>MOD_IMCMAP_NAME</name>
+    <creationDate>2014-08-25</creationDate>
+    <copyright>Copyright (C) 2014. All rights reserved.</copyright>
+    <license>GNU AFFERO GENERAL PUBLIC LICENSE Version 3; see LICENSE</license>
+    <author>Ioannis Tsampoulatidis</author>
+    <authorEmail>tsampoulatidis@gmail.com</authorEmail>
+    <authorUrl>https://github.com/itsam</authorUrl>
+    <version>3.0.0</version>
+    <description>MOD_IMCMAP_DESCRIPTION</description>
+    
+    <files>
+        <filename module="mod_imcmap">mod_imcmap.php</filename>
+        <filename>helper.php</filename>
+        <filename>index.html</filename>
+        <folder>tmpl</folder>
+        <folder>assets</folder>
+    </files>
+    <languages folder="language">
+			<language tag="en-GB">en-GB/en-GB.mod_imcmap.ini</language>
+			<language tag="en-GB">en-GB/en-GB.mod_imcmap.sys.ini</language>
+			<language tag="el-GR">el-GR/el-GR.mod_imcmap.ini</language>
+			<language tag="el-GR">el-GR/el-GR.mod_imcmap.sys.ini</language>
+    </languages>
+    <config>
+        <fields name="params">
+            <fieldset name="layout_type" label="MOD_IMCMAP_LAYOUT_TAB_LBL">
+                <field name="layout_type" 
+                    type="list"
+                    label="MOD_IMCMAP_LAYOUT_TYPE_LBL">
+                    <option value="default">MOD_IMCMAP_LAYOUT_DEFAULT</option>
+                </field>
+
+            </fieldset>
+     
+        </fields>
+    </config>
+</extension>
