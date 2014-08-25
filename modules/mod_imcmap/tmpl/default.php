@@ -26,13 +26,13 @@ if ($option == 'com_imc' && $view != 'issues'){
 	return;
 }
 ?>
-
+<p>I am the MAP</p>
 <div id="imc-map-canvas"></div>
-
+<p>I am the MAP.</p>
 <?php 
-		//http://stackoverflow.com/questions/25209463/asynchronous-loading-of-google-map-markers-from-json-data
+		
 		//initialize map
-		//$script = array();
-		//$script[] = "google.maps.event.addDomListener(window, 'load', initialize);";
-		//JFactory::getDocument()->addScriptDeclaration(implode("\n", $script));
+		$script = array();
+		$script[] = "google.maps.event.addDomListener(window, 'load', imc_mod_map_initialize);";
+		JFactory::getDocument()->addScriptDeclaration(implode("\n", $script));
 ?>

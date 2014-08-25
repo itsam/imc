@@ -12,7 +12,7 @@ defined('_JEXEC') or die;
 
 // Include the syndicate functions only once
 require_once __DIR__ . '/helper.php';
-JHtml::_('jquery.framework');
+//JHtml::_('jquery.framework');
 $doc = JFactory::getDocument();
 $doc->addStyleSheet(JURI::base() . '/modules/mod_imcmap/assets/css/style.css');
 

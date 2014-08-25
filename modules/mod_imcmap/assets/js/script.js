@@ -1,5 +1,5 @@
-var map;
-function initialize() {
+var imc_mod_map;
+function imc_mod_map_initialize() {
 	var latitude = 40.62,
 	    longitude = 22.96,
 	    center = new google.maps.LatLng(latitude,longitude);
@@ -9,10 +9,10 @@ function initialize() {
     zoom: 14,
     center: center
   };
-  map = new google.maps.Map(document.getElementById('imc-map-canvas'),
+  imc_mod_map = new google.maps.Map(document.getElementById('imc-map-canvas'),
       mapOptions);
 
-  setMarkers(center, map)
+  setMarkers(center, imc_mod_map)
 }
 
 function setMarkers(center, map) {
@@ -37,15 +37,15 @@ function setMarkers(center, map) {
 
 
 			            // Creating a marker and putting it on the map
-			            var marker = new google.maps.Marker({
+			            var imc_mod_marker = new google.maps.Marker({
 			                position: latLng,
 			                map: map,
 			                title: data.title
 			            });
-			            infoBox(map, marker, data);
+			            infoBox(map, imc_mod_marker, data);
 
 			            if(data.state == 0){
-			            	marker.setIcon('http://maps.google.com/mapfiles/ms/icons/blue-dot.png');
+			            	imc_mod_marker.setIcon('http://maps.google.com/mapfiles/ms/icons/blue-dot.png');
 			            }
 			    }
 
@@ -80,5 +80,3 @@ function infoBox(map, marker, data) {
       });
     })(marker, data);
 }
-
-google.maps.event.addDomListener(window, 'load', initialize);
