@@ -207,6 +207,7 @@ class ImcModelIssues extends JModelList {
     }
 
     public function getItems() {
+        parent::populateState();
         $items = parent::getItems();
 
 /*        

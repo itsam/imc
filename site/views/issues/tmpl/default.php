@@ -74,7 +74,6 @@ $canDelete = $user->authorise('core.delete', 'com_imc');
         </tfoot>
         <tbody>
 
-        <a href="index.php?option=com_imc&task=issues.markers&format=json">ISSUES MARKERS JSON</a><br />
             <?php foreach ($this->items as $i => $item) : ?>
 
                 <?php 
