@@ -26,11 +26,9 @@ if ($option == 'com_imc' && $view != 'issues'){
 	return;
 }
 ?>
-<p>I am the MAP</p>
 <div id="imc-map-canvas"></div>
-<p>I am the MAP.</p>
+ 
 <?php 
-		
 		//initialize map
 		$script = array();
 		$script[] = "google.maps.event.addDomListener(window, 'load', imc_mod_map_initialize);";
