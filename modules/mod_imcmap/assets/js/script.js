@@ -12,7 +12,7 @@ function imc_mod_map_initialize() {
   imc_mod_map = new google.maps.Map(document.getElementById('imc-map-canvas'),
       mapOptions);
 
-  setMarkers(center, imc_mod_map)
+  setMarkers(center, imc_mod_map);
 }
 
 function setMarkers(center, map) {
@@ -24,30 +24,27 @@ function setMarkers(center, map) {
             'url': "index.php?option=com_imc&task=issues.markers&format=json", 
             'dataType': "json", 
             'success': function (data) {
-                 json = data; 
+                json = data; 
 
 
 
-			    //loop between each of the json elements
-			    for (var i = 0, length = json.data.length; i < length; i++) {
-			        var data = json.data[i],
+      			    //loop between each of the json elements
+      			    for (var i = 0, length = json.data.length; i < length; i++) {
+      			        var data = json.data[i],
+      			        latLng = new google.maps.LatLng(data.latitude, data.longitude); 
 
-			        latLng = new google.maps.LatLng(data.latitude, data.longitude); 
+  			            // Create marker and putting it on the map
+  			            var imc_mod_marker = new google.maps.Marker({
+  			                position: latLng,
+  			                map: map,
+  			                title: data.title
+  			            });
+  			            infoBox(map, imc_mod_marker, data);
 
-
-
-			            // Creating a marker and putting it on the map
-			            var imc_mod_marker = new google.maps.Marker({
-			                position: latLng,
-			                map: map,
-			                title: data.title
-			            });
-			            infoBox(map, imc_mod_marker, data);
-
-			            if(data.state == 0){
-			            	imc_mod_marker.setIcon('http://maps.google.com/mapfiles/ms/icons/blue-dot.png');
-			            }
-			    }
+  			            if(data.state == 0){
+  			            	imc_mod_marker.setIcon('http://maps.google.com/mapfiles/ms/icons/blue-dot.png');
+  			            }
+      			    }
 
 
              }
@@ -56,9 +53,6 @@ function setMarkers(center, map) {
     })();
 
 
-
-
-    
 }
 
 
@@ -71,7 +65,7 @@ function infoBox(map, marker, data) {
     });
 
     // Creating a closure to retain the correct data 
-    // Note how I pass the current data in the loop into the closure (marker, data)
+    // Pass the current data in the loop into the closure (marker, data)
     (function(marker, data) {
       // Attaching a click event to the current marker
       google.maps.event.addListener(marker, "click", function(e) {

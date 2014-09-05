@@ -10,27 +10,24 @@
  */
 defined('_JEXEC') or die;
 
-// Check for component
-if (!JComponentHelper::getComponent('com_imc', true)->enabled)
-{
-	echo '<div class="alert alert-danger">Improve My City component is not enabled</div>';
-	return;
-}
+
 
 $jinput = JFactory::getApplication()->input;
 $option = $jinput->get('option', null);
 $view = $jinput->get('view', null);
 
+//Show module only on issues list view
 if ($option == 'com_imc' && $view != 'issues'){
 	$module->showtitle = false;
 	return;
 }
 ?>
+
 <div id="imc-map-canvas"></div>
- 
+
 <?php 
-		//initialize map
-		$script = array();
-		$script[] = "google.maps.event.addDomListener(window, 'load', imc_mod_map_initialize);";
-		JFactory::getDocument()->addScriptDeclaration(implode("\n", $script));
+	//initialize map
+	$script = array();
+	$script[] = "google.maps.event.addDomListener(window, 'load', imc_mod_map_initialize);";
+	JFactory::getDocument()->addScriptDeclaration(implode("\n", $script));
 ?>

@@ -10,6 +10,13 @@
  */
 defined('_JEXEC') or die;
 
+// Check for component
+if (!JComponentHelper::getComponent('com_imc', true)->enabled)
+{
+	echo '<div class="alert alert-danger">Improve My City component is not enabled</div>';
+	return;
+}
+
 // Include the syndicate functions only once
 require_once __DIR__ . '/helper.php';
 //JHtml::_('jquery.framework');
