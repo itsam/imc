@@ -182,18 +182,22 @@ class JFormFieldGmap extends JFormField
 		}
 		$html[] = '	</div>';		
 		$html[] = '</div>';		
-	 
+
 		$html[] = '<!-- Modal -->';
-		$html[] = '<div id="searchModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">';
-		$html[] = '	<div class="modal-header">';
-		$html[] = '		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>';
-		$html[] = '		<h3 id="searchModalLabel">Search Results</h3>';
-		$html[] = '	</div>';
-		$html[] = '	<div class="modal-body">';
-		$html[] = '		<p id="searchBody">One fine body…</p>';
-		$html[] = '	</div>';
-		$html[] = '	<div class="modal-footer">';
-		$html[] = '		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>';
+		$html[] = '<div id="searchModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">';
+		$html[] = '	<div class="modal-dialog modal-sm">';
+		$html[] = '		<div class="modal-content">';
+		$html[] = '			<div class="modal-header">';
+		$html[] = '				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>';
+		$html[] = '				<h3 id="searchModalLabel">Search Results</h3>';
+		$html[] = '			</div>';
+		$html[] = '			<div class="modal-body">';
+		$html[] = '				<p id="searchBody">One fine body…</p>';
+		$html[] = '			</div>';
+		$html[] = '			<div class="modal-footer">';
+		$html[] = '				<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>';
+		$html[] = '			</div>';
+		$html[] = '		</div>';
 		$html[] = '	</div>';
 		$html[] = '</div>';
 

@@ -168,20 +168,25 @@ class JFormFieldStep extends JFormField
 		$html[] = '<a id="'.$this->type.'_reason_btn" href="#'.$this->type.'Modal" role="button" class="btn btn-mini hide" data-toggle="modal">Reason</a>';
 
 		$html[] = '<!-- Modal -->';
-		$html[] = '<div id="'.$this->type.'Modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="'.$this->type.'ModalLabel" aria-hidden="true">';
-		$html[] = '	<div class="modal-header">';
-		$html[] = '		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>';
-		$html[] = '		<h3 id="'.$this->type.'ModalLabel">'.$this->type.' Modification: Reason Description</h3>';
+		$html[] = '<div id="'.$this->type.'Modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="'.$this->type.'ModalLabel" aria-hidden="true">';
+		$html[] = '	<div class="modal-dialog modal-sm">';
+		$html[] = '		<div class="modal-content">';
+		$html[] = '			<div class="modal-header">';
+		$html[] = '				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>';
+		$html[] = '				<h3 id="'.$this->type.'ModalLabel">'.$this->type.' Modification: Reason Description</h3>';
+		$html[] = '			</div>';
+		$html[] = '			<div class="modal-body">';
+		$html[] = '				<p id="'.$this->type.'Body">';
+		$html[] = '				<textarea style="width:98%;resize:none;" rows="6" cols="75" id="jform_'.$this->element['descriptionfield'].'" name="jform['.$this->element['descriptionfield'].']"></textarea>';
+		$html[] = '				</p>';
+		$html[] = '				<p>(if set on options, notifications will be sent on save)</p>';
+		$html[] = '			</div>';
+		$html[] = '			<div class="modal-footer">';
+		$html[] = '				<button id="save_'.$this->type.'_reason" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">OK</button>';
+		$html[] = '			</div>';
+		$html[] = '		</div>';
 		$html[] = '	</div>';
-		$html[] = '	<div class="modal-body">';
-		$html[] = '		<p id="'.$this->type.'Body">';
-		$html[] = '		<textarea style="width:98%;resize:none;" rows="6" cols="75" id="jform_'.$this->element['descriptionfield'].'" name="jform['.$this->element['descriptionfield'].']"></textarea>';
-		$html[] = '		</p>';
-		$html[] = '		<p>(if set on options, notifications will be sent on save)</p>';
-		$html[] = '	</div>';
-		$html[] = '	<div class="modal-footer">';
-		$html[] = '		<button id="save_'.$this->type.'_reason" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">OK</button>';
-		$html[] = '	</div>';
+
 		$html[] = '</div>';
 		return implode("\n", $html);
 	}
