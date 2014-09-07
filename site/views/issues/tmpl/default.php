@@ -97,9 +97,9 @@ $canDelete = $user->authorise('core.delete', 'com_imc');
                         <td class="center">
                             <a class="btn btn-micro <?php echo $class; ?>" href="<?php echo ($canChange) ? JRoute::_('index.php?option=com_imc&task=issue.publish&id=' . $item->id . '&state=' . (($item->state + 1) % 2), false, 2) : '#'; ?>">
                                 <?php if ($item->state == 1): ?>
-                                    <i class="icon-publish"></i>
+                                    <i class="icon-ok"></i>
                                 <?php else: ?>
-                                    <i class="icon-unpublish"></i>
+                                    <i class="icon-remove"></i>
                                 <?php endif; ?>
                             </a>
                         </td>

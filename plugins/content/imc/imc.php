@@ -25,7 +25,7 @@ class plgContentimc extends JPlugin
 		// Check we are manipulating a valid form.
 		$name = $form->getName();
 		//if (!in_array($name, array('com_content.article','com_categories.categorycom_content'))) {
-		if (!in_array($name, array('com_content.article', 'com_categories.categorycom_imc'))) {
+		if (!in_array($name, array('com_categories.categorycom_imc'))) {
 			return true;
 		}		
 
