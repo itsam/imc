@@ -11,6 +11,32 @@ defined('_JEXEC') or die;
 
 class ModImcfiltersHelper {
 
+    public function createLimitBox()
+    {
+        // Initialise variables.
+        $app = JFactory::getApplication();
+        $limit = $app->getUserStateFromRequest('global.list.limit', 'limit', $app->getCfg('list_limit'));
+
+        $jinput = JFactory::getApplication()->input;
+        //$selected = $jinput->get('list.limit');
+        $selected = $limit;
+
+        $html = '';
+        $values = array (1, 5, 10, 20, 100, 0);
+        foreach($values as $i){
+            $a = $i;
+            if($a == 0)
+                $a = JText::_('ALL');
+            if($selected == $i){
+                $html .= '<li><a href="#" onclick="jQuery(\'input[name=limit]\').val('.$i.');jQuery(\'#adminForm\').submit();">'.$a.' <i class="icon-ok"></i></a></li>';
+            }
+            else {
+                $html .= '<li><a href="#" onclick="jQuery(\'input[name=limit]\').val('.$i.');jQuery(\'#adminForm\').submit();">'.$a.'</a></li>';
+            }
+        }
+        return $html;
+    }
+
     /**
      * Retrieve component items
      * @param Joomla\Registry\Registry  &$params  module parameters

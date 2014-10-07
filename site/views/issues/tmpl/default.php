@@ -69,6 +69,7 @@ $canDelete = $user->authorise('core.delete', 'com_imc');
             <tr>
                 <td colspan="<?php echo isset($this->items[0]) ? count(get_object_vars($this->items[0])) : 10; ?>">
                     <?php echo $this->pagination->getListFooter(); ?>
+                    <?php //echo $this->pagination->getLimitBox(); ?>
                 </td>
             </tr>
         </tfoot>
@@ -165,6 +166,15 @@ $canDelete = $user->authorise('core.delete', 'com_imc');
     <input type="hidden" name="boxchecked" value="0" />
     <input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>" />
     <input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>" />
+    
+    <?php         
+        $app = JFactory::getApplication();
+        $limit = $app->getUserStateFromRequest('global.list.limit', 'limit', $app->getCfg('list_limit'));  
+        $limitstart = JFactory::getApplication()->input->getInt('limitstart', 0);      
+    ?>
+    <input type="text" name="limit" value="<?php echo $limit;?>" /> 
+    <input type="text" name="limitstart" value="<?php echo $limitstart;?>" />
+
     <?php echo JHtml::_('form.token'); ?>
 </form>
 
