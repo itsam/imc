@@ -28,12 +28,12 @@ $listDirn  = $jinput->get('filter_order_Dir');
 	<form class="form-search form-inline" action="<?php echo JRoute::_('index.php?option=com_imc&view=issues'); ?>" method="post" name="imc_filter_form" id="imc_filter_form">
 		<?php if ($option == 'com_imc' && $view != 'issues') : ?>
 			<span class="imc_btn_left">
-				<a href="<?php echo JRoute::_('index.php?option=com_imc', false, 2); ?>" class="btn btn-primary"><i class="icon-arrow-left"></i> <?php echo JText::_('COM_IMC_RETURN_TO_ISSUES'); ?></a>		
+				<a href="<?php echo JRoute::_('index.php?option=com_imc', false, 2); ?>" class="btn btn-primary"><i class="icon-arrow-left"></i> <?php echo JText::_('MOD_IMCFILTERS_RETURN_TO_ISSUES'); ?></a>		
 			</span>				
 		<?php else : ?>
 			<div class="imc_btn_left">
 				
-				<button type="button" class="btn btn-primary"><i class="icon-filter"></i> <?php echo JText::_('COM_IMC_FILTERS'); ?></button>
+				<button type="button" class="btn btn-primary"><i class="icon-filter"></i> <?php echo JText::_('MOD_IMCFILTERS_FILTERS'); ?></button>
 				
 				<div class="btn-group">
 				  
@@ -63,7 +63,7 @@ $listDirn  = $jinput->get('filter_order_Dir');
 	<?php $canCreate = JFactory::getUser()->authorise('core.create', 'com_imc'); ?>
 	<?php if ($canCreate): ?>
 		<div class="imc_btn_right">
-	    	<a href="<?php echo JRoute::_('index.php?option=com_imc&task=issue.edit&id=0', false, 2); ?>" class="btn btn-success btn-large"><i class="icon-plus"></i> <?php echo JText::_('COM_IMC_ADD_ITEM'); ?></a>
+	    	<a href="<?php echo JRoute::_('index.php?option=com_imc&task=issue.edit&id=0', false, 2); ?>" class="btn btn-success btn-large"><i class="icon-plus"></i> <?php echo JText::_('MOD_IMCFILTERS_ADD_ITEM'); ?></a>
 	    </div>
 	<?php endif; ?>
 
