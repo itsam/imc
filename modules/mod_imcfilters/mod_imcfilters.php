@@ -23,15 +23,16 @@ $option = $jinput->get('option', null);
 $view = $jinput->get('view', null);
 
 if ($option == 'com_imc' && $view != 'issues'){
-	$module->showtitle = false;
-	return;
+	if($params->get('show_on_details') == 0){
+		$module->showtitle = false;
+		return;
+	}
 }
-
 
 // Include the syndicate functions only once
 require_once __DIR__ . '/helper.php';
 
-//$doc = JFactory::getDocument();
-//$doc->addStyleSheet(JURI::base() . '/modules/mod_imc/assets/css/style.css');
-//$doc->addScript(JURI::base() . '/modules/mod_imc/assets/js/script.css');
+$doc = JFactory::getDocument();
+$doc->addStyleSheet(JURI::base() . '/modules/mod_imcfilters/assets/css/style.css');
+//$doc->addScript(JURI::base() . '/modules/mod_imc/assets/js/script.js');
 require JModuleHelper::getLayoutPath('mod_imcfilters', $params->get('layout_type', 'default'));

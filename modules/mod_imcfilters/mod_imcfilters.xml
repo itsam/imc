@@ -32,7 +32,14 @@
                     <option value="search">MOD_IMCFILTERS_LAYOUT_SEARCH</option>
                     <option value="category">MOD_IMCFILTERS_LAYOUT_CATEGORY</option>
                 </field>
-
+                <field name="show_on_details"
+                     type="radio"
+                     default="0"
+                     class="btn-group btn-group-yesno"
+                     label="MOD_IMCFILTERS_SHOW_ON_DETAILS">
+                     <option value="0">JNO</option>
+                     <option value="1">JYES</option>
+                </field>
             </fieldset>
      
         </fields>
