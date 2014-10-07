@@ -26,7 +26,6 @@
     
     <target name="_init" description="Settings overview">
         <tstamp/>
-        <mkdir dir="${build}"/>
         <echo message="src: ${src} "/>
         <echo message="target (web root): ${copy.src.target} "/>
         <echo message="------------------" />        
@@ -187,9 +186,10 @@
         </copy>
         
     </target>
-    <target name="_zipup" description="zips the archive" >
+    <target name="zipup" description="zips the archive" >
+        <mkdir dir="${build}"/>
         <zip destfile="${build}/${name}.zip">
-            <zipfileset dir="${src}" excludes="**/.git/,**/package/**"/>
+            <zipfileset dir="${src}" excludes="**/.git/,**/package/**,.gitignore,README.md,built.xml,build.properties,cache*,contributors.txt"/>
         </zip>
     </target>
 

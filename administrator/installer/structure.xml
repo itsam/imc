@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <component>
+<!--
   <table action="add" table_name="#__imc_issues" storage_engine="" collation="utf8_general_ci">
     <field field_name="id" field_type="INT" field_length="11" is_autoincrement="1" index="primary" description=""/>
     <field action="add" field_name="title" field_type="VARCHAR" field_length="255" description="Issue title"/>
@@ -90,4 +91,5 @@
     <field field_name="created_by" field_type="INT" field_length="11" index="index" description=""/>
     <field field_name="language" field_type="VARCHAR" field_length="255" description=""/>
   </table>
+-->
 </component>

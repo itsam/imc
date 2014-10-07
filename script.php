@@ -44,6 +44,7 @@ class com_imcInstallerScript {
     public function install($parent) {
         $this->installDb($parent);
         $this->installPlugins($parent);
+        $this->installModules($parent);
     }
 
     /**
