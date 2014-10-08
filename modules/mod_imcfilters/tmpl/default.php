@@ -60,10 +60,15 @@ $listDirn  = $jinput->get('filter_order_Dir');
 
 	</form>
 
+	<?php 
+		$jinput = JFactory::getApplication()->input;
+		$option = $jinput->get('option', null);
+		$view = $jinput->get('view', null);
+	?>
 	<?php $canCreate = JFactory::getUser()->authorise('core.create', 'com_imc'); ?>
-	<?php if ($canCreate): ?>
+	<?php if ($canCreate && $option == 'com_imc' && $view != 'issueform'): ?>
 		<div class="imc_btn_right">
-	    	<a href="<?php echo JRoute::_('index.php?option=com_imc&task=issue.edit&id=0', false, 2); ?>" class="btn btn-success btn-large"><i class="icon-plus"></i> <?php echo JText::_('MOD_IMCFILTERS_ADD_ITEM'); ?></a>
+	    	<a href="<?php echo JRoute::_('index.php?option=com_imc&task=issue.edit&id=0', false, 2); ?>" class="btn btn-success btn-large btn-lg"><i class="icon-plus"></i> <?php echo JText::_('MOD_IMCFILTERS_ADD_ITEM'); ?></a>
 	    </div>
 	<?php endif; ?>
 

@@ -157,10 +157,12 @@ $canDelete = $user->authorise('core.delete', 'com_imc');
         </tbody>
     </table>
 
+    <?php /*
     <?php $canCreate = $user->authorise('core.create', 'com_imc'); ?>
     <?php if ($canCreate): ?>
         <a href="<?php echo JRoute::_('index.php?option=com_imc&task=issue.edit&id=0', false, 2); ?>" class="btn btn-success btn-small"><i class="icon-plus"></i> <?php echo JText::_('COM_IMC_ADD_ITEM'); ?></a>
     <?php endif; ?>
+    */ ?>
 
     <input type="hidden" name="task" value="" />
     <input type="hidden" name="boxchecked" value="0" />
@@ -172,8 +174,8 @@ $canDelete = $user->authorise('core.delete', 'com_imc');
         $limit = $app->getUserStateFromRequest('global.list.limit', 'limit', $app->getCfg('list_limit'));  
         $limitstart = JFactory::getApplication()->input->getInt('limitstart', 0);      
     ?>
-    <input type="text" name="limit" value="<?php echo $limit;?>" /> 
-    <input type="text" name="limitstart" value="<?php echo $limitstart;?>" />
+    <input type="hidden" name="limit" value="<?php echo $limit;?>" /> 
+    <input type="hidden" name="limitstart" value="<?php echo $limitstart;?>" />
 
     <?php echo JHtml::_('form.token'); ?>
 </form>

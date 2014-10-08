@@ -71,8 +71,8 @@ class ImcModelIssues extends JModelList {
         $limitstart = JFactory::getApplication()->input->getInt('limitstart', 0);
         $this->setState('list.start', $limitstart);
 
-        echo 'limit='.$limit;
-        echo ' limitstart='.$limitstart;
+        //echo 'limit='.$limit;
+        //echo ' limitstart='.$limitstart;
 ///.
 
         // Load the filter state.
