@@ -31,7 +31,7 @@
                     label="MOD_IMCFILTERS_LAYOUT_TYPE_LBL">
                     <option value="default">MOD_IMCFILTERS_LAYOUT_DEFAULT</option>
                     <option value="search">MOD_IMCFILTERS_LAYOUT_SEARCH</option>
-                    <option value="category">MOD_IMCFILTERS_LAYOUT_CATEGORY</option>
+                    <option value="filters">MOD_IMCFILTERS_LAYOUT_FILTERS</option>
                 </field>
                 <field name="show_on_details"
                      type="radio"

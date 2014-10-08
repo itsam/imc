@@ -11,4 +11,10 @@
 defined('_JEXEC') or die;
 ?>
 
-<h1>Category only filters</h1>
+<?php $category_filters = ModImcfiltersHelper::getCategoryFilters();
+foreach ($category_filters as $filter) {
+	echo $filter;
+}
+?>
+
+<button class="btn btn-primary"><?php echo JText::_('Apply');?></button>
