@@ -34,5 +34,5 @@ require_once __DIR__ . '/helper.php';
 
 $doc = JFactory::getDocument();
 $doc->addStyleSheet(JURI::base() . '/modules/mod_imcfilters/assets/css/style.css');
-//$doc->addScript(JURI::base() . '/modules/mod_imc/assets/js/script.js');
+$doc->addScript(JURI::base() . '/modules/mod_imcfilters/assets/js/script.js');
 require JModuleHelper::getLayoutPath('mod_imcfilters', $params->get('layout_type', 'default'));

@@ -10,6 +10,107 @@
 defined('_JEXEC') or die;
 
 class ModImcfiltersHelper {
+    
+    private static $filters;
+
+    public static function getCategories($recursive = false)
+    {
+        $_categories = JCategories::getInstance('Imc');
+        $_parent = $_categories->get();
+        if(is_object($_parent))
+        {
+            $_items = $_parent->getChildren($recursive);
+        }
+        else
+        {
+            $_items = false;
+        }
+        return ModImcfiltersHelper::loadCats($_items);
+    }
+        
+    private static function loadCats($cats = array())
+    {
+        if(is_array($cats))
+        {
+            $i = 0;
+            $return = array();
+            foreach($cats as $JCatNode)
+            {
+                $return[$i] = new stdClass();
+                $return[$i]->title = $JCatNode->title;
+                $return[$i]->parentid = $JCatNode->parent_id;
+                $return[$i]->path = $JCatNode->get('path');
+                $return[$i]->id = $JCatNode->id;
+                //$params = new JRegistry();
+                //$params->loadJSON($JCatNode->params);
+                //$return[$i]->image = $params->get('image');
+
+                if($JCatNode->hasChildren())
+                    $return[$i]->children = ModImcfiltersHelper::loadCats($JCatNode->getChildren());
+                else
+                    $return[$i]->children = false;
+
+                $i++;
+            }
+            return $return;
+        }
+        return false;
+    }
+
+    private static function createFilters($cats = array())
+    {
+        //$jinput = JFactory::getApplication()->input;
+        $filter_category = '';//$this->state->get('filter_category');    
+    
+        self::$filters .= '<ul>';
+        foreach($cats as $JCatNode){
+            //id is the category id
+            if(empty($filter_category)){
+                if($JCatNode->parentid == 'root')       
+                    self::$filters .='<li><input path="'.$JCatNode->path.'" parent="box'.$JCatNode->parentid.'" name="cat[]" value="'.$JCatNode->id.'" type="checkbox" checked="checked" id="cat-'.$JCatNode->id.'" onclick="imc_filterbox_click(this,'.$JCatNode->id.')" /><span class="root">'.$JCatNode->title.'</span></li>' . "\n";
+                else
+                    self::$filters .='<li><input path="'.$JCatNode->path.'" parent="box'.$JCatNode->parentid.'" name="cat[]" value="'.$JCatNode->id.'" type="checkbox" checked="checked" id="cat-'.$JCatNode->id.'" onclick="imc_filterbox_click(this,'.$JCatNode->id.')" />'.$JCatNode->title.'</li>' . "\n";
+            }
+            else{
+                if($JCatNode->parentid == 'root'){
+                    self::$filters .='<li><input path="'.$JCatNode->path.'" parent="box'.$JCatNode->parentid.'" name="cat[]" value="'.$JCatNode->id.'" type="checkbox" '; if(in_array($JCatNode->id, $filter_category)) $this->filters .= 'checked="checked"'; $this->filters .= ' id="cat-'.$JCatNode->id.'" onclick="imc_filterbox_click(this,'.$JCatNode->id.')" /><span class="root">'.$JCatNode->title.'</span></li>' . "\n";
+                }
+                else{
+                    self::$filters .='<li><input path="'.$JCatNode->path.'" parent="box'.$JCatNode->parentid.'" name="cat[]" value="'.$JCatNode->id.'" type="checkbox" '; if(in_array($JCatNode->id, $filter_category)) $this->filters .= 'checked="checked"'; $this->filters .= ' id="cat-'.$JCatNode->id.'" onclick="imc_filterbox_click(this,'.$JCatNode->id.')" />'.$JCatNode->title.'</li>' . "\n";
+                }   
+            }
+            
+            if(!empty($JCatNode->children)){
+                ModImcfiltersHelper::createFilters($JCatNode->children);
+            }
+        
+        }
+        self::$filters .= '</ul>';
+
+        return self::$filters;
+    }
+    
+    private static function createFiltersAsArray($cats)
+    {
+        $ar[] = null;
+        foreach($cats as $cat){
+            self::$filters = '';
+            $ar[] = ModImcfiltersHelper::createFilters(array($cat));
+        }
+        self::$filters = '';
+        return $ar;
+    }
+
+
+
+
+
+
+
+
+
+
+
 
     public function createLimitBox()
     {
@@ -37,77 +138,43 @@ class ModImcfiltersHelper {
         return $html;
     }
 
-    /**
-     * Retrieve component items
-     * @param Joomla\Registry\Registry  &$params  module parameters
-     * @return array Array with all the elements
-     */
-    public static function getList(&$params) {
-        $db = JFactory::getDbo();
-        $query = $db->getQuery(true);
-
-        /* @var $params Joomla\Registry\Registry */
-        $query
-                ->select('*')
-                ->from($params->get('table'));
-
-        $db->setQuery($query, $params->get('offset'), $params->get('limit'));
-        $rows = $db->loadObjectList();
-        return $rows;
-    }
-
-    /**
-     * Retrieve component items
-     * @param Joomla\Registry\Registry  &$params  module parameters
-     * @return mixed stdClass object if the item was found, null otherwise
-     */
-    public static function getItem(&$params) {
-        $db = JFactory::getDbo();
-        $query = $db->getQuery(true);
-
-        /* @var $params Joomla\Registry\Registry */
-        $query
-                ->select('*')
-                ->from($params->get('item_table'))
-                ->where('id = ' . intval($params->get('item_id')));
-
-        $db->setQuery($query);
-        $element = $db->loadObject();
-        return $element;
-    }
 
 
-    /**
-     * Checks if an element should appear in the table/item view
-     * @param string $field name of the field
-     * @return boolean True if it should appear, false otherwise
-     */
-    public static function shouldAppear($field) {
-        $noHeaderFields = array('checked_out_time', 'checked_out', 'ordering', 'state');
-        return !in_array($field, $noHeaderFields);
-    }
 
+    public static function getCategoryFilters($cat_id = 0) {
+        $categories = ModImcfiltersHelper::getCategories();
+        return ModImcfiltersHelper::createFiltersAsArray($categories);
+        /*
+        $categories = ModImcfiltersHelper::getCategories();
+        $tree = array();
+        foreach ($categories as $row) {
+            if($row['parent_id'] == 1) {
+                $row['Children'] = array();
+                $tree[$row['id']] = $row;
+            } else {
+                $tree[$row['parent_id']]['Children'][] = $row;
+            }       
+        }
+        */
     
+        /*       
+        $tree = array();
+        $categories = JCategories::getInstance('Imc');
+        $cat = $categories->get($cat_id);
+        $children = $cat->getChildren(); 
+        foreach ($children as $child) {
+            //echo ':'.$child->title . '<br />';
+            $tree[$child->id] = $child->title;
+            ModImcfiltersHelper::createCategoryFilters($child->id);
+        }
 
-    /**
-     * Method to get a value from a external table
-     * @param string $source_table Source table name
-     * @param string $key_field Source key field 
-     * @param string $value_field Source value field
-     * @param mixed  $key_value Value for the key field
-     * @return mixed The value in the external table or null if it wasn't found
-     */
-    private static function loadValueFromExternalTable($source_table, $key_field, $value_field, $key_value) {
-        $db = JFactory::getDbo();
-        $query = $db->getQuery(true);
+        return $tree;
+        */
 
-        $query
-                ->select($value_field)
-                ->from($source_table)
-                ->where($key_field . ' = ' . $db->quote($key_value));
-
-
-        $db->setQuery($query);
-        return $db->loadResult();
+        /*
+        return JHtmlCategory::options('com_imc');
+        */
     }
+
+   
 }
