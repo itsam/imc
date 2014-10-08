@@ -29,7 +29,7 @@ $owned = $app->getUserStateFromRequest('com_imc.issues.filter.owned', 'filter_ow
 			</p>
 		<?php endif; ?>
 
-	    <button type="submit" class="btn">Search</button>
+	    <button type="submit" class="btn">Search / Apply</button>
 	    </p>
 	</form>
 </div>
