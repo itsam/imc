@@ -42,6 +42,8 @@
             label="COM_IMC_FORM_LBL_ISSUE_CATID"
             description="COM_IMC_FORM_DESC_ISSUE_CATID" 
             required="true" 
+            published="1"
+            action="edit"
             extension="com_imc" 
             descriptionfield="category_modified_description"
             flagfield="is_category_modified" 

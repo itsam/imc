@@ -38,6 +38,18 @@ class JFormFieldCat extends JFormFieldStep
 		return $results;
 	}
 
+	protected function getAccessById($id)
+	{
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query->select('access')
+              ->from('#__categories')
+              ->where('id='.$id);
+        $db->setQuery($query);
+        $results = $db->loadRow();		
+		return $results;
+	}
+
 	public function getOptions()
 	{
 		$options = array();
@@ -66,6 +78,8 @@ class JFormFieldCat extends JFormFieldStep
 
 				foreach ($options as $i => $option)
 				{
+					$cat = $this->getAccessById($option->value);
+
 					/*
 					 * To take save or create in a category you need to have create rights for that category
 					 * unless the item is already in that category.
@@ -75,6 +89,13 @@ class JFormFieldCat extends JFormFieldStep
 					{
 						unset($options[$i]);
 					}
+
+					/* itsam added: check category access */
+					else if(!in_array($cat[0], $user->getAuthorisedViewLevels())){
+						unset($options[$i]);	
+					}
+
+
 				}
 
 			}
