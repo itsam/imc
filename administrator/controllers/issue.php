@@ -24,6 +24,11 @@ class ImcControllerIssue extends JControllerForm
     //override postSaveHook
     protected function postSaveHook(JModelLegacy $model, $validData = array())
     {
+        // Get the event dispatcher.
+        $dispatcher = JEventDispatcher::getInstance();
+        // Load the imc plugin group.
+        JPluginHelper::importPlugin('imc');
+
         //A: inform log table about the new issue
         if($validData['id'] == 0){
             
@@ -40,16 +45,22 @@ class ImcControllerIssue extends JControllerForm
             $data2['language'] = $validData['language'];
             $data2['rules'] = $validData['rules'];
             
-            // Get the event dispatcher.
-            $dispatcher = JEventDispatcher::getInstance();
 
-            // Load the finder plugin group.
-            JPluginHelper::importPlugin('imc');
+            if (!$log->bind($data2))
+            {
+                JFactory::getApplication()->enqueueMessage('Cannot bind data to log table', 'error'); 
+            }
+
+            if (!$log->save($data2))
+            {
+                JFactory::getApplication()->enqueueMessage('Cannot save data to log table', 'error'); 
+            }
+
+
             try
             {
                 // Trigger the event.
                 $results = $dispatcher->trigger( 'onAfterNewIssueAdded', array( $model, $validData ) );
-
                 // Check the returned results. This is for plugins that don't throw
                 // exceptions when they encounter serious errors.
                 if (in_array(false, $results))
@@ -63,17 +74,6 @@ class ImcControllerIssue extends JControllerForm
                 throw $e;
             }
 
-
-
-            if (!$log->bind($data2))
-            {
-                JFactory::getApplication()->enqueueMessage('Cannot bind data to log table', 'error'); 
-            }
-
-            if (!$log->save($data2))
-            {
-                JFactory::getApplication()->enqueueMessage('Cannot save data to log table', 'error'); 
-            }
 
         }
         else {
@@ -103,6 +103,8 @@ class ImcControllerIssue extends JControllerForm
                 {
                     JFactory::getApplication()->enqueueMessage('Cannot save data to log table', 'error'); 
                 }
+
+                $dispatcher->trigger( 'onAfterStepModified', array( $model, $validData ) );
             }
 
             //b. check for category modification

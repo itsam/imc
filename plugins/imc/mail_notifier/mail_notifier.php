@@ -10,8 +10,14 @@ class plgImcmail_notifier extends JPlugin
 	{
 		print_r($validData);
 		print_r($model);
-		echo 'I AM MAIL NOTIFIER PLUGIN';
+		die;
 		JFactory::getApplication()->enqueueMessage('Notification mail sent', 'info');
 	}	
 
+	function onAfterStepModified($model, $validData)
+	{
+		print_r($validData);
+		print_r($model);die;
+		JFactory::getApplication()->enqueueMessage('Notification mail sent because step is modified', 'info');
+	}	
 }
