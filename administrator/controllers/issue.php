@@ -9,9 +9,7 @@
 
 // No direct access
 defined('_JEXEC') or die;
-
 jimport('joomla.application.component.controllerform');
-
 /**
  * Issue controller class.
  */
@@ -26,10 +24,9 @@ class ImcControllerIssue extends JControllerForm
     //override postSaveHook
     protected function postSaveHook(JModelLegacy $model, $validData = array())
     {
-
         //A: inform log table about the new issue
         if($validData['id'] == 0){
-        
+            
             $log = JTable::getInstance('Log', 'ImcTable', array());
 
             $data2['state'] = 1;
@@ -42,6 +39,31 @@ class ImcControllerIssue extends JControllerForm
             $data2['updated'] = $validData['created'];
             $data2['language'] = $validData['language'];
             $data2['rules'] = $validData['rules'];
+            
+            // Get the event dispatcher.
+            $dispatcher = JEventDispatcher::getInstance();
+
+            // Load the finder plugin group.
+            JPluginHelper::importPlugin('imc');
+            try
+            {
+                // Trigger the event.
+                $results = $dispatcher->trigger( 'onAfterNewIssueAdded', array( $model, $validData ) );
+
+                // Check the returned results. This is for plugins that don't throw
+                // exceptions when they encounter serious errors.
+                if (in_array(false, $results))
+                {
+                    throw new Exception($dispatcher->getError(), 500);
+                }
+            }
+            catch (Exception $e)
+            {
+                // Handle a caught exception.
+                throw $e;
+            }
+
+
 
             if (!$log->bind($data2))
             {
@@ -52,6 +74,7 @@ class ImcControllerIssue extends JControllerForm
             {
                 JFactory::getApplication()->enqueueMessage('Cannot save data to log table', 'error'); 
             }
+
         }
         else {
 

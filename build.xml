@@ -12,6 +12,7 @@
     <property name="modulemapsrc" location="modules/mod_${modulemap.name}"/>
     <property name="searchpluginsrc" location="plugins/search/${search.plugin.name}"/>
     <property name="contentpluginsrc" location="plugins/content/${content.plugin.name}"/>
+    <property name="mailnotifierpluginsrc" location="plugins/imc/${imc.mail_notifier.name}"/>
     <property name="build" location="package"/>
     
     <property name="sitedst"  value="${copy.src.target}/components/com_${name}" />
@@ -22,6 +23,7 @@
     <property name="mediadst"  value="${copy.src.target}/media/com_${name}" />
     <property name="searchplugindst"  value="${copy.src.target}/plugins/search/${search.plugin.name}" />
     <property name="contentplugindst"  value="${copy.src.target}/plugins/content/${content.plugin.name}" />
+    <property name="mailnotifierplugindst"  value="${copy.src.target}/plugins/imc/${imc.mail_notifier.name}" />
     <property name="manifest"  value="${src}/${name}.xml" />
     
     <target name="_init" description="Settings overview">
@@ -134,6 +136,25 @@
         
     </target>
 
+    <target name="_copy_mail_notifier_plugin" description="Copies mail notifier plugin files to dst project.">
+        <echo message="Running build.xml...." />
+        <copy todir="${mailnotifierplugindst}">
+            <fileset dir="${mailnotifierpluginsrc}">
+                <modified/>
+                <exclude name="**/*.git/"/>
+                <exclude name="language/" />
+            </fileset>
+        </copy>
+        <copy file="${mailnotifierpluginsrc}/language/en-GB/en-GB.plg_imc_${imc.mail_notifier.name}.ini" todir="${copy.src.target}/administrator/language/en-GB"/>
+        <copy file="${mailnotifierpluginsrc}/language/el-GR/el-GR.plg_imc_${imc.mail_notifier.name}.ini" todir="${copy.src.target}/administrator/language/el-GR"/>
+        <copy file="${mailnotifierpluginsrc}/language/en-GB/en-GB.plg_imc_${imc.mail_notifier.name}.sys.ini" todir="${copy.src.target}/administrator/language/en-GB"/>
+        <copy file="${mailnotifierpluginsrc}/language/el-GR/el-GR.plg_imc_${imc.mail_notifier.name}.sys.ini" todir="${copy.src.target}/administrator/language/el-GR"/>
+
+        <copy file="${mailnotifierpluginsrc}/language/en-GB/en-GB.plg_imc_${imc.mail_notifier.name}.sys.ini" todir="${copy.src.target}/plugins/imc/${imc.mail_notifier.name}/language/en-GB"/>
+        <copy file="${mailnotifierpluginsrc}/language/el-GR/el-GR.plg_imc_${imc.mail_notifier.name}.sys.ini" todir="${copy.src.target}/plugins/imc/${imc.mail_notifier.name}/language/el-GR"/>
+        
+    </target>
+
     <target name="_copy_modfilters" description="Copies filters module files to dst project.">
         <echo message="Copying modulefilters files: ${modulefilterssrc} --> ${modulefiltersdst}" />
         <copy todir="${modulefiltersdst}">
@@ -193,7 +214,7 @@
         </zip>
     </target>
 
-    <target name="build" depends="_copy_site,_copy_admin,_copy_search_plugin,_copy_content_plugin,_copy_modfilters,_copy_modmap"
+    <target name="build" depends="_copy_site,_copy_admin,_copy_search_plugin,_copy_content_plugin,_copy_modfilters,_copy_modmap,_copy_mail_notifier_plugin"
             description="Copies to appropriate directories in Joomla site" >
     </target>   
 

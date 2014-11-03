@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="3.1" type="plugin" group="imc" method="upgrade">
+    <name>Improve My City Mail Notifier</name>
+    <author>Ioannis Tsampoulatidis</author>
+    <creationDate>2014-11-01</creationDate>
+    <copyright>Copyright (C) 2014. All rights reserved.</copyright>
+    <license>GNU AFFERO GENERAL PUBLIC LICENSE Version 3; see LICENSE</license>
+    <authorEmail>tsampoulatidis@gmail.com</authorEmail>
+    <authorUrl>https://github.com/itsam</authorUrl>
+    <version>3.0.0</version>
+    <description>PLG_IMC_MAIL_NOTIFIER_XML_DESCRIPTION</description>
+
+    <files>
+        <filename plugin="mail_notifier">mail_notifier.php</filename>
+        <filename>index.html</filename>
+        <filename>language/en-GB/en-GB.plg_imc_mail_notifier.sys.ini</filename>
+        <filename>language/el-GR/el-GR.plg_imc_mail_notifier.sys.ini</filename>
+    </files>
+
+    <languages folder="language">
+			<language tag="en-GB">en-GB/en-GB.plg_imc_mail_notifier.ini</language>
+			<language tag="en-GB">en-GB/en-GB.plg_imc_mail_notifier.sys.ini</language>
+			<language tag="el-GR">el-GR/el-GR.plg_imc_mail_notifier.ini</language>
+			<language tag="el-GR">el-GR/el-GR.plg_imc_mail_notifier.sys.ini</language>
+    </languages>
+</extension>
