@@ -15,7 +15,7 @@
             description="COM_IMC_FORM_DESC_ISSUE_TITLE" 
             required="true" 
             menu_published="0"
-            
+            class="inputbox input-xxlarge input-large-text"
             filter="string" /> 
 
      
@@ -23,7 +23,7 @@
             type="step" 
             label="Current Step" 
             description="" 
-            required="true"
+            required="false"
             descriptionfield="step_modified_description"
             flagfield="is_step_modified" 
             /> 
@@ -70,6 +70,7 @@
             description="COM_IMC_FORM_DESC_ISSUE_DESCRIPTION" 
             cols="100"
             rows="8"
+            class="full-width"
             filter="safehtml" /> 
 
         <field name="address" type="gmap" 
@@ -119,23 +120,23 @@
             <option value="*">JALL</option>
         </field>
 
-        <field name="hits" type="text" size="40" class="inputbox"
+        <field name="hits" type="hidden" size="40" class="inputbox"
             label="COM_IMC_FORM_LBL_ISSUE_HITS"
             description="COM_IMC_FORM_DESC_ISSUE_HITS" 
             default="0" 
             filter="safehtml" /> 
 
-        <field name="note" type="text" size="40" class="inputbox"
+        <field name="note" type="text" size="40" class="inputbox full-width"
             label="COM_IMC_FORM_LBL_ISSUE_NOTE"
             description="COM_IMC_FORM_DESC_ISSUE_NOTE" 
             filter="safehtml" /> 
 
-        <field name="votes" type="text" size="40" class="inputbox"
+        <field name="votes" type="hidden" size="40" class="inputbox"
             label="COM_IMC_FORM_LBL_ISSUE_VOTES"
             description="COM_IMC_FORM_DESC_ISSUE_VOTES" 
             filter="safehtml" /> 
 
-        <field name="modality" type="text" size="40" class="inputbox"
+        <field name="modality" type="hidden" size="40" class="inputbox"
             label="COM_IMC_FORM_LBL_ISSUE_MODALITY"
             description="COM_IMC_FORM_DESC_ISSUE_MODALITY" 
             filter="safehtml" /> 

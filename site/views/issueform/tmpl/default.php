@@ -33,56 +33,80 @@ if($this->item->id) {
 } else {
 	$canState = JFactory::getUser()->authorise('core.edit.state','com_imc.issue.'.$this->item->id);
 }
-?>
-</style>
-<script type="text/javascript">
-    
 
-    
+//TODO: Add business logic here
+if(!$canState) {
+    JFormHelper::addFieldPath(JPATH_ROOT . '/components/com_imc/models/fields');
+    $steps = JFormHelper::loadFieldType('Step', false);
+    $options = $steps->getOptions();
+    $default_stepId = $options[0]->value;
+
+	$this->form->setFieldAttribute( 'stepid', 'readonly', 'true' );
+	$this->form->setFieldAttribute( 'access', 'disabled', 'disabled' );
+}
+
+?>
+
+<script type="text/javascript">
         jQuery(document).ready(function() {
+            jQuery('.imcid').css('display','none');
+            jQuery('.imcaccess').css('display','none');
+            jQuery('.imclanguage').css('display','none');
+
             jQuery('#form-issue').submit(function(event) {
                 
             });
 
-            
 			jQuery('input:hidden.stepid').each(function(){
 				var name = jQuery(this).attr('name');
 				if(name.indexOf('stepidhidden')){
 					jQuery('#jform_stepid option[value="' + jQuery(this).val() + '"]').attr('selected', 'selected');
 				}
 			});
-					jQuery("#jform_stepid").trigger("liszt:updated");
+
+			jQuery("#jform_stepid").trigger("liszt:updated");
         });
     
     
 </script>
 
 <div class="issue-edit front-end-edit">
+    <form id="form-issue" action="<?php echo JRoute::_('index.php?option=com_imc&task=issue.save'); ?>" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
+
     <?php if (!empty($this->item->id)): ?>
-        <h1>Edit <?php echo $this->item->id; ?></h1>
+        <h1><i class="icon-pencil"></i> Edit issue #<?php echo $this->item->id; ?></h1>
     <?php else: ?>
-        <h1>Add</h1>
+        <h1><i class="icon-plus-sign"></i> Report new issue</h1>
     <?php endif; ?>
 
-    <form id="form-issue" action="<?php echo JRoute::_('index.php?option=com_imc&task=issue.save'); ?>" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
-        
-	<div class="control-group">
-		<div class="control-label"><?php echo $this->form->getLabel('id'); ?></div>
-		<div class="controls"><?php echo $this->form->getInput('id'); ?></div>
-	</div>
+    <hr />
+
+
 	<div class="control-group">
 		<div class="control-label"><?php echo $this->form->getLabel('title'); ?></div>
 		<div class="controls"><?php echo $this->form->getInput('title'); ?></div>
 	</div>
+	
+	<div class="control-group imcid">
+		<div class="control-label"><?php echo $this->form->getLabel('id'); ?></div>
+		<div class="controls"><?php echo $this->form->getInput('id'); ?></div>
+	</div>	
+
+	<?php if (!empty($this->item->id)): /*existing*/?> 
 	<div class="control-group">
 		<div class="control-label"><?php echo $this->form->getLabel('stepid'); ?></div>
 		<div class="controls"><?php echo $this->form->getInput('stepid'); ?></div>
+		<?php foreach((array)$this->item->stepid as $value): ?>
+			<?php if(!is_array($value)): ?>
+				<input type="hidden" class="stepid" name="jform[stepidhidden][<?php echo $value; ?>]" value="<?php echo $value; ?>" />
+			<?php endif; ?>
+		<?php endforeach; ?>
 	</div>
-	<?php foreach((array)$this->item->stepid as $value): ?>
-		<?php if(!is_array($value)): ?>
-			<input type="hidden" class="stepid" name="jform[stepidhidden][<?php echo $value; ?>]" value="<?php echo $value; ?>" />
-		<?php endif; ?>
-	<?php endforeach; ?>
+	<?php else : /*new*/?>
+		<input type="hidden" name="jform[stepid]" value="<?php echo $default_stepId; ?>" />
+		<input type="hidden" class="stepid" name="jform[stepidhidden][<?php echo $default_stepId; ?>]" value="<?php echo $default_stepId; ?>" />
+	<?php endif; ?>
+
 	<div class="control-group">
 		<div class="control-label"><?php echo $this->form->getLabel('catid'); ?></div>
 		<div class="controls"><?php echo $this->form->getInput('catid'); ?></div>
@@ -118,7 +142,7 @@ if($this->item->id) {
 		<?php endif; ?>
 	</div>
 
-	<div class="control-group">
+	<div class="control-group imcaccess">
 		<div class="control-label"><?php echo $this->form->getLabel('access'); ?></div>
 		<div class="controls"><?php echo $this->form->getInput('access'); ?></div>
 	</div>
@@ -136,7 +160,7 @@ if($this->item->id) {
 		<div class="control-label"><?php echo $this->form->getLabel('created_by'); ?></div>
 		<div class="controls"><?php echo $this->form->getInput('created_by'); ?></div>
 	</div>
-	<div class="control-group">
+	<div class="control-group imclanguage">
 		<div class="control-label"><?php echo $this->form->getLabel('language'); ?></div>
 		<div class="controls"><?php echo $this->form->getInput('language'); ?></div>
 	</div>
@@ -157,9 +181,11 @@ if($this->item->id) {
 		<div class="controls"><?php echo $this->form->getInput('modality'); ?></div>
 	</div>				
 
+
+
 					<?php if(!empty($this->item->notification_emails)) : ?>
 						<div class="alert alert-info">
-							<p><strong>Notification to:</strong></p>
+							<p><strong>Notified people:</strong></p>
 							<?php 
 								foreach ($this->item->notification_emails as $email) {
 									echo $email.'<br />';
