@@ -43,7 +43,7 @@ class JFormFieldTimecreated extends JFormField
         if ($hidden == null || !$hidden) {
             $jdate = new JDate($time_created);
             $pretty_date = $jdate->format(JText::_('DATE_FORMAT_LC2'));
-            $html[] = "<div>" . $pretty_date . "</div>";
+            $html[] = "<span>" . $pretty_date . "</span>";
         }
         $html[] = '<input type="hidden" name="' . $this->name . '" value="' . $time_created . '" />';
         return implode("\n", $html);

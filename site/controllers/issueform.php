@@ -252,6 +252,7 @@ class ImcControllerIssueForm extends ImcController {
             JTable::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/tables');
             $log = JTable::getInstance('Log', 'ImcTable', array());
 
+            $data2['id'] = 0;
             $data2['state'] = 1;
             $data2['action'] = JText::_('COM_IMC_LOGS_ACTION_INITIAL_COMMIT');
             $data2['issueid'] = $insertid; //$model->getItem()->get('id');
@@ -338,18 +339,18 @@ class ImcControllerIssueForm extends ImcController {
         //B: move any images only if record is new
         if($validData['id'] == 0){
             //check if any files uploaded
-            $obj = json_decode( $data['photo'] );
+            $obj = json_decode( $validData['photo'] );
             if(empty($obj->files))
                 return;
 
             $srcDir = JPATH_ROOT . '/' . $obj->imagedir . '/' . $obj->id;
             $dstDir = JPATH_ROOT . '/' . $obj->imagedir . '/' . $insertid;
-
             $success = rename ( $srcDir , $dstDir );
 
             if(!$success){
                 JFactory::getApplication()->enqueueMessage('Cannot move '.$srcDir.' to '.$dstDir.'. Check folder rights', 'error'); 
             }
+
         }
 
 

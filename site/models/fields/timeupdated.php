@@ -44,7 +44,7 @@ class JFormFieldTimeupdated extends JFormField
             } else {
                 $jdate = new JDate($old_time_updated);
                 $pretty_date = $jdate->format(JText::_('DATE_FORMAT_LC2'));
-                $html[] = "<div>".$pretty_date."</div>";
+                $html[] = "<span>".$pretty_date."</span>";
             }
         }
         $time_updated = date("Y-m-d H:i:s");

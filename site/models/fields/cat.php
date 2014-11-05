@@ -9,10 +9,10 @@
 
 
 defined('JPATH_BASE') or die;
-
 jimport('joomla.html.html');
 jimport('joomla.form.formfield');
-include_once('step.php');
+if(!class_exists('JFormFieldStep',false)) include_once('step.php');
+//include('step.php');
 /**
  * Supports an HTML select list of categories
  */

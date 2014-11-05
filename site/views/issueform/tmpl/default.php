@@ -19,13 +19,13 @@ $lang = JFactory::getLanguage();
 $lang->load('com_imc', JPATH_ADMINISTRATOR);
 $doc = JFactory::getDocument();
 $doc->addScript(JUri::base() . '/components/com_imc/assets/js/form.js');
-
+$doc->addStyleSheet(JURI::base() . '/components/com_imc/assets/css/form.css');
 
 if($this->item->state == 1){
-	$state_string = 'Publish';
+	$state_string = 'Published';
 	$state_value = 1;
 } else {
-	$state_string = 'Unpublish';
+	$state_string = 'Unpublished';
 	$state_value = 0;
 }
 if($this->item->id) {
@@ -54,7 +54,7 @@ if(!$canState) {
             jQuery('.imclanguage').css('display','none');
 
             jQuery('#form-issue').submit(function(event) {
-                
+                jQuery('input[name="task"]').val('issueform.save');
             });
 
 			jQuery('input:hidden.stepid').each(function(){
@@ -70,16 +70,32 @@ if(!$canState) {
     
 </script>
 
+
 <div class="issue-edit front-end-edit">
     <form id="form-issue" action="<?php echo JRoute::_('index.php?option=com_imc&task=issue.save'); ?>" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
+    <div style="float:right;">
+        <button type="submit" class="validate btn btn-primary"><i class="icon-ok"></i> <?php echo JText::_('JSUBMIT'); ?></button>
+        <a class="btn" href="<?php echo JRoute::_('index.php?option=com_imc&task=issueform.cancel'); ?>" title="<?php echo JText::_('JCANCEL'); ?>"><?php echo JText::_('JCANCEL'); ?></a>
+    </div>
 
     <?php if (!empty($this->item->id)): ?>
         <h1><i class="icon-pencil"></i> Edit issue #<?php echo $this->item->id; ?></h1>
     <?php else: ?>
         <h1><i class="icon-plus-sign"></i> Report new issue</h1>
     <?php endif; ?>
+    <hr class="imc-form-hr" />
 
-    <hr />
+    <div class="imc-dates">
+		<i class="icon-user"></i> <?php echo (empty($this->form->getInput('created_by')) ? 'Guest' : $this->form->getInput('created_by')); ?>
+		<i class="icon-calendar"></i> <?php echo $this->form->getInput('created'); ?>
+		<?php echo (strlen($this->form->getInput('updated')) > 4 ? '<i class="icon-pencil"></i> '.$this->form->getInput('updated') : ''); ?>
+	
+	</div>
+
+   
+
+
+
 
 
 	<div class="control-group">
@@ -131,35 +147,12 @@ if(!$canState) {
 		<div class="control-label"><?php echo $this->form->getLabel('photo'); ?></div>
 		<div class="controls"><?php echo $this->form->getInput('photo'); ?></div>
 	</div>
-	<div class="control-group">
-		<?php if(!$canState): ?>
-			<div class="control-label"><?php echo $this->form->getLabel('state'); ?></div>
-			<div class="controls"><?php echo $state_string; ?></div>
-			<input type="hidden" name="jform[state]" value="<?php echo $state_value; ?>" />
-		<?php else: ?>
-			<div class="control-label"><?php echo $this->form->getLabel('state'); ?></div>
-			<div class="controls"><?php echo $this->form->getInput('state'); ?></div>
-		<?php endif; ?>
-	</div>
 
 	<div class="control-group imcaccess">
 		<div class="control-label"><?php echo $this->form->getLabel('access'); ?></div>
 		<div class="controls"><?php echo $this->form->getInput('access'); ?></div>
 	</div>
 
-
-	<div class="control-group">
-		<div class="control-label"><?php echo $this->form->getLabel('created'); ?></div>
-		<div class="controls"><?php echo $this->form->getInput('created'); ?></div>
-	</div>
-	<div class="control-group">
-		<div class="control-label"><?php echo $this->form->getLabel('updated'); ?></div>
-		<div class="controls"><?php echo $this->form->getInput('updated'); ?></div>
-	</div>
-	<div class="control-group">
-		<div class="control-label"><?php echo $this->form->getLabel('created_by'); ?></div>
-		<div class="controls"><?php echo $this->form->getInput('created_by'); ?></div>
-	</div>
 	<div class="control-group imclanguage">
 		<div class="control-label"><?php echo $this->form->getLabel('language'); ?></div>
 		<div class="controls"><?php echo $this->form->getInput('language'); ?></div>
@@ -181,7 +174,16 @@ if(!$canState) {
 		<div class="controls"><?php echo $this->form->getInput('modality'); ?></div>
 	</div>				
 
-
+	<div class="control-group">
+		<?php if(!$canState): ?>
+			<div class="control-label"><?php echo $this->form->getLabel('state'); ?></div>
+			<div class="controls"><?php echo $state_string; ?></div>
+			<input type="hidden" name="jform[state]" value="<?php echo $state_value; ?>" />
+		<?php else: ?>
+			<div class="control-label"><?php echo $this->form->getLabel('state'); ?></div>
+			<div class="controls"><?php echo $this->form->getInput('state'); ?></div>
+		<?php endif; ?>
+	</div>
 
 					<?php if(!empty($this->item->notification_emails)) : ?>
 						<div class="alert alert-info">
@@ -219,18 +221,7 @@ if(!$canState) {
 	    </script>
 	<?php endif; ?>
 
-    <div class="control-group">
-    	<script type="text/javascript">
-    		jQuery.noConflict();
-			jQuery( "#form-issue" ).submit(function( event ) {
-				jQuery('input[name="task"]').val('issueform.save');
-			});        		
-    	</script>
-        <div class="controls">
-            <button type="submit" class="validate btn btn-primary"><?php echo JText::_('JSUBMIT'); ?></button>
-            <a class="btn" href="<?php echo JRoute::_('index.php?option=com_imc&task=issueform.cancel'); ?>" title="<?php echo JText::_('JCANCEL'); ?>"><?php echo JText::_('JCANCEL'); ?></a>
-        </div>
-    </div>
+
     
     <input type="hidden" name="option" value="com_imc" />
     <input type="hidden" name="task" value="issueform.save" />
