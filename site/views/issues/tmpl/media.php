@@ -22,58 +22,9 @@ $listDirn = $this->state->get('list.direction');
 $canEdit = $user->authorise('core.edit', 'com_imc');
 $canDelete = $user->authorise('core.delete', 'com_imc');
 ?>
-I AM MEDIA.PHP
+
 <form action="<?php echo JRoute::_('index.php?option=com_imc&view=issues'); ?>" method="post" name="adminForm" id="adminForm">
 
-    <table class="table table-striped" id="issueList">
-        <thead>
-            <tr>
-                <?php if (isset($this->items[0]->state)): ?>
-                    <th width="1%" class="nowrap center">
-                        <?php echo JHtml::_('grid.sort', 'JSTATUS', 'a.state', $listDirn, $listOrder); ?>
-                    </th>
-                <?php endif; ?>
-
-                <th class='left'>
-				<?php echo JHtml::_('grid.sort',  'COM_IMC_ISSUES_TITLE', 'a.title', $listDirn, $listOrder); ?>
-				</th>
-				<th class='left'>
-				<?php echo JHtml::_('grid.sort',  'COM_IMC_ISSUES_STEPID', 'a.stepid', $listDirn, $listOrder); ?>
-				</th>
-				<th class='left'>
-				<?php echo JHtml::_('grid.sort',  'COM_IMC_ISSUES_CATID', 'a.catid', $listDirn, $listOrder); ?>
-				</th>
-				<th class='left'>
-				<?php echo JHtml::_('grid.sort',  'COM_IMC_ISSUES_CREATED_BY', 'a.created_by', $listDirn, $listOrder); ?>
-				</th>
-				<th class='left'>
-				<?php echo JHtml::_('grid.sort',  'COM_IMC_ISSUES_LANGUAGE', 'a.language', $listDirn, $listOrder); ?>
-				</th>
-                    
-
-                <?php if (isset($this->items[0]->id)): ?>
-                    <th width="1%" class="nowrap center hidden-phone">
-                        <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'a.id', $listDirn, $listOrder); ?>
-                    </th>
-                <?php endif; ?>
-
-                <?php if ($canEdit || $canDelete): ?>
-					<th class="center">
-				    <?php echo JText::_('COM_IMC_ISSUES_ACTIONS'); ?>
-				</th>
-				<?php endif; ?>
-
-            </tr>
-        </thead>
-        <tfoot>
-            <tr>
-                <td colspan="<?php echo isset($this->items[0]) ? count(get_object_vars($this->items[0])) : 10; ?>">
-                    <?php echo $this->pagination->getListFooter(); ?>
-                    <?php //echo $this->pagination->getLimitBox(); ?>
-                </td>
-            </tr>
-        </tfoot>
-        <tbody>
 
             <?php foreach ($this->items as $i => $item) : ?>
 
@@ -91,71 +42,30 @@ I AM MEDIA.PHP
                     <?php $canEdit = JFactory::getUser()->id == $item->created_by; ?>
 				<?php endif; ?>
 
-                <tr class="row<?php echo $i % 2; ?>">
+                    <?php 
+                        $obj = json_decode($item->photo); 
+                        foreach ($obj->files as $file) {
+                            echo '<img src="http://localhost/joomla3/'. $file->thumbnailUrl . '" />';
+                        }
+                    ?>                
 
-                    <?php if (isset($this->items[0]->state)): ?>
-                        <?php $class = ($canChange) ? 'active' : 'disabled'; ?>
-                        <td class="center">
-                            <a class="btn btn-micro <?php echo $class; ?>" href="<?php echo ($canChange) ? JRoute::_('index.php?option=com_imc&task=issue.publish&id=' . $item->id . '&state=' . (($item->state + 1) % 2), false, 2) : '#'; ?>">
-                                <?php if ($item->state == 1): ?>
-                                    <i class="icon-ok"></i>
-                                <?php else: ?>
-                                    <i class="icon-remove"></i>
-                                <?php endif; ?>
-                            </a>
-                        </td>
-                    <?php endif; ?>
-
-                <td>
-				<?php if (isset($item->checked_out) && $item->checked_out) : ?>
-					<?php echo JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, 'issues.', $canCheckin); ?>
-				<?php endif; ?>
-				<?php if ($canEdit) : ?>
-					<a href="<?php echo JRoute::_('index.php?option=com_imc&task=issue.edit&id='.(int) $item->id); ?>">
-					<?php echo $this->escape($item->title); ?></a>
-				<?php else : ?>
-					<?php echo $this->escape($item->title); ?>
-				<?php endif; ?>
-                <a href="<?php echo JRoute::_('index.php?option=com_imc&view=issue&id='.(int) $item->id); ?>">view details</a>
-				</td>
-				<td>
-
-					<?php echo $item->stepid_title; ?>
-				</td>
-				<td>
-
-					<?php echo $item->catid_title; ?>
-				</td>
-				<td>
+					<p><?php echo $item->stepid_title; ?></p>
+					<p><?php echo $item->catid_title; ?></p>
 
 					<?php echo JFactory::getUser($item->created_by)->name; ?>
-				<td>
 
-					<?php echo $item->language; ?>
-				</td>
-
-
-                <?php if (isset($this->items[0]->id)): ?>
-                    <td class="center hidden-phone">
-                        <?php echo (int) $item->id; ?>
-                    </td>
-                <?php endif; ?>
+					
 
                 <?php if ($canEdit || $canDelete): ?>
-					<td class="center">
 						<?php if ($canEdit): ?>
 							<a href="<?php echo JRoute::_('index.php?option=com_imc&task=issue.edit&id=' . $item->id, false, 2); ?>" class="btn btn-mini" type="button"><i class="icon-edit" ></i></a>
 						<?php endif; ?>
 						<?php if ($canDelete): ?>
 							<button data-item-id="<?php echo $item->id; ?>" class="btn btn-mini delete-button" type="button"><i class="icon-trash" ></i></button>
 						<?php endif; ?>
-					</td>
 				<?php endif; ?>
 
-                </tr>
             <?php endforeach; ?>
-        </tbody>
-    </table>
 
     <?php /*
     <?php $canCreate = $user->authorise('core.create', 'com_imc'); ?>
