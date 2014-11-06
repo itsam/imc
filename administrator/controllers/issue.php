@@ -134,6 +134,9 @@ class ImcControllerIssue extends JControllerForm
                 {
                     JFactory::getApplication()->enqueueMessage('Cannot save data to log table', 'error'); 
                 }
+
+                $dispatcher = JEventDispatcher::getInstance();
+                $dispatcher->trigger( 'onAfterCategoryModified', array( $model, $validData ) );                
             }
 
         }   

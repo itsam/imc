@@ -291,4 +291,10 @@ class ImcModelIssueForm extends JModelForm
         return true;
     }
 
+
+
+	public function getItem($pk = null)
+	{
+		return $this->getData($pk); //TODO: returns empty even with correct id...
+	}
 }

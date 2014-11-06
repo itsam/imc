@@ -9,8 +9,8 @@
  */
 // No direct access
 defined('_JEXEC') or die;
-
 require_once JPATH_COMPONENT . '/controller.php';
+JPluginHelper::importPlugin('imc');
 
 /**
  * Issue controller class.
@@ -274,7 +274,9 @@ class ImcControllerIssueForm extends ImcController {
             {
                 JFactory::getApplication()->enqueueMessage('Cannot save data to log table', 'error'); 
             }
-            
+
+            $dispatcher = JEventDispatcher::getInstance();
+            $results = $dispatcher->trigger( 'onAfterNewIssueAdded', array( $model, $validData, $insertid ) );            
         }
         else {
 
@@ -303,6 +305,9 @@ class ImcControllerIssueForm extends ImcController {
                 {
                     JFactory::getApplication()->enqueueMessage('Cannot save data to log table', 'error'); 
                 }
+
+                $dispatcher = JEventDispatcher::getInstance();
+                $dispatcher->trigger( 'onAfterStepModified', array( $model, $validData ) );
             }
 
             //b. check for category modification
@@ -330,6 +335,9 @@ class ImcControllerIssueForm extends ImcController {
                 {
                     JFactory::getApplication()->enqueueMessage('Cannot save data to log table', 'error'); 
                 }
+
+                $dispatcher = JEventDispatcher::getInstance();
+                $dispatcher->trigger( 'onAfterCategoryModified', array( $model, $validData ) ); 
             }
 
 
