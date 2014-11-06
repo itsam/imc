@@ -9,14 +9,16 @@ class plgImcmail_notifier extends JPlugin
 	function onAfterNewIssueAdded($model, $validData)
 	{
 		//print_r($validData);
-		//die;
-		JFactory::getApplication()->enqueueMessage('Notification mail sent', 'info');
+		$emails = $model->getItem()->get('notification_emails');
+		$recipients = implode(',', $emails);
+		JFactory::getApplication()->enqueueMessage('Notification mail sent to '.$recipients, 'info');
 	}	
 
 	function onAfterStepModified($model, $validData)
 	{
 		//print_r($validData);
-		//print_r($model);die;
-		JFactory::getApplication()->enqueueMessage('Notification mail sent because step is modified', 'info');
+		$emails = $model->getItem()->get('notification_emails');
+		$recipients = implode(',', $emails);
+		JFactory::getApplication()->enqueueMessage('Notification mail (because step is modified) sent to '.$recipients, 'info');
 	}	
 }

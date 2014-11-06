@@ -10,6 +10,7 @@
 // No direct access
 defined('_JEXEC') or die;
 jimport('joomla.application.component.controllerform');
+JPluginHelper::importPlugin('imc');
 /**
  * Issue controller class.
  */
@@ -24,16 +25,14 @@ class ImcControllerIssue extends JControllerForm
     //override postSaveHook
     protected function postSaveHook(JModelLegacy $model, $validData = array())
     {
-        // Get the event dispatcher.
-        $dispatcher = JEventDispatcher::getInstance();
-        // Load the imc plugin group.
-        JPluginHelper::importPlugin('imc');
+
 
         //A: inform log table about the new issue
         if($validData['id'] == 0){
             
             $log = JTable::getInstance('Log', 'ImcTable', array());
 
+            $data2['id'] = 0;
             $data2['state'] = 1;
             $data2['action'] = JText::_('COM_IMC_LOGS_ACTION_INITIAL_COMMIT');
             $data2['issueid'] = $model->getItem()->get('id');
@@ -59,7 +58,7 @@ class ImcControllerIssue extends JControllerForm
 
             try
             {
-                // Trigger the event.
+                $dispatcher = JEventDispatcher::getInstance();
                 $results = $dispatcher->trigger( 'onAfterNewIssueAdded', array( $model, $validData ) );
                 // Check the returned results. This is for plugins that don't throw
                 // exceptions when they encounter serious errors.
@@ -83,6 +82,7 @@ class ImcControllerIssue extends JControllerForm
                 $user = JFactory::getUser();
                 $log = JTable::getInstance('Log', 'ImcTable', array());
 
+                $data2['id'] = 0;
                 $data2['state'] = 1;
                 $data2['action'] = JText::_('COM_IMC_LOGS_ACTION_STEP_MODIFIED');
                 $data2['issueid'] = $validData['id'];
@@ -103,7 +103,8 @@ class ImcControllerIssue extends JControllerForm
                 {
                     JFactory::getApplication()->enqueueMessage('Cannot save data to log table', 'error'); 
                 }
-
+                
+                $dispatcher = JEventDispatcher::getInstance();
                 $dispatcher->trigger( 'onAfterStepModified', array( $model, $validData ) );
             }
 
@@ -112,6 +113,7 @@ class ImcControllerIssue extends JControllerForm
                 $user = JFactory::getUser();
                 $log = JTable::getInstance('Log', 'ImcTable', array());
 
+                $data2['id'] = 0;
                 $data2['state'] = 1;
                 $data2['action'] = JText::_('COM_IMC_LOGS_ACTION_CATEGORY_MODIFIED');
                 $data2['issueid'] = $validData['id'];
