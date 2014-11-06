@@ -22,7 +22,7 @@ $listDirn = $this->state->get('list.direction');
 $canEdit = $user->authorise('core.edit', 'com_imc');
 $canDelete = $user->authorise('core.delete', 'com_imc');
 ?>
-I AM TABULAR.PHP
+I AM TABULAR .PHP
 <form action="<?php echo JRoute::_('index.php?option=com_imc&view=issues'); ?>" method="post" name="adminForm" id="adminForm">
 
     <table class="table table-striped" id="issueList">
@@ -47,7 +47,7 @@ I AM TABULAR.PHP
 				<?php echo JHtml::_('grid.sort',  'COM_IMC_ISSUES_CREATED_BY', 'a.created_by', $listDirn, $listOrder); ?>
 				</th>
 				<th class='left'>
-				<?php echo JHtml::_('grid.sort',  'COM_IMC_ISSUES_LANGUAGE', 'a.language', $listDirn, $listOrder); ?>
+				<?php echo JHtml::_('grid.sort',  'COM_IMC_ISSUES_CREATED', 'a.created', $listDirn, $listOrder); ?>
 				</th>
                     
 
@@ -131,7 +131,7 @@ I AM TABULAR.PHP
 					<?php echo JFactory::getUser($item->created_by)->name; ?>
 				<td>
 
-					<?php echo $item->language; ?>
+					<?php echo $item->created; ?>
 				</td>
 
 
