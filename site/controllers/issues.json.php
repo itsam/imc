@@ -40,7 +40,7 @@ class ImcControllerIssues extends ImcController
 				$marker->title = $item->title;
 				$marker->latitude = $item->latitude;
 				$marker->longitude = $item->longitude;
-				$marker->category_image = $item->category_image;
+				$marker->category_image = ($item->category_image == '' ? '' : JURI::base() . $item->category_image);
 				$marker->stepid_title = $item->stepid_title;
 				$marker->stepid_color = $item->stepid_color;
 

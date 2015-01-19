@@ -30,5 +30,29 @@ if($api_key == '')
 else
 	$doc->addScript('https://maps.googleapis.com/maps/api/js?key='.$api_key);
 
-$doc->addScript(JURI::base() . '/modules/mod_imcmap/assets/js/script.js');
+//get parameters
+$params = JComponentHelper::getParams('com_imc');	
+
+$lat        = $params->get('latitude');
+$lng        = $params->get('longitude');
+$zoom 	    = $params->get('zoom');
+$language   = $params->get('maplanguage');
+?>
+
+<script type="text/javascript">
+	var lat = <?php echo $lat;?> ;
+	var lng = <?php echo $lng;?> ;
+	var zoom = <?php echo $zoom;?> ;
+	var language = "<?php echo $language;?>" ;
+</script>
+<script src="<?php echo JURI::base();?>modules/mod_imcmap/assets/js/script.js" type="text/javascript"></script>
+
+<?php
+//initialize and load map
+$script = array();
+$script[] = "jQuery(document).ready(function () {";
+$script[] = "  google.maps.event.addDomListener(window, 'load', imc_mod_map_initialize);";
+$script[] = "});";
+$doc->addScriptDeclaration(implode("\n", $script));
+
 require JModuleHelper::getLayoutPath('mod_imcmap', $params->get('layout_type', 'default'));

@@ -10,8 +10,6 @@
  */
 defined('_JEXEC') or die;
 
-
-
 $jinput = JFactory::getApplication()->input;
 $option = $jinput->get('option', null);
 $view = $jinput->get('view', null);
@@ -23,11 +21,4 @@ if ($option == 'com_imc' && $view != 'issues'){
 }
 ?>
 
-<div id="imc-map-canvas"></div>
-
-<?php 
-	//initialize map
-	$script = array();
-	$script[] = "google.maps.event.addDomListener(window, 'load', imc_mod_map_initialize);";
-	JFactory::getDocument()->addScriptDeclaration(implode("\n", $script));
-?>
+<div id="imc-mod-map-canvas"></div>
