@@ -15,7 +15,16 @@ $option = $jinput->get('option', null);
 $view = $jinput->get('view', null);
 
 //Show module only on issues list view
-if ($option == 'com_imc' && $view != 'issues'){
+if ($option == 'com_imc' && $view != 'issues') {
+	//TODO: get the following from module settings	
+	$s = "
+	    jQuery(document).ready(function() {
+	 		jQuery('#map-sidebar').remove();
+	 		jQuery('#alphatour-left').removeClass().addClass('col-xs-12');
+	    });
+	";
+	JFactory::getDocument()->addScriptDeclaration($s);
+
 	$module->showtitle = false;
 	return;
 }
