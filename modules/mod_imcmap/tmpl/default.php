@@ -20,7 +20,7 @@ if ($option == 'com_imc' && $view != 'issues') {
 	$s = "
 	    jQuery(document).ready(function() {
 	 		jQuery('#map-sidebar').remove();
-	 		jQuery('#alphatour-left').removeClass().addClass('col-xs-12');
+	 		jQuery('#imc-left').removeClass().addClass('col-xs-12');
 	    });
 	";
 	JFactory::getDocument()->addScriptDeclaration($s);

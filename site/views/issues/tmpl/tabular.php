@@ -22,7 +22,7 @@ $listDirn = $this->state->get('list.direction');
 $canEdit = $user->authorise('core.edit', 'com_imc');
 $canDelete = $user->authorise('core.delete', 'com_imc');
 ?>
-I AM TABULAR .PHP
+
 <form action="<?php echo JRoute::_('index.php?option=com_imc&view=issues'); ?>" method="post" name="adminForm" id="adminForm">
 
     <table class="table table-striped" id="issueList">

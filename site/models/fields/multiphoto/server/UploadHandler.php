@@ -127,12 +127,12 @@ class UploadHandler
                     'auto_orient' => true
                 ),
                 // Uncomment the following to create medium sized images:
-                /*
+                
                 'medium' => array(
-                    'max_width' => 800,
-                    'max_height' => 600
+                    'max_width' => 430,
+                    'max_height' => 300
                 ),
-                */
+                
                 'thumbnail' => array(
                     // Uncomment the following to use a defined directory for the thumbnails
                     // instead of a subdirectory based on the version identifier.
