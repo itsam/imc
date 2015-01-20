@@ -65,6 +65,10 @@ $canDelete = $user->authorise('core.delete', 'com_imc');
         
       <div class="col-sm-6 col-md-4 col-xs-12 masonry-element">
         <div id="imc-panel-<?php echo $item->id;?>" class="panel panel-default">
+          <?php if (JFactory::getUser()->id == $item->created_by) : ?>  
+          <div class="ribbon-wrapper-green"><div class="ribbon-green">My issue</div></div>
+          <?php endif; ?>
+
           <?php $domain = ''; ?>
 
 
@@ -77,12 +81,12 @@ $canDelete = $user->authorise('core.delete', 'com_imc');
             <?php endif; ?>
 
           
-          <div class="panel-body">
+          <div class="<?php echo ($item->state == 0 ? 'issue-unpublished ' : ''); ?>panel-body">
             <p class="lead">
                 <?php if (isset($item->checked_out) && $item->checked_out) : ?>
                     <?php echo JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, 'issues.', $canCheckin); ?>
                 <?php endif; ?>
-                
+
                 <?php if($item->category_image != '') : ?>
                 <img src="<?php echo $item->category_image; ?>" alt="category image" />
                 <?php endif; ?>
@@ -100,7 +104,7 @@ $canDelete = $user->authorise('core.delete', 'com_imc');
 
             <p><?php echo $item->description; ?></p>
 
-            <p><a href="<?php echo JRoute::_('index.php?option=com_imc&view=issue&id='.(int) $item->id); ?>">Περισσότερα...</a></p>
+            <p><a href="<?php echo JRoute::_('index.php?option=com_imc&view=issue&id='.(int) $item->id); ?>">More details...</a></p>
           </div>
         </div>
       </div><!--/col-->                

@@ -86,7 +86,7 @@ if(!$canState) {
     <hr class="imc-form-hr" />
 
     <div class="imc-dates">
-		<i class="icon-user"></i> <?php echo (empty($this->form->getInput('created_by')) ? 'Guest' : $this->form->getInput('created_by')); ?>
+		<i class="icon-user"></i> <?php echo (strlen($this->form->getInput('created_by'))>1 ? $this->form->getInput('created_by') : 'Guest'); ?>
 		<i class="icon-calendar"></i> <?php echo $this->form->getInput('created'); ?>
 		<?php echo (strlen($this->form->getInput('updated')) > 4 ? '<i class="icon-pencil"></i> '.$this->form->getInput('updated') : ''); ?>
 	
