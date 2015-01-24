@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="module" version="3.0" method="upgrade" client="site">
-    <name>MOD_IMCFILTERS_NAME</name>
-    <creationDate>2014-08-23</creationDate>
-    <copyright>Copyright (C) 2014. All rights reserved.</copyright>
+    <name>Improve My City Filters</name>
+    <creationDate>2015-01-25</creationDate>
+    <copyright>Copyright (C) 2015. All rights reserved.</copyright>
     <license>GNU AFFERO GENERAL PUBLIC LICENSE Version 3; see LICENSE</license>
     <author>Ioannis Tsampoulatidis</author>
     <authorEmail>tsampoulatidis@gmail.com</authorEmail>

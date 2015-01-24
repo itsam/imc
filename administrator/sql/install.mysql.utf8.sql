@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS `#__imc_keys` (
 `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
 `asset_id` INT(10) UNSIGNED NOT NULL DEFAULT '0',
 `title` VARCHAR(255)  NOT NULL ,
-`skey` VARCHAR(16)  NOT NULL ,
+`skey` VARCHAR(255)  NOT NULL ,
 `ordering` INT(11)  NOT NULL ,
 `state` TINYINT(1)  NOT NULL ,
 `checked_out` INT(11)  NOT NULL ,

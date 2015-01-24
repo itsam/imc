@@ -9,6 +9,7 @@ define('NOT_MODIFIED', 2);
  */
 class com_imcInstallerScript {
 
+    private $imc_version = 0;
     /**
      * Method called before install/update the component. Note: This method won't be called during uninstall process.
      * @param string $type Type of process [install | update]
@@ -21,12 +22,23 @@ class com_imcInstallerScript {
         // Installing component manifest file version
         $manifest = $parent->get("manifest");
         $this->release = (string) $manifest['version'];
+        $this->imc_version = $parent->get( "manifest" )->version;
 
         // abort if the component wasn't build for the current Joomla version
         if (!$jversion->isCompatible($this->release)) {
             JFactory::getApplication()->enqueueMessage(JText::_('This component is not compatible with installed Joomla version'), 'error');
             return false;
         }
+
+        // abort if the component being installed is older than the currently installed version
+        if ( $type == 'update' ) {
+            $oldRelease = $this->getParam('version');
+            $rel = $oldRelease . ' to ' . $this->imc_version;
+            if ( version_compare( $this->imc_version, $oldRelease, 'lt' ) ) {
+                Jerror::raiseWarning(null, 'Incorrect version sequence. Cannot upgrade ' . $rel);
+                return false;
+            }
+        }        
     }
 
     /**
@@ -631,10 +643,43 @@ class com_imcInstallerScript {
      * $type is the type of change (install, update or discover_install, not uninstall).
      * postflight is run after the extension is registered in the database.
      */
-    private function postflight( $type, $parent ) {
-        // always create or modify these parameters
-        $params['version'] = 'ImproveMyCity version ' . $this->release;
+    public function postflight( $type, $parent ) {
+        // always create or update version parameter
+        $params['version'] = $this->imc_version;
         $this->setParams( $params );
+    }
+
+    /*
+     * get a variable from the manifest file (actually, from the manifest cache).
+     */
+    public function getParam( $name ) {
+        $db = JFactory::getDbo();
+        $db->setQuery('SELECT manifest_cache FROM #__extensions WHERE name = "com_imc"');
+        $manifest = json_decode( $db->loadResult(), true );
+        return $manifest[ $name ];
+    }
+    
+    /*
+     * sets parameter values in the component's row of the extension table
+     */
+    public function setParams($param_array) {
+        if ( count($param_array) > 0 ) {
+            // read the existing component value(s)
+            $db = JFactory::getDbo();
+            $db->setQuery('SELECT params FROM #__extensions WHERE name = "com_imc"');
+            $params = json_decode( $db->loadResult(), true );
+            // add the new variable(s) to the existing one(s)
+            foreach ( $param_array as $name => $value ) {
+                $params[ (string) $name ] = (string) $value;
+            }
+            // store the combined new and existing values back as a JSON string
+            $paramsString = json_encode( $params );
+            
+            $db->setQuery('UPDATE #__extensions SET params = ' .
+                $db->quote( $paramsString ) .
+                ' WHERE name = "com_imc"' );
+                $db->query();
+        }
     }
 
 }

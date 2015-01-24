@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="component" version="3.0" method="upgrade">
     <name>com_imc</name>
-    <creationDate>2015-01-23</creationDate>
-    <copyright>Copyright (C) 2014. All rights reserved.</copyright>
+    <creationDate>2015-01-25</creationDate>
+    <copyright>Copyright (C) 2015. All rights reserved.</copyright>
     <license>GNU AFFERO GENERAL PUBLIC LICENSE Version 3; see LICENSE</license>
     <author>Ioannis Tsampoulatidis</author>
     <authorEmail>tsampoulatidis@gmail.com</authorEmail>
     <authorUrl>https://github.com/itsam</authorUrl>
     <version>3.0.0</version>
-    <description>Improve My City for Joomla 3</description>
+    <description>Improve My City</description>
     
     <install> <!-- Runs on install -->
         <sql>
@@ -54,9 +54,6 @@
 
             <menu link="option=com_imc&amp;view=keys" view="keys" img="components/com_imc/assets/images/s_keys.png" alt="Imc/Keys">COM_IMC_TITLE_KEYS</menu>
 
-            <menu link="option=com_imc&amp;view=votes" view="votes" img="components/com_imc/assets/images/s_votes.png" alt="Imc/Votes">COM_IMC_TITLE_VOTES</menu>
-
-
         </submenu>
         <files folder="administrator">
             <filename>access.xml</filename>
@@ -84,6 +81,7 @@
     <plugins>
         <plugin group="search" plugin="imc"/>
         <plugin group="content" plugin="imc"/>
+        <plugin group="imc" plugin="mail_notifier"/>
     </plugins>
     <modules>
         <module module="mod_imcmap" />

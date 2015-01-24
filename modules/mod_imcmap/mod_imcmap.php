@@ -26,7 +26,7 @@ $doc->addStyleSheet(JURI::base() . '/modules/mod_imcmap/assets/css/style.css');
 $params = JComponentHelper::getParams('com_imc');
 $api_key = $params->get('api_key');
 if($api_key == '')
-	echo '<strong>Module IMC Map :: Google Maps API KEY missing</strong>';
+	echo '<span style="color: red; font-weight:bold;">Module IMC Map :: Google Maps API KEY missing</span>';
 else
 	$doc->addScript('https://maps.googleapis.com/maps/api/js?key='.$api_key);
 

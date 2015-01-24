@@ -73,7 +73,7 @@
     <field field_name="updated_by" field_type="INT" field_length="11" index="index" description=""/>
     <field field_name="language" field_type="VARCHAR" field_length="255" description=""/>
   </table>
-  <table table_name="#__imc_votes" table_name="#__imc_votes" storage_engine="" collation="utf8_general_ci">
+  <table table_name="#__imc_votes" storage_engine="" collation="utf8_general_ci">
     <field field_name="id" field_type="INT" field_length="11" is_autoincrement="1" index="primary" description=""/>
     <field field_name="asset_id" field_type="INT" field_length="10" description=""/>
     <field field_name="issueid" field_type="INT" field_length="11" description=""/>
@@ -87,7 +87,7 @@
     <field field_name="updated_by" field_type="INT" field_length="11" index="index" description=""/>
     <field field_name="modality" field_type="SMALLINT" field_length="6" description=""/>
   </table>
-  <table table_name="#__imc_comments" table_name="#__imc_comments" storage_engine="" collation="utf8_general_ci">
+  <table table_name="#__imc_comments" storage_engine="" collation="utf8_general_ci">
     <field field_name="id" field_type="INT" field_length="11" is_autoincrement="1" index="primary" description=""/>
     <field field_name="asset_id" field_type="INT" field_length="10" description=""/>
     <field field_name="issueid" field_type="INT" field_length="11" description=""/>

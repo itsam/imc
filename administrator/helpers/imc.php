@@ -55,8 +55,7 @@ class ImcHelper {
 			$vName == 'steps'
 		);
 		JHtmlSidebar::addEntry(
-			//JText::_('COM_IMC_TITLE_KEYS'),
-			'API/REST',
+			JText::_('COM_IMC_TITLE_KEYS'),
 			'index.php?option=com_imc&view=keys',
 			$vName == 'keys'
 		);
