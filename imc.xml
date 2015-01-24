@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="component" version="3.0" method="upgrade">
     <name>com_imc</name>
-    <creationDate>2014-07-23</creationDate>
+    <creationDate>2015-01-23</creationDate>
     <copyright>Copyright (C) 2014. All rights reserved.</copyright>
     <license>GNU AFFERO GENERAL PUBLIC LICENSE Version 3; see LICENSE</license>
     <author>Ioannis Tsampoulatidis</author>
@@ -89,4 +89,7 @@
         <module module="mod_imcmap" />
 		<module module="mod_imcfilters" />
 	</modules>
+    <updateservers>
+        <server type="extension" priority="1" name="ImproveMyCity Update Site">http://www.improve-my-city.com/autoupdates-repo/imc3-update.xml</server>
+    </updateservers>    
 </extension>

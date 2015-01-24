@@ -626,4 +626,15 @@ class com_imcInstallerScript {
         }
     }
 
+    /*
+     * $parent is the class calling this method.
+     * $type is the type of change (install, update or discover_install, not uninstall).
+     * postflight is run after the extension is registered in the database.
+     */
+    private function postflight( $type, $parent ) {
+        // always create or modify these parameters
+        $params['version'] = 'ImproveMyCity version ' . $this->release;
+        $this->setParams( $params );
+    }
+
 }
