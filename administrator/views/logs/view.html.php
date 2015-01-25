@@ -145,7 +145,7 @@ class ImcViewLogs extends JViewLegacy {
         }
 
         JHtmlSidebar::addFilter(
-            '- Select Issue -',
+            JText::_("COM_IMC_LOGS_ISSUEID_FILTER"),
             'filter_issueid',
             JHtml::_('select.options', $options, "value", "text", $this->state->get('filter.issueid'), true)
 
@@ -156,7 +156,7 @@ class ImcViewLogs extends JViewLegacy {
         $steps = JFormHelper::loadFieldType('Step', false);
         $options = $steps->getOptions();
         JHtmlSidebar::addFilter(
-            '- Select Step -',
+            JText::_("COM_IMC_ISSUES_STEPID_FILTER"),
             'filter_stepid',
             JHtml::_('select.options', $options, "value", "text", $this->state->get('filter.stepid'), true)
         );

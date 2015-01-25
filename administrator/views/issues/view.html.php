@@ -120,7 +120,7 @@ class ImcViewIssues extends JViewLegacy {
         $options = $steps->getOptions();
 
         JHtmlSidebar::addFilter(
-            '- Select Step -',
+            JText::_("COM_IMC_ISSUES_STEPID_FILTER"),
             'filter_stepid',
             JHtml::_('select.options', $options, "value", "text", $this->state->get('filter.stepid'), true)
         );
