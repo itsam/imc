@@ -108,15 +108,15 @@ $document->addStyleSheet('components/com_imc/assets/css/imc.css');
 					</div>
 					<div class="control-group">
 						<div class="controls">
-							<legend>Progress</legend>
+							<legend><?php echo JText::_("COM_IMC_TITLE_LOGS");?></legend>
 							<table class="table table-striped">
 								<thead>
 									<tr>
-										<th>Date</th>
-										<th>Action</th>
-										<th>By</th>
-										<th>Step</th>
-										<th>Description</th>
+										<th><?php echo JText::_("JDATE");?></th>
+										<th><?php echo JText::_("COM_IMC_FORM_LBL_LOG_ACTION");?></th>
+										<th><?php echo JText::_("COM_IMC_LOGS_CREATED_BY");?></th>
+										<th><?php echo JText::_("COM_IMC_TITLE_STEP");?></th>
+										<th><?php echo JText::_("COM_IMC_LOGS_DESCRIPTION");?></th>
 										</tr>
 								</thead>
 								<tbody>

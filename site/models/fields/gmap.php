@@ -113,7 +113,7 @@ class JFormFieldGmap extends JFormField
 		$params = JComponentHelper::getParams('com_imc');
 		$api_key = $params->get('api_key');
 		if($api_key == '')
-			return '<span style="color: red; font-weight:bold;">Google Maps API KEY missing</span>';
+			return '<span style="color: red; font-weight:bold;">'.JText::_('COM_IMC_JFIELD_GMAP_MISSING_KEY').'</span>';
 		JFactory::getDocument()->addScript('https://maps.googleapis.com/maps/api/js?key='.$api_key);
 		JFactory::getDocument()->addScript(JURI::root(true).'/components/com_imc/models/fields/gmap/js/gmap.js');
 

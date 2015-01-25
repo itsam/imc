@@ -19,13 +19,13 @@ class ImcHelper {
      * Configure the Linkbar.
      */
     public static function addSubmenu($vName = '') {
-        		JHtmlSidebar::addEntry(
+        JHtmlSidebar::addEntry(
 			JText::_('COM_IMC_TITLE_ISSUES'),
 			'index.php?option=com_imc&view=issues',
 			$vName == 'issues'
 		);
 		JHtmlSidebar::addEntry(
-			'Categories (Issues)',
+			JText::_('COM_IMC_TITLE_CATEGORIES'),
 			"index.php?option=com_categories&extension=com_imc",
 			$vName == 'categories'
 		);

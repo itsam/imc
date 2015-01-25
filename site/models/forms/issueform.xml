@@ -17,11 +17,10 @@
             menu_published="0"
             class="inputbox input-xxlarge input-large-text"
             filter="string" /> 
-
      
         <field name="stepid" 
             type="step" 
-            label="Current Step" 
+            label="COM_IMC_FORM_LBL_ISSUE_STEPID" 
             description="" 
             required="false"
             descriptionfield="step_modified_description"

@@ -16,14 +16,14 @@
 
         <field name="photo" 
             type="multiphoto" 
-            label="Photos" 
-            description="Upload and handle images" 
+            label="COM_IMC_FORM_LBL_ISSUE_PHOTOS" 
+            description="COM_IMC_FORM_DESC_ISSUE_PHOTOS" 
             imagedir="images/imc"
             side="backend" />
 
 		<field name="stepid" 
             type="step" 
-            label="Current Step" 
+            label="COM_IMC_FORM_LBL_ISSUE_STEPID" 
             description="" 
             required="true"
             descriptionfield="step_modified_description"
