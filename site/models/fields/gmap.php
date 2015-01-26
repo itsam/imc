@@ -127,6 +127,8 @@ class JFormFieldGmap extends JFormField
 
 		//set js variables
 		$itemId   = (isset($this->element['userstate']) ? JFactory::getApplication()->getUserState($this->element['userstate']) : JRequest::getVar('id', 0));
+		if($itemId == '')
+			$itemId = 0;
 
 		$script = array();
 		if($disabled)
@@ -143,7 +145,7 @@ class JFormFieldGmap extends JFormField
 		$script[] = "var zoom=".$zoom.";";
 		$script[] = "var language='".$language."';";
 		$script[] = "var hiddenterm='".$hiddenterm."';";
-		$script[] = "var info='".JText::_('COM_IMC_DRAG_MARKER')."';";
+		$script[] = "var info='".addslashes(JText::_('COM_IMC_DRAG_MARKER'))."';";
 		$script[] = "var info_unlock='".JText::_('COM_IMC_UNLOCK_ADDRESS')."';";
 		$script[] = "var notfound='".JText::_('COM_IMC_ADDRESS_NOT_FOUND')."';";
 		JFactory::getDocument()->addScriptDeclaration(implode("\n", $script));
