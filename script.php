@@ -647,6 +647,17 @@ class com_imcInstallerScript {
         // always create or update version parameter
         $params['version'] = $this->imc_version;
         $this->setParams( $params );
+
+        $db    = JFactory::getDBO();
+        $query = $db->getQuery(true);
+        $query
+            ->update('#__update_sites')
+            ->set("`enabled`='1'")
+            ->where("`name`='ImproveMyCity'");
+        $db->setQuery($query);
+        $db->execute();
+        
+        return true;        
     }
 
     /*

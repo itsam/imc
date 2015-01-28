@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="component" version="3.0" method="upgrade">
     <name>com_imc</name>
-    <creationDate>2015-01-25</creationDate>
+    <creationDate>2015-01-27</creationDate>
     <copyright>Copyright (C) 2015. All rights reserved.</copyright>
     <license>GNU AFFERO GENERAL PUBLIC LICENSE Version 3; see LICENSE</license>
     <author>Ioannis Tsampoulatidis</author>
     <authorEmail>tsampoulatidis@gmail.com</authorEmail>
     <authorUrl>https://github.com/itsam</authorUrl>
-    <version>3.0.0</version>
+    <version>3.0.1</version>
     <description>COM_IMC_XML_DESCRIPTION</description>
     
     <install> <!-- Runs on install -->
@@ -88,6 +88,6 @@
 		<module module="mod_imcfilters" />
 	</modules>
     <updateservers>
-        <server type="extension" priority="1" name="ImproveMyCity Update Site">http://www.improve-my-city.com/autoupdates-repo/imc3-update.xml</server>
+        <server type="extension" priority="1" name="ImproveMyCity">http://www.improve-my-city.com/autoupdates-repo/imc3-update.xml</server>
     </updateservers>    
 </extension>
