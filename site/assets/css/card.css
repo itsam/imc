@@ -1,4 +1,5 @@
-/*#columns:hover .panel:not(:hover) {	opacity: 0.5; }*/
+/*#columns:hover .panel:not(:hover) {	opacity: 0.35; }
+*/
 
 #columns:hover .panel:hover {
 	border-color: #0077BB;
@@ -13,11 +14,9 @@
     flex:1 1 auto;
 }
 */
+p.imc-warning {color: #e21d1d; font-size: small;}
 .masonry .panel { position: relative;z-index:90;}
-.issue-unpublished { 
-	background-color: #efefef;
-
-}
+.issue-unpublished { /*background-color: #efefef;*/ }
 
 .ribbon-wrapper-green {
   width: 85px;

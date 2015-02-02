@@ -93,18 +93,23 @@ $canDelete = $user->authorise('core.delete', 'com_imc');
 
                 <?php if ($canEdit) : ?>
                     <a href="<?php echo JRoute::_('index.php?option=com_imc&task=issue.edit&id='.(int) $item->id); ?>">
-                    <?php echo $this->escape($item->title); ?></a>
+                    <i class="icon-edit"></i> <?php echo $this->escape($item->title); ?></a>
                 <?php else : ?>
                     <?php echo $this->escape($item->title); ?>
                 <?php endif; ?>
             </p>
 
-            <span class="label label-info"><?php echo $item->stepid_title; ?></span>
+            <span class="label label-default"><?php echo ImcFrontendHelper::getRelativeTime($item->created); ?></span><br />
+            <span class="label label-info"><?php echo $item->stepid_title; ?></span><br />
             <span class="label label-primary"><?php echo $item->catid_title; ?></span>
 
             <p><?php echo $item->description; ?></p>
 
             <p><a href="<?php echo JRoute::_('index.php?option=com_imc&view=issue&id='.(int) $item->id); ?>"><?php echo JText::_('COM_IMC_ISSUES_MORE');?></a></p>
+            <?php if($item->state == 0) : ?>
+                <hr />
+                <p class="imc-warning"><i class="icon-info-sign"></i> <?php echo JText::_('COM_IMC_ISSUES_NOT_YET_PUBLISHED');?></p>
+            <?php endif; ?>
           </div>
         </div>
       </div><!--/col-->                
