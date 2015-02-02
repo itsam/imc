@@ -23,20 +23,21 @@ require_once __DIR__ . '/helper.php';
 $doc = JFactory::getDocument();
 $doc->addStyleSheet(JURI::base() . '/modules/mod_imcmap/assets/css/style.css');
 
-$params = JComponentHelper::getParams('com_imc');
-$api_key = $params->get('api_key');
-if($api_key == '')
-	echo '<span style="color: red; font-weight:bold;">Module IMC Map :: Google Maps API KEY missing</span>';
-else
-	$doc->addScript('https://maps.googleapis.com/maps/api/js?key='.$api_key);
-
 //get parameters
 $params = JComponentHelper::getParams('com_imc');	
-
+$api_key = $params->get('api_key');
 $lat        = $params->get('latitude');
 $lng        = $params->get('longitude');
 $zoom 	    = $params->get('zoom');
 $language   = $params->get('maplanguage');
+
+if($api_key == ''){
+	echo '<span style="color: red; font-weight:bold;">Module IMC Map :: Google Maps API KEY missing</span>';
+	$doc->addScript('https://maps.googleapis.com/maps/api/js?language='.$language);
+}
+else{
+	$doc->addScript('https://maps.googleapis.com/maps/api/js?key='.$api_key.'&language='.$language);
+}
 ?>
 
 <script type="text/javascript">

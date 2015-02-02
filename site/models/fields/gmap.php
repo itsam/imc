@@ -112,10 +112,10 @@ class JFormFieldGmap extends JFormField
 
 		$params = JComponentHelper::getParams('com_imc');
 		$api_key = $params->get('api_key');
+		
 		if($api_key == '')
-			return '<span style="color: red; font-weight:bold;">'.JText::_('COM_IMC_JFIELD_GMAP_MISSING_KEY').'</span>';
-		JFactory::getDocument()->addScript('https://maps.googleapis.com/maps/api/js?key='.$api_key);
-		JFactory::getDocument()->addScript(JURI::root(true).'/components/com_imc/models/fields/gmap/js/gmap.js');
+			echo '<span style="color: red; font-weight:bold;">'.JText::_('COM_IMC_JFIELD_GMAP_MISSING_KEY').'</span>';
+		
 
 		//get google maps default options if no value is set (e.g. new record)
 		$lat        = $params->get('latitude');
@@ -124,6 +124,16 @@ class JFormFieldGmap extends JFormField
 		$zoom 	    = $params->get('zoom');
 		$language   = $params->get('maplanguage');
 		$hiddenterm = $params->get('hiddenterm');
+
+		if($api_key != '')
+			JFactory::getDocument()->addScript('https://maps.googleapis.com/maps/api/js?key='.$api_key.'&language='.$language);
+		else
+			JFactory::getDocument()->addScript('https://maps.googleapis.com/maps/api/js?language='.$language);
+
+
+
+		JFactory::getDocument()->addScript(JURI::root(true).'/components/com_imc/models/fields/gmap/js/gmap.js');
+
 
 		//set js variables
 		$itemId   = (isset($this->element['userstate']) ? JFactory::getApplication()->getUserState($this->element['userstate']) : JRequest::getVar('id', 0));

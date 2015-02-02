@@ -95,7 +95,7 @@
 
         <field name="photo" 
             type="multiphoto" 
-            label="Photos" 
+            label="COM_IMC_FORM_LBL_ISSUE_PHOTOS" 
             description="Upload and handle images" 
             imagedir="images/imc"
             userstate="com_imc.edit.issue.id" 
