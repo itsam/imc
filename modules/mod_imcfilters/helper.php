@@ -101,17 +101,6 @@ class ModImcfiltersHelper {
         return $ar;
     }
 
-
-
-
-
-
-
-
-
-
-
-
     public function createLimitBox()
     {
         // Initialise variables.
@@ -127,7 +116,7 @@ class ModImcfiltersHelper {
         foreach($values as $i){
             $a = $i;
             if($a == 0)
-                $a = JText::_('ALL');
+                $a = JText::_('JALL');
             if($selected == $i){
                 $html .= '<li><a href="#" onclick="jQuery(\'input[name=limit]\').val('.$i.');jQuery(\'#adminForm\').submit();">'.$a.' <i class="icon-ok"></i></a></li>';
             }

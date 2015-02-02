@@ -66,7 +66,7 @@ $canDelete = $user->authorise('core.delete', 'com_imc');
       <div class="col-sm-6 col-md-4 col-xs-12 masonry-element">
         <div id="imc-panel-<?php echo $item->id;?>" class="panel panel-default">
           <?php if (JFactory::getUser()->id == $item->created_by) : ?>  
-          <div class="ribbon-wrapper-green"><div class="ribbon-green">My issue</div></div>
+          <div class="ribbon-wrapper-green"><div class="ribbon-green"><?php echo JText::_('COM_IMC_ISSUES_MY_ISSUE');?></div></div>
           <?php endif; ?>
 
           <?php $domain = ''; ?>
@@ -104,7 +104,7 @@ $canDelete = $user->authorise('core.delete', 'com_imc');
 
             <p><?php echo $item->description; ?></p>
 
-            <p><a href="<?php echo JRoute::_('index.php?option=com_imc&view=issue&id='.(int) $item->id); ?>">More details...</a></p>
+            <p><a href="<?php echo JRoute::_('index.php?option=com_imc&view=issue&id='.(int) $item->id); ?>"><?php echo JText::_('COM_IMC_ISSUES_MORE');?></a></p>
           </div>
         </div>
       </div><!--/col-->                

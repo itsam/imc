@@ -22,10 +22,10 @@ $doc->addScript(JUri::base() . '/components/com_imc/assets/js/form.js');
 $doc->addStyleSheet(JURI::base() . '/components/com_imc/assets/css/form.css');
 
 if($this->item->state == 1){
-	$state_string = 'Published';
+	$state_string = JText::_('JPUBLISHED');
 	$state_value = 1;
 } else {
-	$state_string = 'Unpublished';
+	$state_string = JText::_('JUNPUBLISHED');
 	$state_value = 0;
 }
 if($this->item->id) {
@@ -79,9 +79,9 @@ if(!$canState) {
     </div>
 
     <?php if (!empty($this->item->id)): ?>
-        <h1><i class="icon-pencil"></i> Edit issue #<?php echo $this->item->id; ?></h1>
+        <h1><i class="icon-pencil"></i> <?php echo JText::_('COM_IMC_ISSUE_EDIT'); ?> #<?php echo $this->item->id; ?></h1>
     <?php else: ?>
-        <h1><i class="icon-plus-sign"></i> Report new issue</h1>
+        <h1><i class="icon-plus-sign"></i> <?php echo JText::_('COM_IMC_ISSUE_NEW'); ?></h1>
     <?php endif; ?>
     <hr class="imc-form-hr" />
 

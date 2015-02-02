@@ -28,14 +28,14 @@ $listDirn  = $jinput->get('filter_order_Dir');
 	<form class="form-search form-inline" action="<?php echo JRoute::_('index.php?option=com_imc&view=issues'); ?>" method="post" name="imc_filter_form" id="imc_filter_form">
 		<?php if ($option == 'com_imc' && $view != 'issues') : ?>
 			<span class="imc_btn_left">
-				<a href="<?php echo JRoute::_('index.php?option=com_imc', false, 2); ?>" class="btn btn-primary"><i class="icon-arrow-left"></i> <?php echo JText::_('MOD_IMCFILTERS_RETURN_TO_ISSUES'); ?></a>		
+				<a href="<?php echo JRoute::_('index.php?option=com_imc', false, 2); ?>" class="btn btn-warning"><i class="icon-arrow-left"></i> <?php echo JText::_('MOD_IMCFILTERS_RETURN_TO_ISSUES'); ?></a>		
 			</span>				
 		<?php else : ?>
 			<div class="imc_btn_left">
 				<a id="filters_btn" href="#filtersModal" role="button" class="btn btn-primary" data-toggle="modal"><i class="icon-filter"></i> <?php echo JText::_('MOD_IMCFILTERS_FILTERS'); ?></a>
 				<div class="btn-group">
 				  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-				    Ordering <span class="caret"></span>
+				    <?php echo JText::_('MOD_IMCFILTERS_ORDERING'); ?> <span class="caret"></span>
 				  </button>
 				  <ul class="dropdown-menu" role="menu">
 				    <li><?php echo JHtml::_('grid.sort',  'COM_IMC_ISSUES_TITLE', 'a.title', $listDirn, $listOrder); ?></li>
@@ -45,7 +45,7 @@ $listDirn  = $jinput->get('filter_order_Dir');
 				
 				<div class="btn-group">
 				  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-				    Display <span class="caret"></span>
+				    <?php echo JText::_('MOD_IMCFILTERS_DISPLAY'); ?> <span class="caret"></span>
 				  </button>
 				  <ul class="dropdown-menu" role="menu">
 				  	<?php echo ModImcfiltersHelper::createLimitBox(); ?>

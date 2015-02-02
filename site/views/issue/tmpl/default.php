@@ -60,7 +60,7 @@ if (!$canEdit && $user->authorise('core.edit.own', 'com_imc.issue.' . $this->ite
 			<td><?php echo $this->item->longitude; ?></td>
 			</tr>
 			<tr>
-			<th><?php echo JText::_('COM_IMC_FORM_LBL_ISSUE_PHOTO'); ?></th>
+			<th><?php echo JText::_('COM_IMC_FORM_LBL_ISSUE_PHOTOS'); ?></th>
 			<td><?php echo $this->item->photo; ?></td>
 			</tr>
 			<tr>
