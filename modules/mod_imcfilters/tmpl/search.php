@@ -10,8 +10,6 @@
  */
 defined('_JEXEC') or die;
 
-
-
 $app = JFactory::getApplication();
 $search = $app->getUserStateFromRequest('com_imc.issues.filter.search', 'filter_search');
 $owned = $app->getUserStateFromRequest('com_imc.issues.filter.owned', 'filter_owned');
@@ -28,8 +26,7 @@ $owned = $app->getUserStateFromRequest('com_imc.issues.filter.owned', 'filter_ow
 			</label>
 			</p>
 		<?php endif; ?>
-
-	    <button type="submit" class="btn">Search / Apply</button>
-	    </p>
+		<p></p>
+	    <p><button type="submit" class="btn"><?php echo JText::_('MOD_IMCFILTERS_SEARCH'); ?> / <?php echo JText::_('MOD_IMCFILTERS_APPLY'); ?></button></p>
 	</form>
 </div>
