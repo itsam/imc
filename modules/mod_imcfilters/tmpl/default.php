@@ -40,6 +40,7 @@ $listDirn  = $jinput->get('filter_order_Dir');
 				  <ul class="dropdown-menu" role="menu">
 				    <li><?php echo JHtml::_('grid.sort',  'COM_IMC_ISSUES_TITLE', 'a.title', $listDirn, $listOrder); ?></li>
 					<li><?php echo JHtml::_('grid.sort',  'COM_IMC_ISSUES_STEPID', 'a.stepid', $listDirn, $listOrder); ?></li>
+					<li><?php echo JHtml::_('grid.sort',  'JDATE', 'a.created', $listDirn, $listOrder); ?></li>
 				  </ul>
 				</div>
 				
