@@ -24,24 +24,26 @@
     flex:1 1 auto;
 }
 */
-p.imc-warning {color: #e21d1d; font-size: small;}
+.imc-warning {color: #e21d1d; font-size: small;}
 .masonry .panel { position: relative;z-index:90;}
+/*.masonry .panel-body {position: relative;}*/
 .issue-unpublished { /*background-color: #efefef;*/ }
 
-.ribbon-wrapper-green {
+.ribbon-wrapper-corner {
   width: 85px;
   height: 88px;
   overflow: hidden;
   position: absolute;
   top: -3px;
   right: -3px;
+  z-index:100;
 }
 
-.ribbon-green {
-  font: bold 13px Sans-Serif;
-  color: #333;
+.ribbon-corner {
+  font: 13px Sans-Serif;
+  color: #fff;
   text-align: center;
-  text-shadow: rgba(255,255,255,0.5) 0px 1px 0px;
+  /*text-shadow: rgba(255,255,255,0.5) 0px 1px 0px;*/
   -webkit-transform: rotate(45deg);
   -moz-transform:    rotate(45deg);
   -ms-transform:     rotate(45deg);
@@ -51,19 +53,19 @@ p.imc-warning {color: #e21d1d; font-size: small;}
   left: -5px;
   top: 15px;
   width: 120px;
-  background-color: #BFDC7A;
+  background-color: #0099CC;/* #BFDC7A*/
 /*  background-image: -webkit-gradient(linear, left top, left bottom, from(#BFDC7A), to(#8EBF45)); 
   background-image: -webkit-linear-gradient(top, #BFDC7A, #8EBF45); 
   background-image:    -moz-linear-gradient(top, #BFDC7A, #8EBF45); 
   background-image:     -ms-linear-gradient(top, #BFDC7A, #8EBF45); 
   background-image:      -o-linear-gradient(top, #BFDC7A, #8EBF45); */
-  color: #6a6340;
+  /*color: #6a6340;*/
   -webkit-box-shadow: 0px 0px 3px rgba(0,0,0,0.3);
   -moz-box-shadow:    0px 0px 3px rgba(0,0,0,0.3);
   box-shadow:         0px 0px 3px rgba(0,0,0,0.3);
 }
 
-.ribbon-green:before, .ribbon-green:after {
+.ribbon-corner:before, .ribbon-corner:after {
   content: "";
   border-top:   3px solid #6e8900;   
   border-left:  3px solid transparent;
@@ -72,9 +74,46 @@ p.imc-warning {color: #e21d1d; font-size: small;}
   bottom: -3px;
 }
 
-.ribbon-green:before {
+.ribbon-corner:before {
   left: 0;
 }
-.ribbon-green:after {
+.ribbon-corner:after {
   right: 0;
 }
+
+
+
+
+
+
+.book-ribbon {
+  font: 12px Sans-Serif;
+  line-height: 16px;
+  padding: 0 0 10px 0;
+  position: absolute;
+  right: 1.0em;
+  top: -0.25em;
+  width: 30px;
+}
+.book-ribbon-left {left: 0.85em;}
+
+.book-ribbon div {
+  background: #f21f1f;
+  /*background: linear-gradient(#e74841 0%, #bb3a34 100%);*/
+  color: #fff;
+  padding: 0.5em 0;
+  text-align: center;
+  /*text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.5);*/
+}
+.book-ribbon div:after {
+  border-left: 15px solid #f21f1f;
+  border-right: 15px solid #f21f1f;
+  border-bottom: 10px solid transparent;
+  bottom: 0;
+  content: '';
+  height: 0;
+  left: 0;
+  position: absolute;
+  width: 0;
+}
+

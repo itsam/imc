@@ -85,7 +85,11 @@ function infoBox(map, marker, data) {
     (function(marker, data) {
       // Attaching a click event to the current marker
       google.maps.event.addListener(marker, "click", function(e) {
-        infoWindow.setContent('<div class="infowindowcontent">'+data.title+'</div>');
+        if(data.state == 0){
+          infoWindow.setContent('<div class="infowindowcontent imc-warning"><i class="icon-info-sign"></i> '+data.title+'</div>');
+        } else {
+          infoWindow.setContent('<div class="infowindowcontent">'+data.title+'</div>');
+        }
         infoWindow.open(map, marker);
       });
     })(marker, data);
@@ -143,11 +147,6 @@ function resetBounds(map, gmarkers) {
 }
 
 function panelFocus(id) {
-  /*  
-  jQuery('body').animate({
-      scrollTop: jQuery('#imc-panel-'+id).offset().top - 70
-  }, 250);
-  */
   jQuery('#imc-panel-' + id)[0].scrollIntoView( true );
 
   //all

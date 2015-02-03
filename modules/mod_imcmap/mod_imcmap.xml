@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="module" version="3.0" method="upgrade" client="site">
     <name>Improve My City Google Map</name>
-    <creationDate>2015-01-25</creationDate>
+    <creationDate>2015-02-03</creationDate>
     <copyright>Copyright (C) 2015. All rights reserved.</copyright>
     <license>GNU AFFERO GENERAL PUBLIC LICENSE Version 3; see LICENSE</license>
     <author>Ioannis Tsampoulatidis</author>
     <authorEmail>tsampoulatidis@gmail.com</authorEmail>
     <authorUrl>https://github.com/itsam</authorUrl>
-    <version>3.0.0</version>
+    <version>3.0.2</version>
     <description>MOD_IMCMAP_DESCRIPTION</description>
     
     <files>
