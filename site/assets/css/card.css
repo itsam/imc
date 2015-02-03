@@ -4,6 +4,16 @@
 #columns:hover .panel:hover {
 	border-color: #0077BB;
 }
+.imc-focus { 
+  border-color: #0077BB;
+  opacity: 1;
+}
+.imc-not-focus {
+  border-color: #dddddd;
+  opacity: 0.25;
+}
+
+
 /*
 #columns, #columns > div[class*='col-'] {  
     display: -webkit-box;

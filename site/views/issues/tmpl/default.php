@@ -64,6 +64,7 @@ $canDelete = $user->authorise('core.delete', 'com_imc');
             <?php endif; ?>
         
       <div class="col-sm-6 col-md-4 col-xs-12 masonry-element">
+        <a name="imc-id-<?php echo $item->id;?>"/>
         <div id="imc-panel-<?php echo $item->id;?>" class="panel panel-default">
           <?php if (JFactory::getUser()->id == $item->created_by) : ?>  
           <div class="ribbon-wrapper-green"><div class="ribbon-green"><?php echo JText::_('COM_IMC_ISSUES_MY_ISSUE');?></div></div>

@@ -69,6 +69,10 @@ function infoBox(map, marker, data) {
     google.maps.event.addListener(marker, "click", function(e) {
         infoWindow.setContent('<div class="infowindowcontent">'+data.title+'</div>');
         infoWindow.open(map, marker);
+        panelFocus(data.id);
+    });
+    google.maps.event.addListener(infoWindow,'closeclick',function(){
+        panelFocusReset();
     });
 
     // Creating a closure to retain the correct data 
@@ -131,4 +135,25 @@ function resetBounds(map, gmarkers) {
       google.maps.event.removeListener(listener); 
     });
   }
+}
+
+function panelFocus(id) {
+  var aTag = jQuery("a[name='imc-id-"+ id +"']");
+  jQuery('html,body').animate({
+      scrollTop: jQuery(aTag).offset().top
+  }, 2000);
+
+  //all
+  jQuery("[id^=imc-panel-]").removeClass('imc-focus');
+  jQuery("[id^=imc-panel-]").addClass('imc-not-focus');
+
+  //selected
+  jQuery('#imc-panel-'+id).removeClass('imc-not-focus');
+  jQuery('#imc-panel-'+id).addClass('imc-focus');
+  
+}
+
+function panelFocusReset() {
+  jQuery("[id^=imc-panel-]").removeClass('imc-not-focus');
+  jQuery("[id^=imc-panel-]").removeClass('imc-focus');
 }
