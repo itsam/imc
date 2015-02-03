@@ -138,10 +138,13 @@ function resetBounds(map, gmarkers) {
 }
 
 function panelFocus(id) {
-  var aTag = jQuery("a[name='imc-id-"+ id +"']");
-  jQuery('html,body').animate({
-      scrollTop: jQuery(aTag).offset().top
-  }, 2000);
+  jQuery('html').css('height', 'auto');
+  //var aTag = jQuery("a[name='imc-id-"+ id +"']");
+  jQuery('body').animate({
+      scrollTop: jQuery('#imc-panel-'+id).offset().top - 70
+  }, 250);
+  //alert('adfas');
+  jQuery('html').css('height', '100%');
 
   //all
   jQuery("[id^=imc-panel-]").removeClass('imc-focus');
