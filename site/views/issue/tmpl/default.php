@@ -22,10 +22,26 @@ if (!$canEdit && $user->authorise('core.edit.own', 'com_imc.issue.' . $this->ite
 }
 ?>
 
-
 <?php if ($this->item && ($this->item->state == 1 || $canEditOwn ) ) : ?>
 
     <div class="item_fields">
+
+    <?php 
+        JFormHelper::addFieldPath(JPATH_ROOT . '/components/com_imc/models/fields');
+        $gmap = JFormHelper::loadFieldType('GMap', false);
+        //$options = $steps->getOptions();
+        //print_r($options);
+        $gmap->__set('mapOnly', true);
+        echo $gmap->show($this->item->latitude, $this->item->longitude, 4);
+
+
+
+        //JFormHelper::renderField('Step');
+
+    ?>   
+
+
+
         <table class="table">
             <tr>
 			<th><?php echo JText::_('COM_IMC_FORM_LBL_ISSUE_ID'); ?></th>
@@ -66,7 +82,9 @@ if (!$canEdit && $user->authorise('core.edit.own', 'com_imc.issue.' . $this->ite
 			<tr>
 			<th><?php echo JText::_('COM_IMC_FORM_LBL_ISSUE_STATE'); ?></th>
 			<td>
-			<i class="icon-<?php echo ($this->item->state == 1) ? 'publish' : 'unpublish'; ?>"></i></td>
+			<i class="icon-<?php echo ($this->item->state == 1) ? 'publish' : 'unpublish'; ?>"></i>
+			<?php echo $this->item->state; ?>
+			</td>
 			</tr>
 			<tr>
 			<th><?php echo JText::_('COM_IMC_FORM_LBL_ISSUE_CREATED'); ?></th>
@@ -118,5 +136,7 @@ if (!$canEdit && $user->authorise('core.edit.own', 'com_imc.issue.' . $this->ite
 	<?php endif; ?>
 
 <?php else: ?>
-	    <?php echo JText::_('COM_IMC_ITEM_NOT_LOADED'); ?>
+	<div class="alert alert-danger">
+	<?php echo JText::_('COM_IMC_ITEM_NOT_LOADED'); ?>
+	</div>
 <?php endif; ?>

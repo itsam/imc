@@ -33,7 +33,7 @@ class ImcViewIssueform extends JViewLegacy {
         $this->state = $this->get('State');
         $this->item = $this->get('Data');
         $this->params = $app->getParams('com_imc');
-        $this->form		= $this->get('Form');
+        $this->form	= $this->get('Form');
 
         // Check for errors.
         if (count($errors = $this->get('Errors'))) {

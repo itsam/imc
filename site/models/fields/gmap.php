@@ -25,22 +25,16 @@ class JFormFieldGmap extends JFormField
 	 * @since	1.6
 	 */
 	protected $type = 'Gmap';
-
-	/**
-	* @var string
-	* the field that holds the latitude
-	*/
 	protected $latitudefield;
-
-	/**
-	* @var string
-	* the field that holds the longitude
-	*/
 	protected $longitudefield;
-
 	protected $width;
 	protected $height;
-
+	protected $lat;
+	protected $lng;
+	protected $zoom;
+	
+	protected $mapOnly = false;
+	
 	/**
 	 * Method to get certain otherwise inaccessible properties from the form field object.
 	 *
@@ -58,6 +52,10 @@ class JFormFieldGmap extends JFormField
 			case 'longitudefield':
 			case 'width':
 			case 'height':
+			case 'lat':
+			case 'lng':
+			case 'zoom':			
+			case 'mapOnly':			
 				return $this->$name;
 		}
 
@@ -83,11 +81,27 @@ class JFormFieldGmap extends JFormField
 			case 'longitudefield':
 			case 'width':
 			case 'height':
+			case 'lat':
+			case 'lng':
+			case 'zoom':
+			case 'mapOnly':
 				$this->$name = (string) $value;
 				break;
 			default:
 				parent::__set($name, $value);
 		}
+	}
+
+	public function show($lat, $lng, $zoom = 14) 
+	{
+		$this->element['disabled'] = true;
+		$this->element['latitudefield'] = 'latitudefield';
+		$this->element['longitudefield'] = 'longitudefield';
+		$this->lat = $lat;
+		$this->lng = $lng;
+		$this->zoom = $zoom;
+		echo $zoom;
+		return $this->getInput();
 	}
 
 	/**
@@ -118,10 +132,10 @@ class JFormFieldGmap extends JFormField
 		
 
 		//get google maps default options if no value is set (e.g. new record)
-		$lat        = $params->get('latitude');
-		$lng        = $params->get('longitude');
+		$lat        = (isset($this->lat) ? $this->lat : $params->get('latitude') );
+		$lng        = (isset($this->lng) ? $this->lng : $params->get('longitude') );
+		$zoom       = (isset($this->zoom) ? $this->zoom : $params->get('zoom') );
 
-		$zoom 	    = $params->get('zoom');
 		$language   = $params->get('maplanguage');
 		$hiddenterm = $params->get('hiddenterm');
 
@@ -176,22 +190,33 @@ class JFormFieldGmap extends JFormField
 		$html = array();
         $html[] = '<div style="'.implode("", $style).'">';
         $html[] = '	<div id="imc-map-canvas"></div>';
+
+        if($this->mapOnly){
+        	$html[] = '</div>';
+        	return implode("\n", $html);
+        }
+
+
         $html[] = '	<br />';
         $html[] = '	<div class="row-fluid">';
+        
         if(!$disabled) {
         $html[] = '		<div class="span1">';
 		$html[] = '			<button id="locateposition" class="btn btn-mini" type="button"><i class="icon-home"></i></button><br /><br />';
 		$html[] = '			<button id="searchaddress" class="btn btn-mini" type="button"><i class="icon-search icon-white"></i></button>';
 		$html[] = '		</div>';
 		}
+        
         $html[] = '		<div class="'. ($disabled ? "span12" : "span10").'">';
 		$html[] = '			<textarea '. ($disabled ? "disabled=\"\"" : "").' class="imc-gmap-textarea" rows="3" cols="75" id="' . $this->id . '" name="' . $this->name . '">'.htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8').'</textarea>';
 		$html[] = '		</div>';
+		
 		if(!$disabled) {
         $html[] = '		<div class="span1 imc-text-right">';
 		$html[] = '			<button id="lockaddress" class="btn btn-mini" type="button"><i class="icon-lock"></i></button><br /><br /><br />';
 		$html[] = '		</div>';
 		}
+		
 		$html[] = '	</div>';		
 		$html[] = '</div>';		
 
