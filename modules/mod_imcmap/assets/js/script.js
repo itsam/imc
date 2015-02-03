@@ -15,6 +15,11 @@ function imc_mod_map_initialize() {
       mapOptions);
 
   setMarkers(center, imc_mod_map);
+
+  google.maps.event.addListener(imc_mod_map, 'click', function() {
+    infoWindow.close();
+    panelFocusReset();
+  });  
 }
 
 
@@ -138,13 +143,12 @@ function resetBounds(map, gmarkers) {
 }
 
 function panelFocus(id) {
-  jQuery('html').css('height', 'auto');
-  //var aTag = jQuery("a[name='imc-id-"+ id +"']");
+  /*  
   jQuery('body').animate({
       scrollTop: jQuery('#imc-panel-'+id).offset().top - 70
   }, 250);
-  //alert('adfas');
-  jQuery('html').css('height', '100%');
+  */
+  jQuery('#imc-panel-' + id)[0].scrollIntoView( true );
 
   //all
   jQuery("[id^=imc-panel-]").removeClass('imc-focus');
