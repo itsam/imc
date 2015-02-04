@@ -92,7 +92,7 @@ class JFormFieldGmap extends JFormField
 		}
 	}
 
-	public function show($lat, $lng, $zoom = 14) 
+	public function showField($lat, $lng, $zoom = 14) 
 	{
 		$this->element['disabled'] = true;
 		$this->element['latitudefield'] = 'latitudefield';
@@ -100,7 +100,6 @@ class JFormFieldGmap extends JFormField
 		$this->lat = $lat;
 		$this->lng = $lng;
 		$this->zoom = $zoom;
-		echo $zoom;
 		return $this->getInput();
 	}
 
@@ -176,6 +175,7 @@ class JFormFieldGmap extends JFormField
 
 		//initialize map
 		$script = array();
+		$script[] = "";
 		$script[] = "google.maps.event.addDomListener(window, 'load', initialize);";
 		JFactory::getDocument()->addScriptDeclaration(implode("\n", $script));
 

@@ -9,25 +9,6 @@
  * @author      Ioannis Tsampoulatidis <tsampoulatidis@gmail.com> - https://github.com/itsam
  */
 defined('_JEXEC') or die;
-
-$jinput = JFactory::getApplication()->input;
-$option = $jinput->get('option', null);
-$view = $jinput->get('view', null);
-
-//Show module only on issues list view
-if ($option == 'com_imc' && $view != 'issues') {
-	//TODO: get the following from module settings	
-	$s = "
-	    jQuery(document).ready(function() {
-	 		jQuery('#map-sidebar').remove();
-	 		jQuery('#imc-left').removeClass().addClass('col-xs-12');
-	    });
-	";
-	JFactory::getDocument()->addScriptDeclaration($s);
-
-	$module->showtitle = false;
-	return;
-}
 ?>
 
 <div id="imc-mod-map-canvas"></div>

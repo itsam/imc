@@ -8,6 +8,7 @@
  */
 // no direct access
 defined('_JEXEC') or die;
+JHtml::_('jquery.framework');
 
 //Load admin language file
 $lang = JFactory::getLanguage();
@@ -32,12 +33,7 @@ if (!$canEdit && $user->authorise('core.edit.own', 'com_imc.issue.' . $this->ite
         //$options = $steps->getOptions();
         //print_r($options);
         $gmap->__set('mapOnly', true);
-        echo $gmap->show($this->item->latitude, $this->item->longitude, 4);
-
-
-
-        //JFormHelper::renderField('Step');
-
+        echo $gmap->showField($this->item->latitude, $this->item->longitude, 18);
     ?>   
 
 

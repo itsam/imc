@@ -40,6 +40,32 @@ else{
 }
 ?>
 
+<?php
+// Check if we allow to display the module on details (issue) page
+$jinput = JFactory::getApplication()->input;
+$option = $jinput->get('option', null);
+$view = $jinput->get('view', null);
+
+//Show module only on issues list view
+if ($option == 'com_imc' && $view != 'issues') {
+	//TODO: get the following from module settings	
+	$s = "
+	    jQuery(document).ready(function() {
+	 		jQuery('#map-sidebar').remove();
+	 		jQuery('#imc-left').removeClass().addClass('col-xs-12');
+	    });
+	";
+	JFactory::getDocument()->addScriptDeclaration($s);
+
+	$module->showtitle = false;
+	return;
+}
+?>
+
+
+
+
+
 <script type="text/javascript">
 	var lat = <?php echo $lat;?> ;
 	var lng = <?php echo $lng;?> ;
