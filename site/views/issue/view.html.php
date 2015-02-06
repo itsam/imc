@@ -11,7 +11,7 @@
 defined('_JEXEC') or die;
 
 jimport('joomla.application.component.view');
-
+JHtml::_('jquery.framework');
 /**
  * View to edit
  */
@@ -105,6 +105,10 @@ class ImcViewIssue extends JViewLegacy {
             $this->document->setMetadata('robots', $this->params->get('robots'));
         }
 
+        $this->document->addStyleSheet(JURI::root(true).'/components/com_imc/assets/css/style.css');
+        $this->document->addStyleSheet(JURI::root(true).'/components/com_imc/assets/css/photobox.css');
+        // TODO: add this <!--[if lt IE 9]><link rel="stylesheet" href="photobox/photobox.ie.css"><![endif]-->
+        $this->document->addScript(JURI::root(true).'/components/com_imc/assets/js/jquery.photobox.js');
     }
 
 }
