@@ -52,7 +52,7 @@ $canDelete = $user->authorise('core.delete', 'com_imc');
                     
 
                 <?php if (isset($this->items[0]->id)): ?>
-                    <th width="1%" class="nowrap center hidden-phone">
+                    <th width="5%" class="nowrap center hidden-phone">
                         <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'a.id', $listDirn, $listOrder); ?>
                     </th>
                 <?php endif; ?>
@@ -116,7 +116,7 @@ $canDelete = $user->authorise('core.delete', 'com_imc');
 				<?php else : ?>
 					<?php echo $this->escape($item->title); ?>
 				<?php endif; ?>
-                <a href="<?php echo JRoute::_('index.php?option=com_imc&view=issue&id='.(int) $item->id); ?>">view details</a>
+                <br /><a href="<?php echo JRoute::_('index.php?option=com_imc&view=issue&id='.(int) $item->id); ?>"><?php echo JText::_('COM_IMC_ISSUES_MORE');?></a>
 				</td>
 				<td>
 
