@@ -67,7 +67,7 @@
 
 .ribbon-corner:before, .ribbon-corner:after {
   content: "";
-  border-top:   3px solid #6e8900;   
+  border-top:   3px solid #0099CC;   
   border-left:  3px solid transparent;
   border-right: 3px solid transparent;
   position:absolute;
@@ -98,7 +98,7 @@
 .book-ribbon-left {left: 0.85em;}
 
 .book-ribbon div {
-  background: #f21f1f;
+  background: #0099CC;
   /*background: linear-gradient(#e74841 0%, #bb3a34 100%);*/
   color: #fff;
   padding: 0.5em 0;
@@ -106,8 +106,8 @@
   /*text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.5);*/
 }
 .book-ribbon div:after {
-  border-left: 15px solid #f21f1f;
-  border-right: 15px solid #f21f1f;
+  border-left: 15px solid #0099CC;
+  border-right: 15px solid #0099CC;
   border-bottom: 10px solid transparent;
   bottom: 0;
   content: '';

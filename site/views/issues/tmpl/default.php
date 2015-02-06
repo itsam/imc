@@ -63,7 +63,7 @@ $canDelete = $user->authorise('core.delete', 'com_imc');
                         <?php else : ?>
                             <?php if($item->votes > 0) : ?>
                             <div title="<?php echo JText::_('COM_IMC_ISSUES_VOTES');?>" class="book-ribbon">
-                                <div><?php echo $item->votes; ?></div>
+                                <div>+<?php echo $item->votes; ?></div>
                             </div>
                             <?php endif; ?>
                         <?php endif; ?>
@@ -77,28 +77,30 @@ $canDelete = $user->authorise('core.delete', 'com_imc');
 
                         <div class="<?php echo ($item->state == 0 ? 'issue-unpublished ' : ''); ?>panel-body">
                             <p class="lead">
-                                <?php if (isset($item->checked_out) && $item->checked_out) : ?>
-                                  <?php echo JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, 'issues.', $canCheckin); ?>
-                                <?php endif; ?>
-
                                 <?php if($item->category_image != '') : ?>
                                 <img src="<?php echo $item->category_image; ?>" alt="category image" />
                                 <?php endif; ?>
-
                                 <?php if ($canEdit) : ?>
                                   <a href="<?php echo JRoute::_('index.php?option=com_imc&task=issue.edit&id='.(int) $item->id); ?>">
                                   <i class="icon-edit"></i> <?php echo $this->escape($item->title); ?></a>
                                 <?php else : ?>
                                   <?php echo $this->escape($item->title); ?>
                                 <?php endif; ?>
+                                <?php if (isset($item->checked_out) && $item->checked_out) : ?>
+                                  <i class="icon-lock"></i> <?php echo JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, 'issues.', $canCheckin); ?>
+                                <?php endif; ?>
                             </p>
 
+                            <?php if($item->updated == $item->created) : ?>
                             <span class="label label-default" title="<?php echo JText::_('COM_IMC_ISSUES_CREATED');?>"><?php echo ImcFrontendHelper::getRelativeTime($item->created); ?></span>
-                            <span class="label label-info" title="<?php echo JText::_('COM_IMC_ISSUES_STEPID');?>"><?php echo $item->stepid_title; ?></span>
-                            <span class="label label-primary" title="<?php echo JText::_('COM_IMC_ISSUES_CATID');?>"><?php echo $item->catid_title; ?></span>
-                            <span class="label label-primary" title="<?php echo JText::_('COM_IMC_TITLE_COMMENTS');?>">0</span>
+                            <?php else : ?>
+                            <span class="label label-default" title="<?php echo JText::_('COM_IMC_ISSUES_UPDATED');?>"><?php echo ImcFrontendHelper::getRelativeTime($item->updated); ?></span>
+                            <?php endif; ?>
+                            <span class="label label-info" style="background-color: <?php echo $item->stepid_color;?>" title="<?php echo JText::_('COM_IMC_ISSUES_STEPID');?>"><?php echo $item->stepid_title; ?></span>
+                            <span class="label label-default" title="<?php echo JText::_('COM_IMC_ISSUES_CATID');?>"><?php echo $item->catid_title; ?></span>
+                            <span class="label label-default" title="<?php echo JText::_('COM_IMC_TITLE_COMMENTS');?>"><i class="icon-comment"></i> 0</span>
                             <?php if (JFactory::getUser()->id == $item->created_by && $item->votes > 0) : ?>
-                            <span class="label label-primary" title="<?php echo JText::_('COM_IMC_ISSUES_VOTES');?>"><?php echo $item->votes; ?></span>
+                            <span class="label label-default" title="<?php echo JText::_('COM_IMC_ISSUES_VOTES');?>">+<?php echo $item->votes; ?></span>
                             <?php endif; ?>
 
                             <p><?php echo $item->description; ?></p>

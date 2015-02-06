@@ -25,16 +25,23 @@ if (!$canEdit && $user->authorise('core.edit.own', 'com_imc.issue.' . $this->ite
 
 <?php if ($this->item && ($this->item->state == 1 || $canEditOwn ) ) : ?>
 
-    <div class="item_fields">
+    <div class="item_fields2">
 
     <?php 
+    	//map
         JFormHelper::addFieldPath(JPATH_ROOT . '/components/com_imc/models/fields');
         $gmap = JFormHelper::loadFieldType('GMap', false);
-        //$options = $steps->getOptions();
-        //print_r($options);
         $gmap->__set('mapOnly', true);
         echo $gmap->showField($this->item->latitude, $this->item->longitude, 18);
     ?>   
+
+	<?php 
+		$step = JFormHelper::loadFieldType('Step', false);
+        $options = $step->getOptions();
+        print_r($options);
+        
+
+	?>
 
 
 
@@ -49,7 +56,7 @@ if (!$canEdit && $user->authorise('core.edit.own', 'com_imc.issue.' . $this->ite
 			</tr>
 			<tr>
 			<th><?php echo JText::_('COM_IMC_FORM_LBL_ISSUE_STEPID'); ?></th>
-			<td><?php echo $this->item->stepid_title; ?></td>
+			<td><?php echo $this->item->stepid_title . ' -> '. $this->item->stepid;; ?></td>
 			</tr>
 			<tr>
 			<th><?php echo JText::_('COM_IMC_FORM_LBL_ISSUE_CATID'); ?></th>
