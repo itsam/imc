@@ -84,33 +84,40 @@ if (!$canEdit && $user->authorise('core.edit.own', 'com_imc.issue.' . $this->ite
 	    </div>
 
     </div>
+    
+
+
+    <hr />
     <div class="row">
-	<div class="col-lg-12 col-sm-12 col-xs-12">    	
-    <h2 class="center">Timeline</h2>
-	<section id="cd-timeline" class="cd-container">
-		<?php $first = true; ?>
-		<?php foreach ($this->logs as $log) : ?>
-			<div class="cd-timeline-block">
-				<div class="cd-timeline-img cd-location" style="background-color: <?php echo $log['stepid_color']; ?>;">
-					<img src="images/cd-icon-location.svg" alt="Location">
-				</div> 
-				<div class="cd-timeline-content">
-					<h2><?php echo $log['stepid_title']; ?></h2>
-					<!-- <h3><?php echo $log['action']; ?></h3> -->
-					
-
-					<?php if ($first) : ?>
-					<?php endif; ?>
-
-					<p><?php echo $log['description']; ?></p>
-					<span class="cd-date"><?php echo ImcFrontendHelper::getRelativeTime($log['created']); ?></span>
+		<div class="col-lg-12 col-sm-12 col-xs-12">    	
+		<div class="center">
+		<button class="btn btn-primary btn-lg" type="button" data-toggle="collapse" data-target="#cd-timeline" aria-expanded="false" aria-controls="cd-timeline">
+		  Timeline <i class="icon-arrow-down"></i>
+		</button>			
+		</div>
+		<section id="cd-timeline" class="cd-container collapse">
+			<?php $first = true; ?>
+			<?php foreach ($this->logs as $log) : ?>
+				<div class="cd-timeline-block">
+					<div class="cd-timeline-img cd-location" style="background-color: <?php echo $log['stepid_color']; ?>;">
+						<img src="images/cd-icon-location.svg" alt="Location">
+					</div> 
+					<div class="cd-timeline-content">
+						<h2><?php echo $log['stepid_title']; ?></h2>
+						<!-- <h3><?php echo $log['action']; ?></h3> -->
+						<?php if ($first) : ?>
+						<?php endif; ?>
+						<p><?php echo $log['description']; ?></p>
+						<span class="cd-date"><?php echo ImcFrontendHelper::getRelativeTime($log['created']); ?></span>
+					</div>
 				</div>
-			</div>
-		<?php $first = false; ?>	
-		<?php endforeach; ?>
-	</section>
+			<?php $first = false; ?>	
+			<?php endforeach; ?>
+		</section>
+	    </div>
     </div>
-    </div>
+
+
     </div> <!-- /container -->
 	
 
@@ -124,7 +131,7 @@ if (!$canEdit && $user->authorise('core.edit.own', 'com_imc.issue.' . $this->ite
 
 
 
-
+<?php /*
     <div class="item_fields2">
         <table class="table">
             <tr>
@@ -219,6 +226,11 @@ if (!$canEdit && $user->authorise('core.edit.own', 'com_imc.issue.' . $this->ite
 	<?php if(JFactory::getUser()->authorise('core.delete','com_imc.issue.'.$this->item->id)):?>
 		<a class="btn" href="<?php echo JRoute::_('index.php?option=com_imc&task=issue.remove&id=' . $this->item->id, false, 2); ?>"><?php echo JText::_("COM_IMC_DELETE_ITEM"); ?></a>
 	<?php endif; ?>
+
+
+*/ ?>
+
+
 
 <?php else: ?>
 	<div class="alert alert-danger">
