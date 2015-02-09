@@ -13,6 +13,14 @@ class ModImcfiltersHelper {
     
     private static $filters;
 
+    public function getVotes($id) 
+    {
+        $db = JFactory::getDbo();
+        $db->setQuery('SELECT votes FROM #__imc_issues WHERE id='.$id);
+        $votes = $db->loadResult();
+        return $votes;
+    }
+
     public static function getCategories($recursive = false)
     {
         $_categories = JCategories::getInstance('Imc');

@@ -76,6 +76,7 @@ $listDirn  = $jinput->get('filter_order_Dir');
 		$jinput = JFactory::getApplication()->input;
 		$option = $jinput->get('option', null);
 		$view = $jinput->get('view', null);
+		$id = $jinput->get('id', null);
 	?>
 	<?php $canCreate = JFactory::getUser()->authorise('core.create', 'com_imc'); ?>
 	<?php if ($canCreate && $option == 'com_imc' && $view == 'issues'): ?>
@@ -85,7 +86,10 @@ $listDirn  = $jinput->get('filter_order_Dir');
 	<?php endif; ?>
 	<?php if ($canCreate && $option == 'com_imc' && $view == 'issue'): ?>
 		<div class="imc_btn_right">
-	    	<a href="#" class="btn btn-success btn-large btn-lg"><i class="icon-thumbs-up"></i> <?php echo JText::_('MOD_IMCFILTERS_VOTE'); ?></a>
+			<div class="btn-group btn-group-lg" role="group" aria-label="">
+	    	<a href="#" class="btn btn-success btn-large btn-lg"><i class="icon-thumbs-up"></i> +1 <?php echo JText::_('MOD_IMCFILTERS_VOTE'); ?></a>
+	    	<span class="btn btn-success btn-large btn-lg disabled"><?php echo ModImcfiltersHelper::getVotes($id); ?></span>
+	    	</div>
 	    	<a href="<?php echo JRoute::_('index.php?option=com_imc&task=issue.edit&id=0', false, 2); ?>" class="btn btn-default btn-large btn-lg"><i class="icon-plus"></i> <?php echo JText::_('MOD_IMCFILTERS_ADD_ITEM'); ?></a>
 	    </div>
 	<?php endif; ?>
