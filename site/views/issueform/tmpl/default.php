@@ -70,7 +70,8 @@ if(!$canState) {
     
 </script>
 
-
+<div class="container">
+<div class="row">
 <div class="issue-edit front-end-edit">
     <form id="form-issue" action="<?php echo JRoute::_('index.php?option=com_imc&task=issue.save'); ?>" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
     <div style="float:right;">
@@ -229,4 +230,5 @@ if(!$canState) {
 
     </form>
 </div>
-
+</div>
+</div> <!-- /container -->

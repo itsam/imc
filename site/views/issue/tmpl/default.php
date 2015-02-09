@@ -34,22 +34,59 @@ if (!$canEdit && $user->authorise('core.edit.own', 'com_imc.issue.' . $this->ite
 </script>
 
 <?php if ($this->item && ($this->item->state == 1 || $canEditOwn ) ) : ?>
-    
-    <h1>
-    <?php if($this->item->category_image != '') : ?>
-    <img src="<?php echo $this->item->category_image; ?>" alt="category image" />
-    <?php endif; ?>
-	<?php echo $this->item->title; ?>
-	</h1>
+    <div class="container">
+    <div class="row">
 
-    <?php 
-    	//map
-        JFormHelper::addFieldPath(JPATH_ROOT . '/components/com_imc/models/fields');
-        $gmap = JFormHelper::loadFieldType('GMap', false);
-        $gmap->__set('mapOnly', true);
-        //echo $gmap->showField($this->item->latitude, $this->item->longitude, 18);
-    ?>   
+	    <h1>
+	    <?php if($this->item->category_image != '') : ?>
+	    <img src="<?php echo $this->item->category_image; ?>" alt="category image" />
+	    <?php endif; ?>
+		<?php echo '#'. $this->item->id . '. ' .$this->item->title; ?>
+		</h1>
 
+	    <div class="col-lg-6 col-sm-12 col-xs-12 col-lg-push-6">
+	    	<div style="padding-bottom: 40px;">
+		    <div class="well"><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> <?php echo $this->item->address;?></div>
+		    <?php 
+		    	//map
+		        JFormHelper::addFieldPath(JPATH_ROOT . '/components/com_imc/models/fields');
+		        $gmap = JFormHelper::loadFieldType('GMap', false);
+		        $gmap->__set('mapOnly', true);
+		        if($this->item->category_image != ''){
+		        	$gmap->__set('icon', JURI::base().$this->item->category_image);
+		        }
+	    		echo $gmap->showField($this->item->latitude, $this->item->longitude, 18);
+		    ?>   
+		    </div>
+	    </div>
+	    <div class="col-lg-6 col-sm-12 col-xs-12 col-lg-pull-6">
+	    	<p><?php echo $this->item->description; ?></p>
+			<p>
+			<?php $photos = json_decode($this->item->photo); ?>
+			<?php if(!empty($photos->files) && file_exists($photos->imagedir .'/'. $photos->id . '/thumbnail/' . (@$photos->files[0]->name))) : ?>
+				<div id='gallery'>
+				<?php $count = 1; ?>
+				<?php foreach ($photos->files as $photo) : ?>
+			        <a href="<?php echo $photos->imagedir .'/'. $photos->id . '/' . ($photo->name) ;?>">
+			        	<?php if($count == 1) : ?>
+				        	<img src="<?php echo $photos->imagedir .'/'. $photos->id . '/medium/' . ($photo->name) ;?>" alt="<?php echo JText::_('COM_IMC_ISSUES_PHOTO') . ' '. $count;?>" class="img-responsive" /><br />
+			        	<?php else :?>
+			        		<img src="<?php echo $photos->imagedir .'/'. $photos->id . '/thumbnail/' . ($photo->name) ;?>" alt="<?php echo JText::_('COM_IMC_ISSUES_PHOTO') . ' '. $count;?>" class="img-responsive" />
+			        	<?php endif; ?>
+			        </a>
+			        <?php $count++;?>
+				<?php endforeach; ?>
+				</div>        
+			<?php endif; ?>
+			</p>
+			<hr />
+			<p><a href="#" class="btn btn-success"><i class="icon-comment"></i> Add new comment</a></p>
+	    </div>
+
+    </div>
+    <div class="row">
+	<div class="col-lg-12 col-sm-12 col-xs-12">    	
+    <h2 class="center">Timeline</h2>
 	<section id="cd-timeline" class="cd-container">
 		<?php $first = true; ?>
 		<?php foreach ($this->logs as $log) : ?>
@@ -63,26 +100,6 @@ if (!$canEdit && $user->authorise('core.edit.own', 'com_imc.issue.' . $this->ite
 					
 
 					<?php if ($first) : ?>
-						<?php echo $gmap->showField($this->item->latitude, $this->item->longitude, 18); ?>
-						<p><?php echo $this->item->description; ?></p>
-						<p>
-						<?php $photos = json_decode($this->item->photo); ?>
-						<?php if(!empty($photos->files) && file_exists($photos->imagedir .'/'. $photos->id . '/thumbnail/' . (@$photos->files[0]->name))) : ?>
-							<div id='gallery'>
-							<?php $count = 1; ?>
-							<?php foreach ($photos->files as $photo) : ?>
-						        <a href="<?php echo $photos->imagedir .'/'. $photos->id . '/' . ($photo->name) ;?>">
-						        	<?php if($count == 1) : ?>
-							        	<img src="<?php echo $photos->imagedir .'/'. $photos->id . '/medium/' . ($photo->name) ;?>" alt="<?php echo JText::_('COM_IMC_ISSUES_PHOTO') . ' '. $count;?>" class="img-responsive" /><br />
-						        	<?php else :?>
-						        		<img src="<?php echo $photos->imagedir .'/'. $photos->id . '/thumbnail/' . ($photo->name) ;?>" alt="<?php echo JText::_('COM_IMC_ISSUES_PHOTO') . ' '. $count;?>" class="img-responsive" />
-						        	<?php endif; ?>
-						        </a>
-						        <?php $count++;?>
-							<?php endforeach; ?>
-							</div>        
-						<?php endif; ?>
-						</p>
 					<?php endif; ?>
 
 					<p><?php echo $log['description']; ?></p>
@@ -92,6 +109,12 @@ if (!$canEdit && $user->authorise('core.edit.own', 'com_imc.issue.' . $this->ite
 		<?php $first = false; ?>	
 		<?php endforeach; ?>
 	</section>
+    </div>
+    </div>
+    </div> <!-- /container -->
+	
+
+
 	<?php 
 		//issue statuses
 		$step = JFormHelper::loadFieldType('Step', false);

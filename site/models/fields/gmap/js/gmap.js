@@ -160,7 +160,9 @@ function initialize() {
 			draggable: true
 		});
 	}
-
+	if(icon != ''){
+		marker.setIcon(icon);
+	}
 	marker.setMap(map);
 
 	infowindow = new google.maps.InfoWindow({

@@ -32,6 +32,7 @@ class JFormFieldGmap extends JFormField
 	protected $lat;
 	protected $lng;
 	protected $zoom;
+	protected $icon = '';
 	
 	protected $mapOnly = false;
 	
@@ -55,6 +56,7 @@ class JFormFieldGmap extends JFormField
 			case 'lat':
 			case 'lng':
 			case 'zoom':			
+			case 'icon':			
 			case 'mapOnly':			
 				return $this->$name;
 		}
@@ -84,6 +86,7 @@ class JFormFieldGmap extends JFormField
 			case 'lat':
 			case 'lng':
 			case 'zoom':
+			case 'icon':
 			case 'mapOnly':
 				$this->$name = (string) $value;
 				break;
@@ -166,6 +169,7 @@ class JFormFieldGmap extends JFormField
 		$script[] = "var lngfield='jform_".$this->element['longitudefield']."';";
 		$script[] = "var addrfield='".$this->id."';";
 		$script[] = "var zoom=".$zoom.";";
+		$script[] = "var icon='".$this->icon."';";
 		$script[] = "var language='".$language."';";
 		$script[] = "var hiddenterm='".$hiddenterm."';";
 		$script[] = "var info='".addslashes(JText::_('COM_IMC_DRAG_MARKER'))."';";
