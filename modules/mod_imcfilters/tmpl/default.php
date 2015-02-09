@@ -28,7 +28,7 @@ $listDirn  = $jinput->get('filter_order_Dir');
 	<form class="form-search form-inline" action="<?php echo JRoute::_('index.php?option=com_imc&view=issues'); ?>" method="post" name="imc_filter_form" id="imc_filter_form">
 		<?php if ($option == 'com_imc' && $view != 'issues') : ?>
 			<span class="imc_btn_left">
-				<a href="<?php echo JRoute::_('index.php?option=com_imc', false, 2); ?>" class="btn btn-warning"><i class="icon-arrow-left"></i> <?php echo JText::_('MOD_IMCFILTERS_RETURN_TO_ISSUES'); ?></a>		
+				<a href="<?php echo JRoute::_('index.php?option=com_imc', false, 2); ?>" class="btn btn-info"><i class="icon-arrow-left"></i> <?php echo JText::_('MOD_IMCFILTERS_RETURN_TO_ISSUES'); ?></a>		
 			</span>				
 		<?php else : ?>
 			<div class="imc_btn_left">
@@ -78,9 +78,15 @@ $listDirn  = $jinput->get('filter_order_Dir');
 		$view = $jinput->get('view', null);
 	?>
 	<?php $canCreate = JFactory::getUser()->authorise('core.create', 'com_imc'); ?>
-	<?php if ($canCreate && $option == 'com_imc' && $view != 'issueform'): ?>
+	<?php if ($canCreate && $option == 'com_imc' && $view == 'issues'): ?>
 		<div class="imc_btn_right">
 	    	<a href="<?php echo JRoute::_('index.php?option=com_imc&task=issue.edit&id=0', false, 2); ?>" class="btn btn-success btn-large btn-lg"><i class="icon-plus"></i> <?php echo JText::_('MOD_IMCFILTERS_ADD_ITEM'); ?></a>
+	    </div>
+	<?php endif; ?>
+	<?php if ($canCreate && $option == 'com_imc' && $view == 'issue'): ?>
+		<div class="imc_btn_right">
+	    	<a href="#" class="btn btn-success btn-large btn-lg"><i class="icon-thumbs-up"></i> <?php echo JText::_('MOD_IMCFILTERS_VOTE'); ?></a>
+	    	<a href="<?php echo JRoute::_('index.php?option=com_imc&task=issue.edit&id=0', false, 2); ?>" class="btn btn-default btn-large btn-lg"><i class="icon-plus"></i> <?php echo JText::_('MOD_IMCFILTERS_ADD_ITEM'); ?></a>
 	    </div>
 	<?php endif; ?>
 
