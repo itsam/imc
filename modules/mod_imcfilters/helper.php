@@ -67,24 +67,24 @@ class ModImcfiltersHelper {
 
     private static function createFilters($cats = array())
     {
-        //$jinput = JFactory::getApplication()->input;
-        $filter_category = '';//$this->state->get('filter_category');    
+        $app = JFactory::getApplication();
+        $filter_category = $app->getUserStateFromRequest('com_imc.pois.filter.category', 'cat', array());
     
-        self::$filters .= '<ul>';
+        self::$filters .= '<ul class="imc_ulist">';
         foreach($cats as $JCatNode){
             //id is the category id
             if(empty($filter_category)){
                 if($JCatNode->parentid == 'root')       
-                    self::$filters .='<li><input path="'.$JCatNode->path.'" parent="box'.$JCatNode->parentid.'" name="cat[]" value="'.$JCatNode->id.'" type="checkbox" checked="checked" id="cat-'.$JCatNode->id.'" onclick="imc_filterbox_click(this,'.$JCatNode->id.')" /><span class="root">'.$JCatNode->title.'</span></li>' . "\n";
+                    self::$filters .='<li><input path="'.$JCatNode->path.'" parent="box'.$JCatNode->parentid.'" name="cat[]" value="'.$JCatNode->id.'" type="checkbox" checked="checked" id="cat-'.$JCatNode->id.'" onclick="imc_filterbox_click(this,'.$JCatNode->id.')" /><span class="root">'.' '.$JCatNode->title.'</span></li>' . "\n";
                 else
-                    self::$filters .='<li><input path="'.$JCatNode->path.'" parent="box'.$JCatNode->parentid.'" name="cat[]" value="'.$JCatNode->id.'" type="checkbox" checked="checked" id="cat-'.$JCatNode->id.'" onclick="imc_filterbox_click(this,'.$JCatNode->id.')" />'.$JCatNode->title.'</li>' . "\n";
+                    self::$filters .='<li><input path="'.$JCatNode->path.'" parent="box'.$JCatNode->parentid.'" name="cat[]" value="'.$JCatNode->id.'" type="checkbox" checked="checked" id="cat-'.$JCatNode->id.'" onclick="imc_filterbox_click(this,'.$JCatNode->id.')" />'. ' ' .$JCatNode->title.'</li>' . "\n";
             }
             else{
                 if($JCatNode->parentid == 'root'){
-                    self::$filters .='<li><input path="'.$JCatNode->path.'" parent="box'.$JCatNode->parentid.'" name="cat[]" value="'.$JCatNode->id.'" type="checkbox" '; if(in_array($JCatNode->id, $filter_category)) $this->filters .= 'checked="checked"'; $this->filters .= ' id="cat-'.$JCatNode->id.'" onclick="imc_filterbox_click(this,'.$JCatNode->id.')" /><span class="root">'.$JCatNode->title.'</span></li>' . "\n";
+                    self::$filters .='<li><input path="'.$JCatNode->path.'" parent="box'.$JCatNode->parentid.'" name="cat[]" value="'.$JCatNode->id.'" type="checkbox" '; if(in_array($JCatNode->id, $filter_category)) self::$filters .= 'checked="checked"'; self::$filters .= ' id="cat-'.$JCatNode->id.'" onclick="imc_filterbox_click(this,'.$JCatNode->id.')" /><span class="root">'.' '.$JCatNode->title.'</span></li>' . "\n";
                 }
                 else{
-                    self::$filters .='<li><input path="'.$JCatNode->path.'" parent="box'.$JCatNode->parentid.'" name="cat[]" value="'.$JCatNode->id.'" type="checkbox" '; if(in_array($JCatNode->id, $filter_category)) $this->filters .= 'checked="checked"'; $this->filters .= ' id="cat-'.$JCatNode->id.'" onclick="imc_filterbox_click(this,'.$JCatNode->id.')" />'.$JCatNode->title.'</li>' . "\n";
+                    self::$filters .='<li><input path="'.$JCatNode->path.'" parent="box'.$JCatNode->parentid.'" name="cat[]" value="'.$JCatNode->id.'" type="checkbox" '; if(in_array($JCatNode->id, $filter_category)) self::$filters .= 'checked="checked"'; self::$filters .= ' id="cat-'.$JCatNode->id.'" onclick="imc_filterbox_click(this,'.$JCatNode->id.')" />'.' '.$JCatNode->title.'</li>' . "\n";
                 }   
             }
             
@@ -97,7 +97,7 @@ class ModImcfiltersHelper {
 
         return self::$filters;
     }
-    
+
     private static function createFiltersAsArray($cats)
     {
         $ar[] = null;
@@ -134,9 +134,6 @@ class ModImcfiltersHelper {
         }
         return $html;
     }
-
-
-
 
     public static function getCategoryFilters($cat_id = 0) {
         $categories = ModImcfiltersHelper::getCategories();

@@ -71,10 +71,6 @@ class ImcModelIssues extends JModelList {
         $limitstart = JFactory::getApplication()->input->getInt('limitstart', 0);
         $this->setState('list.start', $limitstart);
 
-        //echo 'limit='.$limit;
-        //echo ' limitstart='.$limitstart;
-///.
-
         // Load the filter state.
         $search = $app->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
         $this->setState('filter.search', $search);
@@ -85,19 +81,27 @@ class ImcModelIssues extends JModelList {
         $access = $app->getUserStateFromRequest($this->context . '.filter.access', 'filter_access');
         $this->setState('filter.access', $access);
 
+        $category = $app->getUserStateFromRequest($this->context . '.filter.category', 'cat', array()); 
+        $this->setState('filter.category', $category);
+        //Filtering catid
+        //$this->setState('filter.catid', $app->getUserStateFromRequest($this->context.'.filter.catid', 'filter_catid', '', 'string'));
+        
         //Filtering stepid
         $this->setState('filter.stepid', $app->getUserStateFromRequest($this->context.'.filter.stepid', 'filter_stepid', '', 'string'));
 
-        //Filtering catid
-        $this->setState('filter.catid', $app->getUserStateFromRequest($this->context.'.filter.catid', 'filter_catid', '', 'string'));
 
         //Filtering owned
         $this->setState('filter.owned', $app->getUserStateFromRequest($this->context.'.filter.owned', 'filter_owned', 'no', 'string'));
-///        
 
+        //set default ordering
 		if(empty($ordering)) {
-			$ordering = 'a.ordering';
+			$ordering = 'a.updated';
 		}
+
+        //set default ordering
+        if(empty($direction)) {
+            $direction = 'desc';
+        }
 
         // List state information.
         parent::populateState($ordering, $direction);
@@ -180,10 +184,18 @@ class ImcModelIssues extends JModelList {
         }
 
 		//Filtering catid
-		$filter_catid = $this->state->get("filter.catid");
-		if ($filter_catid) {
-			$query->where("a.catid = '".$filter_catid."'");
-		}
+		//$filter_catid = $this->state->get("filter.catid");
+		//if ($filter_catid) {
+		//	$query->where("a.catid = '".$filter_catid."'");
+		//}
+
+        $filter_category = $this->state->get('filter.category');
+        if(!empty($filter_category)){
+            if(!in_array(0, $filter_category)){
+                $filter_category = implode(',', $filter_category);
+                $query->where('a.catid IN ('.$filter_category.')');
+            }
+        }        
 
         //Filtering owned
         $filter_owned = $this->state->get("filter.owned");

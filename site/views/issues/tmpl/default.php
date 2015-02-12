@@ -10,17 +10,18 @@
 defined('_JEXEC') or die;
 
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
-JHtml::_('bootstrap.tooltip');
-JHtml::_('behavior.multiselect');
-JHtml::_('formbehavior.chosen', 'select');
+// JHtml::_('bootstrap.tooltip');
+// JHtml::_('behavior.multiselect');
+// JHtml::_('formbehavior.chosen', 'select');
 
 $user = JFactory::getUser();
 $userId = $user->get('id');
-$listOrder = $this->state->get('list.ordering');
-$listDirn = $this->state->get('list.direction');
 
-$canEdit = $user->authorise('core.edit', 'com_imc');
-$canDelete = $user->authorise('core.delete', 'com_imc');
+// $listOrder = $this->state->get('list.ordering');
+// $listDirn = $this->state->get('list.direction');
+
+// $canEdit = $user->authorise('core.edit', 'com_imc');
+// $canDelete = $user->authorise('core.delete', 'com_imc');
 ?>
 
 <script type="text/javascript">
@@ -39,18 +40,18 @@ $canDelete = $user->authorise('core.delete', 'com_imc');
     });
 </script>
 
-<form action="<?php echo JRoute::_('index.php?option=com_imc&view=issues'); ?>" method="post" name="adminForm" id="adminForm">
+<!-- <form action="<?php echo JRoute::_('index.php?option=com_imc&view=issues'); ?>" method="post" name="adminForm" id="adminForm"> -->
     <div id="columns">
         <div class="row masonry" id="masonry-sample">
             <?php foreach ($this->items as $i => $item) : ?>
                 <?php
-                $canCreate = $user->authorise('core.create', 'com_imc.issue.'.$item->id);
-                $canEdit = $user->authorise('core.edit', 'com_imc.issue.'.$item->id);
-                $canCheckin = $user->authorise('core.manage', 'com_imc.issue.'.$item->id);
-                $canChange = $user->authorise('core.edit.state', 'com_imc.issue.'.$item->id);
-                $canDelete = $user->authorise('core.delete', 'com_imc.issue.'.$item->id);
-                $canEditOwn = $user->authorise('core.edit.own', 'com_imc.issue.' . $item->id);
-                $photos = json_decode($item->photo);
+                    $canCreate = $user->authorise('core.create', 'com_imc.issue.'.$item->id);
+                    $canEdit = $user->authorise('core.edit', 'com_imc.issue.'.$item->id);
+                    $canCheckin = $user->authorise('core.manage', 'com_imc.issue.'.$item->id);
+                    $canChange = $user->authorise('core.edit.state', 'com_imc.issue.'.$item->id);
+                    $canDelete = $user->authorise('core.delete', 'com_imc.issue.'.$item->id);
+                    $canEditOwn = $user->authorise('core.edit.own', 'com_imc.issue.' . $item->id);
+                    $photos = json_decode($item->photo);
                 ?>
                 <?php if (!$canEdit && $user->authorise('core.edit.own', 'com_imc.issue.'.$item->id)): ?>
                     <?php $canEdit = JFactory::getUser()->id == $item->created_by; ?>
@@ -117,14 +118,8 @@ $canDelete = $user->authorise('core.delete', 'com_imc');
         </div>
     </div><!-- /columns -->
 
-    <?php /*
-    <?php $canCreate = $user->authorise('core.create', 'com_imc'); ?>
-    <?php if ($canCreate): ?>
-        <a href="<?php echo JRoute::_('index.php?option=com_imc&task=issue.edit&id=0', false, 2); ?>" class="btn btn-success btn-small"><i class="icon-plus"></i> <?php echo JText::_('COM_IMC_ADD_ITEM'); ?></a>
-    <?php endif; ?>
-    */ ?>
 
-    <input type="hidden" name="task" value="" />
+<!--     <input type="hidden" name="task" value="" />
     <input type="hidden" name="boxchecked" value="0" />
     <input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>" />
     <input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>" />
@@ -138,8 +133,9 @@ $canDelete = $user->authorise('core.delete', 'com_imc');
     <input type="hidden" name="limitstart" value="<?php echo $limitstart;?>" />
 
     <?php echo JHtml::_('form.token'); ?>
-</form>
+</form> -->
 
+<?php /*
 <script type="text/javascript">
     jQuery(document).ready(function() {
         jQuery('.delete-button').click(deleteItem);
@@ -152,3 +148,4 @@ $canDelete = $user->authorise('core.delete', 'com_imc');
         }
     }
 </script>
+*/ ?>
