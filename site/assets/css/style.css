@@ -1,3 +1,36 @@
+.imc-info-wrapper {
+  padding: 10px 20px;
+  border: 1px solid #e3e3e3;
+}
+.imc-issue-title,.imc-issue-subtitle {
+  color: #365A79;
+  font-size: 22px;
+}
+.imc-issue-subtitle {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.imc-statuses {
+  color: #ccc;font-weight: bold;
+  border-bottom: 2px dotted #e3e3e3;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+
+/*
+Vertical Timeline!
+!
+=========!
+!
+Article on CodyHouse (http://codyhouse.co/?p=169)!
+Terms (http://codyhouse.co/terms/)!
+!
+=========!
+*/
+
 .cd-container {
   /* this class is used to give a max-width to the element it is applied to, and center it horizontally when it reaches that max-width */
   width: 90%;
