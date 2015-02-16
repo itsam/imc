@@ -43,6 +43,10 @@ $statuses = $step->getOptions();
 		});
 
 		js('.delete-button').click(deleteItem);
+
+		js('#new-comment').click(function() {
+			alert('<?php echo JText::_('COM_IMC_COMMENTS_NOT_ALLOWED'); ?>');
+		});
     });
 
     function deleteItem() {
@@ -134,7 +138,7 @@ $statuses = $step->getOptions();
 				<?php endif; ?>
 				</p>
 				<hr />
-				<p><a href="#" class="btn btn-success"><i class="icon-comment"></i> Add new comment</a></p>
+				<p><button id="new-comment" class="btn btn-success"><i class="icon-comment"></i> <?php echo JText::_('COM_IMC_COMMENTS_ADD'); ?></button></p>
 	    	</div>
 	    </div>
     </div>
