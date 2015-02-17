@@ -10,15 +10,14 @@
  */
 defined('_JEXEC') or die;
 
-$app = JFactory::getApplication();
-
 //get state of Issues model
-$issuesModel = JModelLegacy::getInstance( 'Issues', 'ImcModel' );
+$issuesModel = JModelLegacy::getInstance( 'Issues', 'ImcModel', array('ignore_request' => false) );
 $state = $issuesModel->getState();
 
 $listOrder = $state->get('list.ordering');
 $listDirn  = $state->get('list.direction');
 
+$app = JFactory::getApplication();
 $search = $app->getUserStateFromRequest('com_imc.issues.filter.search', 'filter_search');
 $owned = $app->getUserStateFromRequest('com_imc.issues.filter.owned', 'filter_owned');
 $cat = $app->getUserStateFromRequest('com_imc.issues.filter.category', 'cat', array()); 
@@ -45,18 +44,20 @@ $id = $jinput->get('id', null);
 				  <ul class="dropdown-menu" role="menu">
 				    <li><?php echo JHtml::_('grid.sort',  'COM_IMC_ISSUES_TITLE', 'a.title', $listDirn, $listOrder); ?></li>
 					<li><?php echo JHtml::_('grid.sort',  'COM_IMC_ISSUES_STEPID', 'a.stepid', $listDirn, $listOrder); ?></li>
-					<li><?php echo JHtml::_('grid.sort',  'JDATE', 'a.created', $listDirn, $listOrder); ?></li>
+					<li><?php echo JHtml::_('grid.sort',  'JDATE', 'a.updated', $listDirn, $listOrder); ?></li>
 				  </ul>
 				</div>
 				
+				<?php /*
 				<div class="btn-group">
 				  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 				    <?php echo JText::_('MOD_IMCFILTERS_DISPLAY'); ?> <span class="caret"></span>
 				  </button>
 				  <ul class="dropdown-menu" role="menu">
-				  	<?php echo ModImcfiltersHelper::createLimitBox(); ?>
+				  	<?php echo ModImcfiltersHelper::createLimitBox($state->get('list.limit')); ?>
 				  </ul>
 				</div>		
+				*/ ?>
 
 				<?php /*
 				<div class="btn-group">
@@ -75,6 +76,7 @@ $id = $jinput->get('id', null);
 		<?php endif; ?>
 
 		<?php $canCreate = JFactory::getUser()->authorise('core.create', 'com_imc'); ?>
+		
 		<?php if ($canCreate && $option == 'com_imc' && $view == 'issues'): ?>
 			<div class="imc_btn_right">
 		    	<a href="<?php echo JRoute::_('index.php?option=com_imc&task=issue.edit&id=0', false, 2); ?>" class="btn btn-success btn-large btn-lg"><i class="icon-plus"></i> <?php echo JText::_('MOD_IMCFILTERS_ADD_ITEM'); ?></a>
@@ -87,6 +89,13 @@ $id = $jinput->get('id', null);
 		    	<span class="btn btn-success btn-large btn-lg disabled"><?php echo ModImcfiltersHelper::getVotes($id); ?></span>
 		    	</div>
 		    	<a href="<?php echo JRoute::_('index.php?option=com_imc&task=issue.edit&id=0', false, 2); ?>" class="btn btn-default btn-large btn-lg"><i class="icon-plus"></i> <?php echo JText::_('MOD_IMCFILTERS_ADD_ITEM'); ?></a>
+		    </div>
+		<?php elseif(!$canCreate && $option == 'com_imc' && $view == 'issue') : ?>
+			<div class="imc_btn_right">
+				<div class="btn-group btn-group-lg" role="group" aria-label="">
+		    	<a href="#" class="btn btn-success btn-large btn-lg disabled"><i class="icon-thumbs-up"></i> +1 <?php echo JText::_('MOD_IMCFILTERS_VOTE'); ?></a>
+		    	<span class="btn btn-success btn-large btn-lg disabled"><?php echo ModImcfiltersHelper::getVotes($id); ?></span>
+		    	</div>
 		    </div>
 		<?php endif; ?>
 

@@ -61,11 +61,25 @@ class ImcModelIssues extends JModelList {
      */
     protected function populateState($ordering = null, $direction = null) {
 
+        //set default ordering
+        if($ordering == null || empty($ordering)) {
+            $ordering = 'a.updated';
+        }
+
+        //set default ordering
+        if($direction == null || empty($direction)) {
+            $direction = 'DESC';
+        }
+
+        // List state information.
+        parent::populateState($ordering, $direction);
+
         // Initialise variables.
         $app = JFactory::getApplication();
 
         // List state information
-        $limit = $app->getUserStateFromRequest('global.list.limit', 'limit', $app->getCfg('list_limit'));
+        //$limit = $app->getUserStateFromRequest('global.list.limit', 'limit', $app->getCfg('list_limit'));
+        $limit = $app->getUserStateFromRequest('global.list.limit', 'limit', 0); //show all by default
         $this->setState('list.limit', $limit);
 
         $limitstart = JFactory::getApplication()->input->getInt('limitstart', 0);
@@ -89,22 +103,12 @@ class ImcModelIssues extends JModelList {
         //Filtering stepid
         $this->setState('filter.stepid', $app->getUserStateFromRequest($this->context.'.filter.stepid', 'filter_stepid', '', 'string'));
 
-
         //Filtering owned
         $this->setState('filter.owned', $app->getUserStateFromRequest($this->context.'.filter.owned', 'filter_owned', 'no', 'string'));
 
-        //set default ordering
-		if(empty($ordering)) {
-			$ordering = 'a.updated';
-		}
+        $this->setState('filter.language', JLanguageMultilang::isEnabled());
 
-        //set default ordering
-        if(empty($direction)) {
-            $direction = 'desc';
-        }
 
-        // List state information.
-        parent::populateState($ordering, $direction);
     }
 
     /**
@@ -203,6 +207,12 @@ class ImcModelIssues extends JModelList {
             $query->where("a.created_by = '".$user->id."'");
         }
 
+        // Filter by language
+        if ($this->getState('filter.language'))
+        {
+            $query->where('a.language IN (' . $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*') . ')');
+        }
+
         // Add the list ordering clause.
         $orderCol = $this->state->get('list.ordering');
         $orderDirn = $this->state->get('list.direction');
@@ -214,6 +224,10 @@ class ImcModelIssues extends JModelList {
 
         if ($orderCol && $orderDirn) {
             $query->order($db->escape($orderCol . ' ' . $orderDirn));
+        }
+        else {
+            //set default ordering
+            $query->order($db->escape('a.updated' . ' ' . 'DESC'));       
         }
 
         return $query;

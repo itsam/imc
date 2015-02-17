@@ -60,7 +60,11 @@ function setMarkers(center, map) {
                 }
                 resetBounds(map, imc_markers);
 
-             }
+             },
+             'error': function (error) {
+                alert('Cannot read markers - See console for more information');
+                console.log (error);
+             }             
         });
         return json;
     })();

@@ -109,14 +109,12 @@ class ModImcfiltersHelper {
         return $ar;
     }
 
-    public function createLimitBox()
+    public function createLimitBox($lim)
     {
         // Initialise variables.
         $app = JFactory::getApplication();
-        $limit = $app->getUserStateFromRequest('global.list.limit', 'limit', $app->getCfg('list_limit'));
-
-        $jinput = JFactory::getApplication()->input;
-        //$selected = $jinput->get('list.limit');
+        //$limit = $app->getUserStateFromRequest('global.list.limit', 'limit', $app->getCfg('list_limit'));
+        $limit = $app->getUserStateFromRequest('global.list.limit', 'limit', $lim);
         $selected = $limit;
 
         $html = '';
