@@ -20,6 +20,14 @@ function imc_mod_map_initialize() {
     infoWindow.close();
     panelFocusReset();
   });  
+
+  js("div[id^='imc-panel-']").mouseenter(function(e){
+      markerBounce( this.id.substring(10) );
+  });
+
+  js("div[id^='imc-panel-']").mouseleave(function(e){
+      markerIdle( this.id.substring(10) );
+  });  
 }
 
 
@@ -44,7 +52,8 @@ function setMarkers(center, map) {
                         position: latLng,
                         icon: data.category_image,
                         map: map,
-                        title: data.title
+                        title: data.title,
+                        id: data.id
                     });
                     if(data.category_image == '')
                       marker.setIcon('http://maps.google.com/mapfiles/ms/icons/red-dot.png');
@@ -129,6 +138,28 @@ function showMarkers() {
 function deleteMarkers() {
   clearMarkers();
   imc_markers = [];
+}
+
+function markerBounce(id) {
+  var index;
+  for (var i=0; i<imc_markers.length; i++) {       
+    if(imc_markers[i].id == id){
+      imc_mod_map.setCenter( imc_markers[i].getPosition() );
+      imc_markers[i].setAnimation(google.maps.Animation.BOUNCE);
+      //google.maps.event.trigger(imc_markers[i], 'click');
+      break;
+    }
+  }
+}
+
+function markerIdle(id) {
+  var index;
+  for (var i=0; i<imc_markers.length; i++) {       
+    if(imc_markers[i].id == id){
+      imc_markers[i].setAnimation(null);
+      break;
+    }
+  }
 }
 
 function resetBounds(map, gmarkers) {
