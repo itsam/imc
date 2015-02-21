@@ -97,7 +97,7 @@ $userId = $user->get('id');
                         <span class="label label-default" title="<?php echo JText::_('COM_IMC_ISSUES_VOTES');?>">+<?php echo $item->votes; ?></span>
                         <?php endif; ?>
 
-                        <p><?php echo $item->description; ?></p>
+                        <p><?php echo ImcFrontendHelper::cutString($item->description, 200); ?></p>
 
                         <p><a href="<?php echo JRoute::_('index.php?option=com_imc&view=issue&id='.(int) $item->id); ?>"><?php echo JText::_('COM_IMC_ISSUES_MORE');?></a></p>
                         <?php if($item->state == 0) : ?>
