@@ -38,7 +38,7 @@ $statuses = $step->getOptions();
 		};
 
 		js( "#timeline" ).click(function() {
-		  js('#cd-timeline').collapse();
+		  js('#cd-timeline').toggle();
 		  js('#cd-timeline')[0].scrollIntoView( true );
 		});
 
@@ -138,7 +138,12 @@ $statuses = $step->getOptions();
 				<?php endif; ?>
 				</p>
 				<hr />
-				<p><button id="new-comment" class="btn btn-success"><i class="icon-comment"></i> <?php echo JText::_('COM_IMC_COMMENTS_ADD'); ?></button></p>
+				<?php if (JFactory::getUser()->guest) : ?>
+					<p><button id="new-comment" class="btn btn-success disabled"><i class="icon-comment"></i> <?php echo JText::_('COM_IMC_COMMENTS_ADD'); ?></button></p>
+				<?php else : ?>
+					<p><button id="new-comment" class="btn btn-success"><i class="icon-comment"></i> <?php echo JText::_('COM_IMC_COMMENTS_ADD'); ?></button></p>
+				<?php endif;?>
+
 	    	</div>
 	    </div>
     </div>

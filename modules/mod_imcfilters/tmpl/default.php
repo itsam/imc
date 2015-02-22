@@ -28,6 +28,16 @@ $view = $jinput->get('view', null);
 $id = $jinput->get('id', null);
 ?>
 
+<script type="text/javascript">
+	js = jQuery.noConflict();
+	js(document).ready(function() {
+		js('#new-vote').click(function(e) {
+			e.preventDefault();
+			vote('<?php echo $id;?>', '<?php echo JFactory::getUser()->id; ?>', '<?php echo JSession::getFormToken(); ?>');
+		});
+	});
+</script>
+
 <form class="form-search form-inline" action="<?php echo JRoute::_('index.php?option=com_imc&view=issues'); ?>" method="post" name="imc_filter_form" id="adminForm">
 	<div class="imc_filters_buttons">
 		<?php if ($option == 'com_imc' && $view != 'issues') : ?>
@@ -85,15 +95,15 @@ $id = $jinput->get('id', null);
 		<?php if ($canCreate && $option == 'com_imc' && $view == 'issue'): ?>
 			<div class="imc_btn_right">
 				<div class="btn-group btn-group-lg" role="group" aria-label="">
-		    	<a href="#" class="btn btn-success btn-large btn-lg"><i class="icon-thumbs-up"></i> +1 <?php echo JText::_('MOD_IMCFILTERS_VOTE'); ?></a>
-		    	<span class="btn btn-success btn-large btn-lg disabled"><?php echo ModImcfiltersHelper::getVotes($id); ?></span>
+		    	<button id="new-vote" class="btn btn-success btn-large btn-lg"><i class="icon-thumbs-up"></i> +1 <?php echo JText::_('MOD_IMCFILTERS_VOTE'); ?></button>
+		    	<span id="votes-counter" class="btn btn-success btn-large btn-lg disabled"><?php echo ModImcfiltersHelper::getVotes($id); ?></span>
 		    	</div>
 		    	<a href="<?php echo JRoute::_('index.php?option=com_imc&task=issue.edit&id=0', false, 2); ?>" class="btn btn-default btn-large btn-lg"><i class="icon-plus"></i> <?php echo JText::_('MOD_IMCFILTERS_ADD_ITEM'); ?></a>
 		    </div>
-		<?php elseif(!$canCreate && $option == 'com_imc' && $view == 'issue') : ?>
+		<?php elseif(JFactory::getUser()->guest && $option == 'com_imc' && $view == 'issue') : ?>
 			<div class="imc_btn_right">
 				<div class="btn-group btn-group-lg" role="group" aria-label="">
-		    	<a href="#" class="btn btn-success btn-large btn-lg disabled"><i class="icon-thumbs-up"></i> +1 <?php echo JText::_('MOD_IMCFILTERS_VOTE'); ?></a>
+		    	<button class="btn btn-success btn-large btn-lg disabled"><i class="icon-thumbs-up"></i> +1 <?php echo JText::_('MOD_IMCFILTERS_VOTE'); ?></button>
 		    	<span class="btn btn-success btn-large btn-lg disabled"><?php echo ModImcfiltersHelper::getVotes($id); ?></span>
 		    	</div>
 		    </div>

@@ -122,4 +122,18 @@ class ImcModelVote extends JModelAdmin
 		}
 	}
 
+/*	public function add($issueid, $userid, $modality = 0) {
+        
+        $vote = array();
+        $vote['issueid'] = $issueid;
+        $vote['created_by'] = $userid;
+        $vote['state'] = 1;
+        $vote['modality'] = $modality;
+        $vote['created'] = date('Y-m-d H:i:s');
+        $vote['updated'] = date('Y-m-d H:i:s');
+        
+        $result = $this->save($vote);
+        return $result;       
+    }
+*/
 }

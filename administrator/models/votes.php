@@ -26,7 +26,7 @@ class ImcModelVotes extends JModelList {
     public function __construct($config = array()) {
         if (empty($config['filter_fields'])) {
             $config['filter_fields'] = array(
-                                'id', 'a.id',
+                'id', 'a.id',
                 'issueid', 'a.issueid',
                 'created', 'a.created',
                 'updated', 'a.updated',
@@ -161,7 +161,7 @@ class ImcModelVotes extends JModelList {
     public function getItems() {
         $items = parent::getItems();
         
-		foreach ($items as $oneItem) {
+/*		foreach ($items as $oneItem) {
 
 			if (isset($oneItem->issueid)) {
 				$values = explode(',', $oneItem->issueid);
@@ -184,8 +184,60 @@ class ImcModelVotes extends JModelList {
 			$oneItem->issueid = !empty($textValue) ? implode(', ', $textValue) : $oneItem->issueid;
 
 			}
-		}
+		}*/
         return $items;
     }
 
+    private function hasVoted($issueid, $userid) {
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query->select('COUNT(*)');
+        $query->from('`#__imc_votes` AS a');
+        $query->where('a.issueid    = ' . $db->quote($db->escape($issueid)));
+        $query->where('a.created_by = ' . $db->quote($db->escape($userid)));
+        $db->setQuery($query);
+        $results = $db->loadResult();
+        return $results;
+    }
+
+    public function add($issueid, $userid, $modality = 0) {
+        // check if already voted    
+        if($this->hasVoted($issueid, $userid)){
+            return array('code'=>0, 'msg'=>'already voted');
+        }
+        $issuesModel = JModelLegacy::getInstance( 'Issues', 'ImcModel', array('ignore_request' => true) );
+        // check if it's own issue
+        if($issuesModel->isOwnIssue($issueid, $userid)){
+            return array('code'=>0, 'msg'=>'cannot vote owned issue');    
+        }
+
+        // Create and populate an object.
+        $vote = new stdClass();
+        $vote->issueid = $issueid;
+        $vote->created_by = $userid;
+        $vote->state = 1;
+        $vote->modality = $modality;
+        $vote->created = date('Y-m-d H:i:s');
+        $vote->updated = date('Y-m-d H:i:s');
+         
+        // Insert the object into the votes table.
+        $db = JFactory::getDbo();
+        $result = $db->insertObject('#__imc_votes', $vote); 
+        if($result){
+            //update issue votes as well
+            $result = $issuesModel->updateVotes($issueid, $userid);
+            if($result){
+                //also return current number of votes 
+                $votes = $issuesModel->getVotes($issueid);
+                return array('code'=>1, 'msg'=>'vote added successfully', 'votes'=>$votes);
+            }
+            else {
+                return array('code'=>-1, 'msg'=>'failed to update issue');
+            }
+        } else {
+            return array('code'=>-1, 'msg'=>'failed to insert into votes table');
+        }
+
+
+    }
 }

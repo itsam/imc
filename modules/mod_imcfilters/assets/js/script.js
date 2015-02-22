@@ -1,3 +1,11 @@
+/**
+ * @version     3.0.0
+ * @package     com_imc
+ * @copyright   Copyright (C) 2014. All rights reserved.
+ * @license     GNU AFFERO GENERAL PUBLIC LICENSE Version 3; see LICENSE
+ * @author      Ioannis Tsampoulatidis <tsampoulatidis@gmail.com> - https://github.com/itsam
+ */
+
 //show markers according to filtering
 function show(category) {
 	// == check the checkbox ==
@@ -36,4 +44,26 @@ function imc_filterbox_click(box, category) {
 		}
 	}
 	return false;
+}
+
+function vote(issue_id, user_id, token){
+	jQuery.ajax({ 
+	    'async': true, 
+	    'global': false, 
+	    'url': "index.php?option=com_imc&task=votes.add&format=json&issue_id=" + issue_id + "&user_id=" + user_id + "&" + token + "=1", 
+	    'dataType': "json", 
+	    'success': function (data) {
+	    	var json = data;
+	        if(json.data.code == 0 || json.data.code == -1){
+	        	alert(json.data.msg);
+	        }
+	        else {
+	        	jQuery('#votes-counter').html(json.data.votes);
+	        }
+	     },
+	     'error': function (error) {
+	        alert('Voting failure - See console for more information');
+	        console.log (error);
+	     }             
+	});
 }

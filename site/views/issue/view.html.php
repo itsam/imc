@@ -109,6 +109,7 @@ class ImcViewIssue extends JViewLegacy {
         $this->document->addStyleSheet(JURI::root(true).'/components/com_imc/assets/css/photobox.css');
         // TODO: add this <!--[if lt IE 9]><link rel="stylesheet" href="photobox/photobox.ie.css"><![endif]-->
         $this->document->addScript(JURI::root(true).'/components/com_imc/assets/js/jquery.photobox.js');
+        $this->document->addScript(JURI::root(true).'/components/com_imc/assets/js/imc.js');
     }
 
 }

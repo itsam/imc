@@ -239,7 +239,7 @@ class ImcModelIssues extends JModelList {
 //////////////////////////
         if (JFactory::getApplication()->isSite())
         {
-            echo('ITSAM');die();
+            //echo('ITSAM');die();
             $user = JFactory::getUser();
             $groups = $user->getAuthorisedViewLevels();
 
@@ -256,6 +256,41 @@ class ImcModelIssues extends JModelList {
 
 
         return $items;
+    }
+
+    public function isOwnIssue($issueid, $userid) {
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query->select('COUNT(*)');
+        $query->from('`#__imc_issues` AS a');
+        $query->where('a.id    = ' . $db->quote($db->escape($issueid)));
+        $query->where('a.created_by = ' . $db->quote($db->escape($userid)));
+        $db->setQuery($query);
+        $results = $db->loadResult();
+        
+        return $results;
+    }
+
+    public function updateVotes($issueid, $userid) {
+        $db = JFactory::getDbo();        
+        $query = $db->getQuery(true);
+        $query  ->update($db->quoteName('#__imc_issues'))
+                ->set($db->quoteName('votes') .'=' . $db->quoteName('votes') . ' + 1')
+                ->where($db->quoteName('id') .'='. $issueid);
+        $db->setQuery($query);
+        $results = $db->execute();
+        return $results;
+    }
+
+    public function getVotes($issueid) {
+        $db = JFactory::getDbo();  
+        $query = $db->getQuery(true);
+        $query->select('a.votes');
+        $query->from('`#__imc_issues` AS a');
+        $query->where('a.id = '. $issueid);
+        $db->setQuery($query);
+        $results = $db->loadResult();
+        return $results;
     }
 
 
