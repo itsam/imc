@@ -60,10 +60,12 @@ function vote(issue_id, user_id, token){
 
 	        var notification = new NotificationFx({
 	        	wrapper : document.body,
-	        	message : '<span class="glyphicon glyphicon-bullhorn icon" aria-hidden="true"></span><p>'+json.data.msg+'</p>',
-	        	layout : 'bar',
-	        	effect : 'slidetop',
-	        	type : 'notice', // notice, warning or error
+	        	message : '<span class="glyphicon glyphicon-info-sign icon" aria-hidden="true"></span><p>'+json.data.msg+'</p>',
+	        	//layout : 'bar',
+	        	//effect : 'slidetop',
+	        	layout : 'attached',
+	        	effect : 'bouncyflip',
+	        	type : 'error', // notice, warning or error
 	        	ttl : 3000,
 	        });
 	        notification.show();
