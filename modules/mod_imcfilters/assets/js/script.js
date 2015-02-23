@@ -54,12 +54,20 @@ function vote(issue_id, user_id, token){
 	    'dataType': "json", 
 	    'success': function (data) {
 	    	var json = data;
-	        if(json.data.code == 0 || json.data.code == -1){
-	        	alert(json.data.msg);
-	        }
-	        else {
+	        if(json.data.code == 1){
 	        	jQuery('#votes-counter').html(json.data.votes);
 	        }
+
+	        var notification = new NotificationFx({
+	        	wrapper : document.body,
+	        	message : '<span class="glyphicon glyphicon-bullhorn icon" aria-hidden="true"></span><p>'+json.data.msg+'</p>',
+	        	layout : 'bar',
+	        	effect : 'slidetop',
+	        	type : 'notice', // notice, warning or error
+	        	ttl : 3000,
+	        });
+	        notification.show();
+
 	     },
 	     'error': function (error) {
 	        alert('Voting failure - See console for more information');

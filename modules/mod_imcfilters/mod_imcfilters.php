@@ -34,5 +34,10 @@ require_once __DIR__ . '/helper.php';
 
 $doc = JFactory::getDocument();
 $doc->addStyleSheet(JURI::base() . '/modules/mod_imcfilters/assets/css/style.css');
+$doc->addStyleSheet(JURI::base() . '/modules/mod_imcfilters/assets/css/ns-default.css');
+$doc->addStyleSheet(JURI::base() . '/modules/mod_imcfilters/assets/css/ns-style-bar.css');
+$doc->addScript(JURI::base() . '/modules/mod_imcfilters/assets/js/classie.js');
+$doc->addScript(JURI::base() . '/modules/mod_imcfilters/assets/js/modernizr.custom.js');
+$doc->addScript(JURI::base() . '/modules/mod_imcfilters/assets/js/notificationFx.js');
 $doc->addScript(JURI::base() . '/modules/mod_imcfilters/assets/js/script.js');
 require JModuleHelper::getLayoutPath('mod_imcfilters', $params->get('layout_type', 'default'));
