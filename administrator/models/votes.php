@@ -203,12 +203,12 @@ class ImcModelVotes extends JModelList {
     public function add($issueid, $userid, $modality = 0) {
         // check if already voted    
         if($this->hasVoted($issueid, $userid)){
-            return array('code'=>0, 'msg'=>'already voted');
+            return array('code'=>0, 'msg'=>JText::_('COM_IMC_VOTES_ALREADY_VOTED'));
         }
         $issuesModel = JModelLegacy::getInstance( 'Issues', 'ImcModel', array('ignore_request' => true) );
         // check if it's own issue
         if($issuesModel->isOwnIssue($issueid, $userid)){
-            return array('code'=>0, 'msg'=>'cannot vote owned issue');    
+            return array('code'=>0, 'msg'=>JText::_('COM_IMC_VOTES_OWN_ISSUE'));    
         }
 
         // Create and populate an object.
@@ -229,7 +229,7 @@ class ImcModelVotes extends JModelList {
             if($result){
                 //also return current number of votes 
                 $votes = $issuesModel->getVotes($issueid);
-                return array('code'=>1, 'msg'=>'vote added successfully', 'votes'=>$votes);
+                return array('code'=>1, 'msg'=>JText::_('COM_IMC_VOTES_ADDED'), 'votes'=>$votes);
             }
             else {
                 return array('code'=>-1, 'msg'=>'failed to update issue');

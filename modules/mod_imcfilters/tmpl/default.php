@@ -70,6 +70,7 @@ $id = $jinput->get('id', null);
 				*/ ?>
 
 				<?php /*
+				TODO: Set layout state
 				<div class="btn-group">
 					<span class="imc_btn_left">
 						<a title="list layout" href="<?php echo JRoute::_('index.php?option=com_imc&layout=default', false, 2); ?>" class="btn btn-default"><i class="icon-align-justify"></i></a>		
