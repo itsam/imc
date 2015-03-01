@@ -6,3 +6,6 @@ RC version is expected by 6 Mar. and Release version is expected by 12 Mar.
 
 At current state you need a Bootstrap-compatible theme to get the most out of the IMC app.
 Testing is based on open source template [Purity III from Joomlart](http://www.joomlart.com/joomla/templates/purity-iii)
+
+
+This project is supported by [ICOS/URENIO](http://icos.urenio.org/) and [Infalia Private Company](http://www.infalia.com)
