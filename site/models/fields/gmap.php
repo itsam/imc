@@ -137,6 +137,10 @@ class JFormFieldGmap extends JFormField
 		$lat        = (isset($this->lat) ? $this->lat : $params->get('latitude') );
 		$lng        = (isset($this->lng) ? $this->lng : $params->get('longitude') );
 		$zoom       = (isset($this->zoom) ? $this->zoom : $params->get('zoom') );
+		//If field is used on params just set some default values...
+		if(!$zoom) $zoom = 14;
+		if(!$lat)  $lat  = '40.626449';
+		if(!$lng)  $lng  = '22.948426';
 
 		$language   = $params->get('maplanguage');
 		$hiddenterm = $params->get('hiddenterm');
