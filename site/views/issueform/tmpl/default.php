@@ -34,13 +34,13 @@ if($this->item->id) {
 	$canState = JFactory::getUser()->authorise('core.edit.state','com_imc.issue.'.$this->item->id);
 }
 
+JFormHelper::addFieldPath(JPATH_ROOT . '/components/com_imc/models/fields');
+$steps = JFormHelper::loadFieldType('Step', false);
+$options = $steps->getOptions();
+$default_stepId = $options[0]->value;
+
 //TODO: Add business logic here
 if(!$canState) {
-    JFormHelper::addFieldPath(JPATH_ROOT . '/components/com_imc/models/fields');
-    $steps = JFormHelper::loadFieldType('Step', false);
-    $options = $steps->getOptions();
-    $default_stepId = $options[0]->value;
-
 	$this->form->setFieldAttribute( 'stepid', 'readonly', 'true' );
 	$this->form->setFieldAttribute( 'access', 'disabled', 'disabled' );
 }
