@@ -10,6 +10,7 @@
 // No direct access
 defined('_JEXEC') or die;
 jimport('joomla.application.component.controllerform');
+require_once JPATH_COMPONENT_SITE . '/helpers/imc.php';
 JPluginHelper::importPlugin('imc');
 /**
  * Issue controller class.
@@ -32,12 +33,14 @@ class ImcControllerIssue extends JControllerForm
             
             $log = JTable::getInstance('Log', 'ImcTable', array());
 
+            $catTitle = ImcFrontendHelper::getCategoryNameByCategoryId($validData['catid']);
+
             $data2['id'] = 0;
             $data2['state'] = 1;
             $data2['action'] = JText::_('COM_IMC_LOGS_ACTION_INITIAL_COMMIT');
             $data2['issueid'] = $model->getItem()->get('id');
             $data2['stepid'] = $validData['stepid'];
-            $data2['description'] = JText::_('COM_IMC_LOGS_ACTION_INITIAL_COMMIT');
+            $data2['description'] = JText::_('COM_IMC_LOGS_ACTION_INITIAL_COMMIT') . ' ' . JText::_('COM_IMC_LOGS_AT_CATEGORY') . ' ' . $catTitle;
             $data2['created'] = $validData['created'];
             $data2['created_by'] = $validData['created_by'];
             $data2['updated'] = $validData['created'];
