@@ -311,7 +311,7 @@ class ImcControllerIssueForm extends ImcController {
                 }
 
                 $dispatcher = JEventDispatcher::getInstance();
-                $dispatcher->trigger( 'onAfterStepModified', array( $model, $validData ) );
+                $dispatcher->trigger( 'onAfterStepModified', array( $model, $validData, $insertid ) );
             }
 
             //b. check for category modification
@@ -342,7 +342,7 @@ class ImcControllerIssueForm extends ImcController {
                 }
 
                 $dispatcher = JEventDispatcher::getInstance();
-                $dispatcher->trigger( 'onAfterCategoryModified', array( $model, $validData ) ); 
+                $dispatcher->trigger( 'onAfterCategoryModified', array( $model, $validData, $insertid ) ); 
             }
 
 
