@@ -5,7 +5,7 @@ jimport('joomla.plugin.plugin');
 class plgImcmail_notifier extends JPlugin
 {
 
-	function onAfterNewIssueAdded($model, $validData, $id = null)
+	public function onAfterNewIssueAdded($model, $validData, $id = null)
 	{
 		//check if issue added from frontend
 		if($id == null){
@@ -20,7 +20,7 @@ class plgImcmail_notifier extends JPlugin
 		$issueModel = JModelLegacy::getInstance( 'Issue', 'ImcModel' );
 		$emails = $issueModel->getItem($issueid)->get('notification_emails');
 
-		$userid = $model->getItem($issueid)->get('created_by');
+		$userid = $issueModel->getItem($issueid)->get('created_by');
 		$username = JFactory::getUser($userid)->name;
 		$useremail = JFactory::getUser($userid)->email;
 		
@@ -38,11 +38,22 @@ class plgImcmail_notifier extends JPlugin
 
 	}	
 
-	function onAfterStepModified($model, $validData)
+	public function onAfterStepModified($model, $validData, $id = null)
 	{
-		$emails = $model->getItem()->get('notification_emails');
+		//check if issue added from frontend
+		if($id == null){
+			$issueid = $model->getItem()->get('id');
+		} 
+		else {
+			$issueid = $id;
+		}
 
-		$userid = $model->getItem()->get('created_by');
+		//$emails = $model->getItem()->get('notification_emails');
+		JModelLegacy::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/models');
+		$issueModel = JModelLegacy::getInstance( 'Issue', 'ImcModel' );
+		$emails = $issueModel->getItem($issueid)->get('notification_emails');
+
+		$userid = $issueModel->getItem($issueid)->get('created_by');
 		$username = JFactory::getUser($userid)->name;
 		$useremail = JFactory::getUser($userid)->email;
 		
@@ -60,12 +71,22 @@ class plgImcmail_notifier extends JPlugin
 		JFactory::getApplication()->enqueueMessage('User notification mail (because issue status has modified) sent to '.$username.' at '.$useremail, 'Info');
 	}	
 
-	function onAfterCategoryModified($model, $validData)
+	public function onAfterCategoryModified($model, $validData, $id = null)
 	{
+		//check if issue added from frontend
+		if($id == null){
+			$issueid = $model->getItem()->get('id');
+		} 
+		else {
+			$issueid = $id;
+		}
 
-		$emails = $model->getItem()->get('notification_emails');
+		//$emails = $model->getItem()->get('notification_emails');
+		JModelLegacy::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/models');
+		$issueModel = JModelLegacy::getInstance( 'Issue', 'ImcModel' );
+		$emails = $issueModel->getItem($issueid)->get('notification_emails');
 
-		$userid = $model->getItem()->get('created_by');
+		$userid = $issueModel->getItem($issueid)->get('created_by');
 		$username = JFactory::getUser($userid)->name;
 		$useremail = JFactory::getUser($userid)->email;
 		
