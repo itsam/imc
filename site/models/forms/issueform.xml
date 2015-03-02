@@ -130,11 +130,6 @@
             default="0" 
             filter="safehtml" /> 
 
-        <field name="note" type="text" size="40" class="inputbox full-width"
-            label="COM_IMC_FORM_LBL_ISSUE_NOTE"
-            description="COM_IMC_FORM_DESC_ISSUE_NOTE" 
-            filter="safehtml" /> 
-
         <field name="votes" type="hidden" size="40" class="inputbox"
             label="COM_IMC_FORM_LBL_ISSUE_VOTES"
             description="COM_IMC_FORM_DESC_ISSUE_VOTES" 
