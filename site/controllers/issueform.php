@@ -284,10 +284,11 @@ class ImcControllerIssueForm extends ImcController {
         else {
 
             //a. check for step modification
-            if($validData['is_step_modified'] === 'true'){
+            if(isset($validData['is_step_modified']) && $validData['is_step_modified'] === 'true'){
                 $user = JFactory::getUser();
                 $log = JTable::getInstance('Log', 'ImcTable', array());
 
+                $data2['id'] = 0;
                 $data2['state'] = 1;
                 $data2['action'] = JText::_('COM_IMC_LOGS_ACTION_STEP_MODIFIED');
                 $data2['issueid'] = $validData['id'];
@@ -314,10 +315,11 @@ class ImcControllerIssueForm extends ImcController {
             }
 
             //b. check for category modification
-            if($validData['is_category_modified'] === 'true'){
+            if(isset($validData['is_category_modified']) && $validData['is_category_modified'] === 'true'){
                 $user = JFactory::getUser();
                 $log = JTable::getInstance('Log', 'ImcTable', array());
 
+                $data2['id'] = 0;
                 $data2['state'] = 1;
                 $data2['action'] = JText::_('COM_IMC_LOGS_ACTION_CATEGORY_MODIFIED');
                 $data2['issueid'] = $validData['id'];

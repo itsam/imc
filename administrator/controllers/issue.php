@@ -81,7 +81,7 @@ class ImcControllerIssue extends JControllerForm
         else {
 
             //a. check for step modification
-            if($validData['is_step_modified'] === 'true'){
+            if(isset($validData['is_step_modified']) && $validData['is_step_modified'] === 'true'){
                 $user = JFactory::getUser();
                 $log = JTable::getInstance('Log', 'ImcTable', array());
 
@@ -112,7 +112,7 @@ class ImcControllerIssue extends JControllerForm
             }
 
             //b. check for category modification
-            if($validData['is_category_modified'] === 'true'){
+            if(isset($validData['is_category_modified']) && $validData['is_category_modified'] === 'true'){
                 $user = JFactory::getUser();
                 $log = JTable::getInstance('Log', 'ImcTable', array());
 
