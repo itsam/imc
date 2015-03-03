@@ -8,7 +8,15 @@
  */
 // no direct access
 defined('_JEXEC') or die;
+require_once JPATH_COMPONENT_SITE . '/helpers/imc.php';
+//TODO: Set this on settings
+?>
+<?php if (ImcFrontendHelper::getStepByStepId($this->item->stepid)['ordering'] != 1) :?>
+	<div class="alert alert-danger"><?php echo JText::_('COM_IMC_ISSUE_CANNOT_EDIT_ANYMORE'); ?></div>
+	<?php return; ?>	
+<?php endif; ?>
 
+<?php 
 JHtml::_('behavior.keepalive');
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.formvalidation');

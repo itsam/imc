@@ -39,7 +39,7 @@ class ImcFrontendHelper {
 		$query = $db->getQuery(true);
 
 		$query
-			->select('a.title AS stepid_title, a.stepcolor AS stepid_color')
+			->select('a.title AS stepid_title, a.stepcolor AS stepid_color, a.ordering')
 			->from('#__imc_steps AS a')
 			->where('a.id = ' . intval($stepid));
 
