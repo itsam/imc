@@ -18,6 +18,14 @@
                 label="COM_IMC_FORM_LBL_ISSUE_REGNUM"
                 description="COM_IMC_FORM_DESC_ISSUE_REGNUM" /> 
 
+        <field name="regdate" type="calendar"
+                label="COM_IMC_FORM_LBL_ISSUE_REGDATE"
+                description="COM_IMC_FORM_DESC_ISSUE_REGDATE" />
+
+        <field name="responsible" type="text"
+                label="COM_IMC_FORM_LBL_ISSUE_RESPONSIBLE"
+                description="COM_IMC_FORM_DESC_ISSUE_RESPONSIBLE" /> 
+
         <field name="photo" 
             type="multiphoto" 
             label="COM_IMC_FORM_LBL_ISSUE_PHOTOS" 

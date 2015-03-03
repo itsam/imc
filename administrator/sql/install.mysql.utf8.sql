@@ -5,6 +5,8 @@ CREATE TABLE IF NOT EXISTS `#__imc_issues` (
 `stepid` TEXT NOT NULL ,
 `catid` INT(11)  NOT NULL ,
 `regnum` VARCHAR(128)  NOT NULL ,
+`regdate` DATETIME NOT NULL ,
+`responsible` TEXT  NOT NULL ,
 `description` TEXT NOT NULL ,
 `address` TEXT NOT NULL ,
 `latitude` VARCHAR(255)  NOT NULL ,

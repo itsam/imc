@@ -7,6 +7,8 @@
     <field field_name="stepid" field_type="TEXT" description=""/>
     <field field_name="catid" field_type="INT" field_length="11" description=""/>
     <field field_name="regnum" field_type="VARCHAR" field_length="128" description=""/>
+    <field field_name="regdate" field_type="DATETIME" description=""/>
+    <field field_name="responsible" field_type="TEXT" description=""/>
     <field field_name="description" field_type="TEXT" description=""/>
     <field field_name="address" field_type="TEXT" description=""/>
     <field field_name="latitude" field_type="VARCHAR" field_length="255" description=""/>
