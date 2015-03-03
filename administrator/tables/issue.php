@@ -53,6 +53,10 @@ class ImcTableissue extends JTable {
 		if(($task == 'save' || $task == 'apply') && (!JFactory::getUser()->authorise('core.edit.state','com_imc.issue.'.$array['id']) && $array['state'] == 1)){
 			$array['state'] = 0;
 		}
+
+        //TODO: moderation check settings
+        $array['state'] = 1;
+        
 		$task = JFactory::getApplication()->input->get('task');
 		if($task == 'apply' || $task == 'save'){
 			$array['modified'] = date("Y-m-d H:i:s");
