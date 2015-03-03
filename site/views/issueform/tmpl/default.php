@@ -44,7 +44,9 @@ if(!$canState) {
 	$this->form->setFieldAttribute( 'stepid', 'readonly', 'true' );
 	$this->form->setFieldAttribute( 'access', 'disabled', 'disabled' );
 }
-
+if(!$canState && $this->item->id > 0) {
+	$this->form->setFieldAttribute( 'catid', 'readonly', 'true' );
+}
 ?>
 
 <script type="text/javascript">
@@ -92,12 +94,6 @@ if(!$canState) {
 		<?php echo (strlen($this->form->getInput('updated')) > 4 ? '<i class="icon-pencil"></i> '.$this->form->getInput('updated') : ''); ?>
 	
 	</div>
-
-   
-
-
-
-
 
 	<div class="control-group">
 		<div class="control-label"><?php echo $this->form->getLabel('title'); ?></div>
@@ -180,6 +176,8 @@ if(!$canState) {
 		<div class="controls"><?php echo $this->form->getInput('modality'); ?></div>
 	</div>				
 
+	<?php /* TODO: check this on settings */ ?>
+	<?php /*
 	<div class="control-group">
 		<?php if(!$canState): ?>
 			<div class="control-label"><?php echo $this->form->getLabel('state'); ?></div>
@@ -190,18 +188,7 @@ if(!$canState) {
 			<div class="controls"><?php echo $this->form->getInput('state'); ?></div>
 		<?php endif; ?>
 	</div>
-
-					<?php if(!empty($this->item->notification_emails)) : ?>
-						<div class="alert alert-info">
-							<p><strong>Notified people:</strong></p>
-							<?php 
-								foreach ($this->item->notification_emails as $email) {
-									echo $email.'<br />';
-								}
-							?>
-						</div>
-					<?php endif; ?>
-
+	*/ ?>
 
 
 	<div class="fltlft" <?php if (!JFactory::getUser()->authorise('core.admin','imc')): ?> style="display:none;" <?php endif; ?> >

@@ -140,6 +140,7 @@
             description="COM_IMC_FORM_DESC_ISSUE_MODALITY" 
             filter="safehtml" /> 
 
+        <!--         
         <field
             name="state"
             type="list"
@@ -150,7 +151,8 @@
             default="1">
             <option value="1">JPUBLISHED</option>
             <option value="0">JUNPUBLISHED</option>
-        </field> 
+        </field>  
+        -->
 
         <field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL"
             description="JFIELD_ACCESS_DESC" size="1" />
