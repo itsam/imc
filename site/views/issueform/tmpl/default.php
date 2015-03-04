@@ -10,8 +10,9 @@
 defined('_JEXEC') or die;
 require_once JPATH_COMPONENT_SITE . '/helpers/imc.php';
 //TODO: Set this on settings
+$firstStep = ImcFrontendHelper::getStepByStepId($this->item->stepid);
 ?>
-<?php if (ImcFrontendHelper::getStepByStepId($this->item->stepid)['ordering'] != 1) :?>
+<?php if ($firstStep['ordering'] != 1 && isset($this->item->id) && $this->item->id > 0) :?>
 	<div class="alert alert-danger"><?php echo JText::_('COM_IMC_ISSUE_CANNOT_EDIT_ANYMORE'); ?></div>
 	<?php return; ?>	
 <?php endif; ?>
