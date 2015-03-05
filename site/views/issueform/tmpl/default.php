@@ -119,6 +119,10 @@ if(!$canState && $this->item->id > 0) {
 		<div class="control-label"><?php echo $this->form->getLabel('regnum'); ?></div>
 		<div class="controls"><?php echo $this->form->getInput('regnum'); ?></div>
 	</div>
+	<div class="control-group">
+		<div class="control-label"><?php echo $this->form->getLabel('regdate'); ?></div>
+		<div class="controls"><?php echo $this->form->getInput('regdate'); ?></div>
+	</div>	
 	
 	<div class="control-group">
 		<div class="control-label"><?php echo $this->form->getLabel('stepid'); ?></div>

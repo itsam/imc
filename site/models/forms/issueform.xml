@@ -23,6 +23,11 @@
             description="COM_IMC_FORM_DESC_ISSUE_REGNUM" 
             readonly="true" class="readonly"/>      
 
+        <field name="regdate" type="text"
+            label="COM_IMC_FORM_LBL_ISSUE_REGDATE"
+            description="COM_IMC_FORM_DESC_ISSUE_REGDATE" 
+            readonly="true" class="readonly"/> 
+
         <field name="stepid" 
             type="step" 
             label="COM_IMC_FORM_LBL_ISSUE_STEPID" 
