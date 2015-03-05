@@ -108,10 +108,19 @@ $statuses = $step->getOptions();
 		    		<strong><?php echo JText::_('COM_IMC_ISSUES_CATID'); ?>: </strong> 
 		    		<?php echo $this->item->catid_title; ?><br />
 
+		    		<strong><?php echo JText::_('COM_IMC_FORM_LBL_ISSUE_REGNUM'); ?>: </strong> 
+		    		<?php echo $this->item->regnum; ?><br />
+
+		    		<strong><?php echo JText::_('COM_IMC_FORM_LBL_ISSUE_REGDATE'); ?>: </strong> 
+		    		<?php echo  date("d-m-Y", strtotime($this->item->regdate)); ?><br />
+
+		    		<?php /* TODO: set this on settings
 		    		<strong><?php echo JText::_('COM_IMC_FORM_LBL_ISSUE_CREATED_BY'); ?>: </strong> 
 		    		<?php echo $this->item->created_by_name; ?>
 					<?php echo ImcFrontendHelper::getRelativeTime($this->item->created); ?>
 		    		<br />
+		    		*/ ?>
+		    		
 		    		<!-- 
 		    		<strong><?php echo JText::_('COM_IMC_FORM_LBL_ISSUE_UPDATED'); ?>: </strong>
 		    		<?php echo $this->item->updated; ?>

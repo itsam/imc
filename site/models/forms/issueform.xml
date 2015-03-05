@@ -23,7 +23,7 @@
             description="COM_IMC_FORM_DESC_ISSUE_REGNUM" 
             readonly="true" class="readonly"/>      
 
-        <field name="regdate" type="text"
+        <field name="regdate" type="calendar"
             label="COM_IMC_FORM_LBL_ISSUE_REGDATE"
             description="COM_IMC_FORM_DESC_ISSUE_REGDATE" 
             readonly="true" class="readonly"/> 
