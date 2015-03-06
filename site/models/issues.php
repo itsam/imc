@@ -253,8 +253,10 @@ class ImcModelIssues extends JModelList {
             $user = JFactory::getUser();
             $canChange = $user->authorise('core.edit.state', 'com_imc');
             $groups = $user->getAuthorisedViewLevels();
-            for ($x = 0, $count = count($items); $x < $count; $x++) {
+            $categories = JCategories::getInstance('imc');
 
+    
+            for ($x = 0, $count = count($items); $x < $count; $x++) {
                 // Set category image (for marker icon)...avoid using JCategories, just get category params in the main query
                 $prms = json_decode($items[$x]->catid_params);
                 unset($items[$x]->catid_params);
@@ -287,6 +289,12 @@ class ImcModelIssues extends JModelList {
                     continue;
                 }
 
+                //Remove according to category access level
+                //if not priviledged user Jcategory->get returns nothing... actually the whole object is not even set
+                if (!isset($categories->get($items[$x]->catid)->access)) {
+                    unset($items[$x]);
+                    continue;
+                }
                 
             }
         }
