@@ -145,7 +145,7 @@
             filter="safehtml" /> 
         
         <field name="note" 
-            type="text" size="40" class="inputbox input-xxlarge"
+            type="text" size="40" class="inputbox"
             label="COM_IMC_FORM_LBL_ISSUE_NOTE"
             description="COM_IMC_FORM_DESC_NOTE_HITS" 
             default="" 

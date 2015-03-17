@@ -158,6 +158,14 @@ class ImcModelIssue extends JModelAdmin
 	        	$item->category_image = $params->image;
 	        else
 	        	$item->category_image = '';
+
+	        $user = JFactory::getUser($item->created_by);
+	        $item->creatorDetails = array(
+	        	'name'=>$user->name,
+	        	'username'=>$user->username,
+	        	'email'=>$user->email,
+	        ); 
+
 		}
 
 		return $item;

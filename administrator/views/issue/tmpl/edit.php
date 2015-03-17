@@ -205,7 +205,7 @@ $document->addStyleSheet('components/com_imc/assets/css/imc.css');
 
 					<?php if(!empty($this->item->notification_emails)) : ?>
 						<div class="alert alert-info">
-							<p><strong>Notification to:</strong></p>
+							<p><strong><?php echo JText::_('COM_IMC_ADMIN_NOTIFICATIONS_RECEIVED_BY');?>:</strong></p>
 							<?php 
 								foreach ($this->item->notification_emails as $email) {
 									echo $email.'<br />';
@@ -213,6 +213,15 @@ $document->addStyleSheet('components/com_imc/assets/css/imc.css');
 							?>
 						</div>
 					<?php endif; ?>
+					<div class="alert alert-info">
+						<p><strong><?php echo JText::_('COM_IMC_USER_DETAILS');?>:</strong></p>
+						<?php 
+						foreach ($this->item->creatorDetails as $details) {
+							echo $details . '<br />';
+						}
+						?>
+					</div>
+					
 
                 </fieldset>	
 			</div>	
