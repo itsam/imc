@@ -156,7 +156,6 @@ $statuses = $step->getOptions();
 	    	</div>
 	    </div>
     </div>
-
     <hr />
     <div class="row">
 		<div class="col-lg-12 col-sm-12 col-xs-12">    	
@@ -166,6 +165,7 @@ $statuses = $step->getOptions();
 		</button>			
 		</div>
 		<section id="cd-timeline" class="cd-container collapse">
+			<?php $first = true; ?>
 			<?php foreach ($this->logs as $log) : ?>
 				<div class="cd-timeline-block">
 					<div class="cd-timeline-img cd-location" style="background-color: <?php echo $log['stepid_color']; ?>;">
@@ -174,8 +174,18 @@ $statuses = $step->getOptions();
 					<div class="cd-timeline-content">
 						<h3><?php echo $log['stepid_title']; ?></h3>
 						<!-- <h3><?php echo $log['action']; ?></h3> -->
-						<p><strong><?php echo JText::_('COM_IMC_FORM_LBL_ISSUE_CREATED_BY'); ?>: </strong> 
-		    			<?php echo $log['created_by']; ?></p>
+						<?php if($this->params->get('showuserdetailstimeline') && $first) : ?>
+							<p><strong><?php echo JText::_('COM_IMC_FORM_LBL_ISSUE_CREATED_BY'); ?>: </strong> 
+		    				<?php echo $log['created_by']; ?></p>
+		    				<?php $first = false; ?>
+		    			
+						<?php elseif($this->params->get('showadmindetailstimeline') && !$first) : ?>
+							<p><strong><?php echo JText::_('COM_IMC_FORM_LBL_ISSUE_CREATED_BY'); ?>: </strong> 
+		    				<?php echo $log['created_by']; ?></p>
+		    				<?php $first = false; ?>
+		    			<?php endif; ?>
+						
+
 						<p><?php echo $log['description']; ?></p>
 						<span class="cd-date"><?php echo ImcFrontendHelper::getRelativeTime($log['created']); ?></span>
 					</div>
