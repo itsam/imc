@@ -30,6 +30,7 @@ $lat        = $params->get('latitude');
 $lng        = $params->get('longitude');
 $zoom 	    = $params->get('zoom');
 $language   = $params->get('maplanguage');
+$clusterer = ($params->get('clusterer') == 1 ? true : false);
 
 if($api_key == ''){
 	echo '<span style="color: red; font-weight:bold;">Module IMC Map :: Google Maps API KEY missing</span>';
@@ -37,6 +38,11 @@ if($api_key == ''){
 }
 else{
 	$doc->addScript('https://maps.googleapis.com/maps/api/js?key='.$api_key.'&language='.$language);
+}
+
+//clusterer
+if($clusterer){
+	$doc->addScript('http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/src/markerclusterer.js');
 }
 ?>
 
@@ -70,6 +76,7 @@ if ($option == 'com_imc' && $view != 'issues') {
 	var lat = <?php echo $lat;?> ;
 	var lng = <?php echo $lng;?> ;
 	var zoom = <?php echo $zoom;?> ;
+	var clusterer = "<?php echo $clusterer;?>" ;
 	var language = "<?php echo $language;?>" ;
 </script>
 <script src="<?php echo JURI::base();?>modules/mod_imcmap/assets/js/script.js" type="text/javascript"></script>

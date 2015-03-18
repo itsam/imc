@@ -142,6 +142,7 @@ function initialize() {
 	var center = new google.maps.LatLng(Lat, Lng);
 
 	var mapOptions = {
+		scrollwheel: scrollwheel,
 		center: center,
 		zoom: zoom
 	}

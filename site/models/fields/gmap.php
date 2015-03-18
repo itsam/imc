@@ -142,6 +142,7 @@ class JFormFieldGmap extends JFormField
 		if(!$lat)  $lat  = '40.626449';
 		if(!$lng)  $lng  = '22.948426';
 
+		$scrollwheel = ($params->get('scrollwheel') == 1 ? true : false);
 		$language   = $params->get('maplanguage');
 		$hiddenterm = $params->get('hiddenterm');
 
@@ -173,6 +174,7 @@ class JFormFieldGmap extends JFormField
 		$script[] = "var lngfield='jform_".$this->element['longitudefield']."';";
 		$script[] = "var addrfield='".$this->id."';";
 		$script[] = "var zoom=".$zoom.";";
+		$script[] = "var scrollwheel='".$scrollwheel."';";
 		$script[] = "var icon='".$this->icon."';";
 		$script[] = "var language='".$language."';";
 		$script[] = "var hiddenterm='".$hiddenterm."';";

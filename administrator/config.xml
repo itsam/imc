@@ -11,7 +11,7 @@
         <field type="spacer" name="timelinespacer" class="text"
         label="COM_IMC_SETTINGS_TIMELINE_LABEL"
         />
-        
+
         <field name="showadmindetailstimeline" type="radio" default="1" class="btn-group btn-group-yesno" label="COM_IMC_SETTINGS_TIMELINE_SHOW_ADMIN_LABEL" description="COM_IMC_SETTINGS_TIMELINE_SHOW_ADMIN_DESC">
           <option value="0">JNO</option>
           <option value="1">JYES</option>
@@ -88,6 +88,17 @@
         label="COM_IMC_SETTINGS_HIDDEN_SEARCH_TERM_LABEL"
         description="COM_IMC_SETTINGS_HIDDEN_SEARCH_TERM_DESC"
       />
+
+      <field name="scrollwheel" type="radio" default="0" class="btn-group btn-group-yesno" label="COM_IMC_SETTINGS_SCROLLWHEEL_LABEL" description="COM_IMC_SETTINGS_SCROLLWHEEL_DESC">
+        <option value="0">JNO</option>
+        <option value="1">JYES</option>
+      </field>      
+
+      <field name="clusterer" type="radio" default="0" class="btn-group btn-group-yesno" label="COM_IMC_SETTINGS_CLUSTERER_LABEL" description="COM_IMC_SETTINGS_CLUSTERER_DESC">
+        <option value="0">JNO</option>
+        <option value="1">JYES</option>
+      </field>
+
   </fieldset>
 
     

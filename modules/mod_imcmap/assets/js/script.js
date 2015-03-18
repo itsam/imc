@@ -1,6 +1,7 @@
 //lat,lng,zoom,language,menu_filter_area are set outside
 var imc_mod_map;
 var imc_markers = [];
+var mc;
 var infoWindow = new google.maps.InfoWindow({
   maxWidth: 350
 });
@@ -68,7 +69,9 @@ function setMarkers(center, map) {
                     }
                 }
                 resetBounds(map, imc_markers);
-
+                if(clusterer){
+                  mc = new MarkerClusterer(map, imc_markers);
+                }
              },
              'error': function (error) {
                 alert('Cannot read markers - See console for more information');
