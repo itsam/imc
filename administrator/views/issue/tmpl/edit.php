@@ -220,6 +220,12 @@ $document->addStyleSheet('components/com_imc/assets/css/imc.css');
 							echo $details . '<br />';
 						}
 						?>
+						<hr />
+						<div class="control-group">
+							<div class="control-label"><?php echo $this->form->getLabel('extra'); ?></div>
+							<div class="controls"><?php echo $this->form->getInput('extra'); ?></div>
+						</div>
+
 					</div>
 					
 

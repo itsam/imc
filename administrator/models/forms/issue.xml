@@ -151,6 +151,15 @@
             default="" 
             filter="safehtml" /> 
 
+        <field name="extra" 
+            type="textarea"
+            label="COM_IMC_FORM_LBL_ISSUE_EXTRA"
+            description="COM_IMC_FORM_DESC_ISSUE_EXTRA" 
+            cols="100"
+            rows="8"
+            class="input-xxlarge"
+            filter="safehtml" /> 
+
         <field name="state" type="list" label="JSTATUS"
             description="JFIELD_PUBLISHED_DESC" class="chzn-color-state"
             filter="intval" size="1" default="1"
