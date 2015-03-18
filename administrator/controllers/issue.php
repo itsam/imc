@@ -26,8 +26,6 @@ class ImcControllerIssue extends JControllerForm
     //override postSaveHook
     protected function postSaveHook(JModelLegacy $model, $validData = array())
     {
-
-
         //A: inform log table about the new issue
         if($validData['id'] == 0){
             
@@ -160,7 +158,25 @@ class ImcControllerIssue extends JControllerForm
     			JFactory::getApplication()->enqueueMessage('Cannot move '.$srcDir.' to '.$dstDir.'. Check folder rights', 'error');	
     		}
         }
-
-
     }
+
+    /*
+    public function printIssue($pk = null)
+    {
+        // Get the input
+        $input = JFactory::getApplication()->input;
+        $issueid = $input->get('id', 0);
+        $model = $this->getModel();
+        $model->setState('printid', $issueid);
+
+        $v = $this->getView('issue', 'print');              //view.print.php
+        $v->setModel($model, true);                         //load issue model
+        $v->setModel($this->getModel('Logs', 'ImcModel'));  //load logs as well
+        $v->display('print');                               //default_print   
+
+        // Redirect to the list screen.
+        //$this->setRedirect(JRoute::_('index.php?option=com_imc&view=issue&layout=edit&id='.$issueid, false));
+    }
+    */
+
 }

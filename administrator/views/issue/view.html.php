@@ -67,13 +67,33 @@ class ImcViewIssue extends JViewLegacy {
             JToolBarHelper::apply('issue.apply', 'JTOOLBAR_APPLY');
             JToolBarHelper::save('issue.save', 'JTOOLBAR_SAVE');
         }
-        if (!$checkedOut && ($canDo->get('core.create'))) {
-            JToolBarHelper::custom('issue.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
-        }
+        // if (!$checkedOut && ($canDo->get('core.create'))) {
+        //     JToolBarHelper::custom('issue.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
+        // }
         // If an existing item, can save to a copy.
         //if (!$isNew && $canDo->get('core.create')) {
         //    JToolBarHelper::custom('issue.save2copy', 'save-copy.png', 'save-copy_f2.png', 'JTOOLBAR_SAVE_AS_COPY', false);
         //}
+
+        if(!empty($this->item->id)) {
+            //on existing allow printing
+            //JToolBarHelper::custom('issue.printIssue', 'print.png', 'print.png', 'COM_IMC_PRINT', false);
+
+            $bar = JToolBar::getInstance('toolbar');
+            $layout = new JLayoutFile('joomla.toolbar.popup');
+            $dhtml = $layout->render(
+                array(
+                    'doTask' => 'print', //$url,
+                    'class' => 'icon-print',
+                    'text' => JText::_('COM_IMC_PRINT'),
+                    'name' => 'imc-print'
+            ));
+            $bar->appendButton('Custom', $dhtml);
+            
+            //$url = 'index.php?option=com_imc&amp;view=issue&amp;task=issue.printIssue&amp;id='.$this->item->id.'&amp;tmpl=component';
+            //$bar->appendButton('Popup', 'print', 'JTOOLBAR_EXPORT', $url);
+        }
+
         if (empty($this->item->id)) {
             JToolBarHelper::cancel('issue.cancel', 'JTOOLBAR_CANCEL');
         } else {

@@ -240,3 +240,4 @@ $document->addStyleSheet('components/com_imc/assets/css/imc.css');
 
     </div>
 </form>
+<?php echo $this->loadTemplate('print'); ?>
