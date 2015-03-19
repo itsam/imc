@@ -90,6 +90,13 @@ class JFormFieldForeignKey extends JFormField {
                 }
 
                 //If the select is multiple
+                if($this->getAttribute('disabled') == true){
+                    $input_options.= 'disabled="disabled"';
+                }
+                if($this->getAttribute('readonly') == true){
+                    $input_options.= 'readonly="true"';
+                }
+
                 if ($this->multiple) {
                     $input_options.= 'multiple="multiple"';
                 } else {
