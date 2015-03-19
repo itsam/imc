@@ -59,6 +59,17 @@ class ImcModelLog extends JModelAdmin
 			return false;
 		}
 
+		$canManageLogs = JFactory::getUser()->authorise('imc.manage.logs');
+		if(!$canManageLogs) {
+			echo '<div class="alert alert-info">'.JText::_('COM_IMC_ACTION_ALERT').'</div>';
+			// Disable fields for display.
+			$form->setFieldAttribute('state', 'disabled', 'true');
+			$form->setFieldAttribute('stepid', 'disabled', 'true');
+			$form->setFieldAttribute('issueid', 'disabled', 'true');
+			$form->setFieldAttribute('action', 'disabled', 'true');
+			$form->setFieldAttribute('description', 'disabled', 'true');
+		}
+
 		return $form;
 	}
 

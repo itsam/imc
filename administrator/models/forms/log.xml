@@ -9,8 +9,7 @@
         <field name="action" 
             type="text" 
             label="COM_IMC_FORM_LBL_LOG_ACTION" 
-            description="COM_IMC_FORM_DESC_LOG_ACTION"
-            readonly="true" />
+            description="COM_IMC_FORM_DESC_LOG_ACTION" />
 
         <field name="issueid" type="foreignkey" class="inputbox readonly"
             label="COM_IMC_FORM_LBL_LOG_ISSUEID"
@@ -20,22 +19,20 @@
             onchange="this.form.submit();"
             query="SELECT 0 AS `id`, '- Please select issueid -' AS `val` UNION SELECT `id`, `title` AS val FROM `#__imc_issues`" key_field="id" value_field="val"
              /> 
-
  
         <field name="stepid" 
             type="step" 
             label="Step" 
             description=""
-            readonly="true" 
-            required="true" /> 
+            required="true" 
+            readonly="true"/> 
  
         <field name="description" 
             type="textarea"
             label="COM_IMC_FORM_LBL_LOG_DESCRIPTION"
             description="COM_IMC_FORM_DESC_LOG_DESCRIPTION" 
             cols="100"
-            rows="8" 
-            readonly="true" /> 
+            rows="8" /> 
 
         <field name="created" type="timecreated" default="" 
             label="COM_IMC_FORM_LBL_LOG_CREATED"

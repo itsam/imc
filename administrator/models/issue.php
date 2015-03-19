@@ -81,7 +81,7 @@ class ImcModelIssue extends JModelAdmin
 			|| ($id == 0 && !$user->authorise('core.edit.state', 'com_imc'))
 		)
 		{
-			echo '<div class="alert alert-info">Based on your user group some fields might be disabled or read only</div>';
+			echo '<div class="alert alert-info">'.JText::_('COM_IMC_ACTION_ALERT').'</div>';
 			// Disable fields for display.
 			//$form->setFieldAttribute('stepid', 'readonly', 'true');
 			//$form->setFieldAttribute('featured', 'disabled', 'true');
