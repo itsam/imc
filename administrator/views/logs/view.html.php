@@ -53,23 +53,24 @@ class ImcViewLogs extends JViewLegacy {
         $state = $this->get('State');
         $canDo = ImcHelper::getActions($state->get('filter.category_id'));
 
+        $canManageLogs = JFactory::getUser()->authorise('imc.manage.logs'); 
+
         JToolBarHelper::title(JText::_('COM_IMC_TITLE_LOGS'), 'logs.png');
 
         //Check if the form exists before showing the add/edit buttons
         $formPath = JPATH_COMPONENT_ADMINISTRATOR . '/views/log';
         if (file_exists($formPath)) {
 
-            if ($canDo->get('core.create')) {
-                ///JToolBarHelper::addNew('log.add', 'JTOOLBAR_NEW');
-
+            if ($canDo->get('core.create') && $canManageLogs) {
+                JToolBarHelper::addNew('log.add', 'JTOOLBAR_NEW');
             }
 
-            if ($canDo->get('core.edit') && isset($this->items[0])) {
+            if ($canDo->get('core.edit') && isset($this->items[0]) && $canManageLogs) {
                 JToolBarHelper::editList('log.edit', 'JTOOLBAR_EDIT');
             }
         }
 
-        if ($canDo->get('core.edit.state')) {
+        if ($canDo->get('core.edit.state') && $canManageLogs) {
 
             if (isset($this->items[0]->state)) {
                 JToolBarHelper::divider();

@@ -45,6 +45,7 @@ class ImcViewLog extends JViewLegacy {
         JFactory::getApplication()->input->set('hidemainmenu', true);
 
         $user = JFactory::getUser();
+        $canManageLogs = $user->authorise('imc.manage.logs');
         $isNew = ($this->item->id == 0);
         if (isset($this->item->checked_out)) {
             $checkedOut = !($this->item->checked_out == 0 || $this->item->checked_out == $user->get('id'));
@@ -54,20 +55,22 @@ class ImcViewLog extends JViewLegacy {
         $canDo = ImcHelper::getActions();
 
         JToolBarHelper::title(JText::_('COM_IMC_TITLE_LOG'), 'log.png');
+        if($canManageLogs){
+            // If not checked out, can save the item.
+            if (!$checkedOut && ($canDo->get('core.edit') || ($canDo->get('core.create')))) {
 
-        // If not checked out, can save the item.
-        if (!$checkedOut && ($canDo->get('core.edit') || ($canDo->get('core.create')))) {
+                JToolBarHelper::apply('log.apply', 'JTOOLBAR_APPLY');
+                JToolBarHelper::save('log.save', 'JTOOLBAR_SAVE');
+            }
+            if (!$checkedOut && ($canDo->get('core.create'))) {
+                //JToolBarHelper::custom('log.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
+            }
+            // If an existing item, can save to a copy.
+            if (!$isNew && $canDo->get('core.create')) {
+                //JToolBarHelper::custom('log.save2copy', 'save-copy.png', 'save-copy_f2.png', 'JTOOLBAR_SAVE_AS_COPY', false);
+            }
+        }    
 
-            JToolBarHelper::apply('log.apply', 'JTOOLBAR_APPLY');
-            JToolBarHelper::save('log.save', 'JTOOLBAR_SAVE');
-        }
-        if (!$checkedOut && ($canDo->get('core.create'))) {
-            //JToolBarHelper::custom('log.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
-        }
-        // If an existing item, can save to a copy.
-        if (!$isNew && $canDo->get('core.create')) {
-            //JToolBarHelper::custom('log.save2copy', 'save-copy.png', 'save-copy_f2.png', 'JTOOLBAR_SAVE_AS_COPY', false);
-        }
         if (empty($this->item->id)) {
             JToolBarHelper::cancel('log.cancel', 'JTOOLBAR_CANCEL');
         } else {

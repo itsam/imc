@@ -12,7 +12,7 @@
             description="COM_IMC_FORM_DESC_LOG_ACTION"
             readonly="true" />
 
-        <field name="issueid" type="foreignkey" class="inputbox"
+        <field name="issueid" type="foreignkey" class="inputbox readonly"
             label="COM_IMC_FORM_LBL_LOG_ISSUEID"
             description="COM_IMC_FORM_DESC_LOG_ISSUEID" input_type="list" table="#__imc_issues" key_field="id" value_field="title"  required="true"  readonly="true" /> 
 
