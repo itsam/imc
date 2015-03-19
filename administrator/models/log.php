@@ -61,7 +61,7 @@ class ImcModelLog extends JModelAdmin
 
 		$canManageLogs = JFactory::getUser()->authorise('imc.manage.logs');
 		if(!$canManageLogs) {
-			echo '<div class="alert alert-info">'.JText::_('COM_IMC_ACTION_ALERT').'</div>';
+			echo '<div class="alert alert-info"><button type="button" class="close" data-dismiss="alert">×</button>'.JText::_('COM_IMC_ACTION_ALERT').'</div>';
 			// Disable fields for display.
 			$form->setFieldAttribute('state', 'disabled', 'true');
 			$form->setFieldAttribute('stepid', 'disabled', 'true');
