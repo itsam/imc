@@ -20,11 +20,15 @@ class ImcViewSteps extends JViewLegacy {
     protected $items;
     protected $pagination;
     protected $state;
+    protected $canManageSteps;
 
     /**
      * Display the view
      */
     public function display($tpl = null) {
+        $user = JFactory::getUser();
+        $this->canManageKeys = $user->authorise('imc.manage.steps');        
+
         $this->state = $this->get('State');
         $this->items = $this->get('Items');
         $this->pagination = $this->get('Pagination');
@@ -37,6 +41,11 @@ class ImcViewSteps extends JViewLegacy {
         ImcHelper::addSubmenu('steps');
 
         $this->addToolbar();
+        
+        if(!$this->canManageKeys){
+            JFactory::getApplication()->enqueueMessage(JText::_('COM_IMC_ACTION_NOT_ALLOWED'), 'error');
+            return;
+        }
 
         $this->sidebar = JHtmlSidebar::render();
         parent::display($tpl);
@@ -48,6 +57,14 @@ class ImcViewSteps extends JViewLegacy {
      * @since	1.6
      */
     protected function addToolbar() {
+        if(!$this->canManageKeys){
+            JToolBarHelper::title(JText::_('COM_IMC_TITLE_STEPS'), 'steps.png');
+            //JToolBarHelper::back();
+            $bar = JToolBar::getInstance('toolbar');
+            $bar->appendButton('Link', 'leftarrow', 'COM_IMC_BACK', JRoute::_('index.php?option=com_imc', false));
+            return;
+        }
+                
         require_once JPATH_COMPONENT . '/helpers/imc.php';
 
         $state = $this->get('State');
