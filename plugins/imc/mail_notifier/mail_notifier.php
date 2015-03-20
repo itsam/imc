@@ -8,7 +8,6 @@ class plgImcmail_notifier extends JPlugin
 
 	public function onAfterNewIssueAdded($model, $validData, $id = null)
 	{
-
 		$details = $this->getDetails($id, $model);
 		$app = JFactory::getApplication();
 
@@ -71,10 +70,10 @@ class plgImcmail_notifier extends JPlugin
 			if ($this->sendMail($subject, $body, $details->usermail) ) {
 				if($showMsgsBackend){
 					//do we really want to sent confirmation mail if issue is submitted from backend?
-					$app->enqueueMessage(JText::_('PLG_IMC_MAIL_NOTIFIER_MAIL_CONFIRM').$details->usermail);
+					$app->enqueueMessage(JText::_('PLG_IMC_MAIL_NOTIFIER_MAIL_NEW_ISSUE_CONFIRM').$details->usermail . ' (' . $details->username . ')');
 				}
 				if($showMsgsFrontend){
-					$app->enqueueMessage(JText::_('PLG_IMC_MAIL_NOTIFIER_MAIL_CONFIRM').$details->usermail);
+					$app->enqueueMessage(JText::_('PLG_IMC_MAIL_NOTIFIER_MAIL_NEW_ISSUE_CONFIRM').$details->usermail . ' (' . $details->username . ')');
 				}				
 			}
 			else {
@@ -87,19 +86,81 @@ class plgImcmail_notifier extends JPlugin
 	public function onAfterStepModified($model, $validData, $id = null)
 	{
 		$details = $this->getDetails($id, $model);
-		
+		$app = JFactory::getApplication();
+
+		$showMsgsFrontend = ($this->params->get('messagesfrontend') && !$app->isAdmin());
+		$showMsgsBackend  = ($this->params->get('messagesbackend') && $app->isAdmin());
+
 		//Prepare email for admins
-		//TODO: Do we really need to notify admins to every issue status modification? Set this on settings
-		if(empty($details->emails) || $details->emails[0] == ''){
-			JFactory::getApplication()->enqueueMessage('Admin notifications when issue status modified are not set', 'Info');
-		}
-		else {
-			$recipients = implode(',', $details->emails);
-			JFactory::getApplication()->enqueueMessage('Admin notification mail due to issue status modification is sent to '.$recipients, 'Info');
+		if ($this->params->get('mailstatuschangeadmins')){
+			$subject = sprintf(
+				JText::_('PLG_IMC_MAIL_NOTIFIER_ADMINS_STEP_MODIFIED_SUBJECT'), 
+				''
+				//$details->username, 
+				//$details->usermail
+			);
+
+			$body = sprintf(
+				JText::_('PLG_IMC_MAIL_NOTIFIER_ADMINS_STEP_MODIFIED_BODY'),
+				''
+				//ImcFrontendHelper::getCategoryNameByCategoryId($validData['catid']),
+				//$validData['title'],
+				//$validData['address']
+				//$validData['description'],
+				//$issueLink
+				//$issueAdminLink 
+			);
+		
+			if(empty($details->emails) || $details->emails[0] == ''){
+				if($showMsgsBackend)
+					$app->enqueueMessage(JText::_('PLG_IMC_MAIL_NOTIFIER_ADMINS_MAIL_NOT_SET').ImcFrontendHelper::getCategoryNameByCategoryId($validData['catid']), 'warning');
+			}
+			else {
+				$recipients = implode(',', $details->emails);
+				if ($this->sendMail($subject, $body, $details->emails) ) {
+					if($showMsgsBackend)
+						$app->enqueueMessage(JText::_('PLG_IMC_MAIL_NOTIFIER_ADMINS_MAIL_CONFIRM').$recipients);
+				}
+				else {
+					if($showMsgsBackend)
+						$app->enqueueMessage(JText::_('PLG_IMC_MAIL_NOTIFIER_MAIL_FAILED').$recipients, 'error');
+				}
+			}
 		}
 
 		//Prepare email for user
-		JFactory::getApplication()->enqueueMessage('User notification mail (because issue status has modified) sent to '.$details->username.' at '.$details->usermail, 'Info');
+		if ($this->params->get('mailstatuschangeuser')) {		
+			
+			$subject = sprintf(
+				JText::_('PLG_IMC_MAIL_NOTIFIER_USER_STEP_MODIFIED_SUBJECT'), 
+				''
+				//$validData['title']
+			);
+
+			$body = sprintf(
+				JText::_('PLG_IMC_MAIL_NOTIFIER_USER_STEP_MODIFIED_BODY'),
+				''
+				//ImcFrontendHelper::getCategoryNameByCategoryId($validData['catid'])
+				//$validData['title'],
+				//$validData['address']
+				//$validData['description'],
+				//$issueLink
+				//$issueAdminLink 
+			);
+
+			if ($this->sendMail($subject, $body, $details->usermail) ) {
+				if($showMsgsBackend){
+					$app->enqueueMessage(JText::_('PLG_IMC_MAIL_NOTIFIER_MAIL_STEP_MODIFIED_CONFIRM').$details->usermail . ' (' . $details->username . ')');
+				}
+				if($showMsgsFrontend){
+					$app->enqueueMessage(JText::_('PLG_IMC_MAIL_NOTIFIER_MAIL_STEP_MODIFIED_CONFIRM').$details->usermail . ' (' . $details->username . ')');
+				}				
+			}
+			else {
+				$app->enqueueMessage(JText::_('PLG_IMC_MAIL_NOTIFIER_MAIL_FAILED').$recipients, 'error');
+			}
+
+		}
 	}	
 
 	public function onAfterCategoryModified($model, $validData, $id = null)
