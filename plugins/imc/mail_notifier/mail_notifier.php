@@ -83,6 +83,87 @@ class plgImcmail_notifier extends JPlugin
 		}
 	}	
 
+	public function onAfterCategoryModified($model, $validData, $id = null)
+	{
+		$details = $this->getDetails($id, $model);
+		$app = JFactory::getApplication();
+
+		$showMsgsFrontend = ($this->params->get('messagesfrontend') && !$app->isAdmin());
+		$showMsgsBackend  = ($this->params->get('messagesbackend') && $app->isAdmin());
+
+		//Prepare email for admins
+		if ($this->params->get('mailcategorychangeadmins')){
+			$subject = sprintf(
+				JText::_('PLG_IMC_MAIL_NOTIFIER_ADMINS_CATEGORY_MODIFIED_SUBJECT'), 
+				''
+				//$details->username, 
+				//$details->usermail
+			);
+
+			$body = sprintf(
+				JText::_('PLG_IMC_MAIL_NOTIFIER_ADMINS_CATEGORY_MODIFIED_BODY'),
+				''
+				//ImcFrontendHelper::getCategoryNameByCategoryId($validData['catid']),
+				//$validData['title'],
+				//$validData['address']
+				//$validData['description'],
+				//$issueLink
+				//$issueAdminLink 
+			);
+		
+			if(empty($details->emails) || $details->emails[0] == ''){
+				if($showMsgsBackend)
+					$app->enqueueMessage(JText::_('PLG_IMC_MAIL_NOTIFIER_ADMINS_MAIL_NOT_SET').ImcFrontendHelper::getCategoryNameByCategoryId($validData['catid']), 'warning');
+			}
+			else {
+				$recipients = implode(',', $details->emails);
+				if ($this->sendMail($subject, $body, $details->emails) ) {
+					if($showMsgsBackend)
+						$app->enqueueMessage(JText::_('PLG_IMC_MAIL_NOTIFIER_ADMINS_MAIL_CONFIRM').$recipients);
+				}
+				else {
+					if($showMsgsBackend)
+						$app->enqueueMessage(JText::_('PLG_IMC_MAIL_NOTIFIER_MAIL_FAILED').$recipients, 'error');
+				}
+			}
+		}
+
+		//Prepare email for user
+		if ($this->params->get('mailcategorychangeuser')) {		
+			
+			$subject = sprintf(
+				JText::_('PLG_IMC_MAIL_NOTIFIER_USER_CATEGORY_MODIFIED_SUBJECT'), 
+				''
+				//$validData['title']
+			);
+
+			$body = sprintf(
+				JText::_('PLG_IMC_MAIL_NOTIFIER_USER_CATEGORY_MODIFIED_BODY'),
+				''
+				//ImcFrontendHelper::getCategoryNameByCategoryId($validData['catid'])
+				//$validData['title'],
+				//$validData['address']
+				//$validData['description'],
+				//$issueLink
+				//$issueAdminLink 
+			);
+
+			if ($this->sendMail($subject, $body, $details->usermail) ) {
+				if($showMsgsBackend){
+					$app->enqueueMessage(JText::_('PLG_IMC_MAIL_NOTIFIER_MAIL_CATEGORY_MODIFIED_CONFIRM').$details->usermail . ' (' . $details->username . ')');
+				}
+				if($showMsgsFrontend){
+					$app->enqueueMessage(JText::_('PLG_IMC_MAIL_NOTIFIER_MAIL_CATEGORY_MODIFIED_CONFIRM').$details->usermail . ' (' . $details->username . ')');
+				}				
+			}
+			else {
+				$app->enqueueMessage(JText::_('PLG_IMC_MAIL_NOTIFIER_MAIL_FAILED').$recipients, 'error');
+			}
+
+		}
+
+	}	
+
 	public function onAfterStepModified($model, $validData, $id = null)
 	{
 		$details = $this->getDetails($id, $model);
@@ -163,23 +244,6 @@ class plgImcmail_notifier extends JPlugin
 		}
 	}	
 
-	public function onAfterCategoryModified($model, $validData, $id = null)
-	{
-		$details = $this->getDetails($id, $model);
-		
-		//Prepare email for admins
-		if(empty($details->emails) || $details->emails[0] == ''){
-			JFactory::getApplication()->enqueueMessage('Admin notifications when category has modified are not set', 'Info');
-		}
-		else {
-			$recipients = implode(',', $details->emails);
-			JFactory::getApplication()->enqueueMessage('Notification mail due to category modification is sent to '.$recipients, 'Info');
-		}
-
-		//Prepare email for user
-		//TODO: Do we really need to notify user for categeory modification? Set this on settings
-		JFactory::getApplication()->enqueueMessage('Notification mail (because category has modified) sent to '.$details->username.' at '.$details->usermail, 'Info');
-	}	
 
 	private function sendMail($subject, $body, $recipients) {
 		$app = JFactory::getApplication();
