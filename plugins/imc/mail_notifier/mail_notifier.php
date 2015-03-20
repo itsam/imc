@@ -8,7 +8,12 @@ class plgImcmail_notifier extends JPlugin
 
 	public function onAfterNewIssueAdded($model, $validData, $id = null)
 	{
+
 		$details = $this->getDetails($id, $model);
+		$app = JFactory::getApplication();
+
+		$showMsgsFrontend = ($this->params->get('messagesfrontend') && !$app->isAdmin());
+		$showMsgsBackend  = ($this->params->get('messagesbackend') && $app->isAdmin());
 
 		//Prepare email for admins
 		if ($this->params->get('mailnewissueadmins')){
@@ -29,22 +34,53 @@ class plgImcmail_notifier extends JPlugin
 			);
 		
 			if(empty($details->emails) || $details->emails[0] == ''){
-				JFactory::getApplication()->enqueueMessage('Admin notifications for this category are not set', 'Info');
+				if($showMsgsBackend)
+					$app->enqueueMessage(JText::_('PLG_IMC_MAIL_NOTIFIER_ADMINS_MAIL_NOT_SET').ImcFrontendHelper::getCategoryNameByCategoryId($validData['catid']), 'warning');
 			}
 			else {
 				$recipients = implode(',', $details->emails);
 				if ($this->sendMail($subject, $body, $details->emails) ) {
-					JFactory::getApplication()->enqueueMessage('Admin notification mail is sent to '.$recipients, 'Info');
+					if($showMsgsBackend)
+						$app->enqueueMessage(JText::_('PLG_IMC_MAIL_NOTIFIER_ADMINS_MAIL_CONFIRM').$recipients);
 				}
 				else {
-					JFactory::getApplication()->enqueueMessage('Admin notification mail to '.$recipients.' have failed', 'Error');
+					if($showMsgsBackend)
+						$app->enqueueMessage(JText::_('PLG_IMC_MAIL_NOTIFIER_MAIL_FAILED').$recipients, 'error');
 				}
 			}
 		}
 
 		//Prepare email for user
 		if ($this->params->get('mailnewissueuser')) {		
-			JFactory::getApplication()->enqueueMessage('User notification mail is sent to '.$details->username.' at '.$details->usermail, 'Info');
+			
+			$subject = sprintf(
+				JText::_('PLG_IMC_MAIL_NOTIFIER_USER_NEW_ISSUE_SUBJECT'), 
+				$validData['title']
+			);
+
+			$body = sprintf(
+				JText::_('PLG_IMC_MAIL_NOTIFIER_USER_NEW_ISSUE_BODY'),
+				ImcFrontendHelper::getCategoryNameByCategoryId($validData['catid'])
+				//$validData['title'],
+				//$validData['address']
+				//$validData['description'],
+				//$issueLink
+				//$issueAdminLink 
+			);
+
+			if ($this->sendMail($subject, $body, $details->usermail) ) {
+				if($showMsgsBackend){
+					//do we really want to sent confirmation mail if issue is submitted from backend?
+					$app->enqueueMessage(JText::_('PLG_IMC_MAIL_NOTIFIER_MAIL_CONFIRM').$details->usermail);
+				}
+				if($showMsgsFrontend){
+					$app->enqueueMessage(JText::_('PLG_IMC_MAIL_NOTIFIER_MAIL_CONFIRM').$details->usermail);
+				}				
+			}
+			else {
+				$app->enqueueMessage(JText::_('PLG_IMC_MAIL_NOTIFIER_MAIL_FAILED').$recipients, 'error');
+			}
+
 		}
 	}	
 
@@ -93,8 +129,14 @@ class plgImcmail_notifier extends JPlugin
 		$mail = JFactory::getMailer();
 		$mail->isHTML(true);
 		$mail->Encoding = 'base64';
-		foreach($recipients as $recipient)
-			$mail->addRecipient($recipient);
+		if(is_array($recipients)){
+			foreach($recipients as $recipient){
+				$mail->addRecipient($recipient);
+			}
+		}
+		else {
+			$mail->addRecipient($recipients);
+		}
 		$mail->setSender(array($mailfrom, $fromname));
 		$mail->setSubject($sitename.': '.$subject);
 		$mail->setBody($body);
@@ -124,6 +166,7 @@ class plgImcmail_notifier extends JPlugin
 		$usermail = JFactory::getUser($userid)->email;
 
 		$details = new stdClass();
+		$details->issueid = $issueid;
 		$details->emails = $emails;
 		$details->userid = $userid;
 		$details->username = $username;
