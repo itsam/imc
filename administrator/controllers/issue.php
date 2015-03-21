@@ -154,9 +154,24 @@ class ImcControllerIssue extends JControllerForm
 
     		$success = rename ( $srcDir , $dstDir );
 
-    		if(!$success){
-    			JFactory::getApplication()->enqueueMessage('Cannot move '.$srcDir.' to '.$dstDir.'. Check folder rights', 'error');	
-    		}
+            if($success){
+                //update photo json isnew, id
+                unset($obj->isnew);
+                $obj->id = $model->getItem()->get('id');
+                $photo = json_encode($obj);
+
+                // Create an object for the record we are going to update.
+                $object = new stdClass();
+                $object->id = $model->getItem()->get('id');
+                $object->photo = $photo;
+                // Update photo
+                $result = JFactory::getDbo()->updateObject('#__imc_issues', $object, 'id');
+
+            }
+            else {
+                JFactory::getApplication()->enqueueMessage('Cannot move '.$srcDir.' to '.$dstDir.'. Check folder rights', 'error'); 
+            }
+
         }
     }
 
