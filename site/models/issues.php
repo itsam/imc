@@ -149,12 +149,13 @@ class ImcModelIssues extends JModelList {
             ->join('LEFT', '#__imc_steps AS st ON st.id = a.stepid');
         
         // Filter by published state
-        $published = $this->getState('filter.state');
-        if (is_numeric($published)) {
-            $query->where('a.state = ' . (int) $published);
-        } else if ($published === '') {
-            $query->where('(a.state IN (0, 1))');
-        }        
+        // $published = $this->getState('filter.state');
+        // if (is_numeric($published)) {
+        //     $query->where('a.state = ' . (int) $published);
+        // } else if ($published === '') {
+        //     $query->where('(a.state IN (0, 1))');
+        // }
+        $query->where('a.state = 1');        
 
         // Filter by search in title
         $search = $this->getState('filter.search');
@@ -186,12 +187,6 @@ class ImcModelIssues extends JModelList {
         {
             $query->where('a.stepid = ' . (int) $stepid);
         }
-
-		//Filtering catid
-		//$filter_catid = $this->state->get("filter.catid");
-		//if ($filter_catid) {
-		//	$query->where("a.catid = '".$filter_catid."'");
-		//}
 
         $filter_category = $this->state->get('filter.category');
         if(!empty($filter_category)){
