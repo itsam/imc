@@ -43,8 +43,16 @@ $userId = $user->get('id');
                 $canCheckin = $user->authorise('core.manage', 'com_imc.issue.'.$item->id);
                 $canChange = $user->authorise('core.edit.state', 'com_imc.issue.'.$item->id);
                 $canDelete = $user->authorise('core.delete', 'com_imc.issue.'.$item->id);
-                $canEditOwn = $user->authorise('core.edit.own', 'com_imc.issue.' . $item->id);
+                //$canEditOwn = $user->authorise('core.edit.own', 'com_imc.issue.' . $item->id);
                 $attachments = json_decode($item->photo);
+                
+                //Edit Own only if issue status is the initial one
+                $firstStep = ImcFrontendHelper::getStepByStepId($item->stepid);
+                $canEditOnStatus = true;
+                if ($firstStep['ordering'] != 1){
+                    $canEditOnStatus = false;
+                }
+
             ?>
             <?php if (!$canEdit && $user->authorise('core.edit.own', 'com_imc.issue.'.$item->id)): ?>
                 <?php $canEdit = JFactory::getUser()->id == $item->created_by; ?>
@@ -80,7 +88,7 @@ $userId = $user->get('id');
                             <?php if($item->category_image != '') : ?>
                             <img src="<?php echo $item->category_image; ?>" alt="category image" />
                             <?php endif; ?>
-                            <?php if ($canEdit) : ?>
+                            <?php if ($canEdit && $canEditOnStatus) : ?>
                               <a href="<?php echo JRoute::_('index.php?option=com_imc&task=issue.edit&id='.(int) $item->id); ?>">
                               <i class="icon-edit"></i> <?php echo $this->escape($item->title); ?></a>
                             <?php else : ?>
@@ -110,6 +118,9 @@ $userId = $user->get('id');
                             <hr />
                             <p class="imc-warning"><i class="icon-info-sign"></i> <?php echo JText::_('COM_IMC_ISSUES_NOT_YET_PUBLISHED');?></p>
                         <?php endif; ?>
+                        <?php if (!$canEditOnStatus && JFactory::getUser()->id == $item->created_by) : ?>
+                            <p class="imc-warning"><i class="icon-info-sign"></i> <?php echo JText::_('COM_IMC_ISSUE_CANNOT_EDIT_ANYMORE'); ?></p>
+                        <?php endif; ?>                        
                     </div>
                 </div><!-- /imc-panel-X -->
             </div><!--/col--> 
