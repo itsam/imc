@@ -85,7 +85,7 @@ $userId = $user->get('id');
                         }
                     ?>
 
-                    <div class="<?php echo ($item->state == 0 ? 'issue-unpublished ' : ''); ?>panel-body">
+                    <div class="<?php echo ($item->moderation == 1 ? 'issue-unmoderated ' : ''); ?>panel-body">
                         <p class="lead">
                             <?php if($item->category_image != '') : ?>
                             <img src="<?php echo $item->category_image; ?>" alt="category image" />
@@ -116,7 +116,7 @@ $userId = $user->get('id');
                         <p><?php echo ImcFrontendHelper::cutString($item->description, 200); ?></p>
 
                         <p><a href="<?php echo JRoute::_('index.php?option=com_imc&view=issue&id='.(int) $item->id); ?>"><?php echo JText::_('COM_IMC_ISSUES_MORE');?></a></p>
-                        <?php if($item->state == 0) : ?>
+                        <?php if($item->moderation == 1) : ?>
                             <hr />
                             <p class="imc-warning"><i class="icon-info-sign"></i> <?php echo JText::_('COM_IMC_ISSUES_NOT_YET_PUBLISHED');?></p>
                         <?php endif; ?>

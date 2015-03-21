@@ -34,8 +34,6 @@ class ImcTableissue extends JTable {
      */
     public function bind($array, $ignore = '') {
 
-        
-
 		//Support for multiple SQL field: stepid
 			if(isset($array['stepid'])){
 				if(is_array($array['stepid'])){
@@ -54,7 +52,7 @@ class ImcTableissue extends JTable {
 			$array['state'] = 0;
 		}
 
-        //TODO: Do we need moderation for administrators as well? Should we include this on settings
+        //TODO: Do we need moderation for administrators as well? Should we include this on settings? Probably not.
         $array['state'] = 1;
         
 		$task = JFactory::getApplication()->input->get('task');

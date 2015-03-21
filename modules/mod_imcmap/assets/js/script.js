@@ -64,7 +64,7 @@ function setMarkers(center, map) {
 
                     infoBox(map, marker, data);
 
-                    if(data.state == 0){
+                    if(data.moderation == 1){
                       marker.setIcon('http://maps.google.com/mapfiles/ms/icons/blue-dot.png');
                     }
                 }

@@ -260,6 +260,7 @@ class ImcModelIssueForm extends JModelForm
         
         //TODO: moderation check settings
         $data['state'] = 1;
+        $data['moderation'] = 1;
 
         if ($authorised !== true) {
             JError::raiseError(403, JText::_('JERROR_ALERTNOAUTHOR'));
