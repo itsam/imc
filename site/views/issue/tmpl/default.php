@@ -21,10 +21,18 @@ if (!$canEdit && $user->authorise('core.edit.own', 'com_imc.issue.' . $this->ite
 	$canEdit = $user->id == $this->item->created_by;
 }
 
+//Edit Own only if issue status is the initial one
+$firstStep = ImcFrontendHelper::getStepByStepId($this->item->stepid);
+$canEditOnStatus = true;
+if ($firstStep['ordering'] != 1){
+    $canEditOnStatus = false;
+}
+
 //issue statuses
 JFormHelper::addFieldPath(JPATH_ROOT . '/components/com_imc/models/fields');
 $step = JFormHelper::loadFieldType('Step', false);
 $statuses = $step->getOptions();
+
 ?>
 
 <script type="text/javascript">
@@ -66,7 +74,7 @@ $statuses = $step->getOptions();
 		    <img src="<?php echo $this->item->category_image; ?>" alt="<?php echo $this->item->catid_title;?>" title="<?php echo $this->item->catid_title;?>" />
 		    <?php endif; ?>
 			<?php echo '#'. $this->item->id . '. ' .$this->item->title; ?>
-		    <?php if($canEdit && $this->item->checked_out == 0): ?>
+		    <?php if($canEdit && $this->item->checked_out == 0 && $canEditOnStatus): ?>
 				<a class="btn btn-default btn-xs" href="<?php echo JRoute::_('index.php?option=com_imc&task=issue.edit&id='.$this->item->id); ?>"><?php echo JText::_("COM_IMC_EDIT_ITEM"); ?></a>
 			<?php endif; ?>
 			<?php /*if(JFactory::getUser()->authorise('core.delete','com_imc.issue.'.$this->item->id)):?>

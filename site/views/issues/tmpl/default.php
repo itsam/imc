@@ -75,7 +75,9 @@ $userId = $user->get('id');
                         foreach ($attachments->files as $file) {
                             if (isset($file->thumbnailUrl)){
                                 echo '<div class="panel-thumbnail">'. "\n";
+                                echo '<a href="'. JRoute::_('index.php?option=com_imc&view=issue&id='.(int) $item->id).'">';
                                 echo '<img src="'.$attachments->imagedir .'/'. $attachments->id . '/medium/' . ($attachments->files[$i]->name) .'" alt="issue photo" class="img-responsive" />' . "\n";
+                                echo '</a>';
                                 echo '</div>'. "\n";
                                 break;
                             }  
@@ -119,7 +121,7 @@ $userId = $user->get('id');
                             <p class="imc-warning"><i class="icon-info-sign"></i> <?php echo JText::_('COM_IMC_ISSUES_NOT_YET_PUBLISHED');?></p>
                         <?php endif; ?>
                         <?php if (!$canEditOnStatus && JFactory::getUser()->id == $item->created_by) : ?>
-                            <p class="imc-warning"><i class="icon-info-sign"></i> <?php echo JText::_('COM_IMC_ISSUE_CANNOT_EDIT_ANYMORE'); ?></p>
+                            <p class="imc-info"><i class="icon-info-sign"></i> <?php echo JText::_('COM_IMC_ISSUE_CANNOT_EDIT_ANYMORE'); ?></p>
                         <?php endif; ?>                        
                     </div>
                 </div><!-- /imc-panel-X -->

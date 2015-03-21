@@ -25,6 +25,7 @@
 }
 */
 .imc-warning {color: #e21d1d; font-size: small;}
+.imc-info {color: #999999; font-size: small;}
 .masonry .panel { position: relative;z-index:90;}
 /*.masonry .panel-body {position: relative;}*/
 .issue-unpublished { /*background-color: #efefef;*/ }
