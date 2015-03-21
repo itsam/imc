@@ -111,4 +111,4 @@ $userId = $user->get('id');
     </div>
 </div><!-- /columns -->
 
-<?php //echo $this->pagination->getListFooter(); ?>
+<?php echo $this->pagination->getListFooter(); ?>

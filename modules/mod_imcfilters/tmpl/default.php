@@ -58,7 +58,7 @@ $id = $jinput->get('id', null);
 				  </ul>
 				</div>
 				
-				<?php /*
+				
 				<div class="btn-group">
 				  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 				    <?php echo JText::_('MOD_IMCFILTERS_DISPLAY'); ?> <span class="caret"></span>
@@ -67,7 +67,7 @@ $id = $jinput->get('id', null);
 				  	<?php echo ModImcfiltersHelper::createLimitBox($state->get('list.limit')); ?>
 				  </ul>
 				</div>		
-				*/ ?>
+				
 
 				<?php /*
 				TODO: Set layout state

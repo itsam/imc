@@ -145,12 +145,15 @@ class ImcModelIssues extends JModelList {
         
 
 		// Filter by published state
-		$published = $this->getState('filter.state');
+        /*
+        $published = $this->getState('filter.state');
 		if (is_numeric($published)) {
 			$query->where('a.state = ' . (int) $published);
 		} else if ($published === '') {
 			$query->where('(a.state IN (0, 1))');
 		}
+        */
+        $query->where('a.state = 1');
 
         // Filter by search in title
         $search = $this->getState('filter.search');

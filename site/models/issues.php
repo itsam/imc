@@ -78,8 +78,8 @@ class ImcModelIssues extends JModelList {
         $app = JFactory::getApplication();
 
         // List state information
-        //$limit = $app->getUserStateFromRequest('global.list.limit', 'limit', $app->getCfg('list_limit'));
-        $limit = $app->getUserStateFromRequest('global.list.limit', 'limit', 0); //show all by default
+        $limit = $app->getUserStateFromRequest('global.list.limit', 'limit', $app->getCfg('list_limit'));
+        //$limit = $app->getUserStateFromRequest('global.list.limit', 'limit', 0); //show all by default
         $this->setState('list.limit', $limit);
 
         $limitstart = JFactory::getApplication()->input->getInt('limitstart', 0);
