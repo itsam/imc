@@ -65,6 +65,12 @@
                     <option
                         value="static"></option>
                 </field>
+                <field
+                    name="execute_js"
+                    type="textarea" rows="3"
+                    label="MOD_IMCMAP_ON_DOCUMENT_READY_LABEL"
+                    description="MOD_IMCMAP_ON_DOCUMENT_READY_DESC" />
+
             </fieldset>     
         </fields>
     </config>

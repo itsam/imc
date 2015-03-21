@@ -24,13 +24,13 @@ $doc = JFactory::getDocument();
 $doc->addStyleSheet(JURI::base() . '/modules/mod_imcmap/assets/css/style.css');
 
 //get parameters
-$params = JComponentHelper::getParams('com_imc');	
-$api_key = $params->get('api_key');
-$lat        = $params->get('latitude');
-$lng        = $params->get('longitude');
-$zoom 	    = $params->get('zoom');
-$language   = $params->get('maplanguage');
-$clusterer = ($params->get('clusterer') == 1 ? true : false);
+$com_imc_params = JComponentHelper::getParams('com_imc');	
+$api_key 	= $com_imc_params->get('api_key');
+$lat        = $com_imc_params->get('latitude');
+$lng        = $com_imc_params->get('longitude');
+$zoom 	    = $com_imc_params->get('zoom');
+$language   = $com_imc_params->get('maplanguage');
+$clusterer 	= ($com_imc_params->get('clusterer') == 1 ? true : false);
 
 if($api_key == ''){
 	echo '<span style="color: red; font-weight:bold;">Module IMC Map :: Google Maps API KEY missing</span>';
@@ -54,11 +54,13 @@ $view = $jinput->get('view', null);
 
 //Show module only on issues list view
 if ($option == 'com_imc' && $view != 'issues') {
-	//TODO: get the following from module settings	
+	
 	$s = "
 	    jQuery(document).ready(function() {
-	 		jQuery('#map-sidebar').remove();
-	 		jQuery('#imc-left').removeClass().addClass('col-xs-12');
+	 		//mod_imcmap advanced settings
+	 		".
+	 		stripcslashes($params->get('execute_js'))
+	 		."
 	    });
 	";
 	JFactory::getDocument()->addScriptDeclaration($s);
