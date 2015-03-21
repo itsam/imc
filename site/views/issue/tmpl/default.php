@@ -129,8 +129,35 @@ $statuses = $step->getOptions();
 		    	<div class="imc-issue-subtitle"><?php echo JText::_('COM_IMC_FORM_LBL_ISSUE_DESCRIPTION'); ?></div>
 		    	<p><?php echo $this->item->description; ?></p>
 				<p>
-				<?php $photos = json_decode($this->item->photo); ?>
+				<?php 
+					$photos = json_decode($this->item->photo); 
+					$i=0;
+					foreach ($photos->files as $photo) {
+						if(!isset($photo->thumbnailUrl))
+							unset($photos->files[$i]);
+						$i++;
+					}
+					$attachments = json_decode($this->item->photo); 
+					$i=0;
+					foreach ($attachments->files as $attachment) {
+						if(isset($attachment->thumbnailUrl))
+							unset($attachments->files[$i]);
+						$i++;
+					}
+				?>
+				<?php if(!empty($attachments->files)) : ?>
+					<div id="attachments">
+						<div class="imc-issue-subtitle"><?php echo JText::_('COM_IMC_ISSUE_ATTACHMENTS'); ?></div>
+						<?php foreach ($attachments->files as $attachment) : ?>
+							<ul>
+							<li><a href="<?php echo $attachment->url; ?>"><?php echo $attachment->name; ?></a></li>
+							</ul>
+						<?php endforeach ?>
+					</div>
+				<?php endif; ?>
+				
 				<?php if(!empty($photos->files) && file_exists($photos->imagedir .'/'. $photos->id . '/thumbnail/' . (@$photos->files[0]->name))) : ?>
+					<div class="imc-issue-subtitle"><?php echo JText::_('COM_IMC_ISSUE_PHOTOS'); ?></div>
 					<div id='gallery'>
 					<?php $count = 1; ?>
 					<?php foreach ($photos->files as $photo) : ?>
