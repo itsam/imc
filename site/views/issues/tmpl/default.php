@@ -45,7 +45,6 @@ $userId = $user->get('id');
                 $canDelete = $user->authorise('core.delete', 'com_imc.issue.'.$item->id);
                 $canEditOwn = $user->authorise('core.edit.own', 'com_imc.issue.' . $item->id);
                 $attachments = json_decode($item->photo);
-                print_r($attachments);
             ?>
             <?php if (!$canEdit && $user->authorise('core.edit.own', 'com_imc.issue.'.$item->id)): ?>
                 <?php $canEdit = JFactory::getUser()->id == $item->created_by; ?>
