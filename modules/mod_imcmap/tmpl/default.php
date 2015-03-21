@@ -10,5 +10,6 @@
  */
 defined('_JEXEC') or die;
 ?>
-
+<div class="imc-mod-map-canvas-wrapper<?php echo $moduleclass_sfx ?>">
 <div id="imc-mod-map-canvas"></div>
+</div>

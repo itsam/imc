@@ -68,10 +68,6 @@ if ($option == 'com_imc' && $view != 'issues') {
 }
 ?>
 
-
-
-
-
 <script type="text/javascript">
 	var lat = <?php echo $lat;?> ;
 	var lng = <?php echo $lng;?> ;
@@ -89,4 +85,5 @@ $script[] = "  google.maps.event.addDomListener(window, 'load', imc_mod_map_init
 $script[] = "});";
 $doc->addScriptDeclaration(implode("\n", $script));
 
-require JModuleHelper::getLayoutPath('mod_imcmap', $params->get('layout_type', 'default'));
+$moduleclass_sfx = htmlspecialchars($params->get('moduleclass_sfx'));
+require JModuleHelper::getLayoutPath('mod_imcmap', $params->get('layout', 'default'));

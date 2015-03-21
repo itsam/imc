@@ -41,4 +41,6 @@ $doc->addScript(JURI::base() . '/modules/mod_imcfilters/assets/js/classie.js');
 $doc->addScript(JURI::base() . '/modules/mod_imcfilters/assets/js/modernizr.custom.js');
 $doc->addScript(JURI::base() . '/modules/mod_imcfilters/assets/js/notificationFx.js');
 $doc->addScript(JURI::base() . '/modules/mod_imcfilters/assets/js/script.js');
-require JModuleHelper::getLayoutPath('mod_imcfilters', $params->get('layout_type', 'default'));
+
+$moduleclass_sfx = htmlspecialchars($params->get('moduleclass_sfx'));
+require JModuleHelper::getLayoutPath('mod_imcfilters', $params->get('layout', 'default'));

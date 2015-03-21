@@ -25,14 +25,8 @@
     </languages>
     <config>
         <fields name="params">
-            <fieldset name="layout_type" label="MOD_IMCFILTERS_LAYOUT_TAB_LBL">
-                <field name="layout_type" 
-                    type="list"
-                    label="MOD_IMCFILTERS_LAYOUT_TYPE_LBL">
-                    <option value="default">MOD_IMCFILTERS_LAYOUT_DEFAULT</option>
-                    <option value="search">MOD_IMCFILTERS_LAYOUT_SEARCH</option>
-                    <option value="filters">MOD_IMCFILTERS_LAYOUT_FILTERS</option>
-                </field>
+            <fieldset
+                name="advanced">
                 <field name="show_on_details"
                      type="radio"
                      default="0"
@@ -40,9 +34,47 @@
                      label="MOD_IMCFILTERS_SHOW_ON_DETAILS">
                      <option value="0">JNO</option>
                      <option value="1">JYES</option>
+                </field>                
+                <field
+                    name="layout"
+                    type="modulelayout"
+                    default="default"
+                    label="JFIELD_ALT_LAYOUT_LABEL"
+                    description="JFIELD_ALT_MODULE_LAYOUT_DESC" />
+
+                <field
+                    name="moduleclass_sfx"
+                    type="textarea" rows="3"
+                    label="COM_MODULES_FIELD_MODULECLASS_SFX_LABEL"
+                    description="COM_MODULES_FIELD_MODULECLASS_SFX_DESC" />
+
+                <field
+                    name="cache"
+                    type="list"
+                    default="1"
+                    label="COM_MODULES_FIELD_CACHING_LABEL"
+                    description="COM_MODULES_FIELD_CACHING_DESC">
+                    <option
+                        value="1">JGLOBAL_USE_GLOBAL</option>
+                    <option
+                        value="0">COM_MODULES_FIELD_VALUE_NOCACHING</option>
                 </field>
-            </fieldset>
-     
+
+                <field
+                    name="cache_time"
+                    type="text"
+                    default="900"
+                    label="COM_MODULES_FIELD_CACHE_TIME_LABEL"
+                    description="COM_MODULES_FIELD_CACHE_TIME_DESC" />
+                <field
+                    name="cachemode"
+                    type="hidden"
+                    default="static">
+                    <option
+                        value="static"></option>
+                </field>
+
+            </fieldset>     
         </fields>
     </config>
 </extension>

@@ -37,7 +37,7 @@ $id = $jinput->get('id', null);
 		});
 	});
 </script>
-
+<div class="imc-mod-imcfilters-wrapper<?php echo $moduleclass_sfx ?>">
 <form class="form-search form-inline" action="<?php echo JRoute::_('index.php?option=com_imc&view=issues'); ?>" method="post" name="imc_filter_form" id="adminForm">
 	<div class="imc_filters_buttons">
 		<?php if ($option == 'com_imc' && $view != 'issues') : ?>
@@ -145,3 +145,4 @@ $id = $jinput->get('id', null);
 
 
 </form>
+</div>
