@@ -14,6 +14,11 @@
             class="inputbox input-xxlarge input-large-text"
             filter="string" /> 
         
+        <field name="moderation" type="radio" default="0" class="btn-group btn-group-yesno" label="COM_IMC_FORM_LBL_ISSUE_MODERATION" description="COM_IMC_FORM_DESC_ISSUE_MODERATION">
+              <option value="0">JNO</option>
+              <option value="1">JYES</option>
+            </field>
+
         <field name="regnum" type="text"
                 label="COM_IMC_FORM_LBL_ISSUE_REGNUM"
                 description="COM_IMC_FORM_DESC_ISSUE_REGNUM" /> 

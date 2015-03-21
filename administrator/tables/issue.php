@@ -54,7 +54,7 @@ class ImcTableissue extends JTable {
 			$array['state'] = 0;
 		}
 
-        //TODO: moderation check settings
+        //TODO: Do we need moderation for administrators as well? Should we include this on settings
         $array['state'] = 1;
         
 		$task = JFactory::getApplication()->input->get('task');
