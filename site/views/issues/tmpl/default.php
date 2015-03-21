@@ -44,7 +44,8 @@ $userId = $user->get('id');
                 $canChange = $user->authorise('core.edit.state', 'com_imc.issue.'.$item->id);
                 $canDelete = $user->authorise('core.delete', 'com_imc.issue.'.$item->id);
                 $canEditOwn = $user->authorise('core.edit.own', 'com_imc.issue.' . $item->id);
-                $photos = json_decode($item->photo);
+                $attachments = json_decode($item->photo);
+                print_r($attachments);
             ?>
             <?php if (!$canEdit && $user->authorise('core.edit.own', 'com_imc.issue.'.$item->id)): ?>
                 <?php $canEdit = JFactory::getUser()->id == $item->created_by; ?>
@@ -61,13 +62,19 @@ $userId = $user->get('id');
                         </div>
                         <?php endif; ?>
                     <?php endif; ?>
-                    <?php if(empty($photos->files) || !file_exists($photos->imagedir .'/'. $photos->id . '/medium/' . (@$photos->files[0]->name))) : ?>
-                        <!-- <img src="//placehold.it/450X300/OO77BB/ffffff" class="img-responsive"> -->
-                    <?php else : ?>
-                        <div class="panel-thumbnail">
-                            <img src="<?php echo $photos->imagedir .'/'. $photos->id . '/medium/' . ($photos->files[0]->name) ;?>" alt="issue photo" class="img-responsive" />
-                        </div>
-                    <?php endif; ?>
+                    
+                    <?php //show photo if any
+                        $i = 0;
+                        foreach ($attachments->files as $file) {
+                            if (isset($file->thumbnailUrl)){
+                                echo '<div class="panel-thumbnail">'. "\n";
+                                echo '<img src="'.$attachments->imagedir .'/'. $attachments->id . '/medium/' . ($attachments->files[$i]->name) .'" alt="issue photo" class="img-responsive" />' . "\n";
+                                echo '</div>'. "\n";
+                                break;
+                            }  
+                            $i++;  
+                        }
+                    ?>
 
                     <div class="<?php echo ($item->state == 0 ? 'issue-unpublished ' : ''); ?>panel-body">
                         <p class="lead">
