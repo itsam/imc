@@ -198,6 +198,9 @@ if (!empty($this->extra_sidebar)) {
 				<?php if ($canEdit) : ?>
 					<a href="<?php echo JRoute::_('index.php?option=com_imc&task=issue.edit&id='.(int) $item->id); ?>">
 					<?php echo $this->escape($item->title); ?></a>
+					<?php if($item->moderation) : ?>
+						<span class="small imc-danger">(<?php echo JText::_('COM_IMC_FORM_LBL_ISSUE_MODERATION'); ?>)</span>
+					<?php endif ?>
 					<br /><span class="small">(<?php echo $this->escape($item->address); ?>)</span>
 				<?php else : ?>
 					<?php echo $this->escape($item->title); ?>
