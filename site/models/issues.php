@@ -158,7 +158,11 @@ class ImcModelIssues extends JModelList {
         $query->where('a.state = 1');        
 
         // Filter by moderation
-        $query->where('(a.created_by ='.$user->id.' AND a.moderation IN (0,1)) OR (a.created_by !='.$user->id.' AND a.moderation = 0)');
+        $query->where('
+            (a.created_by > 0 AND a.created_by  ='.$user->id.' AND a.moderation IN (0,1)) OR 
+            (a.created_by > 0 AND a.created_by !='.$user->id.' AND a.moderation = 0)
+            
+        ');
 
         // Filter by search in title
         $search = $this->getState('filter.search');
