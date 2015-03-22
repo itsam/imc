@@ -61,6 +61,10 @@ $document->addStyleSheet('components/com_imc/assets/css/imc.css');
         <div class="row-fluid">
             <div class="span6 form-horizontal">
                 <fieldset class="adminform">
+	                <div class="control-group">
+	                	<div class="control-label"><?php echo $this->form->getLabel('moderation'); ?></div>
+	                	<div class="controls"><?php echo $this->form->getInput('moderation'); ?></div>
+	                </div>                 
 		            <div class="control-group">
 						<div class="control-label"><?php echo $this->form->getLabel('id'); ?></div>
 						<div class="controls"><?php echo $this->form->getInput('id'); ?></div>
@@ -158,10 +162,6 @@ $document->addStyleSheet('components/com_imc/assets/css/imc.css');
         <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'publishing', JText::_('JGLOBAL_FIELDSET_PUBLISHING', true)); ?>
             <div class="span6 form-horizontal">
                 <fieldset class="adminform">
-	                <div class="control-group">
-	                	<div class="control-label"><?php echo $this->form->getLabel('moderation'); ?></div>
-	                	<div class="controls"><?php echo $this->form->getInput('moderation'); ?></div>
-	                </div>                
 					<div class="control-group">
 						<div class="control-label"><?php echo $this->form->getLabel('state'); ?></div>
 						<div class="controls"><?php echo $this->form->getInput('state'); ?></div>
