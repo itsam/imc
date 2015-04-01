@@ -3,11 +3,16 @@
 <form>
 	<fields name="params" >
 		<fieldset name="imc" label="PLG_CONTENT_IMC_TAB_LABEL" addfieldpath="/components/com_imc/models/fields">
+            <field name="imc_category_usergroup" type="usergroup"
+            	label="PLG_CONTENT_IMC_FIELD_CATEGORY_USERGROUP_LABEL"
+            	description="PLG_CONTENT_IMC_FIELD_CATEGORY_USERGROUP_DESC"
+            	multiple="true" />
+
 			<field name="imc_category_emails"
 				type="textarea"
 				label="PLG_CONTENT_IMC_FIELD_CATEGORY_EMAILS_LABEL"
 				description="PLG_CONTENT_IMC_FIELD_CATEGORY_EMAILS_DESC"
-				id="imc_category_emails" 
+				id="imc_category_emails"
 	            cols="100"
 	            rows="8"
 	            class="input-xxlarge"
