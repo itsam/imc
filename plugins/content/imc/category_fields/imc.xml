@@ -6,8 +6,8 @@
             <field name="imc_category_usergroup" type="usergroup"
             	label="PLG_CONTENT_IMC_FIELD_CATEGORY_USERGROUP_LABEL"
             	description="PLG_CONTENT_IMC_FIELD_CATEGORY_USERGROUP_DESC"
-            	multiple="true" />
-
+            	multiple="true"
+            	/>
 			<field name="imc_category_emails"
 				type="textarea"
 				label="PLG_CONTENT_IMC_FIELD_CATEGORY_EMAILS_LABEL"
