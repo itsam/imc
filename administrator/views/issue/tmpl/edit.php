@@ -70,7 +70,7 @@ $document->addStyleSheet('components/com_imc/assets/css/imc.css');
 						<div class="controls"><?php echo $this->form->getInput('id'); ?></div>
 					</div>
 
-					<div style="border: 1px solid #eee;padding: 15px 0;margin: 15px 0;">
+					<div class="alert alert-warning">
 						<div class="control-group">
 							<div class="control-label"><?php echo $this->form->getLabel('regnum'); ?></div>
 							<div class="controls"><?php echo $this->form->getInput('regnum'); ?></div>
@@ -129,7 +129,7 @@ $document->addStyleSheet('components/com_imc/assets/css/imc.css');
 					<div class="control-group">
 						<div class="control-label"><?php echo $this->form->getLabel('extra'); ?></div>
 						<div class="controls">
-							<div class="alert alert-info">
+							<div class="alert alert-warning">
 								<p><strong><?php echo JText::_('COM_IMC_USER_DETAILS');?>:</strong></p>
 								<?php 
 								foreach ($this->item->creatorDetails as $key => $value) {
