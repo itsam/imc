@@ -81,6 +81,7 @@ class ImcModelIssue extends JModelAdmin
 			|| ($id == 0 && !$user->authorise('core.edit.state', 'com_imc'))
 		)
 		{
+			//TODO: This alert to be moved on view
 			echo '<div class="alert alert-info"><button type="button" class="close" data-dismiss="alert">×</button>'.JText::_('COM_IMC_ACTION_ALERT').'</div>';
 			// Disable fields for display.
 			//$form->setFieldAttribute('stepid', 'readonly', 'true');
