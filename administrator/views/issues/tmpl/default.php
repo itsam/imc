@@ -199,7 +199,10 @@ if (!empty($this->extra_sidebar)) {
 					<a href="<?php echo JRoute::_('index.php?option=com_imc&task=issue.edit&id='.(int) $item->id); ?>">
 					<?php echo $this->escape($item->title); ?></a>
 					<?php if($item->moderation) : ?>
-						<span class="small imc-danger">(<?php echo JText::_('COM_IMC_FORM_LBL_ISSUE_MODERATION'); ?>)</span>
+						<span class="label label-important"><?php echo JText::_('COM_IMC_FORM_LBL_ISSUE_MODERATION'); ?></span>
+					<?php endif ?>
+					<?php if($item->created == $item->updated) : ?>
+						<span class="label label-success"><?php echo JText::_('COM_IMC_NEW'); ?></span>
 					<?php endif ?>
 					<br /><span class="small">(<?php echo $this->escape($item->address); ?>)</span>
 				<?php else : ?>
