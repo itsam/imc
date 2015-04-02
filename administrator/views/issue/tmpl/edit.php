@@ -114,7 +114,7 @@ $document->addStyleSheet('components/com_imc/assets/css/imc.css');
             <div class="span6 form-horizontal">
                 <fieldset class="adminform">
 					<div class="control-group">
-						
+						<div class="control-label"><?php echo $this->form->getLabel('address'); ?></div>
 						<div class="controls"><?php echo $this->form->getInput('address'); ?></div>
 					</div>
 					<div class="control-group">
@@ -125,40 +125,57 @@ $document->addStyleSheet('components/com_imc/assets/css/imc.css');
 						<div class="control-label"><?php echo $this->form->getLabel('longitude'); ?></div>
 						<div class="controls"><?php echo $this->form->getInput('longitude'); ?></div>
 					</div>
+
 					<div class="control-group">
+						<div class="control-label"><?php echo $this->form->getLabel('extra'); ?></div>
 						<div class="controls">
-							<legend><?php echo JText::_("COM_IMC_TITLE_LOGS");?></legend>
-							<table class="table table-striped">
-								<thead>
-									<tr>
-										<th><?php echo JText::_("JDATE");?></th>
-										<th><?php echo JText::_("COM_IMC_FORM_LBL_LOG_ACTION");?></th>
-										<th><?php echo JText::_("COM_IMC_LOGS_CREATED_BY");?></th>
-										<th><?php echo JText::_("COM_IMC_TITLE_STEP");?></th>
-										<th><?php echo JText::_("COM_IMC_LOGS_DESCRIPTION");?></th>
-										</tr>
-								</thead>
-								<tbody>
-									<?php foreach ($this->logs as $log) : ?>
-									<tr>
-										<td><?php echo $log['created']; ?></td>
-										<td><?php echo $log['action']; ?></td>
-										<td><?php echo $log['created_by']; ?></td>
-										<td>
-											<span style="font-size: 20px;color: <?php echo $log['stepid_color']; ?>">&marker;</span>
-											<?php echo $log['stepid_title']; ?>
-										</td>
-										<td><?php echo $log['description']; ?></td>
-									</tr>
-									<?php endforeach; ?>
-								</tbody>
-							</table>
+							<div class="alert alert-info">
+								<p><strong><?php echo JText::_('COM_IMC_USER_DETAILS');?>:</strong></p>
+								<?php 
+								foreach ($this->item->creatorDetails as $key => $value) {
+									echo $key.':'.$value . '<br />';
+								}
+								?>
+							<?php echo $this->form->getInput('extra'); ?>
+							</div>
 						</div>
 					</div>
                 </fieldset>	
 			</div>
         </div>
         <?php echo JHtml::_('bootstrap.endTab'); ?>
+        
+        <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'logging', JText::_('COM_IMC_TITLE_LOGS', true)); ?>
+        	<div class="span12">
+	        	<table class="table table-striped">
+	        		<thead>
+	        			<tr>
+	        				<th><?php echo JText::_("JDATE");?></th>
+	        				<th><?php echo JText::_("COM_IMC_FORM_LBL_LOG_ACTION");?></th>
+	        				<th><?php echo JText::_("COM_IMC_LOGS_CREATED_BY");?></th>
+	        				<th><?php echo JText::_("COM_IMC_TITLE_STEP");?></th>
+	        				<th><?php echo JText::_("COM_IMC_LOGS_DESCRIPTION");?></th>
+	        				</tr>
+	        		</thead>
+	        		<tbody>
+	        			<?php foreach ($this->logs as $log) : ?>
+	        			<tr>
+	        				<td><?php echo $log['created']; ?></td>
+	        				<td><?php echo $log['action']; ?></td>
+	        				<td><?php echo $log['created_by']; ?></td>
+	        				<td>
+	        					<span style="font-size: 20px;color: <?php echo $log['stepid_color']; ?>">&marker;</span>
+	        					<?php echo $log['stepid_title']; ?>
+	        				</td>
+	        				<td><?php echo $log['description']; ?></td>
+	        			</tr>
+	        			<?php endforeach; ?>
+	        		</tbody>
+	        	</table>
+
+        	</div>
+        <?php echo JHtml::_('bootstrap.endTab'); ?>
+
         <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'publishing', JText::_('JGLOBAL_FIELDSET_PUBLISHING', true)); ?>
             <div class="span6 form-horizontal">
                 <fieldset class="adminform">
@@ -217,22 +234,6 @@ $document->addStyleSheet('components/com_imc/assets/css/imc.css');
 							?>
 						</div>
 					<?php endif; ?>
-					<div class="alert alert-info">
-						<p><strong><?php echo JText::_('COM_IMC_USER_DETAILS');?>:</strong></p>
-						<?php 
-						foreach ($this->item->creatorDetails as $details) {
-							echo $details . '<br />';
-						}
-						?>
-						<hr />
-						<div class="control-group">
-							<div class="control-label"><?php echo $this->form->getLabel('extra'); ?></div>
-							<div class="controls"><?php echo $this->form->getInput('extra'); ?></div>
-						</div>
-
-					</div>
-					
-
                 </fieldset>	
 			</div>	
 		<?php echo JHtml::_('bootstrap.endTab'); ?>
