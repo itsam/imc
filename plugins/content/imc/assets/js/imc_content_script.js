@@ -17,15 +17,14 @@ function extractMailFromGroup(token){
         	var textarea = jQuery("textarea#jform_params_imc_category_emails");
         	var existing = textarea.val().split("\n");
         	var names = '';
-        	console.log(existing);
          	jQuery(json.data).each(function(index, element) {
-				if (jQuery.inArray(element.email, existing) == -1){
-					textarea.val( textarea.val() + "\n"+element.email );
+				if (jQuery.inArray(element.email+ ':' + element.name, existing) == -1){
+					textarea.val( textarea.val() + "\n" + element.email + ':' + element.name);
 					names += '<li>' + element.name + '</li>';
 				}
          	});
          	if(names != ''){
-         		jQuery('#jform_params_imc_category_emails-lbl').append('<div class="alert alert-info"> Added:<ul>'+names+'</ul><strong>Apply changes by clicking the "save" button</strong></div>');
+         		jQuery('#jform_params_imc_category_emails-lbl').append('<div class="alert alert-warning"> Added:<ul>'+names+'</ul><strong>Apply changes by clicking the "save" button</strong></div>');
          	}
          },
          'error': function (error) {
