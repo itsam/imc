@@ -256,7 +256,9 @@ class plgImcmail_notifier extends JPlugin
 		$mail->Encoding = 'base64';
 		if(is_array($recipients)){
 			foreach($recipients as $recipient){
-				$mail->addRecipient($recipient);
+				if ($mail->ValidateAddress($recipient)){
+					$mail->addRecipient($recipient);
+				}
 			}
 		}
 		else {
