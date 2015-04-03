@@ -190,6 +190,15 @@ class ImcModelIssues extends JModelList {
 			$query->where("a.catid = '".$db->escape($filter_catid)."'");
 		}
 
+        //Filtering by category usergroups except if access imc.showall.issues = true
+        $canShowAllIssues = $user->authorise('imc.showall.issues');
+        if(!$canShowAllIssues){
+            $allowed_catids = ImcHelper::getCategoriesByUserGroups();
+            $allowed_catids = implode(',', $allowed_catids);
+            if(!empty($allowed_catids)){
+                $query->where('a.catid IN (' . $allowed_catids . ')');
+            }
+        }
 
         // Add the list ordering clause.
         $orderCol = $this->state->get('list.ordering');
@@ -209,37 +218,45 @@ class ImcModelIssues extends JModelList {
 
     public function getItems() {
         $items = parent::getItems();
+
+        /* Causes pagination problem. Check: http://issues.joomla.org/tracker/joomla-cms/6645 */
+/*        if (JFactory::getApplication()->isAdmin())
+        {
+            $user = JFactory::getUser();
+            $canShowAllIssues = $user->authorise('imc.showall.issues');
+            if (!$canShowAllIssues) {
+                $usergroups = JAccess::getGroupsByUser($user->id);
+
+                for ($x = 0, $count = count($items); $x < $count; $x++)
+                {
+                    // Check the category usergroup level. Remove issues the user shouldn't see
+                    $category = JCategories::getInstance('Imc')->get($items[$x]->catid);
+                    $params = json_decode($category->params);
+                    if(isset($params->imc_category_usergroup))
+                        $imc_category_usergroup = $params->imc_category_usergroup;
+                    else
+                        $imc_category_usergroup = array();
+
+                    $group_found = false;
+                    foreach ($imc_category_usergroup as $group) {
+                        if (in_array($group, $usergroups))
+                        {
+                            $group_found = true;
+                            break;
+                        }
+                    }
+                    if($group_found == false){
+                        unset($items[$x]);
+                    }
+
+                }
+            }
+        }*/
         
-        /*
-        it's better to set this on JOIN instead of parsing again ... doh CC !!!!
-		foreach ($items as $oneItem) {
 
-			if (isset($oneItem->stepid)) {
-				$values = explode(',', $oneItem->stepid);
 
-				$textValue = array();
-				foreach ($values as $value){
-					if(!empty($value)){
-						$db = JFactory::getDbo();
-						$query = "SELECT id, color, title AS value FROM #__imc_steps HAVING id LIKE '" . $value . "'";
-						$db->setQuery($query);
-						$results = $db->loadObject();
-						if ($results) {
-							$textValue[] = $results->value;
-						}
-					}
-				}
-
-			$oneItem->stepid = !empty($textValue) ? implode(', ', $textValue) : $oneItem->stepid;
-
-			}
-		}
-        */
-
-//////////////////////////
         if (JFactory::getApplication()->isSite())
         {
-            //echo('ITSAM');die();
             $user = JFactory::getUser();
             $groups = $user->getAuthorisedViewLevels();
 
@@ -252,8 +269,6 @@ class ImcModelIssues extends JModelList {
                 }
             }
         }
-////////////////////////////
-
 
         return $items;
     }

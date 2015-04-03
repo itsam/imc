@@ -15,6 +15,7 @@ defined('_JEXEC') or die;
  */
 class ImcHelper {
 
+	private static $catIds = array();
     /**
      * Configure the Linkbar.
      */
@@ -85,5 +86,62 @@ class ImcHelper {
         return $result;
     }
 
+    public static function getCategoriesByUserGroups($user = null) {
+    	if($user == null) {
+    		$user = JFactory::getUser();
+    	}
+
+    	self::$catIds = array();
+    	ImcHelper::getCategoriesUserGroups(); //populates self::catIds
+    	$categories = self::$catIds;
+
+    	$usergroups = JAccess::getGroupsByUser($user->id);
+    	$allowed_catIds = array();
+    	foreach ($categories as $category) {
+    		foreach ($category['usergroups'] as $groupid) {
+    			if (in_array($groupid, $usergroups)){
+    				array_push($allowed_catIds, $category['catid']);
+    			}
+    		}
+    	}
+
+    	return $allowed_catIds;
+    }
+
+    private static function getCategoriesUserGroups($recursive = false)
+    {
+        $_categories = JCategories::getInstance('Imc');
+        $_parent = $_categories->get();
+        if(is_object($_parent))
+        {
+            $_items = $_parent->getChildren($recursive);
+        }
+        else
+        {
+            $_items = false;
+        }
+        return ImcHelper::loadCats($_items);
+    }
+        
+    private static function loadCats($cats = array())
+    {
+        if(is_array($cats))
+        {
+            foreach($cats as $JCatNode)
+            {
+                $params = json_decode($JCatNode->params);
+                if(isset($params->imc_category_usergroup))
+                    $usergroups = $params->imc_category_usergroup;
+                else
+                    $usergroups = array();
+
+                self::$catIds[] = array('catid'=>$JCatNode->id,'usergroups'=>$usergroups);
+
+                if($JCatNode->hasChildren())
+                    ImcHelper::loadCats($JCatNode->getChildren());
+            }
+        }
+        return false;
+    }
 
 }
