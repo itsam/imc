@@ -93,10 +93,10 @@ class ImcModelIssue extends JModelItem {
 
         $category = JCategories::getInstance('Imc')->get($this->_item->catid);
         $prms = json_decode($category->params);
-        if(isset($prms->imc_category_emails))
-            $this->_item->notification_emails = explode("\n", $prms->imc_category_emails);
-        else
-            $this->_item->notification_emails = array();
+        // if(isset($prms->imc_category_emails))
+        //     $this->_item->notification_emails = explode("\n", $prms->imc_category_emails);
+        // else
+        //     $this->_item->notification_emails = array();
         if(isset($prms->image))
             $this->_item->category_image = $prms->image;
         else

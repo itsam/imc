@@ -262,10 +262,10 @@ class ImcModelIssues extends JModelList {
                 // Set category image (for marker icon)...avoid using JCategories, just get category params in the main query
                 $prms = json_decode($items[$x]->catid_params);
                 unset($items[$x]->catid_params);
-                if(isset($prms->imc_category_emails))
-                    $items[$x]->notification_emails = explode("\n", $prms->imc_category_emails);
-                else
-                    $items[$x]->notification_emails = array();
+                // if(isset($prms->imc_category_emails))
+                //     $items[$x]->notification_emails = explode("\n", $prms->imc_category_emails);
+                // else
+                //     $items[$x]->notification_emails = array();
 
                 if(isset($prms->image))
                     $items[$x]->category_image = $prms->image;
