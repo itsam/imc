@@ -169,8 +169,7 @@ class ImcModelIssue extends JModelAdmin
 	        if(isset($params->imc_category_usergroup))
 	        	$item->imc_category_usergroup = $params->imc_category_usergroup;
 	        else
-	        	$item->imc_category_usergroup = '';
-	        print_r($item->imc_category_usergroup);
+	        	$item->imc_category_usergroup = array();
 
 	        if(isset($params->image))
 	        	$item->category_image = $params->image;
