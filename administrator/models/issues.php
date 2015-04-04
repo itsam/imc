@@ -198,6 +198,10 @@ class ImcModelIssues extends JModelList {
             if(!empty($allowed_catids)){
                 $query->where('a.catid IN (' . $allowed_catids . ')');
             }
+            else {
+                //show nothing
+                $query->where('a.catid = -1');   
+            }
         }
 
         // Add the list ordering clause.
