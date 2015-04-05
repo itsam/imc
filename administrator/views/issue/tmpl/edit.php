@@ -54,12 +54,12 @@ $document->addStyleSheet('components/com_imc/assets/css/imc.css');
 <form action="<?php echo JRoute::_('index.php?option=com_imc&layout=edit&id=' . (int) $this->item->id); ?>" method="post" enctype="multipart/form-data" name="adminForm" id="issue-form" class="form-validate">
 
 	<?php echo JLayoutHelper::render('joomla.edit.title_alias', $this); ?>
-    <div class="form-horizontal">
+    <div class="form-vertical">
         <?php echo JHtml::_('bootstrap.startTabSet', 'myTab', array('active' => 'general')); ?>
 
         <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'general', JText::_('COM_IMC_TITLE_ISSUE', true)); ?>
         <div class="row-fluid">
-            <div class="span6 form-horizontal">
+            <div class="span6">
                 <fieldset class="adminform">
 	                <div class="control-group">
 	                	<div class="control-label"><?php echo $this->form->getLabel('moderation'); ?></div>
@@ -70,7 +70,7 @@ $document->addStyleSheet('components/com_imc/assets/css/imc.css');
 						<div class="controls"><?php echo $this->form->getInput('id'); ?></div>
 					</div>
 
-					<div class="alert alert-warning">
+					<div class="alert alert-warning" style="width:80%;">
 						<div class="control-group">
 							<div class="control-label"><?php echo $this->form->getLabel('regnum'); ?></div>
 							<div class="controls"><?php echo $this->form->getInput('regnum'); ?></div>
@@ -111,19 +111,13 @@ $document->addStyleSheet('components/com_imc/assets/css/imc.css');
 					</div>
                 </fieldset>
             </div>
-            <div class="span6 form-horizontal">
+            <div class="span6">
                 <fieldset class="adminform">
 					<div class="control-group">
 						<div class="control-label"><?php echo $this->form->getLabel('address'); ?></div>
 						<div class="controls"><?php echo $this->form->getInput('address'); ?></div>
-					</div>
-					<div class="control-group">
-						<div class="control-label"><?php echo $this->form->getLabel('latitude'); ?></div>
-						<div class="controls"><?php echo $this->form->getInput('latitude'); ?></div>
-					</div>
-					<div class="control-group">
-						<div class="control-label"><?php echo $this->form->getLabel('longitude'); ?></div>
-						<div class="controls"><?php echo $this->form->getInput('longitude'); ?></div>
+						<?php echo $this->form->getInput('latitude'); ?>
+						<?php echo $this->form->getInput('longitude'); ?>
 					</div>
 
 					<div class="control-group">
@@ -177,7 +171,7 @@ $document->addStyleSheet('components/com_imc/assets/css/imc.css');
         <?php echo JHtml::_('bootstrap.endTab'); ?>
 
         <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'publishing', JText::_('JGLOBAL_FIELDSET_PUBLISHING', true)); ?>
-            <div class="span6 form-horizontal">
+            <div class="span6">
                 <fieldset class="adminform">
 					<div class="control-group">
 						<div class="control-label"><?php echo $this->form->getLabel('state'); ?></div>
@@ -209,19 +203,19 @@ $document->addStyleSheet('components/com_imc/assets/css/imc.css');
 					</div>
                 </fieldset>	
 			</div>		
-            <div class="span6 form-horizontal">
+            <div class="span6">
                 <fieldset class="adminform">
 					<div class="control-group">
 						<div class="control-label"><?php echo $this->form->getLabel('created'); ?></div>
-						<div class="controls"><?php echo $this->form->getInput('created'); ?></div>
+						<div class="controls"><strong><?php echo $this->form->getInput('created'); ?></strong></div>
 					</div>
 					<div class="control-group">
 						<div class="control-label"><?php echo $this->form->getLabel('created_by'); ?></div>
-						<div class="controls"><?php echo $this->form->getInput('created_by'); ?></div>
+						<div class="controls"><strong><?php echo $this->form->getInput('created_by'); ?></strong></div>
 					</div>
 					<div class="control-group">
 						<div class="control-label"><?php echo $this->form->getLabel('updated'); ?></div>
-						<div class="controls"><?php echo $this->form->getInput('updated'); ?></div>
+						<div class="controls"><strong><?php echo $this->form->getInput('updated'); ?></strong></div>
 					</div>
 
 					<?php if(!empty($this->item->notification_emails)) : ?>
