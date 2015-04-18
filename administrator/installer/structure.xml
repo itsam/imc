@@ -30,6 +30,7 @@
     <field field_name="extra" field_type="TEXT" description=""/>
     <field field_name="votes" field_type="MEDIUMINT" field_length="8" description=""/>
     <field field_name="modality" field_type="SMALLINT" field_length="6" description=""/>
+    <field field_name="subgroup" field_type="VARCHAR" field_length="255" description=""/>
   </table>
   <table table_name="#__imc_steps" storage_engine="" collation="utf8_general_ci">
     <field field_name="id" field_type="INT" field_length="11" is_autoincrement="1" index="primary" description=""/>

@@ -83,6 +83,10 @@ $document->addStyleSheet('components/com_imc/assets/css/imc.css');
 							<div class="control-label"><?php echo $this->form->getLabel('responsible'); ?></div>
 							<div class="controls"><?php echo $this->form->getInput('responsible'); ?></div>
 						</div>
+						<div class="control-group">
+							<div class="control-label"><?php echo $this->form->getLabel('subgroup'); ?></div>
+							<div class="controls"><?php echo $this->form->getInput('subgroup'); ?></div>
+						</div>
 					</div>
 
 					<div class="control-group">
