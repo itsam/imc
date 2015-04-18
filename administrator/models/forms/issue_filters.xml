@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+	<fieldset addfieldpath="/components/com_imc/models/fields">
+
+        <field name="id" type="text" default="0" label="COM_IMC_FORM_LBL_ISSUE_ID"
+            readonly="true" class="readonly"
+            description="JGLOBAL_FIELD_ID_DESC" /> 
+
+        <field name="title" type="text"
+            label="COM_IMC_FORM_LBL_ISSUE_TITLE"
+            description="COM_IMC_FORM_DESC_ISSUE_TITLE" 
+            required="true" 
+            menu_published="0"
+            filter="string" /> 
+        
+        <field name="moderation" type="radio" default="0" class="btn-group btn-group-yesno" label="COM_IMC_FORM_LBL_ISSUE_MODERATION" description="COM_IMC_FORM_DESC_ISSUE_MODERATION">
+              <option value="0">JNO</option>
+              <option value="1">JYES</option>
+            </field>
+
+        <field name="regnum" type="text"
+                label="COM_IMC_FORM_LBL_ISSUE_REGNUM"
+                description="COM_IMC_FORM_DESC_ISSUE_REGNUM" /> 
+
+        <field name="regdate" type="calendar"
+                label="COM_IMC_FORM_LBL_ISSUE_REGDATE"
+                description="COM_IMC_FORM_DESC_ISSUE_REGDATE" />
+
+        <field name="responsible" type="text"
+                label="COM_IMC_FORM_LBL_ISSUE_RESPONSIBLE"
+                description="COM_IMC_FORM_DESC_ISSUE_RESPONSIBLE" /> 
+
+		<field name="stepid" 
+            type="step" 
+            label="COM_IMC_FORM_LBL_ISSUE_STEPID" 
+            description="" 
+            readonly="true"
+            /> 
+
+        <field name="catid" 
+            type="cat"
+            label="COM_IMC_FORM_LBL_ISSUE_CATID"
+            description="COM_IMC_FORM_DESC_ISSUE_CATID" 
+            readonly="true" 
+            extension="com_imc" 
+            /> 
+        <field name="filter_catid" type="category"
+            label="COM_IMC_FORM_LBL_ISSUE_CATID"
+            description="COM_IMC_FORM_DESC_ISSUE_CATID" 
+            extension="com_imc"> 
+                <option value="">JALL</option>
+        </field> 
+
+        <field name="subgroup" type="subgrouplist"
+            label="COM_IMC_FORM_LBL_ISSUE_SUBGROUP"> 
+              <option value="">JALL</option>
+        </field>
+
+
+        <field name="created" type="timecreated" default="" 
+            label="COM_IMC_FORM_LBL_ISSUE_CREATED"
+            description="COM_IMC_FORM_DESC_ISSUE_CREATED"  /> 
+
+        <field name="updated" type="timeupdated" default="" 
+            label="COM_IMC_FORM_LBL_ISSUE_UPDATED"
+            description="COM_IMC_FORM_DESC_ISSUE_UPDATED"  /> 
+
+        <field name="created_by" type="createdby" default="" 
+            label="COM_IMC_FORM_LBL_ISSUE_CREATED_BY"
+            description="COM_IMC_FORM_DESC_ISSUE_CREATED_BY"  /> 
+
+
+        <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL"
+            description="COM_CONTENT_FIELD_LANGUAGE_DESC">
+            <option value="*">JALL</option>
+        </field>
+
+        <field name="state" type="list" label="JSTATUS"
+            description="JFIELD_PUBLISHED_DESC" class="chzn-color-state"
+            filter="intval" size="1" default="1"
+        >
+            <option value="1">
+                JPUBLISHED</option>
+            <option value="0">
+                JUNPUBLISHED</option>
+        </field>
+
+    </fieldset> 
+
+</form>

@@ -78,6 +78,8 @@ class ImcModelIssues extends JModelList {
 		//Filtering catid
 		$this->setState('filter.catid', $app->getUserStateFromRequest($this->context.'.filter.catid', 'filter_catid', '', 'string'));
 
+        //Filtering subgroup
+        $this->setState('filter.subgroup', $app->getUserStateFromRequest($this->context.'.filter.subgroup', 'filter_subgroup', '', 'string'));
 
         // Load the parameters.
         $params = JComponentHelper::getParams('com_imc');
@@ -203,6 +205,12 @@ class ImcModelIssues extends JModelList {
                 //show nothing
                 $query->where('a.catid = -1');   
             }
+        }
+
+        //Filtering by subgroup
+        $filter_subgroup = $this->state->get("filter.subgroup");
+        if ($filter_subgroup) {
+            $query->where("a.subgroup = '".$db->escape($filter_subgroup)."'");
         }
 
         // Add the list ordering clause.
