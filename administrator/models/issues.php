@@ -193,6 +193,7 @@ class ImcModelIssues extends JModelList {
         //Filtering by category usergroups except if access imc.showall.issues = true
         $canShowAllIssues = $user->authorise('imc.showall.issues');
         if(!$canShowAllIssues){
+            require_once JPATH_COMPONENT . '/helpers/imc.php';
             $allowed_catids = ImcHelper::getCategoriesByUserGroups();
             $allowed_catids = implode(',', $allowed_catids);
             if(!empty($allowed_catids)){
