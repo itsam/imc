@@ -54,8 +54,9 @@ class JFormFieldSubGroupList extends JFormFieldList
 
 			$db = JFactory::getDbo();
 			$user = JFactory::getUser();
-			$isRoot = $user->authorise('core.admin');
-			if($isRoot){
+			$canDo = ImcHelper::getActions();
+			$canShowAllIssues = $canDo->get('imc.showall.issues');
+			if($canShowAllIssues){
 				$query = $db->getQuery(true)
 					->select('a.id AS value')
 					->select('a.title AS text')
