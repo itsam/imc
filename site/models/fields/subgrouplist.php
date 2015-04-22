@@ -43,6 +43,8 @@ class JFormFieldSubGroupList extends JFormFieldList
 	 */
 	protected function getOptions()
 	{
+		$showEmpty = $this->element['showempty'];
+
 		// Hash for caching
 		$hash = md5($this->element);
 
@@ -109,11 +111,18 @@ class JFormFieldSubGroupList extends JFormFieldList
 					->order('a.lft ASC');
 			}
 
-
+        
 			$db->setQuery($query);
 
 			if ($options = $db->loadObjectList())
 			{
+				if($showEmpty){
+					$empty = new stdClass();
+					$empty->value = '0';
+					$empty->text = '';
+					$empty->level = 1;
+					array_unshift($options, $empty);
+				}
 				foreach ($options as &$option)
 				{
 					$option->text = str_repeat('- ', $option->level) . $option->text;

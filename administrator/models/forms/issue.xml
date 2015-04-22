@@ -103,6 +103,7 @@
             height="300px" /> 
 
         <field name="subgroup" type="subgrouplist"
+            showempty="true"
             label="COM_IMC_FORM_LBL_ISSUE_SUBGROUP" />
 
         <field name="latitude" type="hidden"
