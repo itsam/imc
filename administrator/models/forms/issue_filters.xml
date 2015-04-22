@@ -25,6 +25,14 @@
             extension="com_imc" multiple="false"> 
                 <option value="">JALL</option>
         </field> 
+        
+        <field name="stepid" type="sql" class="inputbox"
+            label="COM_IMC_FORM_LBL_ISSUE_STEPID"
+            query="SELECT `id`, `title` AS val FROM `#__imc_steps`" 
+            key_field="id" 
+            value_field="val">
+                <option value="">JALL</option>
+        </field> 
 
         <field name="subgroup" type="subgrouplist"
             label="COM_IMC_FORM_LBL_ISSUE_SUBGROUP"
