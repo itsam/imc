@@ -71,6 +71,9 @@ class ImcTablelog extends JTable {
 			$array['state'] = 0;
 		}
 
+        //TODO: Do we need moderation for administrators as well? Should we include this on settings? Probably not.
+        $array['state'] = 1;
+        
         if (isset($array['params']) && is_array($array['params'])) {
             $registry = new JRegistry();
             $registry->loadArray($array['params']);
