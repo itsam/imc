@@ -53,7 +53,7 @@ class ImcViewLogs extends JViewLegacy {
         $state = $this->get('State');
         $canDo = ImcHelper::getActions($state->get('filter.category_id'));
 
-        $canManageLogs = JFactory::getUser()->authorise('imc.manage.logs'); 
+        $canManageLogs = $canDo->get('imc.manage.logs'); 
 
         JToolBarHelper::title(JText::_('COM_IMC_TITLE_LOGS'), 'logs.png');
 

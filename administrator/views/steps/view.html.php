@@ -26,8 +26,8 @@ class ImcViewSteps extends JViewLegacy {
      * Display the view
      */
     public function display($tpl = null) {
-        $user = JFactory::getUser();
-        $this->canManageSteps = $user->authorise('imc.manage.steps');        
+        $canDo = ImcHelper::getActions();
+        $this->canManageSteps = $canDo->get('imc.manage.steps');
 
         $this->state = $this->get('State');
         $this->items = $this->get('Items');
