@@ -25,8 +25,8 @@ class ImcViewStep extends JViewLegacy {
      * Display the view
      */
     public function display($tpl = null) {
-        $user = JFactory::getUser();
-        $canManageSteps = $user->authorise('imc.manage.steps');
+        $canDo = ImcHelper::getActions();
+        $canManageSteps = $canDo->get('imc.manage.steps');
         if(!$canManageSteps){
             JFactory::getApplication()->enqueueMessage('COM_IMC_ACTION_NOT_ALLOWED', 'error');
             return;

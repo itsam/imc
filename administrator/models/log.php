@@ -59,7 +59,9 @@ class ImcModelLog extends JModelAdmin
 			return false;
 		}
 
-		$canManageLogs = JFactory::getUser()->authorise('imc.manage.logs');
+		$canDo = ImcHelper::getActions();
+		$canManageLogs = $canDo->get('imc.manage.logs');
+
 		if(!$canManageLogs) {
 			//TODO: This alert to be moved on view
 			echo '<div class="alert alert-info"><button type="button" class="close" data-dismiss="alert">×</button>'.JText::_('COM_IMC_ACTION_ALERT').'</div>';

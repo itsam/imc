@@ -44,15 +44,15 @@ class ImcViewLog extends JViewLegacy {
     protected function addToolbar() {
         JFactory::getApplication()->input->set('hidemainmenu', true);
 
+        $canDo = ImcHelper::getActions();
         $user = JFactory::getUser();
-        $canManageLogs = $user->authorise('imc.manage.logs');
+        $canManageLogs = $canDo->get('imc.manage.logs');
         $isNew = ($this->item->id == 0);
         if (isset($this->item->checked_out)) {
             $checkedOut = !($this->item->checked_out == 0 || $this->item->checked_out == $user->get('id'));
         } else {
             $checkedOut = false;
         }
-        $canDo = ImcHelper::getActions();
 
         JToolBarHelper::title(JText::_('COM_IMC_TITLE_LOG'), 'stack');
         if($canManageLogs){

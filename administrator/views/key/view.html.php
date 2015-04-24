@@ -26,7 +26,8 @@ class ImcViewKey extends JViewLegacy {
      */
     public function display($tpl = null) {
         $user = JFactory::getUser();
-        $canManageKeys = $user->authorise('imc.manage.keys');
+        $canDo = ImcHelper::getActions();
+        $canManageKeys = $canDo->get('imc.manage.keys');
         if(!$canManageKeys){
             JFactory::getApplication()->enqueueMessage('COM_IMC_ACTION_NOT_ALLOWED', 'error');
             return;

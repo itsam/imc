@@ -47,6 +47,19 @@ class ImcFrontendHelper {
 		return $db->loadAssoc();
 	}
 
+	public static function getGroupNameById($group_id) {
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+
+		$query
+			->select('title')
+			->from('#__usergroups')
+			->where('id = ' . intval($group_id));
+
+		$db->setQuery($query);
+		return $db->loadResult();	
+	}
+
 	public static function getRelativeTime($time)
 	{
 		if(strtotime($time) <= 0)

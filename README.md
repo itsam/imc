@@ -1,11 +1,9 @@
-# Improve My City for J3 (beta version) #
+# Improve My City for J3 (RC version) #
 
 *Important note: Do not use in production site yet. This version is only for early adopters and testing*
-
-Release version *is expected* by 12 Mar.
 
 At current state you need a Bootstrap-compatible theme to get the most out of the IMC app.
 Testing is based on open source template [Purity III from Joomlart](http://www.joomlart.com/joomla/templates/purity-iii)
 
 
-This project is supported by [ICOS/URENIO](http://icos.urenio.org/) and [Infalia Private Company](http://www.infalia.com)
+This project is supported by [ICOS/URENIO](http://icos.urenio.org/) and [Infalia Private Company](http://www.infalia.com).

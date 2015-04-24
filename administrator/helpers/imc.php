@@ -76,7 +76,17 @@ class ImcHelper {
         $assetName = 'com_imc';
 
         $actions = array(
-            'core.admin', 'core.manage', 'core.create', 'core.edit', 'core.edit.own', 'core.edit.state', 'core.delete'
+            'core.admin', 
+            'core.manage', 
+            'core.create', 
+            'core.edit', 
+            'core.edit.own', 
+            'core.edit.state', 
+            'core.delete',
+            'imc.manage.keys',
+            'imc.manage.steps',
+            'imc.manage.logs',
+            'imc.showall.issues'
         );
 
         foreach ($actions as $action) {
