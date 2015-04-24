@@ -58,7 +58,7 @@ class ImcViewKeys extends JViewLegacy {
      */
     protected function addToolbar() {
         if(!$this->canManageKeys){
-            JToolBarHelper::title(JText::_('COM_IMC_TITLE_KEYS'), 'keys.png');
+            JToolBarHelper::title(JText::_('COM_IMC_TITLE_KEYS'), 'key');
             //JToolBarHelper::back();
             $bar = JToolBar::getInstance('toolbar');
             $bar->appendButton('Link', 'leftarrow', 'COM_IMC_BACK', JRoute::_('index.php?option=com_imc', false));
@@ -70,7 +70,7 @@ class ImcViewKeys extends JViewLegacy {
         $state = $this->get('State');
         $canDo = ImcHelper::getActions($state->get('filter.category_id'));
 
-        JToolBarHelper::title(JText::_('COM_IMC_TITLE_KEYS'), 'keys.png');
+        JToolBarHelper::title(JText::_('COM_IMC_TITLE_KEYS'), 'key');
 
         //Check if the form exists before showing the add/edit buttons
         $formPath = JPATH_COMPONENT_ADMINISTRATOR . '/views/key';

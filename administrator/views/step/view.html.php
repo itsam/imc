@@ -60,7 +60,7 @@ class ImcViewStep extends JViewLegacy {
         }
         $canDo = ImcHelper::getActions();
 
-        JToolBarHelper::title(JText::_('COM_IMC_TITLE_STEP'), 'step.png');
+        JToolBarHelper::title(JText::_('COM_IMC_TITLE_STEP'), 'drawer-2');
 
         // If not checked out, can save the item.
         if (!$checkedOut && ($canDo->get('core.edit') || ($canDo->get('core.create')))) {

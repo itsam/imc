@@ -53,7 +53,7 @@ class ImcViewIssues extends JViewLegacy {
         $state = $this->get('State');
         $canDo = ImcHelper::getActions($state->get('filter.category_id'));
 
-        JToolBarHelper::title(JText::_('COM_IMC_TITLE_ISSUES'), 'issues.png');
+        JToolBarHelper::title(JText::_('COM_IMC_TITLE_ISSUES'), 'drawer');
 
         //Check if the form exists before showing the add/edit buttons
         $formPath = JPATH_COMPONENT_ADMINISTRATOR . '/views/issue';

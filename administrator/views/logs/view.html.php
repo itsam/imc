@@ -55,7 +55,7 @@ class ImcViewLogs extends JViewLegacy {
 
         $canManageLogs = JFactory::getUser()->authorise('imc.manage.logs'); 
 
-        JToolBarHelper::title(JText::_('COM_IMC_TITLE_LOGS'), 'logs.png');
+        JToolBarHelper::title(JText::_('COM_IMC_TITLE_LOGS'), 'stack');
 
         //Check if the form exists before showing the add/edit buttons
         $formPath = JPATH_COMPONENT_ADMINISTRATOR . '/views/log';

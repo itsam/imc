@@ -11,7 +11,8 @@ defined('_JEXEC') or die;
 
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 JHtml::_('behavior.tooltip');
-JHtml::_('behavior.formvalidation');
+JHtml::_('behavior.modal');
+JHtml::_('behavior.formvalidator');
 JHtml::_('formbehavior.chosen', 'select');
 JHtml::_('behavior.keepalive');
 
@@ -145,6 +146,8 @@ $document->addStyleSheet('components/com_imc/assets/css/imc.css');
         
         <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'logging', JText::_('COM_IMC_TITLE_LOGS', true)); ?>
         	<div class="span12">
+        		<a class="modal" href="index.php?option=com_users&view=user&layout=edit&tmpl=component" rel="{handler: 'iframe', size: {x: 640, y: 540}}"> Edit Login Details</a>
+        		<a href="<?php echo JRoute::_('index.php?option=com_imc&view=step&layout=modal&tmpl=component&client_id='.$this->item->id); ?>" class="modal"><span class="icon icon-cog"></span>test</a>
 	        	<table class="table table-striped">
 	        		<thead>
 	        			<tr>

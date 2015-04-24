@@ -53,7 +53,7 @@ class ImcViewComments extends JViewLegacy {
         $state = $this->get('State');
         $canDo = ImcHelper::getActions($state->get('filter.category_id'));
 
-        JToolBarHelper::title(JText::_('COM_IMC_TITLE_COMMENTS'), 'comments.png');
+        JToolBarHelper::title(JText::_('COM_IMC_TITLE_COMMENTS'), 'comments-2');
 
         //Check if the form exists before showing the add/edit buttons
         $formPath = JPATH_COMPONENT_ADMINISTRATOR . '/views/comment';

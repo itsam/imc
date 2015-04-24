@@ -60,7 +60,7 @@ class ImcViewKey extends JViewLegacy {
         }
         $canDo = ImcHelper::getActions();
 
-        JToolBarHelper::title(JText::_('COM_IMC_TITLE_KEY'), 'key.png');
+        JToolBarHelper::title(JText::_('COM_IMC_TITLE_KEY'), 'key');
 
         // If not checked out, can save the item.
         if (!$checkedOut && ($canDo->get('core.edit') || ($canDo->get('core.create')))) {
