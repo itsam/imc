@@ -1,4 +1,4 @@
-# Improve My City for J3 (beta version) #
+# Improve My City for J3 (RC version) #
 
 *Important note: Do not use in production site yet. This version is only for early adopters and testing*
 
