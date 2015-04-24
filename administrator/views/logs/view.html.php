@@ -62,7 +62,8 @@ class ImcViewLogs extends JViewLegacy {
         if (file_exists($formPath)) {
 
             if ($canDo->get('core.create') && $canManageLogs) {
-                JToolBarHelper::addNew('log.add', 'JTOOLBAR_NEW');
+                //Log populated automatically thus no need to allow add new
+                //JToolBarHelper::addNew('log.add', 'JTOOLBAR_NEW');
             }
 
             if ($canDo->get('core.edit') && isset($this->items[0]) && $canManageLogs) {

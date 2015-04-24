@@ -124,6 +124,9 @@ class JFormFieldStep extends JFormField
 
 	
 		if($readonly){
+			if($this->value == 0) {
+				return '--';
+			}
 			$s = $this->getItemById($this->value);
 			$html = array();
 			$html[] = '<div>';
