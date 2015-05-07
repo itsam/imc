@@ -19,6 +19,7 @@ require_once JPATH_COMPONENT_SITE . '/helpers/imc.php';
 	    visibility: hidden;
 	    height: 0;
 	  }
+	  body {margin: 0;padding:0;}
 	  #section-to-print, #section-to-print * {
 	    visibility: visible;
 	    height: auto;
