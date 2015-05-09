@@ -21,6 +21,7 @@ class ModImcfiltersHelper {
         return $votes;
     }
 
+    //TODO: getCategories + loadCats to be replaced with getOptions like subgrouplist.php does
     public static function getCategories($recursive = false)
     {
         $_categories = JCategories::getInstance('Imc');
@@ -135,37 +136,8 @@ class ModImcfiltersHelper {
 
     public static function getCategoryFilters($cat_id = 0) {
         $categories = ModImcfiltersHelper::getCategories();
-        return ModImcfiltersHelper::createFiltersAsArray($categories);
-        /*
-        $categories = ModImcfiltersHelper::getCategories();
-        $tree = array();
-        foreach ($categories as $row) {
-            if($row['parent_id'] == 1) {
-                $row['Children'] = array();
-                $tree[$row['id']] = $row;
-            } else {
-                $tree[$row['parent_id']]['Children'][] = $row;
-            }       
-        }
-        */
-    
-        /*       
-        $tree = array();
-        $categories = JCategories::getInstance('Imc');
-        $cat = $categories->get($cat_id);
-        $children = $cat->getChildren(); 
-        foreach ($children as $child) {
-            //echo ':'.$child->title . '<br />';
-            $tree[$child->id] = $child->title;
-            ModImcfiltersHelper::createCategoryFilters($child->id);
-        }
-
-        return $tree;
-        */
-
-        /*
-        return JHtmlCategory::options('com_imc');
-        */
+        $filters = ModImcfiltersHelper::createFiltersAsArray($categories);
+        return array_filter($filters);
     }
 
    

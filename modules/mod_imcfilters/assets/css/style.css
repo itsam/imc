@@ -11,3 +11,25 @@
 .imc_btn_left {float: left;}
 .imc_btn_right {float: right;}
 .imc_ulist {list-style-type: none;}
+
+#filter_search {
+    width: 300px;
+}
+#searchclear {
+    position: absolute;
+    right: 5px;
+    top: 0;
+    bottom: 0;
+    height: 14px;
+    margin: auto;
+    font-size: 14px;
+    cursor: pointer;
+    color: #ccc;
+}
+
+.modal.modal-wide .modal-dialog {
+  width: 90%;
+}
+.modal-wide .modal-body {
+  overflow-y: auto;
+}

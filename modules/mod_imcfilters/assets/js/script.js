@@ -6,6 +6,16 @@
  * @author      Ioannis Tsampoulatidis <tsampoulatidis@gmail.com> - https://github.com/itsam
  */
 
+jQuery(document).ready(function() {
+	jQuery("#searchclear").click(function(){
+	   jQuery("#filter_search").val('');
+	});
+
+	jQuery(".modal-wide").on("show.bs.modal", function() {
+	  var height = jQuery(window).height() - 200;
+	  jQuery(this).find(".modal-body").css("max-height", height);
+	});	
+});
 //show markers according to filtering
 function show(category) {
 	// == check the checkbox ==

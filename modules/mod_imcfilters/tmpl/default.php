@@ -46,7 +46,7 @@ $id = $jinput->get('id', null);
 			</span>				
 		<?php else : ?>
 			<div class="imc_btn_left">
-				<a id="filters_btn" href="#filtersModal" role="button" class="btn btn-primary" data-toggle="modal"><i class="icon-filter"></i> <?php echo JText::_('MOD_IMCFILTERS_FILTERS'); ?></a>
+				<a id="search_btn" href="#searchModal" role="button" class="btn btn-primary" data-toggle="modal"><i class="icon-search"></i> <?php echo JText::_('MOD_IMCFILTERS_SEARCH'); ?></a>
 				<div class="btn-group">
 				  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 				    <?php echo JText::_('MOD_IMCFILTERS_ORDERING'); ?> <span class="caret"></span>
@@ -113,20 +113,49 @@ $id = $jinput->get('id', null);
 	</div>
 
 	<!-- Modal -->
-	<div id="filtersModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="filtersModalLabel" aria-hidden="true">
+	<div id="searchModal" class="modal modal-wide fade" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-sm">
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-					<h3 id="filtersModalLabel"><?php echo JText::_('MOD_IMCFILTERS_FILTERS'); ?></h3>
+					<h3 id="searchModalLabel"><?php echo JText::_('MOD_IMCFILTERS_SEARCH'); ?></h3>
 				</div>
 				<div class="modal-body">
-					<p id="filtersBody">
-						<?php $category_filters = ModImcfiltersHelper::getCategoryFilters();?>
-						<?php foreach ($category_filters as $filter) : ?>
-							<?php echo $filter; ?>
-						<?php endforeach; ?>
-					</p>
+					<div class="btn-group">
+					  <input id="filter_search" placeholder="<?php echo JText::_('MOD_IMCFILTERS_SEARCH_PLACEHOLDER');?>" name="filter_search" type="search" class="form-control" value="<?php echo $search; ?>">
+					  <span id="searchclear" class="glyphicon glyphicon-remove-circle"></span>
+					</div>
+					<?php if (JFactory::getUser()->id > 0) : ?>
+						<br /><br />
+						<input type="hidden" id="filter_owned_hidden" name="filter_owned" value="no" />
+					    <label class="checkbox inline">
+							<input type="checkbox" id="filter_owned" name="filter_owned" value="yes" <?php echo ($owned == 'yes' ? 'checked="checked"' : ''); ?> > <?php echo JText::_('MOD_IMCFILTERS_SHOW_MINE');?>
+						</label>
+					<?php endif; ?>
+					<hr />
+				    
+
+
+				    
+					
+					<?php $category_filters = ModImcfiltersHelper::getCategoryFilters(); ?>
+
+					<div class="container-fluid">
+					  <div class="row">
+							<?php foreach ($category_filters as $filter) : ?>
+						  		<div class="col-md-4">
+									<?php echo $filter; ?>
+						  		</div>
+							<?php endforeach; ?>
+					  </div>
+					</div>
+
+
+					
+					
+
+
+					
 				</div>
 				<div class="modal-footer">
 					<button id="cancel_filters" class="btn btn-default" data-dismiss="modal" aria-hidden="true"><?php echo JText::_('JCANCEL');?></button>
