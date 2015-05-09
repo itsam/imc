@@ -21,6 +21,28 @@ class ModImcfiltersHelper {
         return $votes;
     }
 
+    public static function createStatuses() 
+    {
+        $app = JFactory::getApplication();
+        $filter_steps = $app->getUserStateFromRequest('com_imc.issues.filter.steps', 'steps', array());
+
+        //get issue statuses
+        JFormHelper::addFieldPath(JPATH_ROOT . '/components/com_imc/models/fields');
+        $step = JFormHelper::loadFieldType('Step', false);
+        $statuses = $step->getOptions();
+
+        $str = '<ul class="imc_ulist imc_ulist_inline">';
+        foreach ($statuses as $status) {
+            $str .= '<li>';
+            $str .= '<input type="checkbox" name="steps[]" value="'.$status->value.'" '. (in_array($status->value, $filter_steps) ? 'checked="checked"' : '') . '>';
+            $str .= '<span class="root">'.' '.$status->text.'</span>';
+            $str .= '</li>';
+        }
+        $str .= '</ul>';
+        
+        return $str;        
+    }
+
     //TODO: getCategories + loadCats to be replaced with getOptions like subgrouplist.php does
     public static function getCategories($recursive = false)
     {
@@ -69,7 +91,7 @@ class ModImcfiltersHelper {
     private static function createFilters($cats = array())
     {
         $app = JFactory::getApplication();
-        $filter_category = $app->getUserStateFromRequest('com_imc.pois.filter.category', 'cat', array());
+        $filter_category = $app->getUserStateFromRequest('com_imc.issues.filter.category', 'cat', array());
     
         self::$filters .= '<ul class="imc_ulist">';
         foreach($cats as $JCatNode){

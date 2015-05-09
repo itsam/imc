@@ -15,7 +15,16 @@ jQuery(document).ready(function() {
 	  var height = jQuery(window).height() - 200;
 	  jQuery(this).find(".modal-body").css("max-height", height);
 	});	
+
+	jQuery('#selectAllCategories').click(function(event) {  
+		jQuery(':checkbox[name="cat[]"]').prop('checked', this.checked);
+    });
+
+	jQuery('#selectAllSteps').click(function(event) {  
+		jQuery(':checkbox[name="steps[]"]').prop('checked', this.checked);
+    });
 });
+
 //show markers according to filtering
 function show(category) {
 	// == check the checkbox ==
@@ -28,6 +37,7 @@ function hide(category) {
 }
 
 //--- non recursive since IE cannot handle it (doh!!)
+//TODO: replace with jQuery
 function imc_filterbox_click(box, category) {
 	if (box.checked) {
 		show(category);
@@ -55,6 +65,12 @@ function imc_filterbox_click(box, category) {
 	}
 	return false;
 }
+
+function imc_toggle_checkboxes(elem) {
+
+}
+
+
 
 function vote(issue_id, user_id, token){
 	jQuery.ajax({ 

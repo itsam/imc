@@ -21,6 +21,7 @@ $app = JFactory::getApplication();
 $search = $app->getUserStateFromRequest('com_imc.issues.filter.search', 'filter_search');
 $owned = $app->getUserStateFromRequest('com_imc.issues.filter.owned', 'filter_owned');
 $cat = $app->getUserStateFromRequest('com_imc.issues.filter.category', 'cat', array()); 
+$steps = $app->getUserStateFromRequest('com_imc.issues.filter.steps', 'steps', array()); 
 
 $jinput = $app->input;
 $option = $jinput->get('option', null);
@@ -133,13 +134,12 @@ $id = $jinput->get('id', null);
 						</label>
 					<?php endif; ?>
 					<hr />
-				    
-
-
-				    
 					
+					<h4>
+						<input type="checkbox" checked="checked" id="selectAllCategories">
+						<?php echo JText::_('MOD_IMCFILTERS_CATEGORIES');?>
+					</h4>
 					<?php $category_filters = ModImcfiltersHelper::getCategoryFilters(); ?>
-
 					<div class="container-fluid">
 					  <div class="row">
 							<?php foreach ($category_filters as $filter) : ?>
@@ -149,10 +149,22 @@ $id = $jinput->get('id', null);
 							<?php endforeach; ?>
 					  </div>
 					</div>
+					<hr />
 
-
-					
-					
+					<h4>
+						<input type="checkbox" checked="checked" id="selectAllSteps">
+						<?php echo JText::_('MOD_IMCFILTERS_ISSUE_STATUSES');?>
+					</h4>
+					<div class="container-fluid">
+						<div class="row">
+						  	<div class="col-md-12">
+							<?php 
+								$statuses = ModImcfiltersHelper::createStatuses();
+								echo $statuses;
+							?>
+							</div>
+						</div>
+					</div>					
 
 
 					

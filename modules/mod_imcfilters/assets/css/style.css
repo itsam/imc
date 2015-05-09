@@ -11,6 +11,11 @@
 .imc_btn_left {float: left;}
 .imc_btn_right {float: right;}
 .imc_ulist {list-style-type: none;}
+.imc_ulist_inline li {display: inline; padding-right:30px;}
+
+#searchModal input[type="checkbox"] {
+	vertical-align: top;
+}
 
 #filter_search {
     width: 300px;
