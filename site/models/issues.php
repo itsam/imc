@@ -100,8 +100,11 @@ class ImcModelIssues extends JModelList {
         //Filtering catid
         //$this->setState('filter.catid', $app->getUserStateFromRequest($this->context.'.filter.catid', 'filter_catid', '', 'string'));
         
+        
+        $steps = $app->getUserStateFromRequest($this->context . '.filter.steps', 'steps', array()); 
+        $this->setState('filter.steps', $steps);
         //Filtering stepid
-        $this->setState('filter.stepid', $app->getUserStateFromRequest($this->context.'.filter.stepid', 'filter_stepid', '', 'string'));
+        //$this->setState('filter.stepid', $app->getUserStateFromRequest($this->context.'.filter.stepid', 'filter_stepid', '', 'string'));
 
         //Filtering owned
         $this->setState('filter.owned', $app->getUserStateFromRequest($this->context.'.filter.owned', 'filter_owned', 'no', 'string'));
@@ -190,16 +193,16 @@ class ImcModelIssues extends JModelList {
         }        
 
         //Filtering stepid
-        if ($stepid = $this->getState('filter.stepid'))
-        {
-            $query->where('a.stepid = ' . (int) $stepid);
-        }
+        // if ($stepid = $this->getState('filter.stepid'))
+        // {
+        //     $query->where('a.stepid = ' . (int) $stepid);
+        // }
 
-        $filter_category = $this->state->get('filter.category');
-        if(!empty($filter_category)){
-            if(!in_array(0, $filter_category)){
-                $filter_category = implode(',', $filter_category);
-                $query->where('a.catid IN ('.$filter_category.')');
+        $filter_steps = $this->state->get('filter.steps');
+        if(!empty($filter_steps)){
+            if(!in_array(0, $filter_steps)){
+                $filter_steps = implode(',', $filter_steps);
+                $query->where('a.stepid IN ('.$filter_steps.')');
             }
         }        
 
