@@ -1,35 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config>
-
-  <fieldset  
-        name="generic" 
-        class="form-horizontal" 
-        label="COM_IMC_SETTINGS_GENERIC_LABEL"
-        description="COM_IMC_SETTINGS_GENERIC_DESC">
-        
-
-        <field name="newissueneedsmoderation" type="radio" default="0" class="btn-group btn-group-yesno" label="COM_IMC_SETTINGS_NEW_ISSUE_MODERATION_LABEL" description="COM_IMC_SETTINGS_NEW_ISSUE_MODERATION_DESC">
-          <option value="0">JNO</option>
-          <option value="1">JYES</option>
-        </field>
-
-        <field type="spacer" name="myspacer" hr="true" />
-        <field type="spacer" name="timelinespacer" class="text"
-        label="COM_IMC_SETTINGS_TIMELINE_LABEL"
-        />
-
-        <field name="showadmindetailstimeline" type="radio" default="1" class="btn-group btn-group-yesno" label="COM_IMC_SETTINGS_TIMELINE_SHOW_ADMIN_LABEL" description="COM_IMC_SETTINGS_TIMELINE_SHOW_ADMIN_DESC">
-          <option value="0">JNO</option>
-          <option value="1">JYES</option>
-        </field>
-
-        <field name="showuserdetailstimeline" type="radio" default="1" class="btn-group btn-group-yesno" label="COM_IMC_SETTINGS_TIMELINE_SHOW_USER_LABEL" description="COM_IMC_SETTINGS_TIMELINE_SHOW_USER_DESC">
-          <option value="0">JNO</option>
-          <option value="1">JYES</option>
-        </field>
-
-  </fieldset>
-
   <fieldset addfieldpath="/components/com_imc/models/fields" 
         name="map" 
         class="form-horizontal" 
@@ -106,7 +76,34 @@
       </field>
 
   </fieldset>
+  <fieldset  
+        name="generic" 
+        class="form-horizontal" 
+        label="COM_IMC_SETTINGS_GENERIC_LABEL"
+        description="COM_IMC_SETTINGS_GENERIC_DESC">
+        
 
+        <field name="newissueneedsmoderation" type="radio" default="0" class="btn-group btn-group-yesno" label="COM_IMC_SETTINGS_NEW_ISSUE_MODERATION_LABEL" description="COM_IMC_SETTINGS_NEW_ISSUE_MODERATION_DESC">
+          <option value="0">JNO</option>
+          <option value="1">JYES</option>
+        </field>
+
+        <field type="spacer" name="myspacer" hr="true" />
+        <field type="spacer" name="timelinespacer" class="text"
+        label="COM_IMC_SETTINGS_TIMELINE_LABEL"
+        />
+
+        <field name="showadmindetailstimeline" type="radio" default="1" class="btn-group btn-group-yesno" label="COM_IMC_SETTINGS_TIMELINE_SHOW_ADMIN_LABEL" description="COM_IMC_SETTINGS_TIMELINE_SHOW_ADMIN_DESC">
+          <option value="0">JNO</option>
+          <option value="1">JYES</option>
+        </field>
+
+        <field name="showuserdetailstimeline" type="radio" default="1" class="btn-group btn-group-yesno" label="COM_IMC_SETTINGS_TIMELINE_SHOW_USER_LABEL" description="COM_IMC_SETTINGS_TIMELINE_SHOW_USER_DESC">
+          <option value="0">JNO</option>
+          <option value="1">JYES</option>
+        </field>
+
+  </fieldset>
     
   <fieldset name="permissions"
       	    description="JCONFIG_PERMISSIONS_DESC"
