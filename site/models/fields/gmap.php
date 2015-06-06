@@ -231,7 +231,7 @@ class JFormFieldGmap extends JFormField
 		$html[] = '</div>';		
 
 		$html[] = '<!-- Modal -->';
-		$html[] = '<div id="searchModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">';
+		$html[] = '<div id="IMC_searchModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">';
 		$html[] = '	<div class="modal-dialog modal-sm">';
 		$html[] = '		<div class="modal-content">';
 		$html[] = '			<div class="modal-header">';

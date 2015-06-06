@@ -77,12 +77,12 @@ function codeAddress() {
 				var lat = results[i].geometry.location.lat();
 				var lng = results[i].geometry.location.lng();
 				var addr = results[i].formatted_address;
-				html += '<a style="cursor: pointer;" onclick="applySearchResult('+lat+','+lng+',\''+addr+'\');jQuery(\'#searchModal\').modal(\'hide\');">'+addr+'</a>';
+				html += '<a style="cursor: pointer;" onclick="applySearchResult('+lat+','+lng+',\''+addr+'\');jQuery(\'#IMC_searchModal\').modal(\'hide\');">'+addr+'</a>';
 				html += '</li>';
 			};
 			html += '</ul>';
 			jQuery('#searchBody').html(html);
-    		jQuery('#searchModal').modal('show');
+    		jQuery('#IMC_searchModal').modal('show');
 		}
 		else{
 			applySearchResult(results[0].geometry.location.lat(), 

@@ -47,7 +47,7 @@ $id = $jinput->get('id', null);
 			</span>				
 		<?php else : ?>
 			<div class="imc_btn_left">
-				<a id="search_btn" href="#searchModal" role="button" class="btn btn-primary" data-toggle="modal"><i class="icon-search"></i> <?php echo JText::_('MOD_IMCFILTERS_SEARCH'); ?></a>
+				<a id="search_btn" href="#IMC_advancedSearchModal" role="button" class="btn btn-primary" data-toggle="modal"><i class="icon-search"></i> <?php echo JText::_('MOD_IMCFILTERS_SEARCH'); ?></a>
 				<div class="btn-group">
 				  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 				    <?php echo JText::_('MOD_IMCFILTERS_ORDERING'); ?> <span class="caret"></span>
@@ -114,7 +114,7 @@ $id = $jinput->get('id', null);
 	</div>
 
 	<!-- Modal -->
-	<div id="searchModal" class="modal modal-wide fade" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+	<div id="IMC_advancedSearchModal" class="modal modal-wide fade" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-sm">
 			<div class="modal-content">
 				<div class="modal-header">
