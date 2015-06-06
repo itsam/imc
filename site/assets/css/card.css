@@ -13,6 +13,9 @@
   opacity: 0.25;
 }
 
+.panel-body .label {
+  white-space: normal;
+}
 
 /*
 #columns, #columns > div[class*='col-'] {  
