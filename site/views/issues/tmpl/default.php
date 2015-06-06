@@ -72,16 +72,18 @@ $userId = $user->get('id');
                     
                     <?php //show photo if any
                         $i = 0;
-                        foreach ($attachments->files as $file) {
-                            if (isset($file->thumbnailUrl)){
-                                echo '<div class="panel-thumbnail">'. "\n";
-                                echo '<a href="'. JRoute::_('index.php?option=com_imc&view=issue&id='.(int) $item->id).'">';
-                                echo '<img src="'.$attachments->imagedir .'/'. $attachments->id . '/medium/' . ($attachments->files[$i]->name) .'" alt="issue photo" class="img-responsive" />' . "\n";
-                                echo '</a>';
-                                echo '</div>'. "\n";
-                                break;
-                            }  
-                            $i++;  
+                        if(isset($attachments->files)){
+                            foreach ($attachments->files as $file) {
+                                if (isset($file->thumbnailUrl)){
+                                    echo '<div class="panel-thumbnail">'. "\n";
+                                    echo '<a href="'. JRoute::_('index.php?option=com_imc&view=issue&id='.(int) $item->id).'">';
+                                    echo '<img src="'.$attachments->imagedir .'/'. $attachments->id . '/medium/' . ($attachments->files[$i]->name) .'" alt="issue photo" class="img-responsive" />' . "\n";
+                                    echo '</a>';
+                                    echo '</div>'. "\n";
+                                    break;
+                                }  
+                                $i++;  
+                            }
                         }
                     ?>
 
@@ -96,9 +98,10 @@ $userId = $user->get('id');
                             <?php else : ?>
                               <?php echo $this->escape($item->title); ?>
                             <?php endif; ?>
-                            <?php if (isset($item->checked_out) && $item->checked_out) : ?>
+                            <?php /*uncomment if you like to display a lock icon */
+                              /*if (isset($item->checked_out) && $item->checked_out) : ?>
                               <i class="icon-lock"></i> <?php echo JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, 'issues.', $canCheckin); ?>
-                            <?php endif; ?>
+                            <?php endif; */ ?>
                         </p>
 
                         <?php if($item->updated == $item->created) : ?>
@@ -108,7 +111,7 @@ $userId = $user->get('id');
                         <?php endif; ?>
                         <span class="label label-info" style="background-color: <?php echo $item->stepid_color;?>" title="<?php echo JText::_('COM_IMC_ISSUES_STEPID');?>"><?php echo $item->stepid_title; ?></span>
                         <span class="label label-default" title="<?php echo JText::_('COM_IMC_ISSUES_CATID');?>"><?php echo $item->catid_title; ?></span>
-                        <span class="label label-default" title="<?php echo JText::_('COM_IMC_TITLE_COMMENTS');?>"><i class="icon-comment"></i> 0</span>
+                        <br /><span class="label label-default" title="<?php echo JText::_('COM_IMC_TITLE_COMMENTS');?>"><i class="icon-comment"></i> 0</span>
                         <?php if (JFactory::getUser()->id == $item->created_by && $item->votes > 0) : ?>
                         <span class="label label-default" title="<?php echo JText::_('COM_IMC_ISSUES_VOTES');?>">+<?php echo $item->votes; ?></span>
                         <?php endif; ?>
