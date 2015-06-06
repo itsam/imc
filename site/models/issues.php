@@ -89,7 +89,8 @@ class ImcModelIssues extends JModelList {
         $search = $app->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
         $this->setState('filter.search', $search);
 
-        $published = $app->getUserStateFromRequest($this->context . '.filter.state', 'filter_published', '', 'string');
+        //$published = $app->getUserStateFromRequest($this->context . '.filter.state', 'filter_published', '', 'string');
+        $published = 1;
         $this->setState('filter.state', $published);
 
         $access = $app->getUserStateFromRequest($this->context . '.filter.access', 'filter_access');
@@ -152,19 +153,20 @@ class ImcModelIssues extends JModelList {
             ->join('LEFT', '#__imc_steps AS st ON st.id = a.stepid');
         
         // Filter by published state
-        // $published = $this->getState('filter.state');
-        // if (is_numeric($published)) {
-        //     $query->where('a.state = ' . (int) $published);
-        // } else if ($published === '') {
-        //     $query->where('(a.state IN (0, 1))');
-        // }
-        $query->where('a.state = 1');        
+        $published = $this->getState('filter.state');
+         if (is_numeric($published)) {
+             $query->where('a.state = ' . (int) $published);
+         } else if ($published === '') {
+             $query->where('(a.state IN (0, 1))');
+         }
+        //$query->where('a.state = 1');        
 
         // Filter by moderation
         $query->where('
+            (
             (a.created_by > 0 AND a.created_by  ='.$user->id.' AND a.moderation IN (0,1)) OR 
             (a.created_by > 0 AND a.created_by !='.$user->id.' AND a.moderation = 0)
-            
+            )
         ');
 
         // Filter by search in title
