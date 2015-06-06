@@ -30,16 +30,26 @@ class ModImcfiltersHelper {
         JFormHelper::addFieldPath(JPATH_ROOT . '/components/com_imc/models/fields');
         $step = JFormHelper::loadFieldType('Step', false);
         $statuses = $step->getOptions();
-
-        $str = '<ul class="imc_ulist imc_ulist_inline">';
-        foreach ($statuses as $status) {
-            $str .= '<li>';
-            $str .= '<input type="checkbox" name="steps[]" value="'.$status->value.'" '. (in_array($status->value, $filter_steps) ? 'checked="checked"' : '') . '>';
-            $str .= '<span class="root">'.' '.$status->text.'</span>';
-            $str .= '</li>';
+        if(empty($filter_steps)){
+            $str = '<ul class="imc_ulist imc_ulist_inline">';
+            foreach ($statuses as $status) {
+                $str .= '<li>';
+                $str .= '<input type="checkbox" name="steps[]" value="'.$status->value.'" '. 'checked="checked"' . '>';
+                $str .= '<span class="root">'.' '.$status->text.'</span>';
+                $str .= '</li>';
+            }
+            $str .= '</ul>';
         }
-        $str .= '</ul>';
-        
+        else {
+            $str = '<ul class="imc_ulist imc_ulist_inline">';
+            foreach ($statuses as $status) {
+                $str .= '<li>';
+                $str .= '<input type="checkbox" name="steps[]" value="'.$status->value.'" '. (in_array($status->value, $filter_steps) ? 'checked="checked"' : '') . '>';
+                $str .= '<span class="root">'.' '.$status->text.'</span>';
+                $str .= '</li>';
+            }
+            $str .= '</ul>';
+        }
         return $str;        
     }
 
