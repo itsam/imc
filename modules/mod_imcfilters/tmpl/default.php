@@ -47,6 +47,9 @@ $id = $jinput->get('id', null);
 			</span>				
 		<?php else : ?>
 			<div class="imc_btn_left">
+				<?php $powered_by = JURI::base() . '/modules/mod_imcfilters/assets/images/powered_by_imc.png'; ?>
+				<a href="http://www.improve-my-city.com" target="_blank"><img src="<?php echo $powered_by; ?>" title="http://www.improve-my-city.com" alt="Powered by Improve My City" /></a>
+
 				<a id="search_btn" href="#IMC_advancedSearchModal" role="button" class="btn btn-primary" data-toggle="modal"><i class="icon-search"></i> <?php echo JText::_('MOD_IMCFILTERS_SEARCH'); ?></a>
 				<div class="btn-group">
 				  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -68,7 +71,10 @@ $id = $jinput->get('id', null);
 				  	<?php echo ModImcfiltersHelper::createLimitBox($state->get('list.limit')); ?>
 				  </ul>
 				</div>		
-				
+				<?php if($params->get('show_help') == 1) : ?>
+					<a id="help_btn" href="<?php echo $params->get('help_link'); ?>" role="button" class="btn btn-default"><i class="icon-help"></i> <?php echo JText::_('MOD_IMCFILTERS_HELP'); ?></a>
+				<?php endif; ?>
+
 
 				<?php /*
 				TODO: Set layout state
@@ -165,9 +171,6 @@ $id = $jinput->get('id', null);
 							</div>
 						</div>
 					</div>					
-
-
-					
 				</div>
 				<div class="modal-footer">
 					<button id="cancel_filters" class="btn btn-default" data-dismiss="modal" aria-hidden="true"><?php echo JText::_('JCANCEL');?></button>

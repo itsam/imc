@@ -28,13 +28,25 @@
             <fieldset
                 name="advanced">
                 <field name="show_on_details"
-                     type="radio"
-                     default="0"
-                     class="btn-group btn-group-yesno"
-                     label="MOD_IMCFILTERS_SHOW_ON_DETAILS">
-                     <option value="0">JNO</option>
-                     <option value="1">JYES</option>
+                    type="radio"
+                    default="0"
+                    class="btn-group btn-group-yesno"
+                    label="MOD_IMCFILTERS_SHOW_ON_DETAILS">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
+                <field name="show_help"
+                    type="radio"
+                    default="0"
+                    class="btn-group btn-group-yesno"
+                    label="MOD_IMCFILTERS_SHOW_HELP">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
                 </field>                
+                <field name="help_link"
+                    type="text"
+                    label="MOD_IMCFILTERS_LINK_TO_HELP" />
+                
                 <field
                     name="layout"
                     type="modulelayout"
