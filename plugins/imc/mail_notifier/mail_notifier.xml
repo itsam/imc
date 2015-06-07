@@ -31,6 +31,9 @@
                 label="PLG_IMC_MAIL_NOTIFIER_SETTINGS_MAIL_NOTIFICATIONS_LABEL"
                 description="PLG_IMC_MAIL_NOTIFIER_SETTINGS_MAIL_NOTIFICATIONS_DESC"
             >
+                <field type="text" name="menualias" label="PLG_IMC_MAIL_NOTIFIER_SETTINGS_MENU_ALIAS_LABEL" description="PLG_IMC_MAIL_NOTIFIER_SETTINGS_MENU_ALIAS_DESC" />
+                <field type="spacer" name="myspacer2" hr="true" /> 
+
                 <field name="mailnewissueuser" type="radio" default="1" class="btn-group btn-group-yesno" label="PLG_IMC_MAIL_NOTIFIER_SETTINGS_ON_NEW_ISSUE_TO_USER_LABEL" description="PLG_IMC_MAIL_NOTIFIER_SETTINGS_ON_NEW_ISSUE_TO_USER_DESC">
                   <option value="0">JNO</option>
                   <option value="1">JYES</option>
