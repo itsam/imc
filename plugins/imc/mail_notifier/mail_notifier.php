@@ -5,7 +5,6 @@ require_once JPATH_COMPONENT_SITE . '/helpers/imc.php';
 
 class plgImcmail_notifier extends JPlugin
 {
-
 	public function onAfterNewIssueAdded($model, $validData, $id = null)
 	{
 		$details = $this->getDetails($id, $model);
@@ -13,6 +12,8 @@ class plgImcmail_notifier extends JPlugin
 
 		$showMsgsFrontend = ($this->params->get('messagesfrontend') && !$app->isAdmin());
 		$showMsgsBackend  = ($this->params->get('messagesbackend') && $app->isAdmin());
+
+		$issueLink =  rtrim(JURI::base(), '/') . JRoute::_('index.php?option=com_imc&view=issue&id='.(int) $id); 
 
 		//Prepare email for admins
 		if ($this->params->get('mailnewissueadmins')){
@@ -31,6 +32,7 @@ class plgImcmail_notifier extends JPlugin
 				//$issueLink
 				//$issueAdminLink 
 			);
+			$body .= '<a href="'.$issueLink.'">'.$issueLink.'</a>';
 		
 			if(empty($details->emails) || $details->emails[0] == ''){
 				if($showMsgsBackend)
@@ -66,6 +68,7 @@ class plgImcmail_notifier extends JPlugin
 				//$issueLink
 				//$issueAdminLink 
 			);
+			$body .= '<a href="'.$issueLink.'">'.$issueLink.'</a>';
 
 			if ($this->sendMail($subject, $body, $details->usermail) ) {
 				if($showMsgsBackend){
@@ -91,20 +94,31 @@ class plgImcmail_notifier extends JPlugin
 		$showMsgsFrontend = ($this->params->get('messagesfrontend') && !$app->isAdmin());
 		$showMsgsBackend  = ($this->params->get('messagesbackend') && $app->isAdmin());
 
+		//$issueLink = rtrim(JURI::root(), '/') . JRoute::_('index.php?option=com_imc&view=issue&id='.(int) ($id == null ? $validData['id'] : $id)); 
+		//TODO: Get menualias from parameters
+		$MENUALIAS = 'imc';
+		$appSite = JApplication::getInstance('site');
+		$router = $appSite->getRouter();
+		$uri = $router->build('index.php?option=com_imc&view=issue&id='.(int) ($id == null ? $validData['id'] : $id));
+		$parsed_url = $uri->toString();
+		$parsed_url = str_replace('administrator/', '', $parsed_url);
+		$parsed_url = str_replace('component/imc', $MENUALIAS, $parsed_url);
+		$issueLink = $_SERVER['HTTP_HOST'] . $parsed_url;
+
 		//Prepare email for admins
 		if ($this->params->get('mailcategorychangeadmins')){
 			$subject = sprintf(
 				JText::_('PLG_IMC_MAIL_NOTIFIER_ADMINS_CATEGORY_MODIFIED_SUBJECT'), 
-				''
+				($id == null ? $validData['id'] : $id)
 				//$details->username, 
 				//$details->usermail
 			);
 
 			$body = sprintf(
 				JText::_('PLG_IMC_MAIL_NOTIFIER_ADMINS_CATEGORY_MODIFIED_BODY'),
-				''
-				//ImcFrontendHelper::getCategoryNameByCategoryId($validData['catid']),
-				//$validData['title'],
+				$validData['title'],
+				ImcFrontendHelper::getCategoryNameByCategoryId($validData['catid']),
+				JFactory::getUser()->name
 				//$validData['address']
 				//$validData['description'],
 				//$issueLink
@@ -133,20 +147,21 @@ class plgImcmail_notifier extends JPlugin
 			
 			$subject = sprintf(
 				JText::_('PLG_IMC_MAIL_NOTIFIER_USER_CATEGORY_MODIFIED_SUBJECT'), 
-				''
+				($id == null ? $validData['id'] : $id)
 				//$validData['title']
 			);
 
 			$body = sprintf(
 				JText::_('PLG_IMC_MAIL_NOTIFIER_USER_CATEGORY_MODIFIED_BODY'),
-				''
-				//ImcFrontendHelper::getCategoryNameByCategoryId($validData['catid'])
-				//$validData['title'],
+				$validData['title'],
+				ImcFrontendHelper::getCategoryNameByCategoryId($validData['catid'])
 				//$validData['address']
 				//$validData['description'],
 				//$issueLink
 				//$issueAdminLink 
 			);
+			
+			$body .= '<a href="http://'.$issueLink.'">'.$issueLink.'</a>';
 
 			if ($this->sendMail($subject, $body, $details->usermail) ) {
 				if($showMsgsBackend){
@@ -161,7 +176,6 @@ class plgImcmail_notifier extends JPlugin
 			}
 
 		}
-
 	}	
 
 	public function onAfterStepModified($model, $validData, $id = null)
@@ -172,20 +186,33 @@ class plgImcmail_notifier extends JPlugin
 		$showMsgsFrontend = ($this->params->get('messagesfrontend') && !$app->isAdmin());
 		$showMsgsBackend  = ($this->params->get('messagesbackend') && $app->isAdmin());
 
+		$step = ImcFrontendHelper::getStepByStepId($validData['stepid']);
+		//TODO: Get menualias from parameters
+		$MENUALIAS = 'imc';
+		$appSite = JApplication::getInstance('site');
+		$router = $appSite->getRouter();
+		$uri = $router->build('index.php?option=com_imc&view=issue&id='.(int) ($id == null ? $validData['id'] : $id));
+		$parsed_url = $uri->toString();
+		$parsed_url = str_replace('administrator/', '', $parsed_url);
+		$parsed_url = str_replace('component/imc', $MENUALIAS, $parsed_url);
+		$issueLink = $_SERVER['HTTP_HOST'] . $parsed_url;
+
 		//Prepare email for admins
 		if ($this->params->get('mailstatuschangeadmins')){
 			$subject = sprintf(
 				JText::_('PLG_IMC_MAIL_NOTIFIER_ADMINS_STEP_MODIFIED_SUBJECT'), 
-				''
+				($id == null ? $validData['id'] : $id)
 				//$details->username, 
 				//$details->usermail
 			);
 
+
 			$body = sprintf(
 				JText::_('PLG_IMC_MAIL_NOTIFIER_ADMINS_STEP_MODIFIED_BODY'),
-				''
+				$validData['title'],
+				$step['stepid_title'],
+				JFactory::getUser()->name
 				//ImcFrontendHelper::getCategoryNameByCategoryId($validData['catid']),
-				//$validData['title'],
 				//$validData['address']
 				//$validData['description'],
 				//$issueLink
@@ -214,13 +241,15 @@ class plgImcmail_notifier extends JPlugin
 			
 			$subject = sprintf(
 				JText::_('PLG_IMC_MAIL_NOTIFIER_USER_STEP_MODIFIED_SUBJECT'), 
-				''
+				($id == null ? $validData['id'] : $id)
 				//$validData['title']
 			);
 
 			$body = sprintf(
 				JText::_('PLG_IMC_MAIL_NOTIFIER_USER_STEP_MODIFIED_BODY'),
-				''
+				$validData['title'],
+				$step['stepid_title'],
+				$issueLink
 				//ImcFrontendHelper::getCategoryNameByCategoryId($validData['catid'])
 				//$validData['title'],
 				//$validData['address']
@@ -229,6 +258,8 @@ class plgImcmail_notifier extends JPlugin
 				//$issueAdminLink 
 			);
 
+			$body .= '<a href="http://'.$issueLink.'">'.$issueLink.'</a>';
+			
 			if ($this->sendMail($subject, $body, $details->usermail) ) {
 				if($showMsgsBackend){
 					$app->enqueueMessage(JText::_('PLG_IMC_MAIL_NOTIFIER_MAIL_STEP_MODIFIED_CONFIRM').$details->usermail . ' (' . $details->username . ')');
@@ -244,8 +275,8 @@ class plgImcmail_notifier extends JPlugin
 		}
 	}	
 
-
-	private function sendMail($subject, $body, $recipients) {
+	private function sendMail($subject, $body, $recipients) 
+	{
 		$app = JFactory::getApplication();
 		$mailfrom	= $app->getCfg('mailfrom');
 		$fromname	= $app->getCfg('fromname');
@@ -274,7 +305,8 @@ class plgImcmail_notifier extends JPlugin
 		}			
 	}
 
-	private function getDetails($id, $model) {
+	private function getDetails($id, $model) 
+	{
 		//check if issue added from frontend
 		if($id == null){
 			$issueid = $model->getItem()->get('id');
