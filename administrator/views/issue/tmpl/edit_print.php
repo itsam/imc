@@ -17,7 +17,6 @@ require_once JPATH_COMPONENT_SITE . '/helpers/imc.php';
 	@media print {
 	  body * {
 	    visibility: hidden;
-	    height: 0;
 	  }
 	  body {margin: 0;padding:0;}
 	  #section-to-print, #section-to-print * {
@@ -28,10 +27,43 @@ require_once JPATH_COMPONENT_SITE . '/helpers/imc.php';
 	    position: absolute;
 	    left: 0;
 	    top: 0;
-	    height: auto;
 	  }
 
 	}
+
+	@media all {
+		table {width: 100%;}
+		.page-break	{ display: none; }
+		table, th, td, thead, tr {
+		  border: 1px solid black;
+		}
+		table {
+		  border-collapse: collapse;
+		}
+		th {
+		  height: 50px;
+		}
+	}
+
+	@media print {
+	  body {margin: 0;padding:0; }
+	  table {
+	    width: 99%;
+	    margin: 0 auto;
+	  }
+	  div.screen {display: none; height: 0;padding:0;}
+	  table {
+	    font-size: 11px;
+	  }  
+	  .page-break	{ display: block; page-break-before: always; }
+
+	  .navbar, .subhead, .header {display: none; height: 0;}
+	  td {padding: 2px;}
+	  @page { margin: 0.1cm;}
+	  #modal-imc-print{width: 100%; height: 100%;}
+	  .modal-body {overflow: visible; width: 100%; height: 100%;}
+	}
+
 </style>
 
 <div class="modal hide fade" id="modal-imc-print">
@@ -51,6 +83,10 @@ require_once JPATH_COMPONENT_SITE . '/helpers/imc.php';
 		?><br />
 		<strong><?php echo $this->item->created; ?></strong></p>
 		</div>
+
+		<p><strong><?php echo JText::_('COM_IMC_FORM_LBL_ISSUE_ID'); ?></strong>: 
+		<?php echo $this->item->id; ?>
+		</p>
 		
 		<p><strong><?php echo JText::_('COM_IMC_FORM_LBL_ISSUE_STEPID'); ?></strong>: 
 		<?php $step = ImcFrontendHelper::getStepByStepId($this->item->stepid); ?>
@@ -65,11 +101,6 @@ require_once JPATH_COMPONENT_SITE . '/helpers/imc.php';
 		
 		<p><strong><?php echo JText::_('COM_IMC_FORM_LBL_ISSUE_DESCRIPTION'); ?></strong>: 
 		<?php echo $this->item->description; ?></p>
-		
-
-				
-
-		
 	</div>
 	<div class="modal-footer">
 		<button class="btn" type="button" data-dismiss="modal">
