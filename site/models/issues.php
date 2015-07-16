@@ -208,6 +208,15 @@ class ImcModelIssues extends JModelList {
             }
         }        
 
+        // Filter by category
+        $filter_category = $this->state->get('filter.category');
+        if(!empty($filter_category)){
+            if(!in_array(0, $filter_category)){
+                $filter_category = implode(',', $filter_category);
+                $query->where('a.catid IN ('.$filter_category.')');
+            }
+        } 
+
         //Filtering owned
         $filter_owned = $this->state->get("filter.owned");
         if ($filter_owned == 'yes' && $user->id > 0) {
