@@ -200,7 +200,7 @@ $statuses = $step->getOptions();
 		  <?php echo JText::_('COM_IMC_ISSUE_TIMELINE'); ?> <i class="icon-arrow-down"></i>
 		</button>			
 		</div>
-		<section id="cd-timeline" class="cd-container collapse">
+		<section id="cd-timeline" class="cd-container collapse in">
 			<?php $first = true; ?>
 			<?php foreach ($this->logs as $log) : ?>
 				<div class="cd-timeline-block">
