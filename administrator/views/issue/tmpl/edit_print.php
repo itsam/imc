@@ -14,21 +14,11 @@ require_once JPATH_COMPONENT_SITE . '/helpers/imc.php';
 //print_r($this->logs);
 ?>
 <style type="text/css">
-	@media print {
-	  body * {
-	    visibility: hidden;
-	  }
-	  body {margin: 0;padding:0;}
-	  #section-to-print, #section-to-print * {
-	    visibility: visible;
-	    height: auto;
-	  }
-	  #section-to-print {
-	    position: absolute;
-	    left: 0;
-	    top: 0;
-	  }
-
+	
+	@media screen {
+		#modal-imc-print .modal-body {
+			overflow-y: auto;
+		}
 	}
 
 	@media all {
@@ -46,7 +36,22 @@ require_once JPATH_COMPONENT_SITE . '/helpers/imc.php';
 	}
 
 	@media print {
-	  body {margin: 0;padding:0; }
+	  body {margin: 0;padding:0;}
+	  body * {
+	    visibility: hidden;
+	    height: 0;
+	  }
+	  #section-to-print, #section-to-print * {
+	    visibility: visible;
+	    height: auto;
+	    
+	  }
+	  #section-to-print {
+	    position: absolute;
+	    left: 0;
+	    top: 0;
+	  }
+
 	  table {
 	    width: 99%;
 	    margin: 0 auto;
@@ -59,9 +64,10 @@ require_once JPATH_COMPONENT_SITE . '/helpers/imc.php';
 
 	  .navbar, .subhead, .header {display: none; height: 0;}
 	  td {padding: 2px;}
-	  @page { margin: 0.1cm;}
+	  @page { margin: 0.2cm;}
 	  #modal-imc-print{width: 100%; height: 100%;}
-	  .modal-body {overflow: visible; width: 100%; height: 100%;}
+	  #modal-imc-print .modal-body {overflow: visible; width: 100%; height: 100%;}
+	  #modal-imc-print h4 {margin-top: -30px;}
 	}
 
 </style>
