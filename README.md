@@ -1,5 +1,9 @@
 # Improve My City for J3 (RC version) #
 
+Build Status
+---------------------
+Travis-CI: [![Build Status](https://travis-ci.org/itsam/imc.svg)](https://travis-ci.org/itsam/imc)
+
 *Important note: Do not use in production site yet. This version is only for early adopters and testing*
 
 At current state you need a Bootstrap-compatible theme to get the most out of the IMC app.
