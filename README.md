@@ -1,5 +1,5 @@
 # Improve My City for J3 (RC version) #
-[![Analytics](https://ga-beacon.appspot.com/UA-7990459-29/itsam/imc)](https://github.com/igrigorik/ga-beacon)
+[![Analytics](https://ga-beacon.appspot.com/UA-7990459-29/itsam/imc?flat)](https://github.com/igrigorik/ga-beacon)
 
 Build Status
 ---------------------
