@@ -39,14 +39,12 @@ class ImcControllerUsers extends JControllerLegacy
 			$members = array();
 			$groupIds = explode('-', $groups);
 			foreach ($groupIds as $groupId) {
-				$membersIds = JAccess::getUsersByGroup($groupId);
+				$membersIds = JAccess::getUsersByGroup($groupId); //getUsersByGroup($groupId, true) recursively
 				foreach ($membersIds as $userId) {
 					$user = JFactory::getUser($userId);
 					array_push($members, array('name'=>$user->name, 'email'=>$user->email));
 				}
 			}
-
-			//print_r($result);
 			echo new JResponseJson($members);
 		}
 		catch(Exception $e)	{

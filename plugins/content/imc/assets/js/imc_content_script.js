@@ -1,12 +1,13 @@
 //TODO: Get as arguments the containers (textarea and aref)
 function extractMailFromGroup(token){
-	var groups = [];
+    var groups = [];
 	jQuery('#jform_params_imc_category_usergroup_chzn li a').each(function(index, value){
-        id = jQuery(this).attr('data-option-array-index');
+        index = jQuery(this).attr('data-option-array-index');
+        id = jQuery('#jform_params_imc_category_usergroup option').eq(index).val();
         groups.push(id);
 	});
 	var g = groups.join('-');
-
+    
     jQuery.ajax({
         'async': true,
         'global': false,
@@ -14,7 +15,7 @@ function extractMailFromGroup(token){
         'dataType': "json",
         'success': function (data) {
         	var json = data;
-        	var textarea = jQuery("textarea#jform_params_imc_category_emails");
+            var textarea = jQuery("textarea#jform_params_imc_category_emails");
         	var existing = textarea.val().split("\n");
         	var names = '';
          	jQuery(json.data).each(function(index, element) {
