@@ -70,24 +70,38 @@ $document->addStyleSheet('components/com_imc/assets/css/imc.css');
 						<div class="control-label"><?php echo $this->form->getLabel('id'); ?></div>
 						<div class="controls"><?php echo $this->form->getInput('id'); ?></div>
 					</div>
-
-					<div class="alert alert-warning" style="width:80%;">
-						<div class="control-group">
-							<div class="control-label"><?php echo $this->form->getLabel('regnum'); ?></div>
-							<div class="controls"><?php echo $this->form->getInput('regnum'); ?></div>
-						</div>
-						<div class="control-group">
-							<div class="control-label"><?php echo $this->form->getLabel('regdate'); ?></div>
-							<div class="controls"><?php echo $this->form->getInput('regdate'); ?></div>
-						</div>
-						<div class="control-group">
-							<div class="control-label"><?php echo $this->form->getLabel('responsible'); ?></div>
-							<div class="controls"><?php echo $this->form->getInput('responsible'); ?></div>
-						</div>
-						<div class="control-group">
-							<div class="control-label"><?php echo $this->form->getLabel('subgroup'); ?></div>
-							<div class="controls"><?php echo $this->form->getInput('subgroup'); ?></div>
-						</div>
+					<div class="accordion" id="accordion2">
+					  <div class="accordion-group">
+					    <div class="accordion-heading">
+					      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
+					        <i class="icon-download"></i> <?php echo JText::_('COM_IMC_FORM_DESC_ISSUE_REGNUM');?>
+					      </a>
+					    </div>
+					    <div id="collapseOne" class="accordion-body collapse">
+					      <div class="accordion-inner">
+					        
+					        <div class="alert alert-warning" style="width:80%;">
+					        	<div class="control-group">
+					        		<div class="control-label"><?php echo $this->form->getLabel('regnum'); ?></div>
+					        		<div class="controls"><?php echo $this->form->getInput('regnum'); ?></div>
+					        	</div>
+					        	<div class="control-group">
+					        		<div class="control-label"><?php echo $this->form->getLabel('regdate'); ?></div>
+					        		<div class="controls"><?php echo $this->form->getInput('regdate'); ?></div>
+					        	</div>
+					        	<div class="control-group">
+					        		<div class="control-label"><?php echo $this->form->getLabel('responsible'); ?></div>
+					        		<div class="controls"><?php echo $this->form->getInput('responsible'); ?></div>
+					        	</div>
+					        	<div class="control-group">
+					        		<div class="control-label"><?php echo $this->form->getLabel('subgroup'); ?></div>
+					        		<div class="controls"><?php echo $this->form->getInput('subgroup'); ?></div>
+					        	</div>
+					        </div>
+					      </div>
+					    </div>
+					  </div>
+					  
 					</div>
 
 					<div class="control-group">
