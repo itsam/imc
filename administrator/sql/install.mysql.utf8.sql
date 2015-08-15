@@ -63,6 +63,7 @@ CREATE TABLE IF NOT EXISTS `#__imc_keys` (
 `updated` DATETIME NOT NULL ,
 `created_by` INT(11)  NOT NULL ,
 `updated_by` INT(11)  NOT NULL ,
+`quota` INT(11)  NOT NULL ,
 PRIMARY KEY (`id`)
 ) DEFAULT COLLATE=utf8_general_ci;
 
@@ -119,4 +120,16 @@ CREATE TABLE IF NOT EXISTS `#__imc_comments` (
 `language` VARCHAR(255)  NOT NULL ,
 `modality` SMALLINT(6)  NOT NULL ,
 PRIMARY KEY (`id`)
+) DEFAULT COLLATE=utf8_general_ci;
+
+CREATE TABLE IF NOT EXISTS `#__imc_tokens` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `key_id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `user_id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `json_size` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `method` VARCHAR(7)  NOT NULL ,
+  `token` VARCHAR(512)  NOT NULL ,
+  `unixtime` VARCHAR(12) NOT NULL ,
+  `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ,
+  PRIMARY KEY (`id`)
 ) DEFAULT COLLATE=utf8_general_ci;

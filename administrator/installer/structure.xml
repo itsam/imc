@@ -61,6 +61,7 @@
     <field field_name="updated" field_type="DATETIME" description=""/>
     <field field_name="created_by" field_type="INT" field_length="11" index="index" description=""/>
     <field field_name="updated_by" field_type="INT" field_length="11" index="index" description=""/>
+    <field field_name="quota" field_type="INT" field_length="11" index="index" description=""/>
   </table>
   <table table_name="#__imc_log" storage_engine="" collation="utf8_general_ci">
     <field field_name="id" field_type="INT" field_length="11" is_autoincrement="1" index="primary" description=""/>

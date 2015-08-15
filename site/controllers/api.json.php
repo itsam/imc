@@ -12,6 +12,7 @@ defined('_JEXEC') or die;
 
 require_once JPATH_COMPONENT.'/controller.php';
 require_once JPATH_COMPONENT_SITE . '/helpers/MCrypt.php';
+require_once JPATH_COMPONENT_SITE . '/models/tokens.php';
 
 /**
  * IMC API controller class.
@@ -37,6 +38,7 @@ class ImcControllerApi extends ImcController
     private $mcrypt;
     private $keyModel;
     //private $userModel;
+    ///private $tokensModel;
 
     function __construct()
     {
@@ -47,6 +49,8 @@ class ImcControllerApi extends ImcController
 
     	//JModelLegacy::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_users/models/');
         //$this->userModel = JModelLegacy::getInstance( 'User', 'UsersModel');
+
+        ///$this->tokensModel = JModelLegacy::getInstance( 'Tokens', 'ImcModel');
 
     	parent::__construct();
     }
@@ -63,6 +67,12 @@ class ImcControllerApi extends ImcController
             $app->enqueueMessage('Either token, m_id (modality), or l (language) are missing', 'error');
             throw new Exception('Request is invalid');
         }
+
+        //check for nonce (existing token)
+        if(ImcModelTokens::exists($token)){
+            throw new Exception('Token is already used');
+        }
+
         //2. get the appropriate key according to given modality
         $result = $this->keyModel->getItem($m_id);
         $key = $result->skey;
@@ -90,10 +100,11 @@ class ImcControllerApi extends ImcController
             throw new Exception('Token has expired');
         }
 
+
         //4. authenticate user
         $userid = JUserHelper::getUserId($objToken->u);
         $user = JFactory::getUser($userid);
-        //print_r($user);
+
         $match = JUserHelper::verifyPassword($objToken->p, $user->password, $userid);
         if(!$match){
             $app->enqueueMessage('Either username or password do not match', 'error');
@@ -105,6 +116,15 @@ class ImcControllerApi extends ImcController
             throw new Exception('Token user is blocked');
         }
 
+        //5. populate token table
+        $record = new stdClass();
+        $record->key_id = $m_id;
+        $record->user_id = $userid;
+        //$record->json_size = $json_size;
+        $record->method = $app->input->getMethod();
+        $record->token = $token;
+        $record->unixtime = $objToken->t;
+        ImcModelTokens::insertToken($record); //throws exception on error
 
         return true;
     }
