@@ -71,7 +71,6 @@
             <folder>language</folder>
         </files>
         <languages folder="administrator">
-            
 			<language tag="en-GB">language/en-GB/en-GB.com_imc.ini</language>
 			<language tag="en-GB">language/en-GB/en-GB.com_imc.sys.ini</language>
 			<language tag="el-GR">language/el-GR/el-GR.com_imc.ini</language>

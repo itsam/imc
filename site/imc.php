@@ -9,7 +9,7 @@
 
 defined('_JEXEC') or die;
 
-// Include dependancies
+// Include dependencies
 jimport('joomla.application.component.controller');
 
 // Execute the task.
