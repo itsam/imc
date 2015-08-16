@@ -13,6 +13,9 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.modelitem');
 jimport('joomla.event.dispatcher');
 
+//include frontend helper (although is included at controller.php in order to support direct API calls
+require_once JPATH_COMPONENT_SITE . '/helpers/imc.php';
+
 /**
  * Imc model.
  */
@@ -81,30 +84,36 @@ class ImcModelIssue extends JModelItem {
             }
         }
 
-        $step = ImcFrontendHelper::getStepByStepId($this->_item->stepid);
-        if($step){
-            $this->_item->stepid_title = $step['stepid_title'];
-            $this->_item->stepid_color = $step['stepid_color'];
+        if(is_object($this->_item)) {
+            $step = ImcFrontendHelper::getStepByStepId($this->_item->stepid);
+            if ($step) {
+                $this->_item->stepid_title = $step['stepid_title'];
+                $this->_item->stepid_color = $step['stepid_color'];
+            }
+
+            if (isset($this->_item->created_by)) {
+                $this->_item->created_by_name = JFactory::getUser($this->_item->created_by)->name;
+            }
+
+            $category = JCategories::getInstance('Imc')->get($this->_item->catid);
+
+            if ($category) {
+                $prms = json_decode($category->params);
+                // if(isset($prms->imc_category_emails))
+                //     $this->_item->notification_emails = explode("\n", $prms->imc_category_emails);
+                // else
+                //     $this->_item->notification_emails = array();
+                if (isset($prms->image))
+                    $this->_item->category_image = $prms->image;
+                else
+                    $this->_item->category_image = '';
+
+                $this->_item->catid_title = $category->title;
+            } else {
+                $this->_item->category_image = '';
+                $this->_item->catid_title = 'CATEGORY IS NO LONGER PUBLISHED';
+            }
         }
-
-		if ( isset($this->_item->created_by) ) {
-			$this->_item->created_by_name = JFactory::getUser($this->_item->created_by)->name;
-		}
-
-        $category = JCategories::getInstance('Imc')->get($this->_item->catid);
-        $prms = json_decode($category->params);
-        // if(isset($prms->imc_category_emails))
-        //     $this->_item->notification_emails = explode("\n", $prms->imc_category_emails);
-        // else
-        //     $this->_item->notification_emails = array();
-        if(isset($prms->image))
-            $this->_item->category_image = $prms->image;
-        else
-            $this->_item->category_image = '';
-
-        $this->_item->catid_title = $category->title;
-
-
         return $this->_item;
     }
 

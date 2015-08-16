@@ -10,7 +10,82 @@
 defined('_JEXEC') or die;
 
 class ImcFrontendHelper {
-    
+
+    public static function convert2UTC($date)
+    {
+        //get timezone from settings
+        $offset = JFactory::getConfig()->get('offset');
+
+        $utc = new DateTime($date, new DateTimeZone($offset));
+        $utc->setTimezone(new DateTimeZone('UTC'));
+        return $utc->format('Y-m-d H:i:s');
+    }
+
+	public static function sanitizeIssue($data)
+	{
+		if(!is_object($data)){
+            throw new Exception('Issue sanitization bad input');
+        }
+        //unset overhead
+        unset($data->asset_id);
+        unset($data->state);
+        unset($data->ordering);
+        unset($data->checked_out);
+        unset($data->checked_out_time);
+        unset($data->access);
+        unset($data->language);
+        unset($data->note);
+        unset($data->modality);
+        unset($data->updated_by);
+
+        //separate photos and file attachments
+        $photos = json_decode($data->photo);
+        $i=0;
+        foreach ($photos->files as $photo) {
+            if(!isset($photo->thumbnailUrl)) {
+                unset($photos->files[$i]);
+            }
+            else {
+                unset($photos->files[$i]->deleteType);
+                unset($photos->files[$i]->deleteUrl);
+                $photos->files[$i]->url = dirname(JUri::base()) . $photos->files[$i]->url;
+                $photos->files[$i]->mediumUrl = dirname(JUri::base()) . $photos->files[$i]->mediumUrl;
+                $photos->files[$i]->thumbnailUrl = dirname(JUri::base()) . $photos->files[$i]->thumbnailUrl;
+            }
+            $i++;
+        }
+        $attachments = json_decode($data->photo);
+        $i=0;
+        foreach ($attachments->files as $attachment) {
+            if(isset($attachment->thumbnailUrl)) {
+                unset($attachments->files[$i]);
+            }
+            else {
+                unset($attachments->files[$i]->deleteType);
+                unset($attachments->files[$i]->deleteUrl);
+                $attachments->files[$i]->url = dirname(JUri::base()) . $attachments->files[$i]->url;
+            }
+            $i++;
+        }
+
+        unset($data->photo);
+
+        unset($photos->id);
+        unset($photos->imagedir);
+        unset($attachments->id);
+        unset($attachments->imagedir);
+
+        $data->photos = $photos->files;
+        $data->attachments = $attachments->files;
+
+        //set dates to UTC
+        $data->created_UTC = $data->created == '0000-00-00 00:00:00' ? $data->created : self::convert2UTC($data->created);
+        $data->updated_UTC = $data->updated == '0000-00-00 00:00:00' ? $data->updated : self::convert2UTC($data->updated);
+        $data->regdate_UTC = $data->regdate == '0000-00-00 00:00:00' ? $data->regdate : self::convert2UTC($data->regdate);
+
+        return $data;
+	}
+
 	/**
 	* Get category name using category ID
 	* @param integer $category_id Category ID

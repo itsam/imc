@@ -11,6 +11,7 @@
 defined('_JEXEC') or die;
 
 require_once JPATH_COMPONENT.'/controller.php';
+require_once JPATH_COMPONENT_SITE . '/helpers/imc.php';
 require_once JPATH_COMPONENT_SITE . '/helpers/MCrypt.php';
 require_once JPATH_COMPONENT_SITE . '/models/tokens.php';
 
@@ -37,8 +38,8 @@ class ImcControllerApi extends ImcController
 {
     private $mcrypt;
     private $keyModel;
+
     //private $userModel;
-    ///private $tokensModel;
 
     function __construct()
     {
@@ -49,8 +50,6 @@ class ImcControllerApi extends ImcController
 
     	//JModelLegacy::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_users/models/');
         //$this->userModel = JModelLegacy::getInstance( 'User', 'UsersModel');
-
-        ///$this->tokensModel = JModelLegacy::getInstance( 'Tokens', 'ImcModel');
 
     	parent::__construct();
     }
@@ -96,10 +95,10 @@ class ImcControllerApi extends ImcController
             throw new Exception('Token is not well formatted');
         }
 
-        if((time() - $objToken->t) > 100 * 60){
+        //TODO: Set timeout at options (default is 10 minutes)
+        if((time() - $objToken->t) > 10 * 60){
             throw new Exception('Token has expired');
         }
-
 
         //4. authenticate user
         $userid = JUserHelper::getUserId($objToken->u);
@@ -126,9 +125,8 @@ class ImcControllerApi extends ImcController
         $record->unixtime = $objToken->t;
         ImcModelTokens::insertToken($record); //throws exception on error
 
-        return true;
+        return $userid;
     }
-
 
 	public function issues()
 	{
@@ -144,23 +142,58 @@ class ImcControllerApi extends ImcController
 
 	public function issue()
 	{
+		$result = null;
+		$app = JFactory::getApplication();
 		try {
-		    self::validateRequest();
-			$app = JFactory::getApplication();
-			$id = $app->input->getInt('id', null);
-			if ($id == null){
-				echo new JResponseJson(null, 'Id is not set', true);
-			}
-			else {
-				$result = array(
-				    'issueid'=>$id,
-				    'details'=>'what a nice detail',
-				    'method'=>$app->input->getMethod()
-				    //'imctoken'=>$_SERVER['HTTP_IMCTOKEN']
-				);
+		    $userid = self::validateRequest();
+            //get necessary arguments
+            $id = $app->input->getInt('id', null);
 
-				echo new JResponseJson($result);
-			}
+            //get issue model
+            $issueModel = JModelLegacy::getInstance( 'Issue', 'ImcModel', array('ignore_request' => true) );
+
+            switch($app->input->getMethod())
+            {
+                //fetch existing issue
+                case 'GET':
+                    if ($id == null){
+                        throw new Exception('Id is not set');
+                    }
+                    $data = $issueModel->getData($id);
+                    if(!is_object($data)){
+                        throw new Exception('Issue do not exists');
+                    }
+                    $data->myIssue = ($data->created_by == $userid);
+                    $data->moderation = (boolean)$data->moderation;
+
+                    //check for restrictions
+                    if(!$data->myIssue && $data->moderation){
+                        throw new Exception('Issue is under moderation');
+                    }
+                    if($data->state != 1){
+                        throw new Exception('Issue is not published');
+                    }
+
+                    $result = ImcFrontendHelper::sanitizeIssue($data);
+                break;
+                //create new issue
+                case 'POST':
+                    if ($id != null){
+                        throw new Exception('You cannot use POST to fetch issue. Use GET instead');
+                    }
+                break;
+                //update existing issue
+                case 'PUT':
+                case 'PATCH':
+                    if ($id == null){
+                        throw new Exception('Id is not set');
+                    }
+                break;
+                default:
+                    throw new Exception('HTTP method is not supported');
+            }
+
+            echo new JResponseJson($result);
 		}
 		catch(Exception $e)	{
 			echo new JResponseJson($e);
