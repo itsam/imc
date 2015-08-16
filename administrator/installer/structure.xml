@@ -112,4 +112,14 @@
     <field field_name="language" field_type="VARCHAR" field_length="255" description=""/>
     <field field_name="modality" field_type="SMALLINT" field_length="6" description=""/>
   </table>
+  <table action="add" table_name="#__imc_tokens" storage_engine="" collation="utf8_general_ci">
+    <field field_name="id" field_type="INT" field_length="11" is_autoincrement="1" index="primary" description=""/>
+    <field field_name="key_id" field_type="INT" field_length="11" description=""/>
+    <field field_name="user_id" field_type="INT" field_length="11" description=""/>
+    <field field_name="json_size" field_type="INT" field_length="11" description=""/>
+    <field field_name="method" field_type="VARCHAR" field_length="7" description=""/>
+    <field field_name="token" field_type="VARCHAR" field_length="512" description=""/>
+    <field field_name="unixtime" field_type="VARCHAR" field_length="12" description=""/>
+    <field field_name="created" field_type="TIMESTAMP" description=""/>
+  </table>
 </component>
