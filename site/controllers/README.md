@@ -19,3 +19,20 @@ Check **helpers/MCrypt.php** for details on how to use Rijndael-128 AES encrypti
 
 Please note that for better security it is highly recommended to protect your site with SSL (https)
 
+## How to create a token
+```php
+$mcrypt = new MCrypt();
+$mcrypt->setKey('1234567890123456'); //16 digits should match with administrator options
+$data = array(
+	'u'=>'itsam', 
+	'p'=>'mysuperpassword',
+	't'=>(string) time()
+);
+$json = json_encode($data);
+
+$token = $mcrypt->encrypt($json);
+echo $token;
+
+$decryptedData = $mcrypt->decrypt($token);
+print_r(json_decode($decryptedData));
+```
