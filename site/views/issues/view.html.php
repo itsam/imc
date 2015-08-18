@@ -1,51 +1,63 @@
 <?php
 /**
- * @version     3.0.0
- * @package     com_imc
- * @copyright   Copyright (C) 2014. All rights reserved.
- * @license     GNU AFFERO GENERAL PUBLIC LICENSE Version 3; see LICENSE
- * @author      Ioannis Tsampoulatidis <tsampoulatidis@gmail.com> - https://github.com/itsam
+ * @version    CVS: $Id
+ * @package    Imc
+ * @author     Ioannis Tsampoulatidis - https://github.com/itsam <tsampoulatidis@gmail.com>
+ * @copyright  2015 ImproveMyCity - All rights reserved.
+ * @license    GNU AFFERO GENERAL PUBLIC LICENSE Version 3; see LICENSE
  */
 
 // No direct access
 defined('_JEXEC') or die;
-
 jimport('joomla.application.component.view');
 
 /**
- * View class for a list of Imc.
+ * View class for a list of Issues.
+ *
+ * @since  3.0.0
  */
 class ImcViewIssues extends JViewLegacy
 {
 	protected $items;
+
 	protected $pagination;
+
 	protected $state;
-    protected $params;
+
+	protected $params;
 
 	/**
-	 * Display the view
+	 * Execute and display a template script.
+	 *
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 *
+	 * @throws Exception
+	 * @return  mixed  A string if successful, otherwise a Error object.
 	 */
 	public function display($tpl = null)
 	{
-        $app                = JFactory::getApplication();
-        
-        $this->state		= $this->get('State');
-        $this->items		= $this->get('Items');
-        $this->pagination	= $this->get('Pagination');
-        $this->params       = $app->getParams('com_imc');
-        
-        // Check for errors.
-        if (count($errors = $this->get('Errors'))) {;
-            throw new Exception(implode("\n", $errors));
-        }
-        $this->setLayout(JFactory::getApplication()->input->get('layout','default'));
-        $this->_prepareDocument();
-        parent::display($tpl);
-	}
+		$app                = JFactory::getApplication();
+		$this->state		= $this->get('State');
+		$this->items		= $this->get('Items');
+		$this->pagination	= $this->get('Pagination');
+		$this->params       = $app->getParams('com_imc');
 
+		// Check for errors.
+		if (count($errors = $this->get('Errors')))
+		{
+			throw new Exception(implode("\n", $errors));
+		}
+
+		$this->setLayout(JFactory::getApplication()->input->get('layout', 'default'));
+		$this->_prepareDocument();
+		parent::display($tpl);
+	}
 
 	/**
 	 * Prepares the document
+	 *
+	 * @throws Exception
+	 * @return mixed
 	 */
 	protected function _prepareDocument()
 	{
@@ -56,22 +68,31 @@ class ImcViewIssues extends JViewLegacy
 		// Because the application sets a default page title,
 		// we need to get it from the menu item itself
 		$menu = $menus->getActive();
-		if($menu)
+
+		if ($menu)
 		{
 			$this->params->def('page_heading', $this->params->get('page_title', $menu->title));
-		} else {
+		}
+		else
+		{
 			$this->params->def('page_heading', JText::_('COM_IMC_DEFAULT_PAGE_TITLE'));
 		}
+
 		$title = $this->params->get('page_title', '');
-		if (empty($title)) {
+
+		if (empty($title))
+		{
 			$title = $app->getCfg('sitename');
 		}
-		elseif ($app->getCfg('sitename_pagetitles', 0) == 1) {
+		elseif ($app->getCfg('sitename_pagetitles', 0) == 1)
+		{
 			$title = JText::sprintf('JPAGETITLE', $app->getCfg('sitename'), $title);
 		}
-		elseif ($app->getCfg('sitename_pagetitles', 0) == 2) {
+		elseif ($app->getCfg('sitename_pagetitles', 0) == 2)
+		{
 			$title = JText::sprintf('JPAGETITLE', $title, $app->getCfg('sitename'));
 		}
+
 		$this->document->setTitle($title);
 
 		if ($this->params->get('menu-meta_description'))
@@ -88,11 +109,10 @@ class ImcViewIssues extends JViewLegacy
 		{
 			$this->document->setMetadata('robots', $this->params->get('robots'));
 		}
-	
-		$this->document->addStyleSheet(JURI::root(true).'/components/com_imc/assets/css/card.css');
-		$this->document->addScript(JURI::root(true).'/components/com_imc/assets/js/masonry.pkgd.min.js');
-		$this->document->addScript(JURI::root(true).'/components/com_imc/assets/js/imagesloaded.pkgd.min.js');
 
-	}    
-    	
+		$this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/css/card.css');
+		$this->document->addScript(JURI::root(true) . '/components/com_imc/assets/js/masonry.pkgd.min.js');
+		$this->document->addScript(JURI::root(true) . '/components/com_imc/assets/js/imagesloaded.pkgd.min.js');
+
+	}
 }
