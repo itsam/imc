@@ -1,6 +1,6 @@
 <?php
 /**
- * @package    Imc
+ * @package    IMC
  * @author     Ioannis Tsampoulatidis - https://github.com/itsam <tsampoulatidis@gmail.com>
  * @copyright  2015 ImproveMyCity - All rights reserved.
  * @license    GNU AFFERO GENERAL PUBLIC LICENSE Version 3; see LICENSE
@@ -36,11 +36,11 @@ class ImcViewIssues extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-		$app                = JFactory::getApplication();
-		$this->state		= $this->get('State');
-		$this->items		= $this->get('Items');
-		$this->pagination	= $this->get('Pagination');
-		$this->params       = $app->getParams('com_imc');
+		$app = JFactory::getApplication();
+		$this->state = $this->get('State');
+		$this->items = $this->get('Items');
+		$this->pagination = $this->get('Pagination');
+		$this->params = $app->getParams('com_imc');
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))
