@@ -1,10 +1,10 @@
 <?php
 /**
- * @version    CVS: $Id
  * @package    Imc
  * @author     Ioannis Tsampoulatidis - https://github.com/itsam <tsampoulatidis@gmail.com>
  * @copyright  2015 ImproveMyCity - All rights reserved.
  * @license    GNU AFFERO GENERAL PUBLIC LICENSE Version 3; see LICENSE
+ * @link       http://www.improve-my-city.com
  */
 
 // No direct access
