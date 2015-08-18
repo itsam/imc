@@ -113,6 +113,5 @@ class ImcViewIssues extends JViewLegacy
 		$this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/css/card.css');
 		$this->document->addScript(JURI::root(true) . '/components/com_imc/assets/js/masonry.pkgd.min.js');
 		$this->document->addScript(JURI::root(true) . '/components/com_imc/assets/js/imagesloaded.pkgd.min.js');
-
 	}
 }
