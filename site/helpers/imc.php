@@ -60,42 +60,40 @@ class ImcFrontendHelper {
         //separate photos and file attachments
         $photos = json_decode($data->photo);
         $i=0;
-        foreach ($photos->files as $photo) {
-            if(!isset($photo->thumbnailUrl)) {
-                unset($photos->files[$i]);
-            }
-            else {
-                unset($photos->files[$i]->deleteType);
-                unset($photos->files[$i]->deleteUrl);
-                $photos->files[$i]->url = dirname(JUri::base()) . $photos->files[$i]->url;
-                $photos->files[$i]->mediumUrl = dirname(JUri::base()) . $photos->files[$i]->mediumUrl;
-                $photos->files[$i]->thumbnailUrl = dirname(JUri::base()) . $photos->files[$i]->thumbnailUrl;
-            }
-            $i++;
-        }
-        $attachments = json_decode($data->photo);
-        $i=0;
-        foreach ($attachments->files as $attachment) {
-            if(isset($attachment->thumbnailUrl)) {
-                unset($attachments->files[$i]);
-            }
-            else {
-                unset($attachments->files[$i]->deleteType);
-                unset($attachments->files[$i]->deleteUrl);
-                $attachments->files[$i]->url = dirname(JUri::base()) . $attachments->files[$i]->url;
-            }
-            $i++;
-        }
-
+		if(is_object($photos)) {
+			foreach ($photos->files as $photo) {
+				if (!isset($photo->thumbnailUrl)) {
+					unset($photos->files[$i]);
+				} else {
+					unset($photos->files[$i]->deleteType);
+					unset($photos->files[$i]->deleteUrl);
+					$photos->files[$i]->url = dirname(JUri::base()) . $photos->files[$i]->url;
+					$photos->files[$i]->mediumUrl = dirname(JUri::base()) . $photos->files[$i]->mediumUrl;
+					$photos->files[$i]->thumbnailUrl = dirname(JUri::base()) . $photos->files[$i]->thumbnailUrl;
+				}
+				$i++;
+			}
+			$attachments = json_decode($data->photo);
+			$i = 0;
+			foreach ($attachments->files as $attachment) {
+				if (isset($attachment->thumbnailUrl)) {
+					unset($attachments->files[$i]);
+				} else {
+					unset($attachments->files[$i]->deleteType);
+					unset($attachments->files[$i]->deleteUrl);
+					$attachments->files[$i]->url = dirname(JUri::base()) . $attachments->files[$i]->url;
+				}
+				$i++;
+			}
+			unset($photos->id);
+			unset($photos->imagedir);
+			unset($attachments->id);
+			unset($attachments->imagedir);
+		}
         unset($data->photo);
 
-        unset($photos->id);
-        unset($photos->imagedir);
-        unset($attachments->id);
-        unset($attachments->imagedir);
-
-        $data->photos = $photos->files;
-        $data->attachments = $attachments->files;
+        $data->photos = (is_object($photos) ? $photos->files : array());
+        $data->attachments = (is_object($photos) ? $attachments->files : array());
 
         //set dates to UTC
         $data->created_UTC = $data->created == '0000-00-00 00:00:00' ? $data->created : self::convert2UTC($data->created);
