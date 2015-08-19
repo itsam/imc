@@ -21,14 +21,28 @@ class ImcFrontendHelper {
         return $utc->format('Y-m-d H:i:s');
     }
 
-	public static function sanitizeIssue($data)
+	public static function sanitizeIssues($data, $userid)
+	{
+		if(!is_array($data)){
+			throw new Exception('Issues sanitization bad input');
+		}
+
+		foreach ($data as $issue)
+		{
+			$issue = self::sanitizeIssue($issue, $userid);
+			unset($issue->access_level);
+			unset($issue->editor);
+		}
+		return $data;
+	}
+
+	public static function sanitizeIssue($data, $userid)
 	{
 		if(!is_object($data)){
             throw new Exception('Issue sanitization bad input');
         }
         //unset overhead
         unset($data->asset_id);
-        unset($data->state);
         unset($data->ordering);
         unset($data->checked_out);
         unset($data->checked_out_time);
@@ -88,6 +102,8 @@ class ImcFrontendHelper {
         $data->updated_UTC = $data->updated == '0000-00-00 00:00:00' ? $data->updated : self::convert2UTC($data->updated);
         $data->regdate_UTC = $data->regdate == '0000-00-00 00:00:00' ? $data->regdate : self::convert2UTC($data->regdate);
 
+		$data->moderation = (boolean)$data->moderation;
+		$data->myIssue = ($data->created_by == $userid);
         return $data;
 	}
 
