@@ -38,6 +38,11 @@ class ImcFrontendHelper {
         unset($data->modality);
         unset($data->updated_by);
 
+		if($data->category_image != '')
+		{
+			$data->category_image = JUri::base() . $data->category_image;
+		}
+
         //separate photos and file attachments
         $photos = json_decode($data->photo);
         $i=0;
