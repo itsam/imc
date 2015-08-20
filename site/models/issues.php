@@ -71,15 +71,11 @@ class ImcModelIssues extends JModelList {
             $direction = 'DESC';
         }
 
-        // List state information.
-        parent::populateState($ordering, $direction);
-
         // Initialise variables.
         $app = JFactory::getApplication();
 
         // List state information
         $limit = $app->getUserStateFromRequest('global.list.limit', 'limit', $app->getCfg('list_limit'));
-        //$limit = $app->getUserStateFromRequest('global.list.limit', 'limit', 0); //show all by default
         $this->setState('list.limit', $limit);
 
         $limitstart = JFactory::getApplication()->input->getInt('limitstart', 0);
@@ -100,8 +96,7 @@ class ImcModelIssues extends JModelList {
         $this->setState('filter.category', $category);
         //Filtering catid
         //$this->setState('filter.catid', $app->getUserStateFromRequest($this->context.'.filter.catid', 'filter_catid', '', 'string'));
-        
-        
+
         $steps = $app->getUserStateFromRequest($this->context . '.filter.steps', 'steps', array()); 
         $this->setState('filter.steps', $steps);
         //Filtering stepid
@@ -112,7 +107,8 @@ class ImcModelIssues extends JModelList {
 
         $this->setState('filter.language', JLanguageMultilang::isEnabled());
 
-
+	    // List state information.
+	    parent::populateState($ordering, $direction);
     }
 
     /**
@@ -122,7 +118,10 @@ class ImcModelIssues extends JModelList {
      * @since	1.6
      */
     protected function getListQuery() {
-        $user = JFactory::getUser();
+        //check API request
+        $userid = $this->state->get('filter.imcapi.userid', 0);
+        $user = ($userid > 0 ? JFactory::getUser($userid) : JFactory::getUser());
+
         // Create a new query object.
         $db = $this->getDbo();
         $query = $db->getQuery(true);
@@ -136,7 +135,6 @@ class ImcModelIssues extends JModelList {
 
         $query->from('`#__imc_issues` AS a');
 
-        
         // Join over the users for the checked out user.
         $query->select('uc.name AS editor');
         $query->join('LEFT', '#__users AS uc ON uc.id=a.checked_out');
@@ -164,7 +162,7 @@ class ImcModelIssues extends JModelList {
         // Filter by moderation
         $query->where('
             (
-            (a.created_by > 0 AND a.created_by  ='.$user->id.' AND a.moderation IN (0,1)) OR 
+            (a.created_by > 0 AND a.created_by  ='.$user->id.' AND a.moderation IN (0,1)) OR
             (a.created_by > 0 AND a.created_by !='.$user->id.' AND a.moderation = 0)
             )
         ');
@@ -218,22 +216,30 @@ class ImcModelIssues extends JModelList {
         } 
 
         //Filtering owned
-        $filter_owned = $this->state->get("filter.owned");
-        if ($filter_owned == 'yes' && $user->id > 0) {
-            $query->where("a.created_by = '".$user->id."'");
-        }
+	    $filter_owned = $this->state->get("filter.owned");
+	    if ($filter_owned == 'yes' && $user->id > 0) {
+		    $query->where("a.created_by = '".$user->id."'");
+	    }
 
-        // Filter by language
-        if ($this->getState('filter.language'))
-        {
-            $query->where('a.language IN (' . $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*') . ')');
-        }
+	    // Filter by language
+	    if ($this->getState('filter.language'))
+	    {
+		    $query->where('a.language IN (' . $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*') . ')');
+	    }
 
-        // Add the list ordering clause.
-        $orderCol = $this->state->get('list.ordering');
-        $orderDirn = $this->state->get('list.direction');
+	    // Add the list ordering clause.
+	    $orderCol = $this->state->get('list.ordering');
+	    $orderDirn = $this->state->get('list.direction');
 
-        if ($orderCol == 'access_level')
+	    if(!$orderCol && !$orderDirn)
+	    {
+		    $orderCol = $this->state->get('filter.imcapi.ordering', '');
+		    $orderDirn = $this->state->get('filter.imcapi.direction', '');
+	    }
+
+	    //echo '->'.$this->state->get('list.limit');
+
+	    if ($orderCol == 'access_level')
         {
             $orderCol = 'ag.title';
         }
@@ -250,20 +256,8 @@ class ImcModelIssues extends JModelList {
     }
 
     public function getItems() {
-        parent::populateState();
         $items = parent::getItems();
 
-/*        
-        foreach($items as $item){
-			if ( isset($item->catid) ) {
-				// Get the title of that particular template
-				$title = ImcFrontendHelper::getCategoryNameByCategoryId($item->catid);
-				// Finally replace the data object with proper information
-				$item->catid = !empty($title) ? $title : $item->catid;
-			}
-        }
-
-*/
         if (JFactory::getApplication()->isSite()) {
 
             $user = JFactory::getUser();
