@@ -23,7 +23,7 @@ class ImcControllerIssues extends ImcController
 	 */
 	public function &getModel($name = 'Issues', $prefix = 'ImcModel')
 	{
-		$model = parent::getModel($name, $prefix, array('ignore_request' => true)); //DO ignore request... we want to populate with paging
+		$model = parent::getModel($name, $prefix, array('ignore_request' => false));
 		return $model;
 	}
 
