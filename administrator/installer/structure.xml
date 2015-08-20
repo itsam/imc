@@ -11,8 +11,8 @@
     <field field_name="responsible" field_type="TEXT" description=""/>
     <field field_name="description" field_type="TEXT" description=""/>
     <field field_name="address" field_type="TEXT" description=""/>
-    <field field_name="latitude" field_type="VARCHAR" field_length="255" description=""/>
-    <field field_name="longitude" field_type="VARCHAR" field_length="255" description=""/>
+    <field field_name="latitude" field_type="DECIMAL" field_length="18,15" description=""/>
+    <field field_name="longitude" field_type="DECIMAL" field_length="18,15" description=""/>
     <field field_name="photo" field_type="TEXT" description=""/>
     <field field_name="ordering" field_type="INT" field_length="11" index="index" description=""/>
     <field field_name="state" field_type="TINYINT" field_length="1" index="index" description=""/>
