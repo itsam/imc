@@ -56,6 +56,7 @@ class ImcControllerApi extends ImcController
 
     private function validateRequest()
     {
+        return 569; //TODO: REMOVE THIS LINE. ONLY FOR DEBUGGING PURPOSES
         $app = JFactory::getApplication();
         $token = $app->input->getString('token');
         $m_id  = $app->input->getInt('m_id');
@@ -95,8 +96,8 @@ class ImcControllerApi extends ImcController
             throw new Exception('Token is not well formatted');
         }
 
-        //TODO: Set timeout at options (default is 10 minutes)
-        if((time() - $objToken->t) > 10 * 60){
+        //TODO: Set timeout at options (default is 1 minute)
+        if((time() - $objToken->t) > 1 * 60){
             throw new Exception('Token has expired');
         }
 
@@ -134,40 +135,34 @@ class ImcControllerApi extends ImcController
 		$app = JFactory::getApplication();
 		try {
 		    $userid = self::validateRequest();
-		    //$userid = 569;
 			//get necessary arguments
-			$minLat = $app->input->getFloat('minLat', null);
-			$maxLat = $app->input->getFloat('maxLat', null);
-			$minLng = $app->input->getFloat('minLng', null);
-			$maxLng = $app->input->getFloat('maxLng', null);
-			$limit = $app->input->getInt('limit', 0);
+			$minLat = $app->input->getString('minLat');
+			$maxLat = $app->input->getString('maxLat');
+			$minLng = $app->input->getString('minLng');
+			$maxLng = $app->input->getString('maxLng');
+			$owned = $app->input->get('owned', false);
+			$lim = $app->input->getInt('lim', 0);
 
             //get issues model
             $issuesModel = JModelLegacy::getInstance( 'Issues', 'ImcModel', array('ignore_request' => true) );
+            //set states
+            $issuesModel->setState('filter.owned', ($owned === 'true' ? 'yes' : 'no'));
+            $issuesModel->setState('filter.imcapi.userid', $userid);
+            //$issuesModel->setState('filter.imcapi.ordering', 'id');
+            //$issuesModel->setState('filter.imcapi.direction', 'DESC');
+            $issuesModel->setState('list.limit', $lim);
 
-			if(is_null($minLat) || is_null($maxLat) || is_null($minLng) || is_null($maxLng))
+			if(!is_null($minLat) && !is_null($maxLat) && !is_null($minLng) && !is_null($maxLng))
 			{
-				//TODO: set state so as to get only allowable issues according to userid
-				$data = $issuesModel->getItems();
-				$result = ImcFrontendHelper::sanitizeIssues($data, $userid);
-			}
-			else
-			{
-				$data = $issuesModel->getItemsInBoundaries($minLat, $maxLat, $minLng, $maxLng);
-				$result = ImcFrontendHelper::sanitizeIssues($data, $userid);
+				$issuesModel->setState('filter.imcapi.minLat', $minLat);
+				$issuesModel->setState('filter.imcapi.maxLat', $maxLat);
+				$issuesModel->setState('filter.imcapi.minLng', $minLng);
+				$issuesModel->setState('filter.imcapi.maxLng', $maxLng);
 			}
 
-			//apply restrictions
-			foreach($result as $issue)
-			{
-                if(!$issue->myIssue && $issue->moderation){
-                    unset($issue);
-                }
-                if($issue->state != 1){
-                    unset($issue);
-                }
-			}
-			$result = array_values($result);
+			//get items and sanitize them
+			$data = $issuesModel->getItems();
+			$result = ImcFrontendHelper::sanitizeIssues($data, $userid);
 
 			echo new JResponseJson($result, 'Issues fetched successfully');
 		}

@@ -227,6 +227,18 @@ class ImcModelIssues extends JModelList {
 		    $query->where('a.language IN (' . $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*') . ')');
 	    }
 
+	    // Filter by geo-boundaries (Currently only used by API requests
+	    $minLat = $this->state->get('filter.imcapi.minLat');
+	    $maxLat = $this->state->get('filter.imcapi.maxLat');
+	    $minLng = $this->state->get('filter.imcapi.minLng');
+	    $maxLng = $this->state->get('filter.imcapi.maxLng');
+
+	    if(!is_null($minLat) && !is_null($maxLat) && !is_null($minLng) && !is_null($maxLng))
+	    {
+		    $query->where('a.latitude BETWEEN ' . $minLat . ' AND ' . $maxLat );
+		    $query->where('a.longitude BETWEEN ' . $minLng . ' AND ' . $maxLng );
+	    }
+
 	    // Add the list ordering clause.
 	    $orderCol = $this->state->get('list.ordering');
 	    $orderDirn = $this->state->get('list.direction');
