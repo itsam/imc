@@ -160,8 +160,11 @@ class ImcControllerApi extends ImcController
 				$issuesModel->setState('filter.imcapi.maxLng', $maxLng);
 			}
 
+            //handle unexpected warnings from model
+            set_error_handler(array($this, 'exception_error_handler'));
 			//get items and sanitize them
 			$data = $issuesModel->getItems();
+			restore_error_handler();
 			$result = ImcFrontendHelper::sanitizeIssues($data, $userid);
 
 			echo new JResponseJson($result, 'Issues fetched successfully');
@@ -170,6 +173,12 @@ class ImcControllerApi extends ImcController
 			echo new JResponseJson($e);
 		}
 	}	
+
+    public function exception_error_handler($errno, $errstr, $errfile, $errline){
+        $ee = new ErrorException($errstr, 0, $errno, $errfile, $errline);
+        JFactory::getApplication()->enqueueMessage($ee, 'error');
+        throw $ee;
+    }
 
 	public function issue()
 	{
@@ -190,7 +199,12 @@ class ImcControllerApi extends ImcController
                     if ($id == null){
                         throw new Exception('Id is not set');
                     }
+
+                    //handle unexpected warnings from model
+                    set_error_handler(array($this, 'exception_error_handler'));
                     $data = $issueModel->getData($id);
+                    restore_error_handler();
+
                     if(!is_object($data)){
                         throw new Exception('Issue does not exist');
                     }
