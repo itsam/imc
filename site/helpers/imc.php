@@ -58,7 +58,8 @@ class ImcFrontendHelper {
 		}
 
         //separate photos and file attachments
-        $photos = json_decode($data->photo);
+        $photos = json_decode($data->photo, true);
+		$attachments = $photos;
         $i=0;
 		if(is_object($photos)) {
 			foreach ($photos->files as $photo) {
@@ -73,7 +74,7 @@ class ImcFrontendHelper {
 				}
 				$i++;
 			}
-			$attachments = json_decode($data->photo);
+
 			$i = 0;
 			foreach ($attachments->files as $attachment) {
 				if (isset($attachment->thumbnailUrl)) {
@@ -92,8 +93,8 @@ class ImcFrontendHelper {
 		}
         unset($data->photo);
 
-        $data->photos = (is_object($photos) ? $photos->files : array());
-        $data->attachments = (is_object($photos) ? $attachments->files : array());
+        $data->photos = (is_array($photos) ? $photos['files'] : array());
+        $data->attachments = (is_array($photos) ? $attachments['files'] : array());
 
         //set dates to UTC
         $data->created_UTC = $data->created == '0000-00-00 00:00:00' ? $data->created : self::convert2UTC($data->created);
