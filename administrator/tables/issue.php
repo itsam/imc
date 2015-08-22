@@ -50,12 +50,11 @@ class ImcTableissue extends JTable {
 		$task = $input->getString('task', '');
 		if(($task == 'save' || $task == 'apply') && (!JFactory::getUser()->authorise('core.edit.state','com_imc.issue.'.$array['id']) && $array['state'] == 1)){
 			$array['state'] = 0;
-		}
+            //TODO: Do we need moderation for administrators as well? Should we include this on settings? Probably not.
+            $array['state'] = 1;
+        }
 
-        //TODO: Do we need moderation for administrators as well? Should we include this on settings? Probably not.
-        $array['state'] = 1;
-        
-		$task = JFactory::getApplication()->input->get('task');
+        $task = JFactory::getApplication()->input->get('task');
 		if($task == 'apply' || $task == 'save'){
 			$array['modified'] = date("Y-m-d H:i:s");
 		}

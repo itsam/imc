@@ -192,7 +192,7 @@ class ImcControllerApi extends ImcController
                     }
                     $data = $issueModel->getData($id);
                     if(!is_object($data)){
-                        throw new Exception('Issue do not exists');
+                        throw new Exception('Issue does not exist');
                     }
 
                     $result = ImcFrontendHelper::sanitizeIssue($data, $userid);
@@ -223,7 +223,8 @@ class ImcControllerApi extends ImcController
                     throw new Exception('HTTP method is not supported');
             }
 
-            echo new JResponseJson($result, 'Issue fetched successfully');
+            //be consistent return as array (of size 1)
+            echo new JResponseJson(array($result), 'Issue fetched successfully');
 		}
 		catch(Exception $e)	{
 			echo new JResponseJson($e);
