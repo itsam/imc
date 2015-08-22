@@ -27,13 +27,16 @@ class ImcFrontendHelper {
 			throw new Exception('Issues sanitization bad input');
 		}
 
+		$issues = array();
+
 		foreach ($data as $issue)
 		{
 			$issue = self::sanitizeIssue($issue, $userid);
 			unset($issue->access_level);
 			unset($issue->editor);
+			array_push($issues, $issue);
 		}
-		return $data;
+		return $issues;
 	}
 
 	public static function sanitizeIssue($data, $userid)
