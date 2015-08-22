@@ -58,43 +58,33 @@ class ImcFrontendHelper {
 		}
 
         //separate photos and file attachments
-        $photos = json_decode($data->photo, true);
-		$attachments = $photos;
-        $i=0;
-		if(is_object($photos)) {
-			foreach ($photos->files as $photo) {
-				if (!isset($photo->thumbnailUrl)) {
-					unset($photos->files[$i]);
-				} else {
-					unset($photos->files[$i]->deleteType);
-					unset($photos->files[$i]->deleteUrl);
-					$photos->files[$i]->url = dirname(JUri::base()) . $photos->files[$i]->url;
-					$photos->files[$i]->mediumUrl = dirname(JUri::base()) . $photos->files[$i]->mediumUrl;
-					$photos->files[$i]->thumbnailUrl = dirname(JUri::base()) . $photos->files[$i]->thumbnailUrl;
-				}
-				$i++;
-			}
+        $obj = json_decode($data->photo);
+		unset($data->photo);
 
-			$i = 0;
-			foreach ($attachments->files as $attachment) {
-				if (isset($attachment->thumbnailUrl)) {
-					unset($attachments->files[$i]);
-				} else {
-					unset($attachments->files[$i]->deleteType);
-					unset($attachments->files[$i]->deleteUrl);
-					$attachments->files[$i]->url = dirname(JUri::base()) . $attachments->files[$i]->url;
+		$data->photos = array();
+		$data->attachments = array();
+
+		if(is_object($obj)) {
+			unset($obj->id);
+			unset($obj->imagedir);
+			foreach ($obj->files as $file) {
+				unset($file->deleteType);
+				unset($file->deleteUrl);
+
+				if (isset($file->thumbnailUrl))
+				{
+					$file->url = dirname(JUri::base()) . $file->url;
+					$file->mediumUrl = dirname(JUri::base()) . $file->mediumUrl;
+					$file->thumbnailUrl = dirname(JUri::base()) . $file->thumbnailUrl;
+					array_push($data->photos, $file);
 				}
-				$i++;
+				else
+				{
+					$file->url = dirname(JUri::base()) . $file->url;
+					array_push($data->attachments, $file);
+				}
 			}
-			unset($photos->id);
-			unset($photos->imagedir);
-			unset($attachments->id);
-			unset($attachments->imagedir);
 		}
-        unset($data->photo);
-
-        $data->photos = (is_array($photos) ? $photos['files'] : array());
-        $data->attachments = (is_array($photos) ? $attachments['files'] : array());
 
         //set dates to UTC
         $data->created_UTC = $data->created == '0000-00-00 00:00:00' ? $data->created : self::convert2UTC($data->created);
