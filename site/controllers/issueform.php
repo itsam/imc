@@ -242,7 +242,7 @@ class ImcControllerIssueForm extends ImcController {
     }
 
     //simulate postSaveHook to move any images to the correct directory
-    protected function postSaveHook (JModelLegacy $model, $validData = array())
+    public function postSaveHook (JModelLegacy $model, $validData = array())
     {
         
         $insertid = JFactory::getApplication()->getUserState('com_imc.edit.issue.insertid');
@@ -265,8 +265,10 @@ class ImcControllerIssueForm extends ImcController {
             $data2['created_by'] = $validData['created_by'];
             $data2['updated'] = $validData['created'];
             $data2['language'] = $validData['language'];
-            $data2['rules'] = $validData['rules'];
-
+            if(isset($data2['rules']))
+            {
+                $data2['rules'] = $validData['rules'];
+            }
             
             if (!$log->bind($data2))
             {
@@ -298,7 +300,10 @@ class ImcControllerIssueForm extends ImcController {
                 $data2['created_by'] = $user->id;
                 $data2['updated'] = $validData['updated'];
                 $data2['language'] = $validData['language'];
-                $data2['rules'] = $validData['rules'];
+                if(isset($data2['rules']))
+                {
+                    $data2['rules'] = $validData['rules'];
+                }
 
                 if (!$log->bind($data2))
                 {

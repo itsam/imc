@@ -280,9 +280,11 @@ class plgImcmail_notifier extends JPlugin
 			$issueid = $id;
 		}
 
-		//$emails = $model->getItem($issueid)->get('notification_emails');
-		JModelLegacy::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/models');
-		$issueModel = JModelLegacy::getInstance( 'Issue', 'ImcModel' );
+		require_once JPATH_COMPONENT_ADMINISTRATOR . '/models/issue.php';
+		$issueModel = new ImcModelIssue();
+		//JModelLegacy::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/models');
+		//$issueModel = JModelLegacy::getInstance( 'Issue', 'ImcModel' );
+
 		$emails = $issueModel->getItem($issueid)->get('notification_emails');
 
 		$userid = $issueModel->getItem($issueid)->get('created_by');

@@ -242,9 +242,12 @@ class ImcModelIssueForm extends JModelForm
 	{
 		$id = (!empty($data['id'])) ? $data['id'] : (int)$this->getState('issue.id');
         $state = (!empty($data['state'])) ? 1 : 0;
-        $user = JFactory::getUser();
 
-        if($id) {
+		//$user = JFactory::getUser();
+		//check API request
+		$user = (isset($data['userid']) ? JFactory::getUser($data['userid']) : JFactory::getUser());
+
+		if($id) {
             //Check the user can edit this item
             $authorised = $user->authorise('core.edit', 'com_imc.issue.'.$id) || $authorised = $user->authorise('core.edit.own', 'com_imc.issue.'.$id);
             if($user->authorise('core.edit.state', 'com_imc.issue.'.$id) !== true && $state == 1){ //The user cannot edit the state of the item.

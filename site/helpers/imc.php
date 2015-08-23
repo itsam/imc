@@ -21,6 +21,30 @@ class ImcFrontendHelper {
         return $utc->format('Y-m-d H:i:s');
     }
 
+	public static function checkNullArguments($args)
+	{
+		$nullArguments = array();
+
+		if(!is_array($args))
+		{
+			throw new Exception('Checking arguments bad input');
+		}
+
+		foreach($args as $name => $value)
+		{
+			if (is_null($value))
+			{
+				array_push($nullArguments, $name);
+			}
+		}
+
+		if(!empty($nullArguments))
+		{
+			$errMsg = 'The following arguments are missing or bad input: ' . implode(', ',$nullArguments);
+			throw new Exception($errMsg);
+		}
+	}
+
 	public static function sanitizeIssues($data, $userid)
 	{
 		if(!is_array($data)){
@@ -133,6 +157,20 @@ class ImcFrontendHelper {
 
 		$db->setQuery($query);
 		return $db->loadAssoc();
+	}
+
+	public static function getPrimaryStepId()
+	{
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+
+		$query
+			->select('a.id')
+			->from('#__imc_steps AS a')
+			->order('a.ordering');
+
+		$db->setQuery($query);
+		return $db->loadResult();
 	}
 
 	public static function getGroupNameById($group_id) {

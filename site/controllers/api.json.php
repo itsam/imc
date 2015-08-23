@@ -54,6 +54,12 @@ class ImcControllerApi extends ImcController
     	parent::__construct();
     }
 
+    public function exception_error_handler($errno, $errstr, $errfile, $errline){
+        $ee = new ErrorException($errstr, 0, $errno, $errfile, $errline);
+        JFactory::getApplication()->enqueueMessage($ee, 'error');
+        throw $ee;
+    }
+
     private function validateRequest()
     {
         return 569; //TODO: REMOVE THIS LINE. ONLY FOR DEBUGGING PURPOSES
@@ -124,7 +130,7 @@ class ImcControllerApi extends ImcController
         $record->method = $app->input->getMethod();
         $record->token = $token;
         $record->unixtime = $objToken->t;
-        ImcModelTokens::insertToken($record); //throws exception on error
+        ImcModelTokens::insertToken($record); //this static method throws exception on error
 
         return $userid;
     }
@@ -174,12 +180,6 @@ class ImcControllerApi extends ImcController
 		}
 	}	
 
-    public function exception_error_handler($errno, $errstr, $errfile, $errline){
-        $ee = new ErrorException($errstr, 0, $errno, $errfile, $errline);
-        JFactory::getApplication()->enqueueMessage($ee, 'error');
-        throw $ee;
-    }
-
 	public function issue()
 	{
 		$result = null;
@@ -189,9 +189,6 @@ class ImcControllerApi extends ImcController
             //get necessary arguments
             $id = $app->input->getInt('id', null);
 
-            //get issue model
-            $issueModel = JModelLegacy::getInstance( 'Issue', 'ImcModel', array('ignore_request' => true) );
-
             switch($app->input->getMethod())
             {
                 //fetch existing issue
@@ -199,6 +196,9 @@ class ImcControllerApi extends ImcController
                     if ($id == null){
                         throw new Exception('Id is not set');
                     }
+
+                    //get issue model
+                    $issueModel = JModelLegacy::getInstance( 'Issue', 'ImcModel', array('ignore_request' => true) );
 
                     //handle unexpected warnings from model
                     set_error_handler(array($this, 'exception_error_handler'));
@@ -219,12 +219,54 @@ class ImcControllerApi extends ImcController
                         throw new Exception('Issue is not published');
                     }
 
+                    //be consistent return as array (of size 1)
+                    $result = array($result);
+
                 break;
                 //create new issue
                 case 'POST':
                     if ($id != null){
                         throw new Exception('You cannot use POST to fetch issue. Use GET instead');
                     }
+                    //get necessary arguments
+                    $args = array (
+                        'catid' => $app->input->getInt('catid'),
+                        'title' => $app->input->getString('title'),
+                        'description' => $app->input->getString('description'),
+                        'address' => $app->input->getString('address'),
+                        'latitude' => $app->input->getString('lat'),
+                        'longitude' => $app->input->getString('lng')
+                    );
+                    ImcFrontendHelper::checkNullArguments($args);
+
+                    $args['userid'] = $userid;
+                    $args['created_by'] = $userid;
+                    $args['stepid'] = ImcFrontendHelper::getPrimaryStepId();
+                    $args['id'] = 0;
+                    $args['created'] = date('Y-m-d H:i:s');
+                    $args['updated'] = $args['created'];
+                    $args['language'] = '*';
+                    $args['note'] = 'modality='.$app->input->getInt('m_id');
+                    $args['subgroup'] = 0;
+                    $args['photo'] = json_encode( array('isnew'=>1,'id'=>time(),'imagedir'=>'images/imc','files'=>array()), JSON_UNESCAPED_SLASHES);
+                    // '{"isnew":1,"id":1440286789,"imagedir":"images/imc","files":[]}';
+
+                    //get issueForm model
+                    //JModelLegacy::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/models');
+                    $issueFormModel = JModelLegacy::getInstance( 'IssueForm', 'ImcModel', array('ignore_request' => true) );
+
+                    //handle unexpected warnings from model
+                    set_error_handler(array($this, 'exception_error_handler'));
+                    $issueFormModel->save($args);
+                    $insertid = JFactory::getApplication()->getUserState('com_imc.edit.issue.insertid');
+
+                    //call post save hook
+                    require_once JPATH_COMPONENT . '/controllers/issueform.php';
+                    $issueFormController = new ImcControllerIssueForm();
+                    $issueFormController->postSaveHook($issueFormModel, $args);
+                    restore_error_handler();
+
+                    $result = 'Newly submitted issue ID is ' . $insertid;
                 break;
                 //update existing issue
                 case 'PUT':
@@ -237,8 +279,7 @@ class ImcControllerApi extends ImcController
                     throw new Exception('HTTP method is not supported');
             }
 
-            //be consistent return as array (of size 1)
-            echo new JResponseJson(array($result), 'Issue fetched successfully');
+            echo new JResponseJson($result, 'Issue action completed successfully');
 		}
 		catch(Exception $e)	{
 			echo new JResponseJson($e);
