@@ -14,7 +14,7 @@ defined('_JEXEC') or die('How dare calling me directly!');
 
 class UploadHandler
 {
-
+    public $imc_api = null;
     protected $options;
 
     // PHP File Upload error message codes:
@@ -538,7 +538,7 @@ class UploadHandler
     }
 
     protected function gd_destroy_image_object($file_path) {
-        $image = @$this->image_objects[$file_path];
+        $image = (isset($this->image_objects[$file_path])) ? $this->image_objects[$file_path] : null ;
         return $image && imagedestroy($image);
     }
 
@@ -1120,6 +1120,10 @@ class UploadHandler
                         $this->fix_integer_overflow(intval($files[0]->size)) - 1
                     ));
                 }
+            }
+            if (isset($this->options['imc_api'])) {
+                $this->imc_api = $json;
+                return;
             }
             $this->body($json);
         }

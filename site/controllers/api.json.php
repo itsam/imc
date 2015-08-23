@@ -245,14 +245,44 @@ class ImcControllerApi extends ImcController
                     $args['id'] = 0;
                     $args['created'] = date('Y-m-d H:i:s');
                     $args['updated'] = $args['created'];
-                    $args['language'] = '*';
                     $args['note'] = 'modality='.$app->input->getInt('m_id');
+                    $args['language'] = '*';
                     $args['subgroup'] = 0;
-                    $args['photo'] = json_encode( array('isnew'=>1,'id'=>time(),'imagedir'=>'images/imc','files'=>array()), JSON_UNESCAPED_SLASHES);
-                    // '{"isnew":1,"id":1440286789,"imagedir":"images/imc","files":[]}';
 
-                    //get issueForm model
-                    //JModelLegacy::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/models');
+                    $tmpTime = time(); //used for temporary id
+                    $imagedir = 'images/imc';
+
+                    //check if post contains files
+                    $file = $app->input->files->get('files');
+                    if(!empty($file))
+                    {
+                        require_once JPATH_ROOT . '/components/com_imc/models/fields/multiphoto/server/UploadHandler.php';
+                        $options = array(
+                                    'script_url' => JRoute::_( JURI::root(true).'/administrator/index.php?option=com_imc&task=upload.handler&format=json&id='.$tmpTime.'&imagedir='.$imagedir.'&'.JSession::getFormToken() .'=1' ),
+                                    'upload_dir' => JPATH_ROOT . '/'.$imagedir . '/' . $tmpTime.'/',
+                                    'upload_url' => JURI::root(true) . '/'.$imagedir . '/'.$tmpTime.'/',
+                                    'param_name' => 'files',
+                                    'imc_api' => true
+
+                                );
+                        $upload_handler = new UploadHandler($options);
+                        if(isset($upload_handler->imc_api))
+                        {
+                            $files_json = json_decode($upload_handler->imc_api);
+                            $args['photo'] = json_encode( array('isnew'=>1,'id'=>$tmpTime,'imagedir'=>$imagedir,'files'=>$files_json->files), JSON_UNESCAPED_SLASHES);
+                            $app->enqueueMessage('File(s) uploaded successfully', 'info');
+                        }
+                        else
+                        {
+                            throw new Exception('Upload failed');
+                        }
+                    }
+                    else
+                    {
+                        $args['photo'] = json_encode( array('isnew'=>1,'id'=>$tmpTime,'imagedir'=>$imagedir,'files'=>array()), JSON_UNESCAPED_SLASHES);
+                    }
+
+                    //get issueForm model and save
                     $issueFormModel = JModelLegacy::getInstance( 'IssueForm', 'ImcModel', array('ignore_request' => true) );
 
                     //handle unexpected warnings from model
