@@ -141,6 +141,12 @@ class ImcControllerApi extends ImcController
 		$app = JFactory::getApplication();
 		try {
 		    $userid = self::validateRequest();
+
+			if($app->input->getMethod() != 'GET')
+			{
+			    throw new Exception('You cannot use other method than GET to fetch issues');
+			}
+
 			//get necessary arguments
 			$minLat = $app->input->getString('minLat');
 			$maxLat = $app->input->getString('maxLat');
@@ -170,8 +176,8 @@ class ImcControllerApi extends ImcController
             set_error_handler(array($this, 'exception_error_handler'));
 			//get items and sanitize them
 			$data = $issuesModel->getItems();
-			restore_error_handler();
 			$result = ImcFrontendHelper::sanitizeIssues($data, $userid);
+			restore_error_handler();
 
 			echo new JResponseJson($result, 'Issues fetched successfully');
 		}
@@ -310,6 +316,39 @@ class ImcControllerApi extends ImcController
             }
 
             echo new JResponseJson($result, 'Issue action completed successfully');
+		}
+		catch(Exception $e)	{
+			echo new JResponseJson($e);
+		}
+	}
+
+	public function steps()
+	{
+		$result = null;
+		$app = JFactory::getApplication();
+		try {
+		    $userid = self::validateRequest();
+
+			if($app->input->getMethod() != 'GET')
+			{
+			    throw new Exception('You cannot use other method than GET to fetch steps');
+			}
+
+            //get steps model
+            $stepsModel = JModelLegacy::getInstance( 'Steps', 'ImcModel', array('ignore_request' => true) );
+            //set states
+            $stepsModel->setState('filter.imcapi.ordering', 'ordering');
+            $stepsModel->setState('filter.imcapi.direction', 'ASC');
+
+            //handle unexpected warnings from model
+            set_error_handler(array($this, 'exception_error_handler'));
+			//get items and sanitize them
+			$data = $stepsModel->getItems();
+			restore_error_handler();
+			$result = $data;
+			//$result = ImcFrontendHelper::sanitizeSteps($data, $userid);
+
+			echo new JResponseJson($result, 'Steps fetched successfully');
 		}
 		catch(Exception $e)	{
 			echo new JResponseJson($e);
