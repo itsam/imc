@@ -327,7 +327,7 @@ class ImcControllerApi extends ImcController
 		$result = null;
 		$app = JFactory::getApplication();
 		try {
-		    $userid = self::validateRequest();
+		    self::validateRequest();
 
 			if($app->input->getMethod() != 'GET')
 			{
@@ -337,18 +337,42 @@ class ImcControllerApi extends ImcController
             //get steps model
             $stepsModel = JModelLegacy::getInstance( 'Steps', 'ImcModel', array('ignore_request' => true) );
             //set states
-            $stepsModel->setState('filter.imcapi.ordering', 'ordering');
-            $stepsModel->setState('filter.imcapi.direction', 'ASC');
+            $stepsModel->setState('filter.state', 1);
+            //$stepsModel->setState('filter.imcapi.ordering', 'ordering');
+            //$stepsModel->setState('filter.imcapi.direction', 'ASC');
 
             //handle unexpected warnings from model
             set_error_handler(array($this, 'exception_error_handler'));
 			//get items and sanitize them
 			$data = $stepsModel->getItems();
 			restore_error_handler();
-			$result = $data;
-			//$result = ImcFrontendHelper::sanitizeSteps($data, $userid);
+			$result = ImcFrontendHelper::sanitizeSteps($data);
 
 			echo new JResponseJson($result, 'Steps fetched successfully');
+		}
+		catch(Exception $e)	{
+			echo new JResponseJson($e);
+		}
+	}
+
+	public function categories()
+	{
+		$result = null;
+		$app = JFactory::getApplication();
+		try {
+		    self::validateRequest();
+
+			if($app->input->getMethod() != 'GET')
+			{
+			    throw new Exception('You cannot use other method than GET to fetch categories');
+			}
+
+            //handle unexpected warnings from JCategories
+            set_error_handler(array($this, 'exception_error_handler'));
+            $result = ImcFrontendHelper::getCategories(true);
+			restore_error_handler();
+
+			echo new JResponseJson($result, 'Categories fetched successfully');
 		}
 		catch(Exception $e)	{
 			echo new JResponseJson($e);

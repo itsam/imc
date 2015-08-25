@@ -9,7 +9,11 @@
  */
 defined('_JEXEC') or die;
 
-class ImcFrontendHelper {
+class ImcFrontendHelper
+{
+
+	private static $_items = array(); //used by getCategories
+	private static $_parent; //used by getCategories
 
     public static function convert2UTC($date)
     {
@@ -56,8 +60,6 @@ class ImcFrontendHelper {
 		foreach ($data as $issue)
 		{
 			$issue = self::sanitizeIssue($issue, $userid);
-			unset($issue->access_level);
-			unset($issue->editor);
 			array_push($issues, $issue);
 		}
 		return $issues;
@@ -78,6 +80,8 @@ class ImcFrontendHelper {
         unset($data->note);
         unset($data->modality);
         unset($data->updated_by);
+		unset($data->access_level);
+		unset($data->editor);
 
 		if($data->category_image != '')
 		{
@@ -121,6 +125,89 @@ class ImcFrontendHelper {
 		$data->moderation = (boolean)$data->moderation;
 		$data->myIssue = ($data->created_by == $userid);
         return $data;
+	}
+
+	public static function sanitizeSteps($data)
+	{
+		if(!is_array($data)){
+			throw new Exception('Steps sanitization bad input');
+		}
+
+		$steps = array();
+
+		foreach ($data as $step)
+		{
+			$step = self::sanitizeStep($step);
+			array_push($steps, $step);
+		}
+		return $steps;
+	}
+
+	public static function sanitizeStep($data)
+	{
+		if(!is_object($data)){
+			throw new Exception('Step sanitization bad input');
+		}
+		//unset overhead
+		unset($data->asset_id);
+		unset($data->state);
+		unset($data->created);
+		unset($data->updated);
+		unset($data->checked_out);
+		unset($data->checked_out_time);
+		unset($data->created_by);
+		unset($data->updated_by);
+		unset($data->language);
+		unset($data->editor);
+
+		return $data;
+	}
+
+	public static function getCategories($recursive = false)
+	{
+		$categories = JCategories::getInstance('imc');
+		self::$_parent = $categories->get();
+		if (is_object(self::$_parent)) {
+			self::$_items = self::$_parent->getChildren($recursive);
+		}
+		else {
+			self::$_items = false;
+		}
+
+		return self::loadCats(self::$_items);
+	}
+
+	protected static function loadCats($cats = array())
+	{
+		if(is_array($cats))
+		{
+			$i = 0;
+			$return = array();
+			foreach($cats as $JCatNode)
+			{
+				$return[$i] = new stdClass();
+				$return[$i]->title = $JCatNode->title;
+				$return[$i]->parentid = $JCatNode->parent_id;
+				$return[$i]->path = $JCatNode->get('path');
+				$return[$i]->id = $JCatNode->id;
+				$params = json_decode($JCatNode->params);
+
+				$return[$i]->image = $params->image;
+				if($return[$i]->image)
+				{
+					$return[$i]->image = JUri::base() . $return[$i]->image;
+				}
+
+				if($JCatNode->hasChildren())
+					$return[$i]->children = self::loadCats($JCatNode->getChildren());
+				else
+					$return[$i]->children = null;
+
+				$i++;
+			}
+			return $return;
+		}
+		return false;
 	}
 
 	/**
