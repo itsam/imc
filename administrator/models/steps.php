@@ -35,7 +35,6 @@ class ImcModelSteps extends JModelList {
                 'updated', 'a.updated',
                 'created_by', 'a.created_by',
                 'language', 'a.language',
-
             );
         }
 
@@ -57,8 +56,6 @@ class ImcModelSteps extends JModelList {
 
         $published = $app->getUserStateFromRequest($this->context . '.filter.state', 'filter_published', '', 'string');
         $this->setState('filter.state', $published);
-
-        
 
         // Load the parameters.
         $params = JComponentHelper::getParams('com_imc');
@@ -106,15 +103,12 @@ class ImcModelSteps extends JModelList {
         );
         $query->from('`#__imc_steps` AS a');
 
-        
 		// Join over the users for the checked out user
 		$query->select("uc.name AS editor");
 		$query->join("LEFT", "#__users AS uc ON uc.id=a.checked_out");
 		// Join over the user field 'created_by'
 		$query->select('created_by.name AS created_by');
 		$query->join('LEFT', '#__users AS created_by ON created_by.id = a.created_by');
-
-        
 
 		// Filter by published state
 		$published = $this->getState('filter.state');
@@ -135,14 +129,24 @@ class ImcModelSteps extends JModelList {
             }
         }
 
-        
-
-
         // Add the list ordering clause.
         $orderCol = $this->state->get('list.ordering');
         $orderDirn = $this->state->get('list.direction');
-        if ($orderCol && $orderDirn) {
+
+        if(!$orderCol && !$orderDirn)
+        {
+            $orderCol = $this->state->get('filter.imcapi.ordering', '');
+            $orderDirn = $this->state->get('filter.imcapi.direction', '');
+        }
+
+        if ($orderCol && $orderDirn)
+        {
             $query->order($db->escape($orderCol . ' ' . $orderDirn));
+        }
+        else
+        {
+            //set default ordering
+            $query->order($db->escape('a.ordering' . ' ' . 'ASC'));
         }
 
         return $query;

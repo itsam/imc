@@ -86,7 +86,7 @@ class ImcModelIssues extends JModelList {
         $this->setState('filter.search', $search);
 
         //$published = $app->getUserStateFromRequest($this->context . '.filter.state', 'filter_published', '', 'string');
-        $published = 1;
+        $published = 1; //always fetch published issues only
         $this->setState('filter.state', $published);
 
         $access = $app->getUserStateFromRequest($this->context . '.filter.access', 'filter_access');
@@ -249,8 +249,6 @@ class ImcModelIssues extends JModelList {
 		    $orderDirn = $this->state->get('filter.imcapi.direction', '');
 	    }
 
-	    //echo '->'.$this->state->get('list.limit');
-
 	    if ($orderCol == 'access_level')
         {
             $orderCol = 'ag.title';
@@ -312,7 +310,7 @@ class ImcModelIssues extends JModelList {
                 }
 
                 //Remove according to category access level
-                //if not priviledged user Jcategory->get returns nothing... actually the whole object is not even set
+                //if not privileged user Jcategory->get returns nothing... actually the whole object is not even set
                 if (!isset($categories->get($items[$x]->catid)->access)) {
                     unset($items[$x]);
                     continue;
