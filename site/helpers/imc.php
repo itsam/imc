@@ -260,7 +260,8 @@ class ImcFrontendHelper
 		return $db->loadResult();
 	}
 
-	public static function getGroupNameById($group_id) {
+	public static function getGroupNameById($group_id)
+	{
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
 
@@ -271,6 +272,20 @@ class ImcFrontendHelper
 
 		$db->setQuery($query);
 		return $db->loadResult();	
+	}
+
+	public static function emailExists($email)
+	{
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+		$query->select('COUNT(*)');
+		$query->from($db->quoteName('#__users'));
+		$query->where($db->quoteName('email')." = ".$db->quote($email));
+
+		$db->setQuery($query);
+		$count = $db->loadResult();
+
+		return (bool) $count;
 	}
 
 	public static function getRelativeTime($time)
