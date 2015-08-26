@@ -37,20 +37,14 @@ require_once JPATH_COMPONENT_SITE . '/models/tokens.php';
 class ImcControllerApi extends ImcController
 {
     private $mcrypt;
-    private $keyModel;
 
-    //private $userModel;
+    private $keyModel;
 
     function __construct()
     {
     	$this->mcrypt = new MCrypt();
-
         JModelLegacy::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/models');
         $this->keyModel = JModelLegacy::getInstance( 'Key', 'ImcModel', array('ignore_request' => true) );
-
-    	//JModelLegacy::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_users/models/');
-        //$this->userModel = JModelLegacy::getInstance( 'User', 'UsersModel');
-
     	parent::__construct();
     }
 
@@ -60,9 +54,9 @@ class ImcControllerApi extends ImcController
         throw $ee;
     }
 
-    private function validateRequest()
+    private function validateRequest($isNew = false)
     {
-        return 569; //TODO: REMOVE THIS LINE. ONLY FOR DEBUGGING PURPOSES
+        ///return 569; //TODO: REMOVE THIS LINE. ONLY FOR DEBUGGING PURPOSES
         $app = JFactory::getApplication();
         $token = $app->input->getString('token');
         $m_id  = $app->input->getInt('m_id');
@@ -110,17 +104,25 @@ class ImcControllerApi extends ImcController
         //4. authenticate user
         $userid = JUserHelper::getUserId($objToken->u);
         $user = JFactory::getUser($userid);
+		$userInfo = array();
+		if ($isNew) {
+			$userInfo['username'] =$objToken->u;
+			$userInfo['password'] =$objToken->p;
+		}
+		else
+		{
+	        $match = JUserHelper::verifyPassword($objToken->p, $user->password, $userid);
+	        if(!$match){
+	            $app->enqueueMessage('Either username or password do not match', 'error');
+	            throw new Exception('Token does not match');
+	        }
 
-        $match = JUserHelper::verifyPassword($objToken->p, $user->password, $userid);
-        if(!$match){
-            $app->enqueueMessage('Either username or password do not match', 'error');
-            throw new Exception('Token does not match');
-        }
+	        if($user->block){
+	            $app->enqueueMessage('User is found but probably is not yet activated', 'error');
+	            throw new Exception('User is blocked');
+	        }
 
-        if($user->block){
-            $app->enqueueMessage('User is found but probably is not yet activated', 'error');
-            throw new Exception('Token user is blocked');
-        }
+		}
 
         //5. populate token table
         $record = new stdClass();
@@ -132,7 +134,7 @@ class ImcControllerApi extends ImcController
         $record->unixtime = $objToken->t;
         ImcModelTokens::insertToken($record); //this static method throws exception on error
 
-        return $userid;
+        return $isNew ? $userInfo : $userid;
     }
 
 	public function issues()
@@ -378,4 +380,138 @@ class ImcControllerApi extends ImcController
 			echo new JResponseJson($e);
 		}
 	}
+
+	/**
+	* check if username / email already exists
+    * with light request validation
+    */
+	public function userexists($username = null, $email = null)
+	{
+		$result = null;
+		$usernameExists = false;
+		$emailExists = false;
+
+		$app = JFactory::getApplication();
+		try {
+		    //self::lightValidateRequest(); //TODO: Implement the loose non user-based validation version
+
+            //get necessary arguments
+            $args = array (
+                'username' => is_null($username) ? $app->input->getString('username') : $username,
+                'email' => is_null($email) ? $app->input->getString('email') : $email
+            );
+            ImcFrontendHelper::checkNullArguments($args);
+			$userid = JUserHelper::getUserId($args['username']);
+			if($userid > 0)
+			{
+				$app->enqueueMessage('Username exists', 'info');
+				$usernameExists = true;
+			}
+
+			if(ImcFrontendHelper::emailExists($args['email']))
+			{
+				$app->enqueueMessage('Email exists', 'info');
+				$emailExists = true;
+			}
+
+			$result = ($usernameExists || $emailExists);
+
+            echo new JResponseJson($result, 'Check user action completed successfully');
+		}
+		catch(Exception $e)	{
+			echo new JResponseJson($e);
+		}
+
+	}
+
+	public function user()
+	{
+		$result = null;
+		$app = JFactory::getApplication();
+
+		try {
+            switch($app->input->getMethod())
+            {
+                case 'GET':
+					$userid = self::validateRequest();
+                    $app->enqueueMessage('User is valid', 'info');
+                    $result = $userid;
+
+                break;
+                //create new user
+                case 'POST':
+                    $userInfo = self::validateRequest(true);
+
+					if(JComponentHelper::getParams('com_users')->get('allowUserRegistration') == 0) {
+						throw new Exception('Registration is not allowed');
+					}
+
+                    //get necessary arguments
+                    $args = array (
+                        'name' => $app->input->getString('name'),
+                        'email' => $app->input->getString('email'),
+                        'phone' => $app->input->getString('phone'),
+                        'address' => $app->input->getString('address')
+                    );
+                    ImcFrontendHelper::checkNullArguments($args);
+
+					//populate other data
+                    $args['username'] = $userInfo['username'];
+                    $args['password1'] = $userInfo['password'];
+                    $args['email1'] = $args['email'];
+
+                    //handle unexpected warnings from model
+                    set_error_handler(array($this, 'exception_error_handler'));
+
+					//load com_users language
+					$lang = JFactory::getLanguage();
+					$language = $lang->getTag();
+					$extension = 'com_users';
+					$base_dir = JPATH_SITE;
+					$language_tag = $language;
+					$reload = true;
+					$lang->load($extension, $base_dir, $language_tag, $reload);
+
+					JModelLegacy::addIncludePath(JPATH_SITE . '/components/com_users/models/');
+					$userModel = JModelLegacy::getInstance( 'Registration', 'UsersModel');
+					$result = $userModel->register($args);
+					if (!$result)
+					{
+						throw new Exception($userModel->getError());
+					}
+                    restore_error_handler();
+
+					if ($result === 'adminactivate')
+					{
+						$app->enqueueMessage(JText::_('COM_USERS_REGISTRATION_COMPLETE_VERIFY'), 'info');
+					}
+					elseif ($result === 'useractivate')
+					{
+						$app->enqueueMessage(JText::_('COM_USERS_REGISTRATION_COMPLETE_ACTIVATE'), 'info');
+					}
+					else
+					{
+						$app->enqueueMessage(JText::_('COM_USERS_REGISTRATION_SAVE_SUCCESS'), 'info');
+					}
+
+                break;
+                //update existing issue
+                case 'PUT':
+                case 'PATCH':
+                    $id = $app->input->getInt('id', null);
+                    if ($id == null){
+                        throw new Exception('Id is not set');
+                    }
+                break;
+                default:
+                    throw new Exception('HTTP method is not supported');
+            }
+
+            echo new JResponseJson($result, $msg = 'User action completed successfully');
+		}
+		catch(Exception $e)	{
+			echo new JResponseJson($e);
+		}
+	}
+
 }
