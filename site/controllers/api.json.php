@@ -59,7 +59,7 @@ class ImcControllerApi extends ImcController
 		$result = null;
 		$app = JFactory::getApplication();
 		try {
-		    //self::lightValidateRequest();
+		    self::validateRequest();
 
 			if($app->input->getMethod() != 'GET')
 			{
@@ -169,17 +169,23 @@ class ImcControllerApi extends ImcController
 		}
 		else
 		{
-	        $match = JUserHelper::verifyPassword($objToken->p, $user->password, $userid);
-	        if(!$match){
-	            $app->enqueueMessage('Either username or password do not match', 'error');
-	            throw new Exception('Token does not match');
-	        }
+			if($objToken->u == 'imc-guest' && $objToken->p == 'imc-guest')
+			{
+				$userid = 0;
+			}
+			else
+			{
+		        $match = JUserHelper::verifyPassword($objToken->p, $user->password, $userid);
+		        if(!$match){
+		            $app->enqueueMessage('Either username or password do not match', 'error');
+		            throw new Exception('Token does not match');
+		        }
 
-	        if($user->block){
-	            $app->enqueueMessage('User is found but probably is not yet activated', 'error');
-	            throw new Exception('User is blocked');
-	        }
-
+		        if($user->block){
+		            $app->enqueueMessage('User is found but probably is not yet activated', 'error');
+		            throw new Exception('User is blocked');
+		        }
+			}
 		}
 
         //5. populate token table
@@ -294,6 +300,14 @@ class ImcControllerApi extends ImcController
                     if ($id != null){
                         throw new Exception('You cannot use POST to fetch issue. Use GET instead');
                     }
+
+                    //guests are not allowed to post issues
+                    //TODO: get this from settings
+                    if($userid == 0)
+                    {
+                        throw new Exception('Guests are now allowed to post new issues');
+                    }
+
                     //get necessary arguments
                     $args = array (
                         'catid' => $app->input->getInt('catid'),
@@ -441,7 +455,6 @@ class ImcControllerApi extends ImcController
 
 	/**
 	* check if username / email already exists
-    * with light request validation
     */
 	public function userexists($username = null, $email = null)
 	{
@@ -451,7 +464,7 @@ class ImcControllerApi extends ImcController
 
 		$app = JFactory::getApplication();
 		try {
-		    //self::lightValidateRequest(); //TODO: Implement the loose non user-based validation version
+		    self::validateRequest();
 
             //get necessary arguments
             $args = array (
@@ -557,6 +570,32 @@ class ImcControllerApi extends ImcController
             }
 
             echo new JResponseJson($result, $msg = 'User action completed successfully');
+		}
+		catch(Exception $e)	{
+			echo new JResponseJson($e);
+		}
+	}
+
+	public function timestamp()
+	{
+		$result = null;
+		$app = JFactory::getApplication();
+		try {
+		    self::validateRequest();
+
+			if($app->input->getMethod() != 'GET')
+			{
+			    throw new Exception('You cannot use other method than GET to fetch timestamp');
+			}
+
+            $args = array (
+                'ts' => $app->input->getString('ts'),
+            );
+            ImcFrontendHelper::checkNullArguments($args);
+
+			$result = ImcFrontendHelper::getTimestamp($args['ts']);
+
+			echo new JResponseJson($result, 'Updates since timestamp fetched successfully');
 		}
 		catch(Exception $e)	{
 			echo new JResponseJson($e);
