@@ -54,6 +54,61 @@ class ImcControllerApi extends ImcController
         throw $ee;
     }
 
+    public function languages()
+    {
+		$result = null;
+		$app = JFactory::getApplication();
+		try {
+		    //self::lightValidateRequest();
+
+			if($app->input->getMethod() != 'GET')
+			{
+			    throw new Exception('You cannot use other method than GET to fetch languages');
+			}
+
+            $availLanguages = JFactory::getLanguage()->getKnownLanguages();
+            $languages = array();
+            foreach ($availLanguages as $key => $value) {
+                array_push($languages, $key);
+            }
+
+            $result = $languages;
+			echo new JResponseJson($result, 'Languages fetched successfully');
+		}
+		catch(Exception $e)	{
+			echo new JResponseJson($e);
+		}
+    }
+
+    private function setLanguage($lan)
+    {
+		$extensions = array('com_users', 'com_imc');
+        $lang = JFactory::getLanguage();
+        $joomlaLang = null;
+
+        //try to align input with available language
+		$availLanguages = $lang->getKnownLanguages();
+		foreach ($availLanguages as $key => $value) {
+		    if($lan == substr($key, 0, 2))
+		    {
+		        $joomlaLang = $key;
+		    }
+		}
+
+		if(is_null($joomlaLang))
+		{
+			throw new Exception('Language is not available');
+		}
+
+        $base_dir = JPATH_SITE;
+        $language_tag = $joomlaLang;
+        $reload = true;
+		//for each extension load the appropriate language
+		foreach ($extensions as $extension) {
+            $lang->load($extension, $base_dir, $language_tag, $reload);
+		}
+    }
+
     private function validateRequest($isNew = false)
     {
         ///return 569; //TODO: REMOVE THIS LINE. ONLY FOR DEBUGGING PURPOSES
@@ -67,6 +122,9 @@ class ImcControllerApi extends ImcController
             $app->enqueueMessage('Either token, m_id (modality), or l (language) are missing', 'error');
             throw new Exception('Request is invalid');
         }
+
+        //set language
+        $this->setLanguage($app->input->getString('l'));
 
         //check for nonce (existing token)
         if(ImcModelTokens::exists($token)){
@@ -462,15 +520,6 @@ class ImcControllerApi extends ImcController
 
                     //handle unexpected warnings from model
                     set_error_handler(array($this, 'exception_error_handler'));
-
-					//load com_users language
-					$lang = JFactory::getLanguage();
-					$language = $lang->getTag();
-					$extension = 'com_users';
-					$base_dir = JPATH_SITE;
-					$language_tag = $language;
-					$reload = true;
-					$lang->load($extension, $base_dir, $language_tag, $reload);
 
 					JModelLegacy::addIncludePath(JPATH_SITE . '/components/com_users/models/');
 					$userModel = JModelLegacy::getInstance( 'Registration', 'UsersModel');
