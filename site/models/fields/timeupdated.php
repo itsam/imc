@@ -36,7 +36,7 @@ class JFormFieldTimeupdated extends JFormField
 		$html = array();
         
         
-		$old_time_updated = $this->value;
+		$old_time_updated = ImcFrontendHelper::convertFromUTC($this->value);
         $hidden = (boolean) $this->element['hidden'];
         if ($hidden == null || !$hidden){
             if (!strtotime($old_time_updated)) {
@@ -47,7 +47,7 @@ class JFormFieldTimeupdated extends JFormField
                 $html[] = "<span>".$pretty_date."</span>";
             }
         }
-        $time_updated = date("Y-m-d H:i:s");
+        $time_updated = ImcFrontendHelper::convert2UTC( date("Y-m-d H:i:s") );
         $html[] = '<input type="hidden" name="'.$this->name.'" value="'.$time_updated.'" />';
         
 		return implode("\n", $html);

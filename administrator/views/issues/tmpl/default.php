@@ -221,8 +221,7 @@ if (!empty($this->extra_sidebar)) {
 					<?php echo $item->catid_title; ?>
 				</td>
 				<td>
-
-					<?php echo $item->created; ?>
+					<?php echo JHtml::_('date', $item->created, JText::_('DATE_FORMAT_LC2')); ?>
 				</td>
 				<td>
 

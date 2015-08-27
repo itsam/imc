@@ -206,9 +206,8 @@ if (!empty($this->extra_sidebar)) {
 					<?php echo $item->action; ?>
 				</td>
 				<td>
-
-					<?php echo $item->created; ?>
-				</td>				
+					<?php echo JHtml::_('date', $item->created, JText::_('DATE_FORMAT_LC2')); ?>
+				</td>
 				<td>
 
 					<?php //echo $item->stepid; ?>

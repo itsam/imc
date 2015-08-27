@@ -25,6 +25,16 @@ class ImcFrontendHelper
         return $utc->format('Y-m-d H:i:s');
     }
 
+	public static function convertFromUTC($date)
+	{
+		//get timezone from settings
+		$offset = JFactory::getConfig()->get('offset');
+
+		$tzDate = new DateTime($date, new DateTimeZone('UTC'));
+		$tzDate->setTimezone(new DateTimeZone($offset));
+		return $tzDate->format('Y-m-d H:i:s');
+	}
+
 	public static function checkNullArguments($args)
 	{
 		$nullArguments = array();
@@ -320,7 +330,9 @@ class ImcFrontendHelper
 	{
 		if(strtotime($time) <= 0)
 			return '';
-		
+
+		$time = ImcFrontendHelper::convertFromUTC($time);
+
 		// Load the parameters.
 		$app = JFactory::getApplication();
 /*		$params	= $app->getParams();
