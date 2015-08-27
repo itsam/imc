@@ -48,65 +48,10 @@ class ImcControllerApi extends ImcController
     	parent::__construct();
     }
 
-    public function exception_error_handler($errno, $errstr, $errfile, $errline){
+    private function exception_error_handler($errno, $errstr, $errfile, $errline){
         $ee = new ErrorException($errstr, 0, $errno, $errfile, $errline);
         JFactory::getApplication()->enqueueMessage($ee, 'error');
         throw $ee;
-    }
-
-    public function languages()
-    {
-		$result = null;
-		$app = JFactory::getApplication();
-		try {
-		    self::validateRequest();
-
-			if($app->input->getMethod() != 'GET')
-			{
-			    throw new Exception('You cannot use other method than GET to fetch languages');
-			}
-
-            $availLanguages = JFactory::getLanguage()->getKnownLanguages();
-            $languages = array();
-            foreach ($availLanguages as $key => $value) {
-                array_push($languages, $key);
-            }
-
-            $result = $languages;
-			echo new JResponseJson($result, 'Languages fetched successfully');
-		}
-		catch(Exception $e)	{
-			echo new JResponseJson($e);
-		}
-    }
-
-    private function setLanguage($lan)
-    {
-		$extensions = array('com_users', 'com_imc');
-        $lang = JFactory::getLanguage();
-        $joomlaLang = null;
-
-        //try to align input with available language
-		$availLanguages = $lang->getKnownLanguages();
-		foreach ($availLanguages as $key => $value) {
-		    if($lan == substr($key, 0, 2))
-		    {
-		        $joomlaLang = $key;
-		    }
-		}
-
-		if(is_null($joomlaLang))
-		{
-			throw new Exception('Language is not available');
-		}
-
-        $base_dir = JPATH_SITE;
-        $language_tag = $joomlaLang;
-        $reload = true;
-		//for each extension load the appropriate language
-		foreach ($extensions as $extension) {
-            $lang->load($extension, $base_dir, $language_tag, $reload);
-		}
     }
 
     private function validateRequest($isNew = false)
@@ -124,11 +69,11 @@ class ImcControllerApi extends ImcController
         }
 
         //set language
-        $this->setLanguage($app->input->getString('l'));
+        ImcFrontendHelper::setLanguage($app->input->getString('l'), array('com_users', 'com_imc'));
 
         //check for nonce (existing token)
         if(ImcModelTokens::exists($token)){
-            throw new Exception('Token is already used');
+            ///throw new Exception('Token is already used');
         }
 
         //2. get the appropriate key according to given modality
@@ -154,9 +99,9 @@ class ImcControllerApi extends ImcController
             throw new Exception('Token is not well formatted');
         }
 
-        //TODO: Set timeout at options (default is 1 minute)
-        if((time() - $objToken->t) > 1 * 60){
-            throw new Exception('Token has expired');
+        //TODO: Set timeout at options
+        if((time() - $objToken->t) > 3 * 60){
+            ///throw new Exception('Token has expired');
         }
 
         //4. authenticate user
@@ -201,7 +146,33 @@ class ImcControllerApi extends ImcController
         return $isNew ? $userInfo : $userid;
     }
 
-	public function issues()
+    public function languages()
+    {
+		$result = null;
+		$app = JFactory::getApplication();
+		try {
+		    self::validateRequest();
+
+			if($app->input->getMethod() != 'GET')
+			{
+			    throw new Exception('You cannot use other method than GET to fetch languages');
+			}
+
+            $availLanguages = JFactory::getLanguage()->getKnownLanguages();
+            $languages = array();
+            foreach ($availLanguages as $key => $value) {
+                array_push($languages, $key);
+            }
+
+            $result = $languages;
+			echo new JResponseJson($result, 'Languages fetched successfully');
+		}
+		catch(Exception $e)	{
+			echo new JResponseJson($e);
+		}
+    }
+
+	public function issues($json = true)
 	{
 		$result = null;
 		$app = JFactory::getApplication();
@@ -220,6 +191,7 @@ class ImcControllerApi extends ImcController
 			$maxLng = $app->input->getString('maxLng');
 			$owned = $app->input->get('owned', false);
 			$lim = $app->input->getInt('lim', 0);
+			$ts = $app->input->getString('ts');
 
             //get issues model
             $issuesModel = JModelLegacy::getInstance( 'Issues', 'ImcModel', array('ignore_request' => true) );
@@ -238,6 +210,11 @@ class ImcControllerApi extends ImcController
 				$issuesModel->setState('filter.imcapi.maxLng', $maxLng);
 			}
 
+			if(!is_null($ts))
+			{
+				$issuesModel->setState('filter.imcapi.ts', $ts);
+			}
+
             //handle unexpected warnings from model
             set_error_handler(array($this, 'exception_error_handler'));
 			//get items and sanitize them
@@ -245,7 +222,14 @@ class ImcControllerApi extends ImcController
 			$result = ImcFrontendHelper::sanitizeIssues($data, $userid);
 			restore_error_handler();
 
-			echo new JResponseJson($result, 'Issues fetched successfully');
+			if($json)
+			{
+				echo new JResponseJson($result, 'Issues fetched successfully');
+			}
+			else
+			{
+				return $result;
+			}
 		}
 		catch(Exception $e)	{
 			echo new JResponseJson($e);
@@ -323,7 +307,7 @@ class ImcControllerApi extends ImcController
                     $args['created_by'] = $userid;
                     $args['stepid'] = ImcFrontendHelper::getPrimaryStepId();
                     $args['id'] = 0;
-                    $args['created'] = date('Y-m-d H:i:s');
+                    $args['created'] = ImcFrontendHelper::convert2UTC(date('Y-m-d H:i:s'));
                     $args['updated'] = $args['created'];
                     $args['note'] = 'modality='.$app->input->getInt('m_id');
                     $args['language'] = '*';
@@ -349,7 +333,7 @@ class ImcControllerApi extends ImcController
                         if(isset($upload_handler->imc_api))
                         {
                             $files_json = json_decode($upload_handler->imc_api);
-                            $args['photo'] = json_encode( array('isnew'=>1,'id'=>$tmpTime,'imagedir'=>$imagedir,'files'=>$files_json->files), JSON_UNESCAPED_SLASHES);
+                            $args['photo'] = json_encode( array('isnew'=>1,'id'=>$tmpTime,'imagedir'=>$imagedir,'files'=>$files_json->files) );
                             $app->enqueueMessage('File(s) uploaded successfully', 'info');
                         }
                         else
@@ -359,7 +343,7 @@ class ImcControllerApi extends ImcController
                     }
                     else
                     {
-                        $args['photo'] = json_encode( array('isnew'=>1,'id'=>$tmpTime,'imagedir'=>$imagedir,'files'=>array()), JSON_UNESCAPED_SLASHES);
+                        $args['photo'] = json_encode( array('isnew'=>1,'id'=>$tmpTime,'imagedir'=>$imagedir,'files'=>array()) );
                     }
 
                     //get issueForm model and save
@@ -396,7 +380,7 @@ class ImcControllerApi extends ImcController
 		}
 	}
 
-	public function steps()
+	public function steps($json = true)
 	{
 		$result = null;
 		$app = JFactory::getApplication();
@@ -408,12 +392,20 @@ class ImcControllerApi extends ImcController
 			    throw new Exception('You cannot use other method than GET to fetch steps');
 			}
 
+			//get necessary arguments
+			$ts = $app->input->getString('ts');
+
             //get steps model
             $stepsModel = JModelLegacy::getInstance( 'Steps', 'ImcModel', array('ignore_request' => true) );
             //set states
             $stepsModel->setState('filter.state', 1);
             //$stepsModel->setState('filter.imcapi.ordering', 'ordering');
             //$stepsModel->setState('filter.imcapi.direction', 'ASC');
+
+			if(!is_null($ts))
+			{
+				$stepsModel->setState('filter.imcapi.ts', $ts);
+			}
 
             //handle unexpected warnings from model
             set_error_handler(array($this, 'exception_error_handler'));
@@ -422,7 +414,13 @@ class ImcControllerApi extends ImcController
 			restore_error_handler();
 			$result = ImcFrontendHelper::sanitizeSteps($data);
 
-			echo new JResponseJson($result, 'Steps fetched successfully');
+			if($json){
+				echo new JResponseJson($result, 'Steps fetched successfully');
+			}
+			else
+			{
+				return $result;
+			}
 		}
 		catch(Exception $e)	{
 			echo new JResponseJson($e);
@@ -453,10 +451,7 @@ class ImcControllerApi extends ImcController
 		}
 	}
 
-	/**
-	* check if username / email already exists
-    */
-	public function userexists($username = null, $email = null)
+	public function userexists()
 	{
 		$result = null;
 		$usernameExists = false;
@@ -468,8 +463,8 @@ class ImcControllerApi extends ImcController
 
             //get necessary arguments
             $args = array (
-                'username' => is_null($username) ? $app->input->getString('username') : $username,
-                'email' => is_null($email) ? $app->input->getString('email') : $email
+                'username' => $app->input->getString('username'),
+                'email' => $app->input->getString('email')
             );
             ImcFrontendHelper::checkNullArguments($args);
 			$userid = JUserHelper::getUserId($args['username']);
@@ -593,13 +588,43 @@ class ImcControllerApi extends ImcController
             );
             ImcFrontendHelper::checkNullArguments($args);
 
-			$result = ImcFrontendHelper::getTimestamp($args['ts']);
+			$result = self::getTimestamp($args['ts']);
 
 			echo new JResponseJson($result, 'Updates since timestamp fetched successfully');
 		}
 		catch(Exception $e)	{
 			echo new JResponseJson($e);
 		}
+	}
+
+	private function getTimestamp($ts)
+	{
+		$app = JFactory::getApplication();
+
+		$tsDate = date("Y-m-d H:i:s", $ts);
+		$offsetDate = JDate::getInstance($tsDate, JFactory::getConfig()->get('offset') );
+
+		$updates = array(
+			'newestTS'   => $ts, //used mainly for backwards compatibility
+			'ts'         => $ts,
+			'offset'     => $offsetDate,
+			'issues'     => null,
+			'categories' => null,
+			'steps'      => null,
+			'votes'      => null,
+			'comments'   => null,
+		);
+
+		$app->input->set('ts', $ts);
+		//$updates['issues'] = self::issues(false);
+		//$updates['categories'] = self::categories(false);
+		//$updates['steps'] = self::steps(false);
+		//$updates['votes'] = self::votes(false);
+		//$updates['comments'] = self::comments(false);
+
+
+
+		return $updates;
 	}
 
 }

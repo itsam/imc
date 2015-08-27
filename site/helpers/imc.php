@@ -288,6 +288,34 @@ class ImcFrontendHelper
 		return (bool) $count;
 	}
 
+	public static function setLanguage($language, $extensions = array('com_imc'))
+	{
+		$lang = JFactory::getLanguage();
+		$joomlaLang = null;
+
+		//try to align input with available language
+		$availLanguages = $lang->getKnownLanguages();
+		foreach ($availLanguages as $key => $value) {
+			if($language == substr($key, 0, 2))
+			{
+				$joomlaLang = $key;
+			}
+		}
+
+		if(is_null($joomlaLang))
+		{
+			throw new Exception('Language is not available');
+		}
+
+		$base_dir = JPATH_SITE;
+		$language_tag = $joomlaLang;
+		$reload = true;
+		//for each extension load the appropriate language
+		foreach ($extensions as $extension) {
+			$lang->load($extension, $base_dir, $language_tag, $reload);
+		}
+	}
+
 	public static function getRelativeTime($time)
 	{
 		if(strtotime($time) <= 0)
