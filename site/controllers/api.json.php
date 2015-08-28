@@ -56,7 +56,6 @@ class ImcControllerApi extends ImcController
 
     private function validateRequest($isNew = false)
     {
-        ///return 569; //TODO: REMOVE THIS LINE. ONLY FOR DEBUGGING PURPOSES
         $app = JFactory::getApplication();
         $token = $app->input->getString('token');
         $m_id  = $app->input->getInt('m_id');
@@ -73,7 +72,7 @@ class ImcControllerApi extends ImcController
 
         //check for nonce (existing token)
         if(ImcModelTokens::exists($token)){
-            ///throw new Exception('Token is already used');
+            throw new Exception('Token is already used');
         }
 
         //2. get the appropriate key according to given modality
@@ -101,7 +100,7 @@ class ImcControllerApi extends ImcController
 
         //TODO: Set timeout at options
         if((time() - $objToken->t) > 3 * 60){
-            ///throw new Exception('Token has expired');
+            throw new Exception('Token has expired');
         }
 
         //4. authenticate user
@@ -168,6 +167,7 @@ class ImcControllerApi extends ImcController
 			echo new JResponseJson($result, 'Languages fetched successfully');
 		}
 		catch(Exception $e)	{
+			header("HTTP/1.0 202 Accepted");
 			echo new JResponseJson($e);
 		}
     }
@@ -232,6 +232,7 @@ class ImcControllerApi extends ImcController
 			}
 		}
 		catch(Exception $e)	{
+			header("HTTP/1.0 202 Accepted");
 			echo new JResponseJson($e);
 		}
 	}	
@@ -376,6 +377,7 @@ class ImcControllerApi extends ImcController
             echo new JResponseJson($result, 'Issue action completed successfully');
 		}
 		catch(Exception $e)	{
+			header("HTTP/1.0 202 Accepted");
 			echo new JResponseJson($e);
 		}
 	}
@@ -423,6 +425,7 @@ class ImcControllerApi extends ImcController
 			}
 		}
 		catch(Exception $e)	{
+			header("HTTP/1.0 202 Accepted");
 			echo new JResponseJson($e);
 		}
 	}
@@ -447,6 +450,7 @@ class ImcControllerApi extends ImcController
 			echo new JResponseJson($result, 'Categories fetched successfully');
 		}
 		catch(Exception $e)	{
+			header("HTTP/1.0 202 Accepted");
 			echo new JResponseJson($e);
 		}
 	}
@@ -485,6 +489,7 @@ class ImcControllerApi extends ImcController
             echo new JResponseJson($result, 'Check user action completed successfully');
 		}
 		catch(Exception $e)	{
+			header("HTTP/1.0 202 Accepted");
 			echo new JResponseJson($e);
 		}
 
@@ -567,6 +572,7 @@ class ImcControllerApi extends ImcController
             echo new JResponseJson($result, $msg = 'User action completed successfully');
 		}
 		catch(Exception $e)	{
+			header("HTTP/1.0 202 Accepted");
 			echo new JResponseJson($e);
 		}
 	}
@@ -593,6 +599,7 @@ class ImcControllerApi extends ImcController
 			echo new JResponseJson($result, 'Updates since timestamp fetched successfully');
 		}
 		catch(Exception $e)	{
+			header("HTTP/1.0 202 Accepted");
 			echo new JResponseJson($e);
 		}
 	}
