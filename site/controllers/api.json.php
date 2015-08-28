@@ -48,7 +48,7 @@ class ImcControllerApi extends ImcController
     	parent::__construct();
     }
 
-    private function exception_error_handler($errno, $errstr, $errfile, $errline){
+    public function exception_error_handler($errno, $errstr, $errfile, $errline){
         $ee = new ErrorException($errstr, 0, $errno, $errfile, $errline);
         JFactory::getApplication()->enqueueMessage($ee, 'error');
         throw $ee;
