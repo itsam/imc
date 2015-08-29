@@ -471,6 +471,11 @@ class ImcControllerApi extends ImcController
 		try {
 		    self::validateRequest();
 
+			if($app->input->getMethod() != 'GET')
+			{
+			    throw new Exception('You cannot use other method than GET to check userexists');
+			}
+
             //get necessary arguments
             $args = array (
                 'username' => $app->input->getString('username'),
@@ -526,9 +531,7 @@ class ImcControllerApi extends ImcController
                     //get necessary arguments
                     $args = array (
                         'name' => $app->input->getString('name'),
-                        'email' => $app->input->getString('email'),
-                        'phone' => $app->input->getString('phone'),
-                        'address' => $app->input->getString('address')
+                        'email' => $app->input->getString('email')
                     );
                     ImcFrontendHelper::checkNullArguments($args);
 
@@ -536,6 +539,8 @@ class ImcControllerApi extends ImcController
                     $args['username'] = $userInfo['username'];
                     $args['password1'] = $userInfo['password'];
                     $args['email1'] = $args['email'];
+                    $args['phone'] = $app->input->getString('phone', '');
+                    $args['address'] = $app->input->getString('address', '');
 
                     //handle unexpected warnings from model
                     set_error_handler(array($this, 'exception_error_handler'));
@@ -583,7 +588,7 @@ class ImcControllerApi extends ImcController
 		}
 	}
 
-	public function timestamp()
+	public function modifications()
 	{
 		$result = null;
 		$app = JFactory::getApplication();
@@ -600,7 +605,15 @@ class ImcControllerApi extends ImcController
             );
             ImcFrontendHelper::checkNullArguments($args);
 
+            if(!ImcFrontendHelper::isValidTimeStamp($args['ts']))
+            {
+                throw new Exception('Invalid timestamp');
+            }
+
+            //handle unexpected warnings
+            set_error_handler(array($this, 'exception_error_handler'));
 			$result = self::getTimestamp($args['ts']);
+            restore_error_handler();
 
 			echo new JResponseJson($result, 'Updates since timestamp fetched successfully');
 		}

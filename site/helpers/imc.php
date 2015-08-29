@@ -220,6 +220,13 @@ class ImcFrontendHelper
 		return false;
 	}
 
+	public static function isValidTimeStamp($timestamp)
+	{
+		return ((string) (int) $timestamp === $timestamp)
+		&& ($timestamp <= PHP_INT_MAX)
+		&& ($timestamp >= ~PHP_INT_MAX);
+	}
+
 	/**
 	* Get category name using category ID
 	* @param integer $category_id Category ID
