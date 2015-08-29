@@ -127,13 +127,24 @@ class ImcFrontendHelper
 			}
 		}
 
-        //set dates to UTC
-        $data->created_UTC = $data->created == '0000-00-00 00:00:00' ? $data->created : self::convert2UTC($data->created);
-        $data->updated_UTC = $data->updated == '0000-00-00 00:00:00' ? $data->updated : self::convert2UTC($data->updated);
-        $data->regdate_UTC = $data->regdate == '0000-00-00 00:00:00' ? $data->regdate : self::convert2UTC($data->regdate);
+        //set dates to server timezone
+        $data->created_TZ = $data->created == '0000-00-00 00:00:00' ? $data->created : self::convertFromUTC($data->created);
+        $data->updated_TZ = $data->updated == '0000-00-00 00:00:00' ? $data->updated : self::convertFromUTC($data->updated);
+        $data->regdate_TZ = $data->regdate == '0000-00-00 00:00:00' ? $data->regdate : self::convertFromUTC($data->regdate);
 
-		$data->moderation = (boolean)$data->moderation;
 		$data->myIssue = ($data->created_by == $userid);
+
+		//do the casting
+		$data->moderation = (boolean)$data->moderation;
+		$data->id = (int)$data->id;
+		$data->stepid = (int)$data->stepid;
+		$data->catid = (int)$data->catid;
+		$data->state = (int)$data->state;
+		$data->created_by = (int)$data->created_by;
+		$data->hits = (int)$data->hits;
+		$data->votes = (int)$data->votes;
+		$data->subgroup = (int)$data->subgroup;
+
         return $data;
 	}
 

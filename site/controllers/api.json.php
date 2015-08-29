@@ -142,7 +142,7 @@ class ImcControllerApi extends ImcController
         $record->unixtime = $objToken->t;
         ImcModelTokens::insertToken($record); //this static method throws exception on error
 
-        return $isNew ? $userInfo : $userid;
+        return $isNew ? $userInfo : (int)$userid;
     }
 
     public function languages()
@@ -517,7 +517,7 @@ class ImcControllerApi extends ImcController
                 case 'GET':
 					$userid = self::validateRequest();
                     $app->enqueueMessage('User is valid', 'info');
-                    $result = $userid;
+                    $result = array('userid' => $userid);
 
                 break;
                 //create new user
