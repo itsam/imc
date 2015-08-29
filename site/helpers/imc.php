@@ -232,6 +232,7 @@ class ImcFrontendHelper
 		$query
 			->select('title')
 			->from('#__categories')
+			->where('extension = ' . $db->quote('com_imc'))
 			->where('id = ' . intval($category_id));
 
 		$db->setQuery($query);

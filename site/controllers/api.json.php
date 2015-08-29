@@ -304,6 +304,12 @@ class ImcControllerApi extends ImcController
                     );
                     ImcFrontendHelper::checkNullArguments($args);
 
+                    //check if category exists
+                    if( is_null(ImcFrontendHelper::getCategoryNameByCategoryId($args['catid'])) )
+                    {
+                        throw new Exception('Category does not exist');
+                    }
+
                     $args['userid'] = $userid;
                     $args['created_by'] = $userid;
                     $args['stepid'] = ImcFrontendHelper::getPrimaryStepId();
