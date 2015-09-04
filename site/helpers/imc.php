@@ -114,14 +114,14 @@ class ImcFrontendHelper
 
 				if (isset($file->thumbnailUrl))
 				{
-					$file->url = dirname(JUri::base()) . $file->url;
-					$file->mediumUrl = dirname(JUri::base()) . $file->mediumUrl;
-					$file->thumbnailUrl = dirname(JUri::base()) . $file->thumbnailUrl;
+					$file->url = JUri::base() . $file->url;
+					$file->mediumUrl = JUri::base() . $file->mediumUrl;
+					$file->thumbnailUrl = JUri::base() . $file->thumbnailUrl;
 					array_push($data->photos, $file);
 				}
 				else
 				{
-					$file->url = dirname(JUri::base()) . $file->url;
+					$file->url = JUri::base() . $file->url;
 					array_push($data->attachments, $file);
 				}
 			}
