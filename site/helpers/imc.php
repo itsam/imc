@@ -106,25 +106,25 @@ class ImcFrontendHelper
 		$data->attachments = array();
 
 		if(is_object($obj)) {
-			unset($obj->id);
-			unset($obj->imagedir);
 			foreach ($obj->files as $file) {
 				unset($file->deleteType);
 				unset($file->deleteUrl);
 
 				if (isset($file->thumbnailUrl))
 				{
-					$file->url = JUri::base() . $file->url;
-					$file->mediumUrl = JUri::base() . $file->mediumUrl;
-					$file->thumbnailUrl = JUri::base() . $file->thumbnailUrl;
+					$file->url = substr($file->url, 0, strlen($obj->imagedir)) === $obj->imagedir ? JUri::base() . $file->url : dirname(JUri::base()) . $file->url;
+					$file->mediumUrl = substr($file->mediumUrl, 0, strlen($obj->imagedir)) === $obj->imagedir ? JUri::base() . $file->mediumUrl : dirname(JUri::base()) . $file->mediumUrl;
+					$file->thumbnailUrl = substr($file->thumbnailUrl, 0, strlen($obj->imagedir)) === $obj->imagedir ? JUri::base() . $file->thumbnailUrl : dirname(JUri::base()) . $file->thumbnailUrl;
 					array_push($data->photos, $file);
 				}
 				else
 				{
-					$file->url = JUri::base() . $file->url;
+					$file->url = substr($file->url, 0, strlen($obj->imagedir)) === $obj->imagedir ? JUri::base() . $file->url : dirname(JUri::base()) . $file->url;
 					array_push($data->attachments, $file);
 				}
 			}
+			unset($obj->id);
+			unset($obj->imagedir);
 		}
 
         //set dates to server timezone
