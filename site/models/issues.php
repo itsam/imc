@@ -277,6 +277,8 @@ class ImcModelIssues extends JModelList {
 
     
             for ($x = 0, $count = count($items); $x < $count; $x++) {
+	            $items[$x]->created_by_name = JFactory::getUser($items[$x]->created_by)->name;
+
                 // Set category image (for marker icon)...avoid using JCategories, just get category params in the main query
                 $prms = json_decode($items[$x]->catid_params);
                 unset($items[$x]->catid_params);
