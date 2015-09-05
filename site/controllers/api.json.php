@@ -367,7 +367,7 @@ class ImcControllerApi extends ImcController
                     $issueFormController->postSaveHook($issueFormModel, $args);
                     restore_error_handler();
 
-                    $result = 'Newly submitted issue ID is ' . $insertid;
+                    $result = array('issueid' => $insertid);
                 break;
                 //update existing issue
                 case 'PUT':
