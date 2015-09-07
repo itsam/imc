@@ -368,7 +368,17 @@ class ImcControllerIssueForm extends ImcController {
             if($success){
                 //update photo json isnew, id
                 unset($obj->isnew);
+
+                //update files url
+                foreach ($obj->files as &$file)
+                {
+                    $file->url = str_replace($obj->id, $insertid, $file->url);
+                    $file->mediumUrl = str_replace($obj->id, $insertid, $file->mediumUrl);
+                    $file->thumbnailUrl = str_replace($obj->id, $insertid, $file->thumbnailUrl);
+                }
+                //update id
                 $obj->id = $insertid;
+
                 $photo = json_encode($obj);
 
                 // Create an object for the record we are going to update.
