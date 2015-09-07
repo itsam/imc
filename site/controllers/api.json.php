@@ -305,9 +305,9 @@ class ImcControllerApi extends ImcController
                     ImcFrontendHelper::checkNullArguments($args);
 
                     //check if category exists
-                    if( is_null(ImcFrontendHelper::getCategoryNameByCategoryId($args['catid'])) )
+                    if( is_null(ImcFrontendHelper::getCategoryNameByCategoryId($args['catid'], true)) )
                     {
-                        throw new Exception('Category does not exist');
+                        throw new Exception('Category does not exist or unpublished');
                     }
 
                     $args['userid'] = $userid;
@@ -331,7 +331,7 @@ class ImcControllerApi extends ImcController
                         $options = array(
                                     'script_url' => JRoute::_( JURI::root(true).'/administrator/index.php?option=com_imc&task=upload.handler&format=json&id='.$tmpTime.'&imagedir='.$imagedir.'&'.JSession::getFormToken() .'=1' ),
                                     'upload_dir' => JPATH_ROOT . '/'.$imagedir . '/' . $tmpTime.'/',
-                                    'upload_url' => JURI::root(true) . '/'.$imagedir . '/'.$tmpTime.'/',
+                                    'upload_url' => $imagedir . '/'.$tmpTime.'/',
                                     'param_name' => 'files',
                                     'imc_api' => true
 

@@ -241,9 +241,10 @@ class ImcFrontendHelper
 	/**
 	* Get category name using category ID
 	* @param integer $category_id Category ID
+	* @param boolean $publishedOnly Take into account category state
 	* @return mixed category name if category is found, null otherwise
 	*/
-	public static function getCategoryNameByCategoryId($category_id) {
+	public static function getCategoryNameByCategoryId($category_id, $publishedOnly = false) {
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
 
@@ -252,6 +253,11 @@ class ImcFrontendHelper
 			->from('#__categories')
 			->where('extension = ' . $db->quote('com_imc'))
 			->where('id = ' . intval($category_id));
+
+		if($publishedOnly)
+		{
+			$query->where('published = 1');
+		}
 
 		$db->setQuery($query);
 		return $db->loadResult();
