@@ -16,6 +16,7 @@
         <filename>language/en-GB/en-GB.plg_content_imc.sys.ini</filename>
         <filename>language/el-GR/el-GR.plg_content_imc.sys.ini</filename>
         <folder>category_fields</folder>
+        <folder>assets</folder>
     </files>
 
     <languages folder="language">
