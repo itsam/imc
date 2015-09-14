@@ -11,6 +11,7 @@
 defined('_JEXEC') or die;
 
 jimport('joomla.application.component.modeladmin');
+require_once JPATH_COMPONENT . '/helpers/imc.php';
 
 /**
  * Imc model.
