@@ -450,7 +450,7 @@ class ImcControllerApi extends ImcController
 
             //handle unexpected warnings from JCategories
             set_error_handler(array($this, 'exception_error_handler'));
-            $result = ImcFrontendHelper::getCategories(true);
+            $result = ImcFrontendHelper::getCategories(false);
 			restore_error_handler();
 
 			echo new JResponseJson($result, 'Categories fetched successfully');
