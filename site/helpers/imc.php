@@ -222,7 +222,7 @@ class ImcFrontendHelper
 				if($JCatNode->hasChildren())
 					$return[$i]->children = self::loadCats($JCatNode->getChildren());
 				else
-					$return[$i]->children = null;
+					$return[$i]->children = array();
 
 				$i++;
 			}

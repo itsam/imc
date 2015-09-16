@@ -368,6 +368,9 @@ class ImcControllerApi extends ImcController
                     restore_error_handler();
 
                     $result = array('issueid' => $insertid);
+
+                    //be consistent return as array (of size 1)
+                    $result = array($result);
                 break;
                 //update existing issue
                 case 'PUT':
@@ -495,7 +498,7 @@ class ImcControllerApi extends ImcController
 				$emailExists = true;
 			}
 
-			$result = ($usernameExists || $emailExists);
+			$result = array($usernameExists || $emailExists);
 
             echo new JResponseJson($result, 'Check user action completed successfully');
 		}
@@ -519,6 +522,8 @@ class ImcControllerApi extends ImcController
                     $app->enqueueMessage('User is valid', 'info');
                     $result = array('userid' => $userid);
 
+                    //be consistent return as array (of size 1)
+                    $result = array($result);
                 break;
                 //create new user
                 case 'POST':
@@ -567,6 +572,8 @@ class ImcControllerApi extends ImcController
 						$app->enqueueMessage(JText::_('COM_USERS_REGISTRATION_SAVE_SUCCESS'), 'info');
 					}
 
+					//be consistent return as array (of size 1)
+                    $result = array($result);
                 break;
                 //update existing issue
                 case 'PUT':
@@ -634,11 +641,10 @@ class ImcControllerApi extends ImcController
 			'newestTS'   => $ts, //used mainly for backwards compatibility
 			'ts'         => $ts,
 			'offset'     => $offsetDate,
-			'issues'     => null,
-			'categories' => null,
-			'steps'      => null,
-			'votes'      => null,
-			'comments'   => null,
+			'issues'     => array(),
+			'categories' => array(),
+			'steps'      => array(),
+			'comments'   => array(),
 		);
 
 		$app->input->set('ts', $ts);
