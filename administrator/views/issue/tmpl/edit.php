@@ -149,7 +149,9 @@ $document->addStyleSheet('components/com_imc/assets/css/imc.css');
 									echo $key.':'.$value . '<br />';
 								}
 								?>
-							<?php echo $this->form->getInput('extra'); ?>
+								<br />
+								<?php echo $this->form->getLabel('extra'); ?>
+								<?php echo $this->form->getInput('extra'); ?>
 							</div>
 						</div>
 					</div>

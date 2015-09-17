@@ -60,7 +60,7 @@ class ImcViewIssues extends JViewLegacy {
         if (file_exists($formPath)) {
 
             if ($canDo->get('core.create')) {
-                JToolBarHelper::addNew('issue.add', 'JTOOLBAR_NEW');
+                JToolBarHelper::addNew('issue.add', 'COM_IMC_JTOOLBAR_NEW_ISSUE');
             }
 
             if ($canDo->get('core.edit') && isset($this->items[0])) {
