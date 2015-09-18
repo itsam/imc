@@ -208,9 +208,9 @@ class ImcFrontendHelper
 			{
 				$return[$i] = new stdClass();
 				$return[$i]->title = $JCatNode->title;
-				$return[$i]->parentid = $JCatNode->parent_id;
+				$return[$i]->parentid = $JCatNode->parent_id == "root" ? 0 : (int) $JCatNode->parent_id;
 				$return[$i]->path = $JCatNode->get('path');
-				$return[$i]->id = $JCatNode->id;
+				$return[$i]->id = (int) $JCatNode->id;
 				$params = json_decode($JCatNode->params);
 
 				$return[$i]->image = $params->image;
