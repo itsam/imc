@@ -194,41 +194,25 @@ class JFormFieldGmap extends JFormField
 		$style[] = (isset($this->element['width']) ? 'width:'.$this->element['width'].';' : '');
 		$style[] = (isset($this->element['height']) ? 'height:'.$this->element['height'].';' : '');
 
-
-
 		//set html
 		$html = array();
-        $html[] = '<div style="'.implode("", $style).'">';
-        $html[] = '	<div id="imc-map-canvas"></div>';
 
-        if($this->mapOnly){
-        	$html[] = '</div>';
-        	return implode("\n", $html);
-        }
-
-
-        $html[] = '	<br />';
-        $html[] = '	<div class="row-fluid">';
-        
-        if(!$disabled) {
-        $html[] = '		<div class="span1">';
-		$html[] = '			<button id="locateposition" class="btn btn-mini" type="button"><i class="icon-home"></i></button><br /><br />';
-		$html[] = '			<button id="searchaddress" class="btn btn-mini" type="button"><i class="icon-search icon-white"></i></button>';
-		$html[] = '		</div>';
+		if($this->mapOnly){
+			$html[] = '<div style="'.implode("", $style).'display:table;clear:both;">';
+			$html[] = '	<div id="imc-map-canvas"></div>';
+			$html[] = '</div>';
+			return implode("\n", $html);
 		}
-        
-        $html[] = '		<div class="'. ($disabled ? "span12" : "span10").'">';
-		$html[] = '			<textarea '. ($disabled ? "disabled=\"\"" : "").' class="imc-gmap-textarea" rows="3" cols="75" id="' . $this->id . '" name="' . $this->name . '">'.htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8').'</textarea>';
-		$html[] = '		</div>';
-		
+
+        $html[] = '<div style="'.implode("", $style).'display:table;clear:both;padding-bottom: 100px;">';
 		if(!$disabled) {
-        $html[] = '		<div class="span1 imc-text-right">';
-		$html[] = '			<button id="lockaddress" class="btn btn-mini" type="button"><i class="icon-lock"></i></button><br /><br /><br />';
-		$html[] = '		</div>';
+			$html[] = '		<button id="searchaddress" class="btn btn-mini" type="button"><i class="icon-search icon-white"></i> Locate address on map</button>';
+			$html[] = '		<button id="lockaddress" class="btn btn-mini" type="button"><i class="icon-lock"></i> Lock address textarea</button>';
+			$html[] = '		<button id="locateposition" style="float:right;" class="btn btn-mini" type="button"><i class="icon-screenshot"></i> Find my position</button>';
 		}
-		
-		$html[] = '	</div>';		
-		$html[] = '</div>';		
+		$html[] = ' <textarea placeholder="'.JText::_('COM_IMC_FORM_LBL_ISSUE_ADDRESS').'" '. ($disabled ? "disabled=\"\"" : "").' class="imc-gmap-textarea" rows="3" cols="75" id="' . $this->id . '" name="' . $this->name . '">'.htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8').'</textarea>';
+        $html[] = '	<div id="imc-map-canvas"></div>';
+		$html[] = '</div>';
 
 		$html[] = '<!-- Modal -->';
 		$html[] = '<div id="IMC_searchModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">';
