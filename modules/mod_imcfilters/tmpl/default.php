@@ -47,8 +47,10 @@ $id = $jinput->get('id', null);
 			</span>				
 		<?php else : ?>
 			<div class="imc_btn_left">
-				<?php $powered_by = JURI::base() . '/modules/mod_imcfilters/assets/images/powered_by_imc.png'; ?>
-				<a href="http://www.improve-my-city.com" target="_blank"><img src="<?php echo $powered_by; ?>" title="http://www.improve-my-city.com" alt="Powered by Improve My City" /></a>
+				<?php if($params->get('show_poweredby') == 1) : ?>
+					<?php $powered_by = JURI::base() . '/modules/mod_imcfilters/assets/images/powered_by_imc.png'; ?>
+					<a href="http://www.improve-my-city.com" target="_blank"><img src="<?php echo $powered_by; ?>" title="http://www.improve-my-city.com" alt="Powered by Improve My City" /></a>
+				<?php endif; ?>
 
 				<a id="search_btn" href="#IMC_advancedSearchModal" role="button" class="btn btn-primary" data-toggle="modal"><i class="icon-search"></i> <?php echo JText::_('MOD_IMCFILTERS_SEARCH'); ?></a>
 				<div class="btn-group">
@@ -61,8 +63,7 @@ $id = $jinput->get('id', null);
 					<li><?php echo JHtml::_('grid.sort',  'JDATE', 'a.updated', $listDirn, $listOrder); ?></li>
 				  </ul>
 				</div>
-				
-				
+
 				<div class="btn-group">
 				  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 				    <?php echo JText::_('MOD_IMCFILTERS_DISPLAY'); ?> <span class="caret"></span>
