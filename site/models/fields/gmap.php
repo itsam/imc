@@ -206,9 +206,9 @@ class JFormFieldGmap extends JFormField
 
         $html[] = '<div style="'.implode("", $style).'display:table;clear:both;padding-bottom: 100px;">';
 		if(!$disabled) {
-			$html[] = '		<button id="searchaddress" class="btn btn-mini" type="button"><i class="icon-search icon-white"></i> Locate address on map</button>';
-			$html[] = '		<button id="lockaddress" class="btn btn-mini" type="button"><i class="icon-lock"></i> Lock address textarea</button>';
-			$html[] = '		<button id="locateposition" style="float:right;" class="btn btn-mini" type="button"><i class="icon-screenshot"></i> Find my position</button>';
+			$html[] = '		<button id="searchaddress" class="btn btn-mini" type="button"><i class="icon-search icon-white"></i> '. JText::_('COM_IMC_CUSTOM_FIELD_LOCATE_ADDRESS') . '</button>';
+			$html[] = '		<button id="lockaddress" class="btn btn-mini" type="button"><i class="icon-lock"></i> '. JText::_('COM_IMC_CUSTOM_FIELD_LOCK_ADDRESS') . '</button>';
+			$html[] = '		<button id="locateposition" style="float:right;" class="btn btn-mini" type="button"><i class="icon-screenshot"></i> '. JText::_('COM_IMC_CUSTOM_FIELD_LOCATE_POSITION') . '</button>';
 		}
 		$html[] = ' <textarea placeholder="'.JText::_('COM_IMC_FORM_LBL_ISSUE_ADDRESS').'" '. ($disabled ? "disabled=\"\"" : "").' class="imc-gmap-textarea" rows="3" cols="75" id="' . $this->id . '" name="' . $this->name . '">'.htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8').'</textarea>';
         $html[] = '	<div id="imc-map-canvas"></div>';
