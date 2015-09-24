@@ -143,6 +143,7 @@ class ImcFrontendHelper
 		$data->created_by = (int)$data->created_by;
 		$data->hits = (int)$data->hits;
 		$data->votes = (int)$data->votes;
+		$data->comments = (int)$data->comments;
 		$data->subgroup = (int)$data->subgroup;
 
         return $data;

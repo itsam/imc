@@ -26,7 +26,7 @@ class ImcModelComments extends JModelList {
     public function __construct($config = array()) {
         if (empty($config['filter_fields'])) {
             $config['filter_fields'] = array(
-                                'id', 'a.id',
+                'id', 'a.id',
                 'issueid', 'a.issueid',
                 'parentid', 'a.parentid',
                 'description', 'a.description',
@@ -92,9 +92,9 @@ class ImcModelComments extends JModelList {
         $query->from('`#__imc_comments` AS a');
 
         
-    // Join over the users for the checked out user.
-    $query->select('uc.name AS editor');
-    $query->join('LEFT', '#__users AS uc ON uc.id=a.checked_out');
+        // Join over the users for the checked out user.
+        $query->select('uc.name AS editor');
+        $query->join('LEFT', '#__users AS uc ON uc.id=a.checked_out');
     
 		// Join over the foreign key 'issueid'
 		$query->select('#__imc_issues_1382371.title AS issues_title_1382371');
@@ -165,4 +165,16 @@ class ImcModelComments extends JModelList {
         return $items;
     }
 
+    public function count($issueid)
+    {
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query->select('COUNT(*)');
+        $query->from($db->quoteName('#__imc_comments'));
+        $query->where($db->quoteName('issueid')." = ".$db->quote($issueid));
+
+        $db->setQuery($query);
+        $count = $db->loadResult();
+        return $count;
+    }
 }
