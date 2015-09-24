@@ -200,6 +200,46 @@ class ImcModelVotes extends JModelList {
         return $results;
     }
 
+    public function remove($issueid, $userid)
+    {
+        // check if already voted
+        if(!$this->hasVoted($issueid, $userid))
+        {
+            return array('code'=>0, 'msg'=>JText::_('COM_IMC_VOTES_CANNOT_UNVOTE'));
+        }
+
+        require_once JPATH_COMPONENT_ADMINISTRATOR . '/models/issues.php';
+        $issuesModel = JModelLegacy::getInstance( 'Issues', 'ImcModel', array('ignore_request' => true) );
+
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+
+        $conditions = array(
+            $db->quoteName('issueid') . ' = ' . $issueid,
+            $db->quoteName('created_by') . ' = ' . $userid
+        );
+
+        $query->delete($db->quoteName('#__imc_votes'));
+        $query->where($conditions);
+        $db->setQuery($query);
+        $result = $db->execute();
+
+        if($result){
+            //update issue votes as well
+            $result = $issuesModel->updateVotes($issueid, false);
+            if($result){
+                //also return current number of votes
+                $votes = $issuesModel->getVotes($issueid);
+                return array('code'=>1, 'msg'=>JText::_('COM_IMC_VOTES_REMOVED'), 'votes'=>$votes);
+            }
+            else {
+                return array('code'=>-1, 'msg'=>'failed to update issue');
+            }
+        } else {
+            return array('code'=>-1, 'msg'=>'failed to insert into votes table');
+        }
+    }
+
     public function add($issueid, $userid, $modality = 0) {
         // check if already voted    
         if($this->hasVoted($issueid, $userid)){
@@ -230,7 +270,7 @@ class ImcModelVotes extends JModelList {
         $result = $db->insertObject('#__imc_votes', $vote); 
         if($result){
             //update issue votes as well
-            $result = $issuesModel->updateVotes($issueid, $userid);
+            $result = $issuesModel->updateVotes($issueid);
             if($result){
                 //also return current number of votes 
                 $votes = $issuesModel->getVotes($issueid);
@@ -242,7 +282,5 @@ class ImcModelVotes extends JModelList {
         } else {
             return array('code'=>-1, 'msg'=>'failed to insert into votes table');
         }
-
-
     }
 }

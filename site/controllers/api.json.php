@@ -605,35 +605,55 @@ class ImcControllerApi extends ImcController
 		try {
 		    $userid = self::validateRequest();
 
-			if($app->input->getMethod() != 'POST')
-			{
-			    throw new Exception('You cannot use other method than POST to vote an issue');
-			}
             //get necessary arguments
             $id = $app->input->getInt('id', null);
             $modality = $app->input->getInt('m_id', null);
 
-            //guests are not allowed to post issues
+            //guests are not allowed to post/delete votes
             //TODO: get this from settings
             if($userid == 0)
             {
-                throw new Exception('Guests are now allowed to vote');
+                throw new Exception('Guests are now allowed to vote/unvote');
             }
 
             //get vote model
             $votesModel = JModelLegacy::getInstance( 'Votes', 'ImcModel', array('ignore_request' => true) );
 
-            //handle unexpected warnings from model
-            set_error_handler(array($this, 'exception_error_handler'));
-            $voting = $votesModel->add($id, $userid, $modality);
-            if($voting['code'] != 1)
+            switch($app->input->getMethod())
             {
-                throw new Exception($voting['msg']);
-            }
-            restore_error_handler();
+                //create vote
+                case 'POST':
+                    //handle unexpected warnings from model
+                    set_error_handler(array($this, 'exception_error_handler'));
+                    $voting = $votesModel->add($id, $userid, $modality);
+                    if($voting['code'] != 1)
+                    {
+                        throw new Exception($voting['msg']);
+                    }
+                    restore_error_handler();
 
-            $app->enqueueMessage($voting['msg'], 'info');
-            $result = array('votes' => $voting['votes']);
+                    $app->enqueueMessage($voting['msg'], 'info');
+                    $result = array('votes' => $voting['votes']);
+                break;
+                //delete vote
+                case 'DELETE':
+                    //handle unexpected warnings from model
+                    set_error_handler(array($this, 'exception_error_handler'));
+                    $voting = $votesModel->remove($id, $userid);
+
+                    if($voting['code'] != 1)
+                    {
+                        throw new Exception($voting['msg']);
+                    }
+                    restore_error_handler();
+
+                    $app->enqueueMessage($voting['msg'], 'info');
+                    $result = array('votes' => $voting['votes']);
+                break;
+                default:
+                    throw new Exception('HTTP method is not supported');
+
+            }
 
             //be consistent return as array (of size 1)
             $result = array($result);
