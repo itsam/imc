@@ -86,6 +86,11 @@ class plgImcmail_notifier extends JPlugin
 		$showMsgsFrontend = ($this->params->get('messagesfrontend') && !$app->isAdmin());
 		$showMsgsBackend  = ($this->params->get('messagesbackend') && $app->isAdmin());
 
+		$DOMAIN = $this->params->get('domain');
+		if($DOMAIN == '')
+		{
+			$DOMAIN = $_SERVER['HTTP_HOST'];
+		}
 		$MENUALIAS = $this->params->get('menualias');
 		$appSite = JApplication::getInstance('site');
 		$router = $appSite->getRouter();
@@ -93,7 +98,7 @@ class plgImcmail_notifier extends JPlugin
 		$parsed_url = $uri->toString();
 		$parsed_url = str_replace('administrator/', '', $parsed_url);
 		$parsed_url = str_replace('component/imc', $MENUALIAS, $parsed_url);
-		$issueLink = $_SERVER['HTTP_HOST'] . $parsed_url;
+		$issueLink = $DOMAIN . $parsed_url;
 
 		//Prepare email for admins
 		if ($this->params->get('mailcategorychangeadmins')){
@@ -140,7 +145,7 @@ class plgImcmail_notifier extends JPlugin
 				ImcFrontendHelper::getCategoryNameByCategoryId($validData['catid'])
 			);
 			
-			$body .= '<a href="http://'.$issueLink.'">'.$issueLink.'</a>';
+			$body .= '<a href="'.$issueLink.'">'.$issueLink.'</a>';
 
 			if ($this->sendMail($subject, $body, $details->usermail) ) {
 				if($showMsgsBackend){
@@ -166,7 +171,12 @@ class plgImcmail_notifier extends JPlugin
 		$showMsgsBackend  = ($this->params->get('messagesbackend') && $app->isAdmin());
 
 		$step = ImcFrontendHelper::getStepByStepId($validData['stepid']);
-		
+
+		$DOMAIN = $this->params->get('domain');
+		if($DOMAIN == '')
+		{
+			$DOMAIN = $_SERVER['HTTP_HOST'];
+		}
 		$MENUALIAS = $this->params->get('menualias');
 		$appSite = JApplication::getInstance('site');
 		$router = $appSite->getRouter();
@@ -174,7 +184,7 @@ class plgImcmail_notifier extends JPlugin
 		$parsed_url = $uri->toString();
 		$parsed_url = str_replace('administrator/', '', $parsed_url);
 		$parsed_url = str_replace('component/imc', $MENUALIAS, $parsed_url);
-		$issueLink = $_SERVER['HTTP_HOST'] . $parsed_url;
+		$issueLink = $DOMAIN . $parsed_url;
 
 		//Prepare email for admins
 		if ($this->params->get('mailstatuschangeadmins')){
@@ -223,7 +233,7 @@ class plgImcmail_notifier extends JPlugin
 				$issueLink
 			);
 
-			$body .= '<a href="http://'.$issueLink.'">'.$issueLink.'</a>';
+			$body .= '<a href="'.$issueLink.'">'.$issueLink.'</a>';
 
 			if ($this->sendMail($subject, $body, $details->usermail) ) {
 				if($showMsgsBackend){
