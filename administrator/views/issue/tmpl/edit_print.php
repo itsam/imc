@@ -107,6 +107,10 @@ require_once JPATH_COMPONENT_SITE . '/helpers/imc.php';
 		
 		<p><strong><?php echo JText::_('COM_IMC_FORM_LBL_ISSUE_DESCRIPTION'); ?></strong>: 
 		<?php echo $this->item->description; ?></p>
+
+		<p><strong><?php echo JText::_('COM_IMC_FORM_LBL_ISSUE_EXTRA'); ?></strong>:
+		<?php echo $this->item->extra; ?></p>
+
 	</div>
 	<div class="modal-footer">
 		<button class="btn" type="button" data-dismiss="modal">
