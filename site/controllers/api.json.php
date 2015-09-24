@@ -598,6 +598,54 @@ class ImcControllerApi extends ImcController
 		}
 	}
 
+	public function vote()
+	{
+		$result = null;
+		$app = JFactory::getApplication();
+		try {
+		    $userid = self::validateRequest();
+
+			if($app->input->getMethod() != 'POST')
+			{
+			    throw new Exception('You cannot use other method than POST to vote an issue');
+			}
+            //get necessary arguments
+            $id = $app->input->getInt('id', null);
+            $modality = $app->input->getInt('m_id', null);
+
+            //guests are not allowed to post issues
+            //TODO: get this from settings
+            if($userid == 0)
+            {
+                throw new Exception('Guests are now allowed to vote');
+            }
+
+            //get vote model
+            $votesModel = JModelLegacy::getInstance( 'Votes', 'ImcModel', array('ignore_request' => true) );
+
+            //handle unexpected warnings from model
+            set_error_handler(array($this, 'exception_error_handler'));
+            $voting = $votesModel->add($id, $userid, $modality);
+            if($voting['code'] != 1)
+            {
+                throw new Exception($voting['msg']);
+            }
+            restore_error_handler();
+
+            $app->enqueueMessage($voting['msg'], 'info');
+            $result = array('votes' => $voting['votes']);
+
+            //be consistent return as array (of size 1)
+            $result = array($result);
+
+            echo new JResponseJson($result, 'Vote action completed successfully');
+		}
+		catch(Exception $e)	{
+			header("HTTP/1.0 202 Accepted");
+			echo new JResponseJson($e);
+		}
+	}
+
 	public function modifications()
 	{
 		$result = null;

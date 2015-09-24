@@ -205,7 +205,12 @@ class ImcModelVotes extends JModelList {
         if($this->hasVoted($issueid, $userid)){
             return array('code'=>0, 'msg'=>JText::_('COM_IMC_VOTES_ALREADY_VOTED'));
         }
+
+        //JModelLegacy::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/models');
+        //require_once otherwise conflicts with site's issues model when called by API
+        require_once JPATH_COMPONENT_ADMINISTRATOR . '/models/issues.php';
         $issuesModel = JModelLegacy::getInstance( 'Issues', 'ImcModel', array('ignore_request' => true) );
+
         // check if it's own issue
         if($issuesModel->isOwnIssue($issueid, $userid)){
             return array('code'=>0, 'msg'=>JText::_('COM_IMC_VOTES_OWN_ISSUE'));    
