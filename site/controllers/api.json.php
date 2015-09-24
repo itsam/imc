@@ -256,10 +256,13 @@ class ImcControllerApi extends ImcController
 
                     //get issue model
                     $issueModel = JModelLegacy::getInstance( 'Issue', 'ImcModel', array('ignore_request' => true) );
+                    $logsModel = JModelLegacy::getInstance( 'Logs', 'ImcModel', array('ignore_request' => true) );
 
                     //handle unexpected warnings from model
                     set_error_handler(array($this, 'exception_error_handler'));
                     $data = $issueModel->getData($id);
+                    //merge logs as timeline
+                    $data->timeline = $logsModel->getItemsByIssue($id);
                     restore_error_handler();
 
                     if(!is_object($data)){
