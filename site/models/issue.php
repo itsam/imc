@@ -115,6 +115,7 @@ class ImcModelIssue extends JModelItem {
             }
 
             //count comments
+            require_once JPATH_COMPONENT_SITE . '/models/comments.php';
             $commentsModel = JModelLegacy::getInstance( 'Comments', 'ImcModel', array('ignore_request' => true) );
             $this->_item->comments = $commentsModel->count($this->_item->id);
         }

@@ -262,7 +262,11 @@ class ImcControllerApi extends ImcController
                     set_error_handler(array($this, 'exception_error_handler'));
                     $data = $issueModel->getData($id);
                     //merge logs as timeline
-                    $data->timeline = $logsModel->getItemsByIssue($id);
+                    if(is_object($data))
+                    {
+                        $data->timeline = $logsModel->getItemsByIssue($id);
+                    }
+
                     restore_error_handler();
 
                     if(!is_object($data)){
@@ -633,9 +637,10 @@ class ImcControllerApi extends ImcController
                     restore_error_handler();
 
                     $app->enqueueMessage($voting['msg'], 'info');
-                    $result = array('votes' => $voting['votes']);
+                    $result = array('votes' => (int) $voting['votes']);
                 break;
                 //delete vote
+                case 'GET':
                 case 'DELETE':
                     //handle unexpected warnings from model
                     set_error_handler(array($this, 'exception_error_handler'));
@@ -648,7 +653,7 @@ class ImcControllerApi extends ImcController
                     restore_error_handler();
 
                     $app->enqueueMessage($voting['msg'], 'info');
-                    $result = array('votes' => $voting['votes']);
+                    $result = array('votes' => (int) $voting['votes']);
                 break;
                 default:
                     throw new Exception('HTTP method is not supported');

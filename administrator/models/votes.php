@@ -193,11 +193,11 @@ class ImcModelVotes extends JModelList {
         $query = $db->getQuery(true);
         $query->select('COUNT(*)');
         $query->from('`#__imc_votes` AS a');
-        $query->where('a.issueid    = ' . $db->quote($db->escape($issueid)));
-        $query->where('a.created_by = ' . $db->quote($db->escape($userid)));
+        $query->where('a.issueid    = ' . $issueid);
+        $query->where('a.created_by = ' . $userid);
         $db->setQuery($query);
         $results = $db->loadResult();
-        return $results;
+        return (boolean) $results;
     }
 
     public function remove($issueid, $userid)
@@ -241,7 +241,8 @@ class ImcModelVotes extends JModelList {
     }
 
     public function add($issueid, $userid, $modality = 0) {
-        // check if already voted    
+
+        // check if already voted
         if($this->hasVoted($issueid, $userid)){
             return array('code'=>0, 'msg'=>JText::_('COM_IMC_VOTES_ALREADY_VOTED'));
         }
@@ -252,8 +253,14 @@ class ImcModelVotes extends JModelList {
         $issuesModel = JModelLegacy::getInstance( 'Issues', 'ImcModel', array('ignore_request' => true) );
 
         // check if it's own issue
-        if($issuesModel->isOwnIssue($issueid, $userid)){
+        if( $issuesModel->isOwnIssue($issueid, $userid) ){
             return array('code'=>0, 'msg'=>JText::_('COM_IMC_VOTES_OWN_ISSUE'));    
+        }
+
+        // check if issue is published
+        if( !$issuesModel->isPublished($issueid))
+        {
+            return array('code'=>0, 'msg'=>'Issue is not published or does not exist');
         }
 
         // Create and populate an object.

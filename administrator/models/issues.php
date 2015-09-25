@@ -292,12 +292,27 @@ class ImcModelIssues extends JModelList {
         $query = $db->getQuery(true);
         $query->select('COUNT(*)');
         $query->from('`#__imc_issues` AS a');
-        $query->where('a.id    = ' . $db->quote($db->escape($issueid)));
-        $query->where('a.created_by = ' . $db->quote($db->escape($userid)));
+        $query->where('a.id    = ' . $issueid);
+        $query->where('a.created_by = ' . $userid);
         $db->setQuery($query);
         $results = $db->loadResult();
-        
-        return $results;
+
+        return (boolean) $results;
+    }
+
+    public function isPublished($issueid)
+    {
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query->select('COUNT(*)');
+        $query->from('`#__imc_issues` AS a');
+        //$query->where('a.id    = ' . $db->quote($db->escape($issueid)));
+        $query->where('a.id    = ' . $issueid);
+        $query->where('a.state = 1' );
+        $db->setQuery($query);
+        $results = $db->loadResult();
+
+        return (boolean) $results;
     }
 
     public function updateVotes($issueid, $increase = true) {
