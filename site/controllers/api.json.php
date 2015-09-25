@@ -192,6 +192,7 @@ class ImcControllerApi extends ImcController
 			$owned = $app->input->get('owned', false);
 			$lim = $app->input->getInt('lim', 0);
 			$ts = $app->input->getString('ts');
+			$prior_to = $app->input->getString('prior_to');
 
             //get issues model
             $issuesModel = JModelLegacy::getInstance( 'Issues', 'ImcModel', array('ignore_request' => true) );
@@ -213,6 +214,10 @@ class ImcControllerApi extends ImcController
 			if(!is_null($ts))
 			{
 				$issuesModel->setState('filter.imcapi.ts', $ts);
+			}
+			if(!is_null($prior_to))
+			{
+				$issuesModel->setState('filter.imcapi.priorto', $prior_to);
 			}
 
             //handle unexpected warnings from model
@@ -720,7 +725,6 @@ class ImcControllerApi extends ImcController
 			'issues'     => array(),
 			'categories' => array(),
 			'steps'      => array(),
-			'comments'   => array(),
 		);
 
 		$app->input->set('ts', $ts);
