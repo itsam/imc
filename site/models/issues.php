@@ -151,11 +151,14 @@ class ImcModelIssues extends JModelList {
             ->join('LEFT', '#__imc_steps AS st ON st.id = a.stepid');
         
         // Filter by published state
+        $imc_raw = $this->state->get('filter.imcapi.raw', false);
         $published = $this->getState('filter.state');
          if (is_numeric($published)) {
              $query->where('a.state = ' . (int) $published);
          } else if ($published === '') {
-             $query->where('(a.state IN (0, 1))');
+             if(!$imc_raw) {
+                 $query->where('(a.state IN (0, 1))');
+             }
          }
         //$query->where('a.state = 1');        
 
@@ -287,8 +290,10 @@ class ImcModelIssues extends JModelList {
             $groups = $user->getAuthorisedViewLevels();
             $categories = JCategories::getInstance('imc');
 
-            for ($x = 0, $count = count($items); $x < $count; $x++) {
-	            $items[$x]->created_by_name = JFactory::getUser($items[$x]->created_by)->name;
+            $imc_raw = $this->state->get('filter.imcapi.raw', false);
+            for ($x = 0, $count = count($items); $x < $count; $x++)
+            {
+                $items[$x]->created_by_name = JFactory::getUser($items[$x]->created_by)->name;
 
                 // Set category image (for marker icon)...avoid using JCategories, just get category params in the main query
                 $prms = json_decode($items[$x]->catid_params);
@@ -298,7 +303,7 @@ class ImcModelIssues extends JModelList {
                 // else
                 //     $items[$x]->notification_emails = array();
 
-                if(isset($prms->image))
+                if (isset($prms->image))
                     $items[$x]->category_image = $prms->image;
                 else
                     $items[$x]->category_image = '';
@@ -310,29 +315,31 @@ class ImcModelIssues extends JModelList {
                     continue;
                 }
 
-                //Check the state. Remove issues that are not not published but keep own (unless is privileged)
-                if ( ($items[$x]->created_by != $user->id) && ($items[$x]->state != 1) && (!$canChange) ) {
-                    unset($items[$x]);
-                    continue;
-                }
-
-                //Remove anonymous unpublished
-                if ( ($items[$x]->created_by == 0) && ($items[$x]->state != 1) ) {
-                    unset($items[$x]);
-                    continue;
-                }
-
                 //Remove according to category access level
                 //if not privileged user Jcategory->get returns nothing... actually the whole object is not even set
                 if (!isset($categories->get($items[$x]->catid)->access)) {
                     unset($items[$x]);
                     continue;
                 }
+
+                if (!$imc_raw) {
+                    //Check the state. Remove issues that are not not published but keep own (unless is privileged)
+                    if (($items[$x]->created_by != $user->id) && ($items[$x]->state != 1) && (!$canChange)) {
+                        unset($items[$x]);
+                        continue;
+                    }
+
+                    //Remove anonymous unpublished
+                    if (($items[$x]->created_by == 0) && ($items[$x]->state != 1)) {
+                        unset($items[$x]);
+                        continue;
+                    }
+                }
             }
 
-            //avoid using model limit ($query->setlimit(x))
+            //avoid using model limit ($query->setlimit(x)) at getListQuery() when called from API
             $imc_limit =  $this->state->get('filter.imcapi.limit');
-            if(!is_null($imc_limit))
+            if(!is_null($imc_limit) && $imc_limit > 0)
             {
                 $items = array_slice($items, 0, $imc_limit);
             }
