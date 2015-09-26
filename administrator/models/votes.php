@@ -188,7 +188,7 @@ class ImcModelVotes extends JModelList {
         return $items;
     }
 
-    private function hasVoted($issueid, $userid) {
+    public function hasVoted($issueid, $userid) {
         $db = JFactory::getDbo();
         $query = $db->getQuery(true);
         $query->select('COUNT(*)');

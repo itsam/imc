@@ -67,9 +67,13 @@ class ImcFrontendHelper
 
 		$issues = array();
 
+		//get vote model
+		$votesModel = JModelLegacy::getInstance( 'Votes', 'ImcModel', array('ignore_request' => true) );
+
 		foreach ($data as $issue)
 		{
 			$issue = self::sanitizeIssue($issue, $userid);
+			$issue->hasVoted = $votesModel->hasVoted($issue->id, $userid);
 			array_push($issues, $issue);
 		}
 		return $issues;

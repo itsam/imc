@@ -275,6 +275,8 @@ class ImcControllerApi extends ImcController
                     if(is_object($data))
                     {
                         $data->timeline = $logsModel->getItemsByIssue($id);
+		                $votesModel = JModelLegacy::getInstance( 'Votes', 'ImcModel', array('ignore_request' => true) );
+		                $data->hasVoted = $votesModel->hasVoted($data->id, $userid);
                     }
 
                     restore_error_handler();
