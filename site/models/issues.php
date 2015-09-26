@@ -287,7 +287,6 @@ class ImcModelIssues extends JModelList {
             $groups = $user->getAuthorisedViewLevels();
             $categories = JCategories::getInstance('imc');
 
-    
             for ($x = 0, $count = count($items); $x < $count; $x++) {
 	            $items[$x]->created_by_name = JFactory::getUser($items[$x]->created_by)->name;
 
@@ -329,8 +328,15 @@ class ImcModelIssues extends JModelList {
                     unset($items[$x]);
                     continue;
                 }
-                
             }
+
+            //avoid using model limit ($query->setlimit(x))
+            $imc_limit =  $this->state->get('filter.imcapi.limit');
+            if(!is_null($imc_limit))
+            {
+                $items = array_slice($items, 0, $imc_limit);
+            }
+
         }
         return $items;
     }

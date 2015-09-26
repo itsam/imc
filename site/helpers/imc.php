@@ -117,7 +117,7 @@ class ImcFrontendHelper
 					$file->thumbnailUrl = substr($file->thumbnailUrl, 0, strlen($obj->imagedir)) === $obj->imagedir ? JUri::base() . $file->thumbnailUrl : dirname(JUri::base()) . $file->thumbnailUrl;
 					array_push($data->photos, $file);
 				}
-				else
+				elseif(isset($file->url))
 				{
 					$file->url = substr($file->url, 0, strlen($obj->imagedir)) === $obj->imagedir ? JUri::base() . $file->url : dirname(JUri::base()) . $file->url;
 					array_push($data->attachments, $file);
