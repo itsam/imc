@@ -173,7 +173,7 @@ class ImcControllerApi extends ImcController
 		}
     }
 
-	public function issues($json = true)
+	public function issues()
 	{
 		$result = null;
 		$app = JFactory::getApplication();
@@ -216,10 +216,18 @@ class ImcControllerApi extends ImcController
 
 			if(!is_null($ts))
 			{
+			    if(!ImcFrontendHelper::isValidTimeStamp($ts))
+                {
+                    throw new Exception('Invalid timestamp');
+                }
 				$issuesModel->setState('filter.imcapi.ts', $ts);
 			}
 			if(!is_null($prior_to))
 			{
+			    if(!ImcFrontendHelper::isValidTimeStamp($prior_to))
+                {
+                    throw new Exception('Invalid prior_to timestamp');
+                }
 				$issuesModel->setState('filter.imcapi.priorto', $prior_to);
 			}
 
@@ -231,14 +239,7 @@ class ImcControllerApi extends ImcController
 			$app->enqueueMessage('size: '.sizeof($result), 'info');
 			restore_error_handler();
 
-			if($json)
-			{
-				echo new JResponseJson($result, 'Issues fetched successfully');
-			}
-			else
-			{
-				return $result;
-			}
+			echo new JResponseJson($result, 'Issues fetched successfully');
 		}
 		catch(Exception $e)	{
 			header("HTTP/1.0 202 Accepted");
@@ -407,7 +408,7 @@ class ImcControllerApi extends ImcController
 		}
 	}
 
-	public function steps($json = true)
+	public function steps()
 	{
 		$result = null;
 		$app = JFactory::getApplication();
@@ -441,14 +442,8 @@ class ImcControllerApi extends ImcController
 			restore_error_handler();
 			$result = ImcFrontendHelper::sanitizeSteps($data);
 
-			if($json){
-			    $app->enqueueMessage('size: '.sizeof($result), 'info');
-				echo new JResponseJson($result, 'Steps fetched successfully');
-			}
-			else
-			{
-				return $result;
-			}
+    	    $app->enqueueMessage('size: '.sizeof($result), 'info');
+			echo new JResponseJson($result, 'Steps fetched successfully');
 		}
 		catch(Exception $e)	{
 			header("HTTP/1.0 202 Accepted");
@@ -468,9 +463,21 @@ class ImcControllerApi extends ImcController
 			    throw new Exception('You cannot use other method than GET to fetch categories');
 			}
 
+            $ts = $app->input->getString('ts');
+
             //handle unexpected warnings from JCategories
             set_error_handler(array($this, 'exception_error_handler'));
             $result = ImcFrontendHelper::getCategories(false);
+            if(!is_null($ts))
+            {
+                if(!ImcFrontendHelper::isValidTimeStamp($ts))
+                {
+                    throw new Exception('Invalid timestamp');
+                }
+                foreach ($result as $cat) {
+                    //TODO: unset categories prior to ts (how to handle children?)
+                }
+            }
 			restore_error_handler();
             $app->enqueueMessage('size: '.sizeof($result), 'info');
 			echo new JResponseJson($result, 'Categories fetched successfully');
@@ -686,7 +693,7 @@ class ImcControllerApi extends ImcController
 		$result = null;
 		$app = JFactory::getApplication();
 		try {
-		    self::validateRequest();
+		    $userid = self::validateRequest();
 
 			if($app->input->getMethod() != 'GET')
 			{
@@ -705,10 +712,10 @@ class ImcControllerApi extends ImcController
 
             //handle unexpected warnings
             set_error_handler(array($this, 'exception_error_handler'));
-			$result = self::getTimestamp($args['ts']);
+			$result = self::getModifications($args['ts'], $userid);
             restore_error_handler();
 
-			echo new JResponseJson($result, 'Updates since timestamp fetched successfully');
+			echo new JResponseJson($result, 'Modifications since timestamp fetched successfully');
 		}
 		catch(Exception $e)	{
 			header("HTTP/1.0 202 Accepted");
@@ -716,32 +723,45 @@ class ImcControllerApi extends ImcController
 		}
 	}
 
-	private function getTimestamp($ts)
+	private function getModifications($ts, $userid)
 	{
-		$app = JFactory::getApplication();
-
 		$tsDate = date("Y-m-d H:i:s", $ts);
 		$offsetDate = JDate::getInstance($tsDate, JFactory::getConfig()->get('offset') );
 
-		$updates = array(
-			'newestTS'   => $ts, //used mainly for backwards compatibility
-			'ts'         => $ts,
+        //1. get issues
+        $issuesModel = JModelLegacy::getInstance( 'Issues', 'ImcModel', array('ignore_request' => true) );
+        $issuesModel->setState('filter.imcapi.ts', $ts);
+        //$issuesModel->setState('filter.imcapi.raw', true); //Do not unset anything in getItems()
+		$data = $issuesModel->getItems();
+		$issues = ImcFrontendHelper::sanitizeIssues($data, $userid);
+
+        //2. get categories
+        //$categories = ImcFrontendHelper::getModifiedCategories($ts);
+        $categories = ImcFrontendHelper::getCategories(false);
+
+
+        //3. get steps
+        $stepsModel = JModelLegacy::getInstance( 'Steps', 'ImcModel', array('ignore_request' => true) );
+        $stepsModel->setState('filter.imcapi.ts', $ts);
+        //$stepsModel->setState('filter.imcapi.raw', true);
+        $data = $stepsModel->getItems();
+        $steps = ImcFrontendHelper::sanitizeSteps($data);
+
+        $info = array(
+			'count_issues' => sizeof($issues),
+			'count_categories' => sizeof($categories),
+			'count_steps' => sizeof($steps),
+			'given_ts'   => $ts,
 			'offset'     => $offsetDate,
-			'issues'     => array(),
-			'categories' => array(),
-			'steps'      => array(),
+        );
+
+		$updated = array(
+			'issues'     => $issues,
+			'categories' => $categories,
+			'steps'      => $steps
 		);
 
-		$app->input->set('ts', $ts);
-		//$updates['issues'] = self::issues(false);
-		//$updates['categories'] = self::categories(false);
-		//$updates['steps'] = self::steps(false);
-		//$updates['votes'] = self::votes(false);
-		//$updates['comments'] = self::comments(false);
-
-
-
-		return $updates;
+		return array('info' => $info, 'updated' => $updated);
 	}
 
 }

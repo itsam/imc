@@ -234,7 +234,8 @@ class ImcFrontendHelper
 				$return[$i]->parentid = $JCatNode->parent_id == "root" ? 0 : (int) $JCatNode->parent_id;
 				$return[$i]->path = $JCatNode->get('path');
 				$return[$i]->id = (int) $JCatNode->id;
-				$return[$i]->updated = $JCatNode->modified_time == '0000-00-00 00:00:00' ? 1 :  strtotime($JCatNode->modified_time);
+				$return[$i]->state = (int) $JCatNode->published;
+				$return[$i]->updated_ts = $JCatNode->modified_time == '0000-00-00 00:00:00' ? 1 :  strtotime($JCatNode->modified_time);
 				$params = json_decode($JCatNode->params);
 
 				$return[$i]->image = $params->image;
