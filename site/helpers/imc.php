@@ -131,6 +131,7 @@ class ImcFrontendHelper
         $data->created_TZ = $data->created == '0000-00-00 00:00:00' ? $data->created : self::convertFromUTC($data->created);
         $data->updated_TZ = $data->updated == '0000-00-00 00:00:00' ? $data->updated : self::convertFromUTC($data->updated);
         $data->regdate_TZ = $data->regdate == '0000-00-00 00:00:00' ? $data->regdate : self::convertFromUTC($data->regdate);
+		$data->updated_ts = $data->updated == '0000-00-00 00:00:00' ? 1 :  strtotime($data->updated);
 
 		$data->myIssue = ($data->created_by == $userid);
 
@@ -193,9 +194,7 @@ class ImcFrontendHelper
 		}
 		//unset overhead
 		unset($data->asset_id);
-		unset($data->state);
 		unset($data->created);
-		unset($data->updated);
 		unset($data->checked_out);
 		unset($data->checked_out_time);
 		unset($data->created_by);
@@ -203,6 +202,8 @@ class ImcFrontendHelper
 		unset($data->language);
 		unset($data->editor);
 
+		$data->updated_ts = $data->updated == '0000-00-00 00:00:00' ? 1 :  strtotime($data->updated);
+		unset($data->updated);
 		return $data;
 	}
 
@@ -233,6 +234,7 @@ class ImcFrontendHelper
 				$return[$i]->parentid = $JCatNode->parent_id == "root" ? 0 : (int) $JCatNode->parent_id;
 				$return[$i]->path = $JCatNode->get('path');
 				$return[$i]->id = (int) $JCatNode->id;
+				$return[$i]->updated = $JCatNode->modified_time == '0000-00-00 00:00:00' ? 1 :  strtotime($JCatNode->modified_time);
 				$params = json_decode($JCatNode->params);
 
 				$return[$i]->image = $params->image;
