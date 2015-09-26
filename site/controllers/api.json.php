@@ -164,6 +164,7 @@ class ImcControllerApi extends ImcController
             }
 
             $result = $languages;
+            $app->enqueueMessage('size: '.sizeof($result), 'info');
 			echo new JResponseJson($result, 'Languages fetched successfully');
 		}
 		catch(Exception $e)	{
@@ -225,6 +226,7 @@ class ImcControllerApi extends ImcController
 			//get items and sanitize them
 			$data = $issuesModel->getItems();
 			$result = ImcFrontendHelper::sanitizeIssues($data, $userid);
+			$app->enqueueMessage('size: '.sizeof($result), 'info');
 			restore_error_handler();
 
 			if($json)
@@ -438,6 +440,7 @@ class ImcControllerApi extends ImcController
 			$result = ImcFrontendHelper::sanitizeSteps($data);
 
 			if($json){
+			    $app->enqueueMessage('size: '.sizeof($result), 'info');
 				echo new JResponseJson($result, 'Steps fetched successfully');
 			}
 			else
@@ -467,7 +470,7 @@ class ImcControllerApi extends ImcController
             set_error_handler(array($this, 'exception_error_handler'));
             $result = ImcFrontendHelper::getCategories(false);
 			restore_error_handler();
-
+            $app->enqueueMessage('size: '.sizeof($result), 'info');
 			echo new JResponseJson($result, 'Categories fetched successfully');
 		}
 		catch(Exception $e)	{
