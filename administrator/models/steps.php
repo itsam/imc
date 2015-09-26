@@ -111,11 +111,14 @@ class ImcModelSteps extends JModelList {
 		$query->join('LEFT', '#__users AS created_by ON created_by.id = a.created_by');
 
 		// Filter by published state
+        $imc_raw = $this->state->get('filter.imcapi.raw', false);
 		$published = $this->getState('filter.state');
 		if (is_numeric($published)) {
 			$query->where('a.state = ' . (int) $published);
 		} else if ($published === '') {
-			$query->where('(a.state IN (0, 1))');
+            if(!$imc_raw) {
+                $query->where('(a.state IN (0, 1))');
+            }
 		}
 
         // Filter by search in title
@@ -128,6 +131,14 @@ class ImcModelSteps extends JModelList {
                 $query->where('( a.title LIKE '.$search.' )');
             }
         }
+
+        // Filter by timestamp/prior to (Currently used only by API requests)
+        $ts = $this->state->get('filter.imcapi.ts');
+        if(!is_null($ts))
+        {
+            $query->where('UNIX_TIMESTAMP(a.updated) >=' . $ts);
+        }
+
 
         // Add the list ordering clause.
         $orderCol = $this->state->get('list.ordering');
