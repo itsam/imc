@@ -112,14 +112,15 @@ class ImcModelSteps extends JModelList {
 
 		// Filter by published state
         $imc_raw = $this->state->get('filter.imcapi.raw', false);
-		$published = $this->getState('filter.state');
-		if (is_numeric($published)) {
-			$query->where('a.state = ' . (int) $published);
-		} else if ($published === '') {
-            if(!$imc_raw) {
+        if(!$imc_raw) {
+            $published = $this->getState('filter.state');
+
+            if (is_numeric($published)) {
+                $query->where('a.state = ' . (int)$published);
+            } else if ($published === '' || is_null($published)) {
                 $query->where('(a.state IN (0, 1))');
             }
-		}
+        }
 
         // Filter by search in title
         $search = $this->getState('filter.search');

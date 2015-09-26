@@ -733,7 +733,7 @@ class ImcControllerApi extends ImcController
         //1. get issues
         $issuesModel = JModelLegacy::getInstance( 'Issues', 'ImcModel', array('ignore_request' => true) );
         $issuesModel->setState('filter.imcapi.ts', $ts);
-        //$issuesModel->setState('filter.imcapi.raw', true); //Do not unset anything in getItems()
+        $issuesModel->setState('filter.imcapi.raw', true); //Do not unset anything in getItems()
 		$data = $issuesModel->getItems();
 		$issues = ImcFrontendHelper::sanitizeIssues($data, $userid);
 
@@ -745,7 +745,7 @@ class ImcControllerApi extends ImcController
         //3. get steps
         $stepsModel = JModelLegacy::getInstance( 'Steps', 'ImcModel', array('ignore_request' => true) );
         $stepsModel->setState('filter.imcapi.ts', $ts);
-        //$stepsModel->setState('filter.imcapi.raw', true);
+        $stepsModel->setState('filter.imcapi.raw', true);
         $data = $stepsModel->getItems();
         $steps = ImcFrontendHelper::sanitizeSteps($data);
 
