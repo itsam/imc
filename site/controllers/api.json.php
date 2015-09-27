@@ -730,7 +730,7 @@ class ImcControllerApi extends ImcController
             set_error_handler(array($this, 'exception_error_handler'));
 			//get items and sanitize them
 			$data = $votesModel->getItems();
-			$result = $data; //ImcFrontendHelper::sanitizeVotes($data, $userid);
+			$result = ImcFrontendHelper::sanitizeVotes($data);
 			restore_error_handler();
 
     	    $app->enqueueMessage('size: '.sizeof($result), 'info');
@@ -870,10 +870,17 @@ class ImcControllerApi extends ImcController
         $data = $stepsModel->getItems();
         $steps = ImcFrontendHelper::sanitizeSteps($data, true);
 
+        //4. get votes
+        $votesModel = JModelLegacy::getInstance( 'Votes', 'ImcModel', array('ignore_request' => true) );
+        $votesModel->setState('filter.imcapi.ts', $ts);
+        $data = $votesModel->getItems();
+        $votes = ImcFrontendHelper::sanitizeVotes($data);
+
         $info = array(
 			'count_issues' => sizeof($issues),
 			'count_categories' => sizeof($categories),
 			'count_steps' => sizeof($steps),
+			'count_votes' => sizeof($votes),
 			'given_ts'   => $ts,
 			'offset'     => $offsetDate,
         );
@@ -881,7 +888,8 @@ class ImcControllerApi extends ImcController
 		$updated = array(
 			'issues'     => $issues,
 			'categories' => $categories,
-			'steps'      => $steps
+			'steps'      => $steps,
+			'votes'      => $votes
 		);
 
 		return array('info' => $info, 'updated' => $updated);

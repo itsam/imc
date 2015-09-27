@@ -202,7 +202,7 @@ class ImcFrontendHelper
 	public static function sanitizeLogs($data)
 	{
 		if(!is_array($data)){
-			throw new Exception('Log sanitization bad input');
+			throw new Exception('Logs sanitization bad input');
 		}
 		$params = JFactory::getApplication()->getParams('com_imc');
 		$showName = (boolean) $params->get('showadmindetailstimeline');
@@ -214,6 +214,38 @@ class ImcFrontendHelper
 			if(!$showName){
 				$tl['created_by'] = null;
 			}
+		}
+
+		return $data;
+	}
+
+	public static function sanitizeVotes($data)
+	{
+		if(!is_array($data)){
+			throw new Exception('Votes sanitization bad input');
+		}
+
+		foreach ($data as &$vote)
+		{
+			$vote->created_ts = $vote->created == '0000-00-00 00:00:00' ? 1 :  strtotime($vote->created);
+
+			unset($vote->id);
+			unset($vote->asset_id);
+			unset($vote->created);
+			unset($vote->updated);
+			unset($vote->ordering);
+			unset($vote->state);
+			unset($vote->checked_out);
+			unset($vote->checked_out_time);
+			unset($vote->updated_by);
+			unset($vote->modality);
+			unset($vote->issue_title);
+			unset($vote->created_by_name);
+
+			//do the casting
+			$vote->issueid = (int) $vote->issueid;
+			$vote->created_by = (int) $vote->created_by;
+
 		}
 
 		return $data;

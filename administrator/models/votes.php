@@ -101,24 +101,15 @@ class ImcModelVotes extends JModelList {
 
         // Select the required fields from the table.
         $query->select(
-                $this->getState(
-                        'list.select', 'DISTINCT a.*'
-                )
+            $this->getState(
+                    'list.select', 'DISTINCT a.*'
+            )
         );
         $query->from('`#__imc_votes` AS a');
-
-        
-		// Join over the users for the checked out user
-		$query->select("uc.name AS editor");
-		$query->join("LEFT", "#__users AS uc ON uc.id=a.checked_out");
-		// Join over the foreign key 'issueid'
-		$query->select('#__imc_issues_1382359.title AS issues_title_1382359');
-		$query->join('LEFT', '#__imc_issues AS #__imc_issues_1382359 ON #__imc_issues_1382359.id = a.issueid');
-		// Join over the user field 'created_by'
-		$query->select('created_by.name AS created_by');
-		$query->join('LEFT', '#__users AS created_by ON created_by.id = a.created_by');
-
-        
+		$query->select('#__imc_issues.title AS issue_title');
+		$query->join('LEFT', '#__imc_issues AS #__imc_issues ON #__imc_issues.id = a.issueid');
+		$query->select('users.name AS created_by_name');
+		$query->join('LEFT', '#__users AS users ON users.id = a.created_by');
 
 		// Filter by published state
 		$published = $this->getState('filter.state');
@@ -133,9 +124,6 @@ class ImcModelVotes extends JModelList {
         if (!empty($search)) {
             if (stripos($search, 'id:') === 0) {
                 $query->where('a.id = ' . (int) substr($search, 3));
-            } else {
-                $search = $db->Quote('%' . $db->escape($search, true) . '%');
-                
             }
         }
 
@@ -171,31 +159,6 @@ class ImcModelVotes extends JModelList {
 
     public function getItems() {
         $items = parent::getItems();
-        
-/*		foreach ($items as $oneItem) {
-
-			if (isset($oneItem->issueid)) {
-				$values = explode(',', $oneItem->issueid);
-
-				$textValue = array();
-				foreach ($values as $value){
-					$db = JFactory::getDbo();
-					$query = $db->getQuery(true);
-					$query
-							->select('title')
-							->from('`#__imc_issues`')
-							->where('id = ' . $db->quote($db->escape($value)));
-					$db->setQuery($query);
-					$results = $db->loadObject();
-					if ($results) {
-						$textValue[] = $results->title;
-					}
-				}
-
-			$oneItem->issueid = !empty($textValue) ? implode(', ', $textValue) : $oneItem->issueid;
-
-			}
-		}*/
         return $items;
     }
 
