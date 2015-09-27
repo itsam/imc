@@ -211,6 +211,34 @@ class ImcFrontendHelper
 		return $data;
 	}
 
+	public static function getModifiedCategories($ts)
+	{
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+
+		$query
+			->select('a.id, a.title, a.parent_id, a.published AS state, a.params')
+			->from('#__categories AS a')
+			->where('extension = ' . $db->quote('com_imc'))
+			->where('UNIX_TIMESTAMP(a.modified_time) >= ' . $ts);
+
+		$db->setQuery($query);
+		$result = $db->loadAssocList();
+		foreach ($result as &$category) {
+			$params = json_decode($category['params']);
+			$category['image'] = $params->image;
+			if($category['image'])
+			{
+				$category['image'] = JUri::base() . $category['image'];
+			}
+			//$category['parentid'] = $category['parent_id'] == "root" ? 1 : (int) $category['parent_id'];
+			unset($category['parent_id']);
+			unset($category['params']);
+		}
+
+		return $result;
+	}
+
 	public static function getCategories($recursive = false)
 	{
 		$categories = JCategories::getInstance('imc');
@@ -235,7 +263,7 @@ class ImcFrontendHelper
 			{
 				$return[$i] = new stdClass();
 				$return[$i]->title = $JCatNode->title;
-				$return[$i]->parentid = $JCatNode->parent_id == "root" ? 0 : (int) $JCatNode->parent_id;
+				$return[$i]->parentid = $JCatNode->parent_id == "root" ? 1 : (int) $JCatNode->parent_id;
 				$return[$i]->path = $JCatNode->get('path');
 				$return[$i]->id = (int) $JCatNode->id;
 				$return[$i]->state = (int) $JCatNode->published;

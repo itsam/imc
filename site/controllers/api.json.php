@@ -743,8 +743,8 @@ class ImcControllerApi extends ImcController
 		$issues = ImcFrontendHelper::sanitizeIssues($data, $userid);
 
         //2. get categories
-        //$categories = ImcFrontendHelper::getModifiedCategories($ts);
-        $categories = ImcFrontendHelper::getCategories(false);
+        $categories = ImcFrontendHelper::getModifiedCategories($ts);
+        //$categories = ImcFrontendHelper::getCategories(false);
 
 
         //3. get steps
