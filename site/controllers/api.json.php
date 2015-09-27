@@ -742,6 +742,44 @@ class ImcControllerApi extends ImcController
 		}
 	}
 
+	public function voters()
+	{
+		$result = null;
+		$app = JFactory::getApplication();
+		try {
+		    $userid = self::validateRequest();
+
+			if($app->input->getMethod() != 'GET')
+			{
+			    throw new Exception('You cannot use other method than GET to fetch votes');
+			}
+
+            //get necessary arguments
+            $ts = $app->input->getString('ts', null);
+
+            //get votes model
+            $votesModel = JModelLegacy::getInstance( 'Votes', 'ImcModel', array('ignore_request' => true) );
+			if(!is_null($ts))
+			{
+				$votesModel->setState('filter.imcapi.ts', $ts);
+			}
+
+            //handle unexpected warnings from model
+            set_error_handler(array($this, 'exception_error_handler'));
+			//get items and sanitize them
+			$data = $votesModel->getItems();
+			$result = ImcFrontendHelper::sanitizeVotes($data);
+			restore_error_handler();
+
+    	    $app->enqueueMessage('size: '.sizeof($result), 'info');
+			echo new JResponseJson($result, 'Voters fetched successfully');
+		}
+		catch(Exception $e)	{
+			header("HTTP/1.0 202 Accepted");
+			echo new JResponseJson($e);
+		}
+	}
+
 	public function timeline()
 	{
 		$result = null;
