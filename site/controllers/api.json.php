@@ -644,7 +644,7 @@ class ImcControllerApi extends ImcController
                 throw new Exception('Guests are now allowed to vote/unvote');
             }
 
-            //get vote model
+            //get votes model
             $votesModel = JModelLegacy::getInstance( 'Votes', 'ImcModel', array('ignore_request' => true) );
 
             switch($app->input->getMethod())
@@ -688,6 +688,53 @@ class ImcControllerApi extends ImcController
             $result = array($result);
 
             echo new JResponseJson($result, 'Vote action completed successfully');
+		}
+		catch(Exception $e)	{
+			header("HTTP/1.0 202 Accepted");
+			echo new JResponseJson($e);
+		}
+	}
+
+	public function votes()
+	{
+		$result = null;
+		$app = JFactory::getApplication();
+		try {
+		    $userid = self::validateRequest();
+
+			if($app->input->getMethod() != 'GET')
+			{
+			    throw new Exception('You cannot use other method than GET to fetch votes');
+			}
+
+            //get necessary arguments
+            $id = $app->input->getInt('id', null);
+            $ts = $app->input->getString('ts', null);
+
+            //get votes model
+            $votesModel = JModelLegacy::getInstance( 'Votes', 'ImcModel', array('ignore_request' => true) );
+			if(!is_null($ts))
+			{
+				$votesModel->setState('filter.imcapi.ts', $ts);
+			}
+			if(is_null($id))
+			{
+				$votesModel->setState('filter.imcapi.userid', $userid);
+			}
+			else
+			{
+			    $votesModel->setState('filter.issueid', $id);
+			}
+
+            //handle unexpected warnings from model
+            set_error_handler(array($this, 'exception_error_handler'));
+			//get items and sanitize them
+			$data = $votesModel->getItems();
+			$result = $data; //ImcFrontendHelper::sanitizeVotes($data, $userid);
+			restore_error_handler();
+
+    	    $app->enqueueMessage('size: '.sizeof($result), 'info');
+			echo new JResponseJson($result, 'Votes fetched successfully');
 		}
 		catch(Exception $e)	{
 			header("HTTP/1.0 202 Accepted");

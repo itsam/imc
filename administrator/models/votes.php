@@ -139,14 +139,25 @@ class ImcModelVotes extends JModelList {
             }
         }
 
-        
-
 		//Filtering issueid
 		$filter_issueid = $this->state->get("filter.issueid");
 		if ($filter_issueid) {
 			$query->where("a.issueid = '".$db->escape($filter_issueid)."'");
 		}
 
+        // Filter by timestamp/prior to (Currently used only by API requests)
+        $ts = $this->state->get('filter.imcapi.ts');
+        if(!is_null($ts))
+        {
+            $query->where('UNIX_TIMESTAMP(a.updated) >=' . $ts);
+        }
+
+        // Filter by userid (Currently used only by API requests)
+        $userid = $this->state->get('filter.imcapi.userid');
+        if(!is_null($userid))
+        {
+            $query->where('a.created_by = ' . $userid);
+        }
 
         // Add the list ordering clause.
         $orderCol = $this->state->get('list.ordering');
