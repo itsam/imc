@@ -120,7 +120,19 @@ class ImcModelIssues extends JModelList {
     protected function getListQuery() {
         //check API request
         $userid = $this->state->get('filter.imcapi.userid', 0);
-        $user = ($userid > 0 ? JFactory::getUser($userid) : JFactory::getUser());
+        $guest = $this->state->get('filter.imcapi.guest', false);
+        if($userid > 0)
+        {
+            $user = JFactory::getUser($userid);
+        }
+        elseif ($guest)
+        {
+            $user = JFactory::getUser(0);
+        }
+        else
+        {
+            $user = JFactory::getUser();
+        }
 
         // Create a new query object.
         $db = $this->getDbo();

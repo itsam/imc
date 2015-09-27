@@ -200,11 +200,16 @@ class ImcControllerApi extends ImcController
             //set states
             $issuesModel->setState('filter.owned', ($owned === 'true' ? 'yes' : 'no'));
             $issuesModel->setState('filter.imcapi.userid', $userid);
+            if($userid == 0)
+            {
+                $issuesModel->setState('filter.imcapi.guest', true);
+            }
             //$issuesModel->setState('filter.imcapi.ordering', 'id');
             //$issuesModel->setState('filter.imcapi.direction', 'DESC');
 
             //$issuesModel->setState('list.limit', $lim);
             $issuesModel->setState('filter.imcapi.limit', $lim);
+
 
 			if(!is_null($minLat) && !is_null($maxLat) && !is_null($minLng) && !is_null($maxLng))
 			{
