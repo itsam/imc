@@ -265,6 +265,7 @@ class ImcFrontendHelper
 			if($extensive)
 			{
 				unset($step->updated_ts);
+				unset($step->description);
 			}
 			array_push($steps, $step);
 		}
