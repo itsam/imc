@@ -621,5 +621,91 @@ class ImcFrontendHelper
 	 
 	    return $string;
 
-	}	
+	}
+
+	/* Analytics */
+
+	public static function getTopUsers($limit = null, $ts = null, $prior_to = null)
+	{
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+
+		$query->select('COUNT(*) AS `count_issues`, a.created_by, b.name');
+		$query->from('`#__imc_issues` AS a');
+		$query->join('LEFT', '#__users AS b ON b.id = a.created_by');
+		$query->where('a.state = 1');
+		$query->group('a.created_by');
+		$query->order('count_issues DESC');
+		if(!is_null($limit) && $limit > 0)
+		{
+			$query->setlimit($limit);
+		}
+		if(!is_null($ts))
+		{
+			$query->where('UNIX_TIMESTAMP(a.updated) >= ' . $ts);
+		}
+		if(!is_null($prior_to))
+		{
+			$query->where('UNIX_TIMESTAMP(a.updated) <= ' . $prior_to);
+		}
+
+		$db->setQuery($query);
+		return $db->loadAssocList();
+	}
+
+	public static function getTopCategories($limit = null, $ts = null, $prior_to = null)
+	{
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+
+		$query->select('COUNT(*) AS `count_issues`, a.catid, b.title');
+		$query->from('`#__imc_issues` AS a');
+		$query->join('LEFT', '#__categories AS b ON b.id = a.catid');
+		$query->where('a.state = 1');
+		$query->group('a.catid');
+		$query->order('count_issues DESC');
+		if(!is_null($limit) && $limit > 0)
+		{
+			$query->setlimit($limit);
+		}
+		if(!is_null($ts))
+		{
+			$query->where('UNIX_TIMESTAMP(a.updated) >= ' . $ts);
+		}
+		if(!is_null($prior_to))
+		{
+			$query->where('UNIX_TIMESTAMP(a.updated) <= ' . $prior_to);
+		}
+
+		$db->setQuery($query);
+		return $db->loadAssocList();
+	}
+
+	public static function getTopSteps($limit = null, $ts = null, $prior_to = null)
+	{
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+
+		$query->select('COUNT(*) AS `count_issues`, a.stepid, b.title');
+		$query->from('`#__imc_issues` AS a');
+		$query->join('LEFT', '#__imc_steps AS b ON b.id = a.stepid');
+		$query->where('a.state = 1');
+		$query->group('a.stepid');
+		$query->order('count_issues DESC');
+		if(!is_null($limit) && $limit > 0)
+		{
+			$query->setlimit($limit);
+		}
+		if(!is_null($ts))
+		{
+			$query->where('UNIX_TIMESTAMP(a.updated) >= ' . $ts);
+		}
+		if(!is_null($prior_to))
+		{
+			$query->where('UNIX_TIMESTAMP(a.updated) <= ' . $prior_to);
+		}
+
+		$db->setQuery($query);
+		return $db->loadAssocList();
+	}
 }

@@ -933,4 +933,69 @@ class ImcControllerApi extends ImcController
 		return array('info' => $info, 'updated' => $updated);
 	}
 
+    public function topusers()
+    {
+        self::getTop('users');
+    }
+
+    public function topcategories()
+    {
+        self::getTop('categories');
+    }
+
+    public function topsteps()
+    {
+        self::getTop('steps');
+    }
+
+    private function getTop($type)
+    {
+		$result = null;
+		$app = JFactory::getApplication();
+		try {
+		    self::validateRequest();
+
+			if($app->input->getMethod() != 'GET')
+			{
+			    throw new Exception('You cannot use other method than GET to fetch top users');
+			}
+
+            //get necessary arguments
+            $ts = $app->input->getString('ts', null);
+            $prior_to = $app->input->getString('prior_to', null);
+            $lim = $app->input->getInt('lim', null);
+
+		    if(!is_null($ts) && !ImcFrontendHelper::isValidTimeStamp($ts))
+            {
+                throw new Exception('Invalid timestamp ts');
+            }
+		    if(!is_null($prior_to) && !ImcFrontendHelper::isValidTimeStamp($prior_to))
+            {
+                throw new Exception('Invalid timestamp prior_to');
+            }
+
+            //handle unexpected warnings from model
+            set_error_handler(array($this, 'exception_error_handler'));
+            switch($type)
+            {
+                case 'users':
+                    $result = ImcFrontendHelper::getTopUsers($lim, $ts, $prior_to);
+                break;
+                case 'categories':
+                    $result = ImcFrontendHelper::getTopCategories($lim, $ts, $prior_to);
+                break;
+                case 'steps':
+                    $result = ImcFrontendHelper::getTopSteps($lim, $ts, $prior_to);
+                break;
+            }
+			restore_error_handler();
+
+    	    $app->enqueueMessage('size: '.sizeof($result), 'info');
+			echo new JResponseJson($result, 'Top users fetched successfully');
+		}
+		catch(Exception $e)	{
+			header("HTTP/1.0 202 Accepted");
+			echo new JResponseJson($e);
+		}
+    }
 }
