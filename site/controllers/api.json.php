@@ -722,6 +722,9 @@ class ImcControllerApi extends ImcController
 			$result = self::getModifications($args['ts'], $userid);
             restore_error_handler();
 
+            //be consistent return as array (of size 1)
+            $result = array($result);
+
 			echo new JResponseJson($result, 'Modifications since timestamp fetched successfully');
 		}
 		catch(Exception $e)	{
@@ -740,19 +743,18 @@ class ImcControllerApi extends ImcController
         $issuesModel->setState('filter.imcapi.ts', $ts);
         $issuesModel->setState('filter.imcapi.raw', true); //Do not unset anything in getItems()
 		$data = $issuesModel->getItems();
-		$issues = ImcFrontendHelper::sanitizeIssues($data, $userid);
+		$issues = ImcFrontendHelper::sanitizeIssues($data, $userid, true);
 
         //2. get categories
         $categories = ImcFrontendHelper::getModifiedCategories($ts);
-        //$categories = ImcFrontendHelper::getCategories(false);
-
+        $categories = ImcFrontendHelper::sanitizeCategories($categories);
 
         //3. get steps
         $stepsModel = JModelLegacy::getInstance( 'Steps', 'ImcModel', array('ignore_request' => true) );
         $stepsModel->setState('filter.imcapi.ts', $ts);
         $stepsModel->setState('filter.imcapi.raw', true);
         $data = $stepsModel->getItems();
-        $steps = ImcFrontendHelper::sanitizeSteps($data);
+        $steps = ImcFrontendHelper::sanitizeSteps($data, true);
 
         $info = array(
 			'count_issues' => sizeof($issues),

@@ -59,7 +59,7 @@ class ImcFrontendHelper
 		}
 	}
 
-	public static function sanitizeIssues($data, $userid)
+	public static function sanitizeIssues($data, $userid, $extensive = false)
 	{
 		if(!is_array($data)){
 			throw new Exception('Issues sanitization bad input');
@@ -74,6 +74,34 @@ class ImcFrontendHelper
 		{
 			$issue = self::sanitizeIssue($issue, $userid);
 			$issue->hasVoted = $votesModel->hasVoted($issue->id, $userid);
+			if($extensive)
+			{
+				unset($issue->created_TZ);
+				unset($issue->updated_TZ);
+				unset($issue->regdate_TZ);
+				unset($issue->updated_ts);
+				unset($issue->description);
+				unset($issue->hits);
+				unset($issue->regdate);
+				unset($issue->responsible);
+				unset($issue->extra);
+				unset($issue->moderation);
+				unset($issue->subgroup);
+				unset($issue->catid_title);
+				unset($issue->stepid_title);
+				unset($issue->stepid_color);
+				unset($issue->category_image);
+				foreach ($issue->photos as &$photo) {
+					unset($photo->name);
+					unset($photo->size);
+					unset($photo->mediumUrl);
+				}
+				foreach ($issue->attachments as &$attachment) {
+					unset($attachment->name);
+					unset($attachment->size);
+				}
+
+			}
 			array_push($issues, $issue);
 		}
 		return $issues;
@@ -175,7 +203,7 @@ class ImcFrontendHelper
 		return $data;
 	}
 
-	public static function sanitizeSteps($data)
+	public static function sanitizeSteps($data, $extensive = false)
 	{
 		if(!is_array($data)){
 			throw new Exception('Steps sanitization bad input');
@@ -186,9 +214,27 @@ class ImcFrontendHelper
 		foreach ($data as $step)
 		{
 			$step = self::sanitizeStep($step);
+			if($extensive)
+			{
+				unset($step->updated_ts);
+			}
 			array_push($steps, $step);
 		}
 		return $steps;
+	}
+
+	public static function sanitizeCategories($data)
+	{
+		if(!is_array($data)){
+			throw new Exception('Categories sanitization bad input');
+		}
+
+		foreach ($data as &$category)
+		{
+			$category['id'] = (int) $category['id'];
+			$category['state'] = (int) $category['state'];
+		}
+		return $data;
 	}
 
 	public static function sanitizeStep($data)
@@ -208,6 +254,12 @@ class ImcFrontendHelper
 
 		$data->updated_ts = $data->updated == '0000-00-00 00:00:00' ? 1 :  strtotime($data->updated);
 		unset($data->updated);
+
+		//do the casting
+		$data->id = (int)$data->id;
+		$data->state = (int)$data->state;
+		$data->ordering = (int)$data->ordering;
+
 		return $data;
 	}
 
