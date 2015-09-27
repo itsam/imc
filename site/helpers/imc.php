@@ -182,22 +182,38 @@ class ImcFrontendHelper
 			$data->comments = (int)$data->comments;
 		}
 
-		//check confidentiality
+		//check confidentiality and sanitize logs
 		$params = JFactory::getApplication()->getParams('com_imc');
 
-		if ($params->get('showadmindetailstimeline') == 0)
+
+		if(isset($data->timeline))
 		{
-			if(isset($data->timeline))
-			{
-				foreach ($data->timeline as &$tl)
-				{
-					$tl['created_by'] = null;
-				}
-			}
+			$data->timeline = self::sanitizeLogs($data->timeline);
 		}
+
 		if ($params->get('showuserdetailstimeline') == 0)
 		{
 			$data->created_by_name = null;
+		}
+
+		return $data;
+	}
+
+	public static function sanitizeLogs($data)
+	{
+		if(!is_array($data)){
+			throw new Exception('Log sanitization bad input');
+		}
+		$params = JFactory::getApplication()->getParams('com_imc');
+		$showName = (boolean) $params->get('showadmindetailstimeline');
+
+		foreach ($data as &$tl)
+		{
+			$tl['created_TZ'] = $tl['created'] == '0000-00-00 00:00:00' ? $tl['created'] : self::convertFromUTC($tl['created']);
+			$tl['created_ts'] = $tl['created'] == '0000-00-00 00:00:00' ? 1 :  strtotime($tl['created']);
+			if(!$showName){
+				$tl['created_by'] = null;
+			}
 		}
 
 		return $data;

@@ -695,6 +695,73 @@ class ImcControllerApi extends ImcController
 		}
 	}
 
+	public function timeline()
+	{
+		$result = null;
+		$app = JFactory::getApplication();
+		try {
+		    $userid = self::validateRequest();
+            //get necessary arguments
+            $id = $app->input->getInt('id', null);
+
+            switch($app->input->getMethod())
+            {
+                //fetch issue's timeline
+                case 'GET':
+                    if ($id == null){
+                        throw new Exception('Id is not set');
+                    }
+
+                    //get logs model
+                    $issueModel = JModelLegacy::getInstance( 'Issue', 'ImcModel', array('ignore_request' => true) );
+                    $logsModel = JModelLegacy::getInstance( 'Logs', 'ImcModel', array('ignore_request' => true) );
+
+                    //handle unexpected warnings from model
+                    set_error_handler(array($this, 'exception_error_handler'));
+                    $data = $issueModel->getData($id);
+
+                    if(!is_object($data)){
+                        throw new Exception('Issue does not exist');
+                    }
+
+                    $result = ImcFrontendHelper::sanitizeIssue($data, $userid);
+                    if($result->state != 1){
+                        throw new Exception('Issue is not published');
+                    }
+                    if(!$result->myIssue && $result->moderation){
+                        $app->enqueueMessage('Issue is under moderation', 'info');
+                    }
+
+                    $data = $logsModel->getItemsByIssue($id);
+                    $result = ImcFrontendHelper::sanitizeLogs($data);
+                    restore_error_handler();
+                break;
+                case 'POST':
+                    if ($id != null){
+                        throw new Exception('You cannot use POST to fetch issue. Use GET instead');
+                    }
+                    //TODO: Future implementation
+                break;
+                //update existing issue
+                case 'PUT':
+                case 'PATCH':
+                    if ($id == null){
+                        throw new Exception('Id is not set');
+                    }
+                break;
+                default:
+                    throw new Exception('HTTP method is not supported');
+            }
+
+            echo new JResponseJson($result, 'Timeline action completed successfully');
+		}
+		catch(Exception $e)	{
+			header("HTTP/1.0 202 Accepted");
+			echo new JResponseJson($e);
+		}
+	}
+
+
 	public function modifications()
 	{
 		$result = null;
