@@ -144,14 +144,14 @@ class ImcFrontendHelper
 
 				if (isset($file->thumbnailUrl))
 				{
-					$file->url = substr($file->url, 0, strlen($obj->imagedir)) === $obj->imagedir ? JUri::base() . $file->url : dirname(JUri::base()) . $file->url;
-					$file->mediumUrl = substr($file->mediumUrl, 0, strlen($obj->imagedir)) === $obj->imagedir ? JUri::base() . $file->mediumUrl : dirname(JUri::base()) . $file->mediumUrl;
-					$file->thumbnailUrl = substr($file->thumbnailUrl, 0, strlen($obj->imagedir)) === $obj->imagedir ? JUri::base() . $file->thumbnailUrl : dirname(JUri::base()) . $file->thumbnailUrl;
+					$file->url = JUri::base() . 'images/imc/' . $data->id . '/' . $file->name;
+					$file->mediumUrl = JUri::base() . 'images/imc/' . $data->id . '/medium/' . $file->name;
+					$file->thumbnailUrl = JUri::base() . 'images/imc/' . $data->id . '/thumbnail/' . $file->name;
 					array_push($data->photos, $file);
 				}
 				elseif(isset($file->url))
 				{
-					$file->url = substr($file->url, 0, strlen($obj->imagedir)) === $obj->imagedir ? JUri::base() . $file->url : dirname(JUri::base()) . $file->url;
+					$file->url = JUri::base() . 'images/imc/' . $data->id . '/' . $file->name;
 					array_push($data->attachments, $file);
 				}
 			}
