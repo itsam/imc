@@ -251,6 +251,22 @@ class ImcFrontendHelper
 		return $data;
 	}
 
+	public static function sanitizeModifiedVotes($data)
+	{
+		if(!is_array($data)){
+			throw new Exception('Modified votes sanitization bad input');
+		}
+
+		foreach ($data as &$vote)
+		{
+			//do the casting
+			$vote['issueid'] = (int) $vote['issueid'];
+			$vote['votes'] = (int) $vote['votes'];
+		}
+
+		return $data;
+	}
+
 	public static function sanitizeSteps($data, $extensive = false)
 	{
 		if(!is_array($data)){
@@ -622,6 +638,24 @@ class ImcFrontendHelper
 	 
 	    return $string;
 
+	}
+
+	public static function getModifiedVotes($ts = null)
+	{
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+		$query->select('a.id AS issueid, a.votes');
+		$query->from('#__imc_issues AS a');
+		$query->where('
+			a.id IN (
+				SELECT DISTINCT b.issueid
+				FROM #__imc_votes AS b
+				WHERE UNIX_TIMESTAMP(b.updated) >= '.$ts.'
+			)
+		');
+
+		$db->setQuery($query);
+		return $db->loadAssocList();
 	}
 
 	/* Analytics */

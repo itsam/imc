@@ -321,11 +321,6 @@ class ImcModelIssues extends JModelList {
         $query  ->update($db->quoteName('#__imc_issues'))
                 ->set($db->quoteName('votes') .'=' . $db->quoteName('votes') . ($increase==true ? ' + 1' : ' - 1') )
                 ->where($db->quoteName('id') .'='. $issueid);
-        //when remove (unvote) refresh 'updated' so as to be caught by /GET modifications
-        if(!$increase)
-        {
-            $query->set($db->quoteName('updated') . '= UTC_TIMESTAMP()');
-        }
         $db->setQuery($query);
         $results = $db->execute();
         return $results;
@@ -341,6 +336,4 @@ class ImcModelIssues extends JModelList {
         $results = $db->loadResult();
         return $results;
     }
-
-
 }

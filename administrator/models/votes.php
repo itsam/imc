@@ -162,6 +162,19 @@ class ImcModelVotes extends JModelList {
         return $items;
     }
 
+	private function getVoteId($issueid, $userid) {
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+		$query->select('a.id');
+		$query->from('`#__imc_votes` AS a');
+		$query->where('a.issueid    = ' . $issueid);
+		$query->where('a.created_by = ' . $userid);
+		$query->where('a.state = 1');
+		$db->setQuery($query);
+		$results = $db->loadResult();
+		return $results;
+	}
+
     public function hasVoted($issueid, $userid) {
         $db = JFactory::getDbo();
         $query = $db->getQuery(true);
@@ -169,12 +182,13 @@ class ImcModelVotes extends JModelList {
         $query->from('`#__imc_votes` AS a');
         $query->where('a.issueid    = ' . $issueid);
         $query->where('a.created_by = ' . $userid);
+        $query->where('a.state = 1');
         $db->setQuery($query);
         $results = $db->loadResult();
         return (boolean) $results;
     }
 
-    public function remove($issueid, $userid)
+    public function remove($issueid, $userid, $modality = 0)
     {
         // check if already voted
         if(!$this->hasVoted($issueid, $userid))
@@ -185,18 +199,14 @@ class ImcModelVotes extends JModelList {
         require_once JPATH_COMPONENT_ADMINISTRATOR . '/models/issues.php';
         $issuesModel = JModelLegacy::getInstance( 'Issues', 'ImcModel', array('ignore_request' => true) );
 
-        $db = JFactory::getDbo();
-        $query = $db->getQuery(true);
-
-        $conditions = array(
-            $db->quoteName('issueid') . ' = ' . $issueid,
-            $db->quoteName('created_by') . ' = ' . $userid
-        );
-
-        $query->delete($db->quoteName('#__imc_votes'));
-        $query->where($conditions);
-        $db->setQuery($query);
-        $result = $db->execute();
+	    //change state to 0
+	    $db = JFactory::getDbo();
+	    $voteid = $this->getVoteId($issueid, $userid);
+	    $vote = new stdClass();
+	    $vote->id = $voteid;
+		$vote->state = 0;
+		$vote->modality = $modality;
+	    $result = $db->updateObject('#__imc_votes', $vote, 'id');
 
         if($result){
             //update issue votes as well
@@ -243,8 +253,8 @@ class ImcModelVotes extends JModelList {
         $vote->created_by = $userid;
         $vote->state = 1;
         $vote->modality = $modality;
-        $vote->created = date('Y-m-d H:i:s');
-        $vote->updated = date('Y-m-d H:i:s');
+        $vote->created = gmdate('Y-m-d H:i:s');
+        $vote->updated = $vote->created;
          
         // Insert the object into the votes table.
         $db = JFactory::getDbo();

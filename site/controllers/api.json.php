@@ -668,7 +668,7 @@ class ImcControllerApi extends ImcController
                 case 'DELETE':
                     //handle unexpected warnings from model
                     set_error_handler(array($this, 'exception_error_handler'));
-                    $voting = $votesModel->remove($id, $userid);
+                    $voting = $votesModel->remove($id, $userid, $modality);
 
                     if($voting['code'] != 1)
                     {
@@ -726,6 +726,7 @@ class ImcControllerApi extends ImcController
 			    $votesModel->setState('filter.issueid', $id);
 			}
 
+            $votesModel->setState('filter.state', 1);
             //handle unexpected warnings from model
             set_error_handler(array($this, 'exception_error_handler'));
 			//get items and sanitize them
@@ -909,10 +910,8 @@ class ImcControllerApi extends ImcController
         $steps = ImcFrontendHelper::sanitizeSteps($data, true);
 
         //4. get votes
-        $votesModel = JModelLegacy::getInstance( 'Votes', 'ImcModel', array('ignore_request' => true) );
-        $votesModel->setState('filter.imcapi.ts', $ts);
-        $data = $votesModel->getItems();
-        $votes = ImcFrontendHelper::sanitizeVotes($data);
+        $data = ImcFrontendHelper::getModifiedVotes($ts);
+        $votes = ImcFrontendHelper::sanitizeModifiedVotes($data);
 
         $info = array(
 			'count_issues' => sizeof($issues),
