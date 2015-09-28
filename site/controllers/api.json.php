@@ -343,6 +343,8 @@ class ImcControllerApi extends ImcController
                     $args['note'] = 'modality='.$app->input->getInt('m_id');
                     $args['language'] = '*';
                     $args['subgroup'] = 0;
+                    $m_id  = $app->input->getInt('m_id', 0);
+                    $args['modality'] = $m_id;
 
                     $tmpTime = time(); //used for temporary id
                     $imagedir = 'images/imc';
