@@ -15,6 +15,20 @@ function imc_mod_map_initialize() {
   imc_mod_map = new google.maps.Map(document.getElementById('imc-mod-map-canvas'),
       mapOptions);
 
+    // Construct the polygon.
+    if(typeof boundaries != 'undefined') {
+
+        var bounds = new google.maps.Polygon({
+            paths: boundaries,
+            strokeColor: '#FF0000',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: '#FF0000',
+            fillOpacity: 0.05
+        });
+        bounds.setMap(imc_mod_map);
+    }
+
   setMarkers(center, imc_mod_map);
 
   google.maps.event.addListener(imc_mod_map, 'click', function() {

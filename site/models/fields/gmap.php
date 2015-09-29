@@ -145,13 +145,25 @@ class JFormFieldGmap extends JFormField
 		$scrollwheel = ($params->get('scrollwheel') == 1 ? true : false);
 		$language   = $params->get('maplanguage');
 		$hiddenterm = $params->get('hiddenterm');
+		$boundaries = $params->get('boundaries', null);
 
 		if($api_key != '')
 			JFactory::getDocument()->addScript('https://maps.googleapis.com/maps/api/js?key='.$api_key.'&language='.$language);
 		else
 			JFactory::getDocument()->addScript('https://maps.googleapis.com/maps/api/js?language='.$language);
 
-
+		if(!is_null($boundaries))
+		{
+			$boundaries = str_replace("\r", "", $boundaries);
+			$bounds = array();
+			$arBoundaries = explode("\n", $boundaries);
+			foreach ($arBoundaries as $bnd)
+			{
+				$latLng = explode(',', $bnd);
+				array_push($bounds, array('lng'=>(double)$latLng[0], 'lat'=>(double)$latLng[1]));
+			}
+			$boundaries = json_encode($bounds);
+		}
 
 		JFactory::getDocument()->addScript(JURI::root(true).'/components/com_imc/models/fields/gmap/js/gmap.js');
 
@@ -178,6 +190,10 @@ class JFormFieldGmap extends JFormField
 		$script[] = "var icon='".$this->icon."';";
 		$script[] = "var language='".$language."';";
 		$script[] = "var hiddenterm='".$hiddenterm."';";
+		if(!is_null($boundaries))
+		{
+			$script[] = "var boundaries=JSON.parse('" . $boundaries . "');";
+		}
 		$script[] = "var info='".addslashes(JText::_('COM_IMC_DRAG_MARKER'))."';";
 		$script[] = "var info_unlock='".JText::_('COM_IMC_UNLOCK_ADDRESS')."';";
 		$script[] = "var notfound='".JText::_('COM_IMC_ADDRESS_NOT_FOUND')."';";

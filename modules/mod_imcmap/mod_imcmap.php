@@ -30,6 +30,7 @@ $lat        = $com_imc_params->get('latitude');
 $lng        = $com_imc_params->get('longitude');
 $zoom 	    = $com_imc_params->get('zoom');
 $language   = $com_imc_params->get('maplanguage');
+$boundaries = $com_imc_params->get('boundaries', null);
 $clusterer 	= ($com_imc_params->get('clusterer') == 1 ? true : false);
 
 if($api_key == ''){
@@ -44,7 +45,23 @@ else{
 if($clusterer){
 	$doc->addScript('http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/src/markerclusterer.js');
 }
+
+if(!is_null($boundaries))
+{
+	$boundaries = str_replace("\r", "", $boundaries);
+	$bounds = array();
+	$arBoundaries = explode("\n", $boundaries);
+	foreach ($arBoundaries as $bnd)
+	{
+		$latLng = explode(',', $bnd);
+		array_push($bounds, array('lng'=>(double)$latLng[0], 'lat'=>(double)$latLng[1]));
+	}
+	$boundaries = json_encode($bounds);
+}
+
 ?>
+
+
 
 <?php
 // Check if we allow to display the module on details (issue) page
@@ -76,6 +93,9 @@ if ($option == 'com_imc' && $view != 'issues') {
 	var zoom = <?php echo $zoom;?> ;
 	var clusterer = "<?php echo $clusterer;?>" ;
 	var language = "<?php echo $language;?>" ;
+	<?php if(!is_null($boundaries)) : ?>
+	var boundaries=JSON.parse('<?php echo $boundaries; ?>');
+	<?php endif; ?>
 </script>
 <script src="<?php echo JURI::base();?>modules/mod_imcmap/assets/js/script.js" type="text/javascript"></script>
 
