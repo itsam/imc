@@ -75,6 +75,17 @@
         <option value="1">JYES</option>
       </field>
 
+      <field
+          name="boundaries"
+          type="textarea"
+          default=""
+          class="inputbox input-xxlarge"
+          label="COM_IMC_SETTINGS_BOUNDARIES_LABEL"
+          description="COM_IMC_SETTINGS_BOUNDARIES_DESC"
+          rows="10"
+          cols="5"
+      />
+
     </fieldset>
     <fieldset
         name="generic"
