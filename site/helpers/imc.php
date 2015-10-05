@@ -337,8 +337,7 @@ class ImcFrontendHelper
 			->select('a.id, a.title, a.parent_id, a.published AS state, a.params')
 			->from('#__categories AS a')
 			->where('extension = ' . $db->quote('com_imc'))
-			->where('UNIX_TIMESTAMP(a.modified_time) >= ' . $ts);
-
+			->where('a.modified_time >= FROM_UNIXTIME(' . $ts . ')');
 		$db->setQuery($query);
 		$result = $db->loadAssocList();
 		foreach ($result as &$category) {
@@ -650,7 +649,7 @@ class ImcFrontendHelper
 			a.id IN (
 				SELECT DISTINCT b.issueid
 				FROM #__imc_votes AS b
-				WHERE UNIX_TIMESTAMP(b.updated) >= '.$ts.'
+				WHERE b.updated >= FROM_UNIXTIME('.$ts.')
 			)
 		');
 
@@ -677,11 +676,13 @@ class ImcFrontendHelper
 		}
 		if(!is_null($ts))
 		{
-			$query->where('UNIX_TIMESTAMP(a.updated) >= ' . $ts);
+			//$query->where('UNIX_TIMESTAMP(a.updated) >= ' . $ts);
+			$query->where('a.updated >= FROM_UNIXTIME(' . $ts . ')');
 		}
 		if(!is_null($prior_to))
 		{
-			$query->where('UNIX_TIMESTAMP(a.updated) <= ' . $prior_to);
+			//$query->where('UNIX_TIMESTAMP(a.updated) <= ' . $prior_to);
+			$query->where('a.updated <= FROM_UNIXTIME(' . $prior_to . ')');
 		}
 
 		$db->setQuery($query);
@@ -705,11 +706,13 @@ class ImcFrontendHelper
 		}
 		if(!is_null($ts))
 		{
-			$query->where('UNIX_TIMESTAMP(a.updated) >= ' . $ts);
+			//$query->where('UNIX_TIMESTAMP(a.updated) >= ' . $ts);
+			$query->where('a.updated >= FROM_UNIXTIME(' . $ts . ')');
 		}
 		if(!is_null($prior_to))
 		{
-			$query->where('UNIX_TIMESTAMP(a.updated) <= ' . $prior_to);
+			//$query->where('UNIX_TIMESTAMP(a.updated) <= ' . $prior_to);
+			$query->where('a.updated <= FROM_UNIXTIME(' . $prior_to . ')');
 		}
 
 		$db->setQuery($query);
@@ -733,11 +736,13 @@ class ImcFrontendHelper
 		}
 		if(!is_null($ts))
 		{
-			$query->where('UNIX_TIMESTAMP(a.updated) >= ' . $ts);
+			//$query->where('UNIX_TIMESTAMP(a.updated) >= ' . $ts);
+			$query->where('a.updated >= FROM_UNIXTIME(' . $ts . ')');
 		}
 		if(!is_null($prior_to))
 		{
-			$query->where('UNIX_TIMESTAMP(a.updated) <= ' . $prior_to);
+			//$query->where('UNIX_TIMESTAMP(a.updated) <= ' . $prior_to);
+			$query->where('a.updated <= FROM_UNIXTIME(' . $prior_to . ')');
 		}
 
 		$db->setQuery($query);

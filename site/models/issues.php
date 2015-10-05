@@ -260,11 +260,13 @@ class ImcModelIssues extends JModelList {
         $prior_to = $this->state->get('filter.imcapi.priorto');
         if(!is_null($ts))
         {
-	        $query->where('UNIX_TIMESTAMP(a.updated) >=' . $ts);
+	        //$query->where('UNIX_TIMESTAMP(a.updated) >=' . $ts);
+	        $query->where('a.updated >= FROM_UNIXTIME(' . $ts . ')');
         }
 	    if(!is_null($prior_to))
 	    {
-		    $query->where('UNIX_TIMESTAMP(a.updated) <=' . $prior_to);
+		    //$query->where('UNIX_TIMESTAMP(a.updated) <=' . $prior_to);
+		    $query->where('a.updated <= FROM_UNIXTIME(' . $prior_to . ')');
 	    }
 
 	    // Add the list ordering clause.
