@@ -225,6 +225,9 @@ class ImcControllerApi extends ImcController
                 {
                     throw new Exception('Invalid timestamp');
                 }
+
+				//get date from ts
+	            $ts = gmdate('Y-m-d H:i:s', $ts);
 				$issuesModel->setState('filter.imcapi.ts', $ts);
 			}
 			if(!is_null($prior_to))
@@ -233,6 +236,8 @@ class ImcControllerApi extends ImcController
                 {
                     throw new Exception('Invalid prior_to timestamp');
                 }
+				//get date from ts
+	            $prior_to = gmdate('Y-m-d H:i:s', $prior_to);
 				$issuesModel->setState('filter.imcapi.priorto', $prior_to);
 			}
 
@@ -441,6 +446,8 @@ class ImcControllerApi extends ImcController
 
 			if(!is_null($ts))
 			{
+				//get date from ts
+	            $ts = gmdate('Y-m-d H:i:s', $ts);
 				$stepsModel->setState('filter.imcapi.ts', $ts);
 			}
 
@@ -717,6 +724,8 @@ class ImcControllerApi extends ImcController
             $votesModel = JModelLegacy::getInstance( 'Votes', 'ImcModel', array('ignore_request' => true) );
 			if(!is_null($ts))
 			{
+				//get date from ts
+	            $ts = gmdate('Y-m-d H:i:s', $ts);
 				$votesModel->setState('filter.imcapi.ts', $ts);
 			}
 			if(is_null($id))
@@ -764,6 +773,8 @@ class ImcControllerApi extends ImcController
             $votesModel = JModelLegacy::getInstance( 'Votes', 'ImcModel', array('ignore_request' => true) );
 			if(!is_null($ts))
 			{
+				//get date from ts
+                $ts = gmdate('Y-m-d H:i:s', $ts);
 				$votesModel->setState('filter.imcapi.ts', $ts);
 			}
 
