@@ -138,7 +138,7 @@ class ImcModelSteps extends JModelList {
         if(!is_null($ts))
         {
             //$query->where('UNIX_TIMESTAMP(a.updated) >=' . $ts);
-            $query->where('a.updated >= FROM_UNIXTIME(' . $ts . ')');
+            $query->where('a.updated >= "' . $ts .'"');
         }
 
 

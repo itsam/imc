@@ -892,27 +892,28 @@ class ImcControllerApi extends ImcController
 	{
 		$tsDate = date("Y-m-d H:i:s", $ts);
 		$offsetDate = JDate::getInstance($tsDate, JFactory::getConfig()->get('offset') );
+		$givenDate = gmdate('Y-m-d H:i:s', $ts);
 
         //1. get issues
         $issuesModel = JModelLegacy::getInstance( 'Issues', 'ImcModel', array('ignore_request' => true) );
-        $issuesModel->setState('filter.imcapi.ts', $ts);
+        $issuesModel->setState('filter.imcapi.ts', $givenDate);
         $issuesModel->setState('filter.imcapi.raw', true); //Do not unset anything in getItems()
 		$data = $issuesModel->getItems();
 		$issues = ImcFrontendHelper::sanitizeIssues($data, $userid, true);
 
         //2. get categories
-        $categories = ImcFrontendHelper::getModifiedCategories($ts);
+        $categories = ImcFrontendHelper::getModifiedCategories($givenDate);
         $categories = ImcFrontendHelper::sanitizeCategories($categories);
 
         //3. get steps
         $stepsModel = JModelLegacy::getInstance( 'Steps', 'ImcModel', array('ignore_request' => true) );
-        $stepsModel->setState('filter.imcapi.ts', $ts);
+        $stepsModel->setState('filter.imcapi.ts', $givenDate);
         $stepsModel->setState('filter.imcapi.raw', true);
         $data = $stepsModel->getItems();
         $steps = ImcFrontendHelper::sanitizeSteps($data, true);
 
         //4. get votes
-        $data = ImcFrontendHelper::getModifiedVotes($ts);
+        $data = ImcFrontendHelper::getModifiedVotes($givenDate);
         $votes = ImcFrontendHelper::sanitizeModifiedVotes($data);
 
         $info = array(
@@ -921,6 +922,7 @@ class ImcControllerApi extends ImcController
 			'count_steps' => sizeof($steps),
 			'count_votes' => sizeof($votes),
 			'given_ts'   => $ts,
+			'given_date'   => $givenDate,
 			'offset'     => $offsetDate,
         );
 
@@ -974,6 +976,10 @@ class ImcControllerApi extends ImcController
             {
                 throw new Exception('Invalid timestamp prior_to');
             }
+
+			//get date from ts
+            $ts = gmdate('Y-m-d H:i:s', $ts);
+            $prior_to = gmdate('Y-m-d H:i:s', $prior_to);
 
             //handle unexpected warnings from model
             set_error_handler(array($this, 'exception_error_handler'));

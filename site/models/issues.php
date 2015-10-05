@@ -261,12 +261,13 @@ class ImcModelIssues extends JModelList {
         if(!is_null($ts))
         {
 	        //$query->where('UNIX_TIMESTAMP(a.updated) >=' . $ts);
-	        $query->where('a.updated >= FROM_UNIXTIME(' . $ts . ')');
+	        $query->where('a.updated >= "' . $ts .'"');
+
         }
 	    if(!is_null($prior_to))
 	    {
 		    //$query->where('UNIX_TIMESTAMP(a.updated) <=' . $prior_to);
-		    $query->where('a.updated <= FROM_UNIXTIME(' . $prior_to . ')');
+		    $query->where('a.updated <= "' . $prior_to .'"');
 	    }
 
 	    // Add the list ordering clause.
