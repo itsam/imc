@@ -220,7 +220,7 @@ class JFormFieldGmap extends JFormField
 			return implode("\n", $html);
 		}
 
-        $html[] = '<div style="'.implode("", $style).'display:table;clear:both;padding-bottom: 100px;">';
+        $html[] = '<div style="'.implode("", $style).'display:table-cell;clear:both;padding-bottom: 100px;">';
 		if(!$disabled) {
 			$html[] = '		<button id="searchaddress" class="btn btn-mini" type="button"><i class="icon-search icon-white"></i> '. JText::_('COM_IMC_CUSTOM_FIELD_LOCATE_ADDRESS') . '</button>';
 			$html[] = '		<button id="lockaddress" class="btn btn-mini" type="button"><i class="icon-lock"></i> '. JText::_('COM_IMC_CUSTOM_FIELD_LOCK_ADDRESS') . '</button>';
