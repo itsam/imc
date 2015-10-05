@@ -19,6 +19,7 @@ JHtml::_('behavior.keepalive');
 // Import CSS
 $document = JFactory::getDocument();
 $document->addStyleSheet('components/com_imc/assets/css/imc.css');
+require_once JPATH_COMPONENT_SITE . '/helpers/imc.php';
 ?>
 <script type="text/javascript">
     /*
@@ -175,7 +176,8 @@ $document->addStyleSheet('components/com_imc/assets/css/imc.css');
 	        		<tbody>
 	        			<?php foreach ($this->logs as $log) : ?>
 	        			<tr>
-	        				<td><?php echo $log['created']; ?></td>
+
+	        				<td><?php echo ImcFrontendHelper::convertFromUTC($log['created']); ?></td>
 	        				<td><?php echo $log['action']; ?></td>
 	        				<td><?php echo $log['created_by']; ?></td>
 	        				<td>

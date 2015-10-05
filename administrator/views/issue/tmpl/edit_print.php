@@ -87,7 +87,7 @@ require_once JPATH_COMPONENT_SITE . '/helpers/imc.php';
 			echo $details . ' / ';
 		}
 		?><br />
-		<strong><?php echo $this->item->created; ?></strong></p>
+		<strong><?php echo ImcFrontendHelper::convertFromUTC($this->item->created); ?></strong></p>
 		</div>
 
 		<p><strong><?php echo JText::_('COM_IMC_FORM_LBL_ISSUE_ID'); ?></strong>: 
