@@ -560,10 +560,18 @@ class ImcControllerApi extends ImcController
                 case 'GET':
 					$userid = self::validateRequest();
                     $app->enqueueMessage('User is valid', 'info');
-                    $result = array('userid' => $userid);
 
-                    //be consistent return as array (of size 1)
-                    $result = array($result);
+                    //return also user votes to prevent internet loss conflicts
+                    $votesModel = JModelLegacy::getInstance( 'Votes', 'ImcModel', array('ignore_request' => true) );
+                    $votesModel->setState('filter.imcapi.userid', $userid);
+		            $votesModel->setState('filter.state', 1);
+		            //handle unexpected warnings from model
+		            set_error_handler(array($this, 'exception_error_handler'));
+					//get items and sanitize them
+					$data = $votesModel->getItems();
+					$votedIssues = ImcFrontendHelper::sanitizeVotes($data);
+					restore_error_handler();
+					$result = array('userid' => $userid, 'votedIssues' => $votedIssues);
                 break;
                 //create new user
                 case 'POST':
