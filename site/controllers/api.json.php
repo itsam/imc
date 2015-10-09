@@ -1020,11 +1020,19 @@ class ImcControllerApi extends ImcController
         $data = ImcFrontendHelper::getModifiedVotes($givenDate);
         $votes = ImcFrontendHelper::sanitizeModifiedVotes($data);
 
+		//5. full categories structure if modified categories are found
+		$allCategories = array();
+		if(!empty($categories))
+		{
+			$allCategories = ImcFrontendHelper::getCategories(false);
+		}
+
         $info = array(
 			'count_issues' => sizeof($issues),
 			'count_categories' => sizeof($categories),
 			'count_steps' => sizeof($steps),
 			'count_votes' => sizeof($votes),
+			'count_allcategories' => sizeof($allCategories),
 			'given_ts'   => $ts,
 			'given_date'   => $givenDate,
 			'offset'     => $offsetDate,
@@ -1034,7 +1042,8 @@ class ImcControllerApi extends ImcController
 			'issues'     => $issues,
 			'categories' => $categories,
 			'steps'      => $steps,
-			'votes'      => $votes
+			'votes'      => $votes,
+			'allcategories' => $allCategories
 		);
 
 		return array('info' => $info, 'updated' => $updated);

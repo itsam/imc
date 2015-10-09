@@ -347,7 +347,7 @@ class ImcFrontendHelper
 			{
 				$category['image'] = JUri::base() . $category['image'];
 			}
-			//$category['parentid'] = $category['parent_id'] == "root" ? 1 : (int) $category['parent_id'];
+			$category['parentid'] = $category['parent_id'] == "root" ? 1 : (int) $category['parent_id'];
 			unset($category['parent_id']);
 			unset($category['params']);
 		}
