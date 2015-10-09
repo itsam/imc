@@ -173,6 +173,91 @@ class ImcControllerApi extends ImcController
 		}
     }
 
+	public function rawissues()
+	{
+		$result = null;
+		$app = JFactory::getApplication();
+		try {
+		    $userid = self::validateRequest();
+
+			if($app->input->getMethod() != 'GET')
+			{
+			    throw new Exception('You cannot use other method than GET to fetch raw issues');
+			}
+
+			//get necessary arguments
+			$minLat = $app->input->getString('minLat');
+			$maxLat = $app->input->getString('maxLat');
+			$minLng = $app->input->getString('minLng');
+			$maxLng = $app->input->getString('maxLng');
+
+			$ordering = $app->input->getString('ordering', 'id');
+			$direction = $app->input->getString('direction', 'DESC');
+
+			$owned = $app->input->get('owned', false);
+			$lim = $app->input->getInt('lim', 0);
+			$ts = $app->input->getString('ts');
+			$prior_to = $app->input->getString('prior_to');
+
+            //get issues model
+            $issuesModel = JModelLegacy::getInstance( 'Issues', 'ImcModel', array('ignore_request' => true) );
+            //set states
+            $issuesModel->setState('filter.owned', ($owned === 'true' ? 'yes' : 'no'));
+            $issuesModel->setState('filter.imcapi.userid', $userid);
+            if($userid == 0)
+            {
+                $issuesModel->setState('filter.imcapi.guest', true);
+            }
+            $issuesModel->setState('filter.imcapi.ordering', $ordering); //default is 'id' <-- same as created
+            $issuesModel->setState('filter.imcapi.direction', $direction); //default is 'DESC'
+            $issuesModel->setState('filter.imcapi.limit', $lim);
+
+			if(!is_null($minLat) && !is_null($maxLat) && !is_null($minLng) && !is_null($maxLng))
+			{
+				$issuesModel->setState('filter.imcapi.minLat', $minLat);
+				$issuesModel->setState('filter.imcapi.maxLat', $maxLat);
+				$issuesModel->setState('filter.imcapi.minLng', $minLng);
+				$issuesModel->setState('filter.imcapi.maxLng', $maxLng);
+			}
+
+			if(!is_null($ts))
+			{
+			    if(!ImcFrontendHelper::isValidTimeStamp($ts))
+                {
+                    throw new Exception('Invalid timestamp');
+                }
+
+				//get date from ts
+	            $ts = gmdate('Y-m-d H:i:s', $ts);
+				$issuesModel->setState('filter.imcapi.created.ts', $ts);
+			}
+			if(!is_null($prior_to))
+			{
+			    if(!ImcFrontendHelper::isValidTimeStamp($prior_to))
+                {
+                    throw new Exception('Invalid prior_to timestamp');
+                }
+				//get date from ts
+	            $prior_to = gmdate('Y-m-d H:i:s', $prior_to);
+				$issuesModel->setState('filter.imcapi.created.priorto', $prior_to);
+			}
+
+            //handle unexpected warnings from model
+            set_error_handler(array($this, 'exception_error_handler'));
+			//get items and sanitize them
+			$data = $issuesModel->getItems();
+			$result = ImcFrontendHelper::sanitizeIssues($data, $userid);
+			$app->enqueueMessage('size: '.sizeof($result), 'info');
+			restore_error_handler();
+
+			echo new JResponseJson($result, 'Issues fetched successfully');
+		}
+		catch(Exception $e)	{
+			header("HTTP/1.0 202 Accepted");
+			echo new JResponseJson($e);
+		}
+	}
+
 	public function issues()
 	{
 		$result = null;

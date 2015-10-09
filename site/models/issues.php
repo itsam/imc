@@ -270,6 +270,19 @@ class ImcModelIssues extends JModelList {
 		    $query->where('a.updated <= "' . $prior_to .'"');
 	    }
 
+	    //check also for raw issues (API)
+	    $ts = $this->state->get('filter.imcapi.created.ts');
+	    $prior_to = $this->state->get('filter.imcapi.created.priorto');
+	    if(!is_null($ts))
+	    {
+		    $query->where('a.created >= "' . $ts .'"');
+	    }
+	    if(!is_null($prior_to))
+	    {
+		    $query->where('a.created <= "' . $prior_to .'"');
+	    }
+
+
 	    // Add the list ordering clause.
 	    $orderCol = $this->state->get('list.ordering');
 	    $orderDirn = $this->state->get('list.direction');
