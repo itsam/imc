@@ -657,6 +657,10 @@ class ImcControllerApi extends ImcController
 					$votedIssues = ImcFrontendHelper::sanitizeVotes($data);
 					restore_error_handler();
 					$result = array('userid' => $userid, 'votedIssues' => $votedIssues);
+
+					//be consistent return as array (of size 1)
+                    $result = array($result);
+
                 break;
                 //create new user
                 case 'POST':
