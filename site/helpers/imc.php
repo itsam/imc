@@ -85,7 +85,6 @@ class ImcFrontendHelper
 				unset($issue->regdate);
 				unset($issue->responsible);
 				unset($issue->extra);
-				unset($issue->moderation);
 				unset($issue->subgroup);
 				unset($issue->catid_title);
 				unset($issue->stepid_title);
