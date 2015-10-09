@@ -1064,6 +1064,11 @@ class ImcControllerApi extends ImcController
         self::getTop('steps');
     }
 
+    public function topvoters()
+    {
+        self::getTop('voters');
+    }
+
     private function getTop($type)
     {
 		$result = null;
@@ -1091,8 +1096,14 @@ class ImcControllerApi extends ImcController
             }
 
 			//get date from ts
-            $ts = gmdate('Y-m-d H:i:s', $ts);
-            $prior_to = gmdate('Y-m-d H:i:s', $prior_to);
+            if(!is_null($ts))
+            {
+                $ts = gmdate('Y-m-d H:i:s', $ts);
+            }
+			if(!is_null($prior_to))
+            {
+	            $prior_to = gmdate('Y-m-d H:i:s', $prior_to);
+            }
 
             //handle unexpected warnings from model
             set_error_handler(array($this, 'exception_error_handler'));
@@ -1107,11 +1118,14 @@ class ImcControllerApi extends ImcController
                 case 'steps':
                     $result = ImcFrontendHelper::getTopSteps($lim, $ts, $prior_to);
                 break;
+                case 'voters':
+                    $result = ImcFrontendHelper::getTopVoters($lim, $ts, $prior_to);
+                break;
             }
 			restore_error_handler();
 
     	    $app->enqueueMessage('size: '.sizeof($result), 'info');
-			echo new JResponseJson($result, 'Top users fetched successfully');
+			echo new JResponseJson($result, 'Top fetched successfully');
 		}
 		catch(Exception $e)	{
 			header("HTTP/1.0 202 Accepted");

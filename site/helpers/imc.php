@@ -748,4 +748,35 @@ class ImcFrontendHelper
 		$db->setQuery($query);
 		return $db->loadAssocList();
 	}
+
+	public static function getTopVoters($limit = null, $ts = null, $prior_to = null)
+	{
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+
+		$query->select('COUNT(*) AS `count_votes`, a.created_by, b.name');
+		$query->from('`#__imc_votes` AS a');
+		$query->join('LEFT', '#__users AS b ON b.id = a.created_by');
+		$query->where('a.state = 1');
+		$query->group('a.created_by');
+		$query->order('count_votes DESC');
+
+		if(!is_null($limit) && $limit > 0)
+		{
+			$query->setlimit($limit);
+		}
+		if(!is_null($ts))
+		{
+			//$query->where('UNIX_TIMESTAMP(a.updated) >= ' . $ts);
+			$query->where('a.updated >= "' . $ts .'"');
+		}
+		if(!is_null($prior_to))
+		{
+			//$query->where('UNIX_TIMESTAMP(a.updated) <= ' . $prior_to);
+			$query->where('a.updated <= "' . $prior_to .'"');
+		}
+
+		$db->setQuery($query);
+		return $db->loadAssocList();
+	}
 }
