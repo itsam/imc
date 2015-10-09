@@ -1132,4 +1132,44 @@ class ImcControllerApi extends ImcController
 			echo new JResponseJson($e);
 		}
     }
+
+    public function boundaries()
+    {
+		$result = array();
+		$app = JFactory::getApplication();
+		try {
+		    self::validateRequest();
+
+			if($app->input->getMethod() != 'GET')
+			{
+			    throw new Exception('You cannot use other method than GET to fetch boundaries');
+			}
+
+			$params = JComponentHelper::getParams('com_imc');
+			$boundaries = $params->get('boundaries', null);
+
+			if(!is_null($boundaries))
+			{
+				$boundaries = str_replace("\r", "", $boundaries);
+				$bounds = array();
+				$arBoundaries = explode("\n", $boundaries);
+				foreach ($arBoundaries as $bnd)
+				{
+					$latLng = explode(',', $bnd);
+					array_push($bounds, array('lng'=>(double)$latLng[0], 'lat'=>(double)$latLng[1]));
+				}
+				if(!empty($bounds))
+				{
+					$result = $bounds;
+				}
+			}
+
+            $app->enqueueMessage('size: '.sizeof($result), 'info');
+			echo new JResponseJson($result, 'Boundaries fetched successfully');
+		}
+		catch(Exception $e)	{
+			header("HTTP/1.0 202 Accepted");
+			echo new JResponseJson($e);
+		}
+    }
 }
