@@ -242,6 +242,7 @@ class ImcControllerApi extends ImcController
 				$issuesModel->setState('filter.imcapi.created.priorto', $prior_to);
 			}
 
+			$issuesModel->setState('filter.imcapi.raw', true); //Do not unset anything in getItems()
             //handle unexpected warnings from model
             set_error_handler(array($this, 'exception_error_handler'));
 			//get items and sanitize them

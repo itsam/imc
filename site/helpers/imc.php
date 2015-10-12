@@ -162,7 +162,8 @@ class ImcFrontendHelper
         $data->created_TZ = $data->created == '0000-00-00 00:00:00' ? $data->created : self::convertFromUTC($data->created);
         $data->updated_TZ = $data->updated == '0000-00-00 00:00:00' ? $data->updated : self::convertFromUTC($data->updated);
         $data->regdate_TZ = $data->regdate == '0000-00-00 00:00:00' ? $data->regdate : self::convertFromUTC($data->regdate);
-		$data->updated_ts = $data->updated == '0000-00-00 00:00:00' ? 1 :  strtotime($data->updated);
+		$data->created_ts = $data->created == '0000-00-00 00:00:00' ? 1 :  strtotime($data->created_TZ);
+		$data->updated_ts = $data->updated == '0000-00-00 00:00:00' ? 1 :  strtotime($data->updated_TZ);
 
 		$data->myIssue = ($data->created_by == $userid);
 
