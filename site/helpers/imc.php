@@ -677,12 +677,12 @@ class ImcFrontendHelper
 		if(!is_null($ts))
 		{
 			//$query->where('UNIX_TIMESTAMP(a.updated) >= ' . $ts);
-			$query->where('a.updated >= "' . $ts .'"');
+			$query->where('a.created >= "' . $ts .'"');
 		}
 		if(!is_null($prior_to))
 		{
 			//$query->where('UNIX_TIMESTAMP(a.updated) <= ' . $prior_to);
-			$query->where('a.updated <= "' . $prior_to .'"');
+			$query->where('a.created <= "' . $prior_to .'"');
 		}
 
 		$db->setQuery($query);
@@ -707,12 +707,12 @@ class ImcFrontendHelper
 		if(!is_null($ts))
 		{
 			//$query->where('UNIX_TIMESTAMP(a.updated) >= ' . $ts);
-			$query->where('a.updated >= "' . $ts .'"');
+			$query->where('a.created >= "' . $ts .'"');
 		}
 		if(!is_null($prior_to))
 		{
 			//$query->where('UNIX_TIMESTAMP(a.updated) <= ' . $prior_to);
-			$query->where('a.updated <= "' . $prior_to .'"');
+			$query->where('a.created <= "' . $prior_to .'"');
 		}
 
 		$db->setQuery($query);
@@ -737,12 +737,12 @@ class ImcFrontendHelper
 		if(!is_null($ts))
 		{
 			//$query->where('UNIX_TIMESTAMP(a.updated) >= ' . $ts);
-			$query->where('a.updated >= "' . $ts .'"');
+			$query->where('a.created >= "' . $ts .'"');
 		}
 		if(!is_null($prior_to))
 		{
 			//$query->where('UNIX_TIMESTAMP(a.updated) <= ' . $prior_to);
-			$query->where('a.updated <= "' . $prior_to .'"');
+			$query->where('a.created <= "' . $prior_to .'"');
 		}
 
 		$db->setQuery($query);
