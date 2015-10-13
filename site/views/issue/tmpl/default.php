@@ -52,9 +52,23 @@ $statuses = $step->getOptions();
 
 		js('.delete-button').click(deleteItem);
 
-		js('#new-comment').click(function() {
-			alert('<?php echo JText::_('COM_IMC_COMMENTS_NOT_ALLOWED'); ?>');
-		});
+	    <?php if($this->showComments) : ?>
+	    js('#comments-container').comments({
+		    profilePictureURL: 'https://app.viima.com/static/media/user_profiles/user-icon.png',
+		    getComments: function(success, error) {
+			    var commentsArray = [{
+				    id: 1,
+				    created: '2015-10-13',
+				    content: 'Lorem ipsum dolort sit amet',
+				    fullname: 'Yiannis Tsampoulatidis',
+				    profile_picture_url: 'https://app.viima.com/static/media/user_profiles/user-icon.png',
+				    upvote_count: 2,
+				    user_has_upvoted: false
+			    }];
+			    success(commentsArray);
+		    }
+	    });
+	    <?php endif; ?>
     });
 
     function deleteItem() {
@@ -183,11 +197,15 @@ $statuses = $step->getOptions();
 				<?php endif; ?>
 				</p>
 				<hr />
-				<?php if (JFactory::getUser()->guest) : ?>
+				<?php if($this->showComments) : ?>
+				<div id="comments-container"></div>
+				<?php endif; ?>
+
+				<?php /*if (JFactory::getUser()->guest) : ?>
 					<p><button id="new-comment" class="btn btn-success disabled"><i class="icon-comment"></i> <?php echo JText::_('COM_IMC_COMMENTS_ADD'); ?></button></p>
 				<?php else : ?>
 					<p><button id="new-comment" class="btn btn-success"><i class="icon-comment"></i> <?php echo JText::_('COM_IMC_COMMENTS_ADD'); ?></button></p>
-				<?php endif;?>
+				<?php endif; */?>
 
 	    	</div>
 	    </div>
