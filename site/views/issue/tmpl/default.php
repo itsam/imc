@@ -54,14 +54,33 @@ $statuses = $step->getOptions();
 
 	    <?php if($this->showComments) : ?>
 	    js('#comments-container').comments({
-		    profilePictureURL: 'https://app.viima.com/static/media/user_profiles/user-icon.png',
+		    profilePictureURL: '<?php echo JURI::base().'components/com_imc/assets/images/user-icon.png';?>',
+		    spinnerIconURL: '<?php echo JURI::base().'components/com_imc/assets/images/spinner.gif';?>',
+		    upvoteIconURL: '<?php echo JURI::base().'components/com_imc/assets/images/upvote-icon.png';?>',
+		    replyIconURL: '<?php echo JURI::base().'components/com_imc/assets/images/reply-icon.png';?>',
+		    noCommentsIconURL: '<?php echo JURI::base().'components/com_imc/assets/images/no-comments-icon.png';?>',
+		    textareaPlaceholderText: 'Leave a comment',
+		    popularText: 'Most popular',
+		    newestText: 'New',
+		    oldestText: 'Old',
+		    sendText: 'Comment',
+		    replyText: 'Answer',
+		    editText: 'Modify',
+		    saveText: 'Update',
+		    deleteText: 'Remove',
+		    editedText: 'Modified',
+		    youText: 'Me',
+		    viewAllRepliesText: 'Show all replies (__replyCount__)',
+		    hideRepliesText: 'Hide',
+		    noCommentsText: 'There are no comments',
 		    getComments: function(success, error) {
+//			    var commentsArray = [];
 			    var commentsArray = [{
 				    id: 1,
 				    created: '2015-10-13',
 				    content: 'Lorem ipsum dolort sit amet',
 				    fullname: 'Yiannis Tsampoulatidis',
-				    profile_picture_url: 'https://app.viima.com/static/media/user_profiles/user-icon.png',
+				    profile_picture_url: '<?php echo JURI::base().'components/com_imc/assets/images/user-icon.png';?>',
 				    upvote_count: 2,
 				    user_has_upvoted: false
 			    }];
