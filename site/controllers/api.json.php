@@ -1213,4 +1213,77 @@ class ImcControllerApi extends ImcController
 			echo new JResponseJson($e);
 		}
 	}
+
+    public function issuesbykeywords()
+    {
+		$result = null;
+		$app = JFactory::getApplication();
+		try {
+		    $userid = self::validateRequest();
+
+			if($app->input->getMethod() != 'GET')
+			{
+			    throw new Exception('You cannot use other method than GET to fetch top users');
+			}
+
+            //get necessary arguments
+            $keywords = $app->input->getString('keywords', null);
+            $ts = $app->input->getString('ts', null);
+            $prior_to = $app->input->getString('prior_to', null);
+            $lim = $app->input->getInt('lim', null);
+
+		    if(is_null($keywords))
+		    {
+		        throw new Exception('Invalid keywords');
+		    }
+		    if(!is_null($ts) && !ImcFrontendHelper::isValidTimeStamp($ts))
+            {
+                throw new Exception('Invalid timestamp ts');
+            }
+		    if(!is_null($prior_to) && !ImcFrontendHelper::isValidTimeStamp($prior_to))
+            {
+                throw new Exception('Invalid timestamp prior_to');
+            }
+
+			//get date from ts
+            if(!is_null($ts))
+            {
+                $ts = gmdate('Y-m-d H:i:s', $ts);
+            }
+			if(!is_null($prior_to))
+            {
+	            $prior_to = gmdate('Y-m-d H:i:s', $prior_to);
+            }
+
+            //handle unexpected warnings
+            set_error_handler(array($this, 'exception_error_handler'));
+			$arComments = ImcFrontendHelper::searchIssuesByComments($keywords, $lim, $ts, $prior_to);
+			$arDescription = ImcFrontendHelper::searchIssues($keywords, 'description', $lim, $ts, $prior_to);
+			$arTitle = ImcFrontendHelper::searchIssues($keywords, 'title', $lim, $ts, $prior_to);
+			$arAddress = ImcFrontendHelper::searchIssues($keywords, 'address', $lim, $ts, $prior_to);
+			restore_error_handler();
+
+	        $info = array(
+				'count_in_comments' => sizeof($arComments),
+				'count_in_description' => sizeof($arDescription),
+				'count_in_title' => sizeof($arTitle),
+				'count_in_address' => sizeof($arAddress)
+	        );
+
+			$found = array(
+				'in_comments' => ImcFrontendHelper::sanitizeIssues(ImcFrontendHelper::array2obj($arComments), $userid),
+				'in_description' => ImcFrontendHelper::sanitizeIssues(ImcFrontendHelper::array2obj($arDescription), $userid),
+				'in_title' => ImcFrontendHelper::sanitizeIssues(ImcFrontendHelper::array2obj($arTitle), $userid),
+				'in_address' => ImcFrontendHelper::sanitizeIssues(ImcFrontendHelper::array2obj($arAddress), $userid)
+			);
+
+			$result = array('info' => $info, 'found' => $found);
+			echo new JResponseJson($result, 'Issues by keywords fetched successfully');
+		}
+		catch(Exception $e)	{
+			header("HTTP/1.0 202 Accepted");
+			echo new JResponseJson($e);
+		}
+    }
+
 }

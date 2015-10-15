@@ -768,12 +768,12 @@ class ImcFrontendHelper
 		if(!is_null($ts))
 		{
 			//$query->where('UNIX_TIMESTAMP(a.updated) >= ' . $ts);
-			$query->where('a.updated >= "' . $ts .'"');
+			$query->where('a.created >= "' . $ts .'"');
 		}
 		if(!is_null($prior_to))
 		{
 			//$query->where('UNIX_TIMESTAMP(a.updated) <= ' . $prior_to);
-			$query->where('a.updated <= "' . $prior_to .'"');
+			$query->where('a.created <= "' . $prior_to .'"');
 		}
 
 		$db->setQuery($query);
@@ -799,12 +799,12 @@ class ImcFrontendHelper
 		if(!is_null($ts))
 		{
 			//$query->where('UNIX_TIMESTAMP(a.updated) >= ' . $ts);
-			$query->where('a.updated >= "' . $ts .'"');
+			$query->where('a.created >= "' . $ts .'"');
 		}
 		if(!is_null($prior_to))
 		{
 			//$query->where('UNIX_TIMESTAMP(a.updated) <= ' . $prior_to);
-			$query->where('a.updated <= "' . $prior_to .'"');
+			$query->where('a.created <= "' . $prior_to .'"');
 		}
 
 		$db->setQuery($query);
@@ -817,16 +817,122 @@ class ImcFrontendHelper
 		$query = $db->getQuery(true);
 
 		$query->select('
-		  (SELECT COUNT(*) FROM scsue_imc_issues WHERE state=1) as total_issues,
-		  (SELECT COUNT(*) FROM scsue_imc_votes WHERE state=1) as total_votes,
-		  (SELECT COUNT(*) FROM scsue_imc_comments WHERE state=1) as total_comments,
-		  (SELECT COUNT(*) FROM scsue_users WHERE 1) as total_users,
-		  (SELECT created FROM scsue_imc_issues WHERE state=1 ORDER BY created ASC LIMIT 1) as oldest_issue_date,
-		  (SELECT created FROM scsue_imc_issues WHERE state=1 ORDER BY created DESC LIMIT 1) as newest_issue_date
+		  (SELECT COUNT(*) FROM #__imc_issues WHERE state=1) as total_issues,
+		  (SELECT COUNT(*) FROM #__imc_votes WHERE state=1) as total_votes,
+		  (SELECT COUNT(*) FROM #__imc_comments WHERE state=1) as total_comments,
+		  (SELECT COUNT(*) FROM #__users WHERE 1) as total_users,
+		  (SELECT created FROM #__imc_issues WHERE state=1 ORDER BY created ASC LIMIT 1) as oldest_issue_date,
+		  (SELECT created FROM #__imc_issues WHERE state=1 ORDER BY created DESC LIMIT 1) as newest_issue_date
 		');
 
 		$db->setQuery($query);
 		return $db->loadAssocList();
 	}
 
+	public static function searchIssuesByComments($keywords, $limit = null, $ts = null, $prior_to = null)
+	{
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+
+		$query->select('DISTINCT a.*, b.params AS catid_params');
+		$query->from('#__imc_issues AS a');
+		$query->join('LEFT', '#__imc_comments AS c ON a.id = c.issueid');
+		$query->join('LEFT', '#__categories AS b ON b.id = a.catid');
+		$query->where('a.state=1');
+		$keywords = $db->Quote('%' . $db->escape($keywords, true) . '%');
+		$query->where('( c.description LIKE '.$keywords.' )');
+		if(!is_null($ts))
+		{
+			$query->where('a.created >= "' . $ts .'"');
+		}
+		if(!is_null($prior_to))
+		{
+			$query->where('a.created <= "' . $prior_to .'"');
+		}
+		if(!is_null($limit) && $limit > 0)
+		{
+			$query->setlimit($limit);
+		}
+		$db->setQuery($query);
+
+		$items = $db->loadAssocList();
+
+		//replicate issues models getItems()
+		foreach ($items as &$item)
+		{
+			$item['created_by_name'] = JFactory::getUser($item['created_by'])->name;
+			$prms = json_decode($item['catid_params']);
+			unset($item['catid_params']);
+			if (isset($prms->image))
+			{
+				$item['category_image'] = $prms->image;
+			}
+			else
+			{
+				$item['category_image'] = '';
+			}
+		}
+
+		return $items;
+	}
+
+	public static function searchIssues($keywords, $field, $limit = null, $ts = null, $prior_to = null)
+	{
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+
+		$query->select('DISTINCT a.*, b.params AS catid_params');
+		$query->from('#__imc_issues AS a');
+		$query->join('LEFT', '#__categories AS b ON b.id = a.catid');
+		$query->where('a.state=1');
+		$keywords = $db->Quote('%' . $db->escape($keywords, true) . '%');
+		$query->where('( a.' . $field .' LIKE '.$keywords.' )');
+		if(!is_null($ts))
+		{
+			$query->where('a.created >= "' . $ts .'"');
+		}
+		if(!is_null($prior_to))
+		{
+			$query->where('a.created <= "' . $prior_to .'"');
+		}
+		if(!is_null($limit) && $limit > 0)
+		{
+			$query->setlimit($limit);
+		}
+		$db->setQuery($query);
+
+		$items = $db->loadAssocList();
+
+		//replicate issues models getItems()
+		foreach ($items as &$item)
+		{
+			$item['created_by_name'] = JFactory::getUser($item['created_by'])->name;
+			$prms = json_decode($item['catid_params']);
+			unset($item['catid_params']);
+			if (isset($prms->image))
+			{
+				$item['category_image'] = $prms->image;
+			}
+			else
+			{
+				$item['category_image'] = '';
+			}
+		}
+
+		return $items;
+	}
+
+	public static function array2obj($in)
+	{
+		foreach ($in as &$comment) {
+			$obj = new stdClass();
+			foreach ($comment as $key => $value)
+			{
+				$obj->$key = $value;
+			}
+			$comment = $obj;
+		}
+
+		return $in;
+	}
 }
