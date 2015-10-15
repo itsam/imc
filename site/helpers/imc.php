@@ -779,4 +779,54 @@ class ImcFrontendHelper
 		$db->setQuery($query);
 		return $db->loadAssocList();
 	}
+
+	public static function getTopCommenters($limit = null, $ts = null, $prior_to = null)
+	{
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+
+		$query->select('COUNT(*) AS `count_comments`, a.created_by, b.name');
+		$query->from('`#__imc_comments` AS a');
+		$query->join('LEFT', '#__users AS b ON b.id = a.created_by');
+		$query->where('a.state = 1');
+		$query->group('a.created_by');
+		$query->order('count_comments DESC');
+
+		if(!is_null($limit) && $limit > 0)
+		{
+			$query->setlimit($limit);
+		}
+		if(!is_null($ts))
+		{
+			//$query->where('UNIX_TIMESTAMP(a.updated) >= ' . $ts);
+			$query->where('a.updated >= "' . $ts .'"');
+		}
+		if(!is_null($prior_to))
+		{
+			//$query->where('UNIX_TIMESTAMP(a.updated) <= ' . $prior_to);
+			$query->where('a.updated <= "' . $prior_to .'"');
+		}
+
+		$db->setQuery($query);
+		return $db->loadAssocList();
+	}
+
+	public static function getTotals($limit = null, $ts = null, $prior_to = null)
+	{
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+
+		$query->select('
+		  (SELECT COUNT(*) FROM scsue_imc_issues WHERE state=1) as total_issues,
+		  (SELECT COUNT(*) FROM scsue_imc_votes WHERE state=1) as total_votes,
+		  (SELECT COUNT(*) FROM scsue_imc_comments WHERE state=1) as total_comments,
+		  (SELECT COUNT(*) FROM scsue_users WHERE 1) as total_users,
+		  (SELECT created FROM scsue_imc_issues WHERE state=1 ORDER BY created ASC LIMIT 1) as oldest_issue_date,
+		  (SELECT created FROM scsue_imc_issues WHERE state=1 ORDER BY created DESC LIMIT 1) as newest_issue_date
+		');
+
+		$db->setQuery($query);
+		return $db->loadAssocList();
+	}
+
 }

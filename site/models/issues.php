@@ -164,9 +164,9 @@ class ImcModelIssues extends JModelList {
         
         // Filter by published state
         $imc_raw = $this->state->get('filter.imcapi.raw', false);
-        if(!$imc_raw) {
-            $published = $this->getState('filter.state');
+	    $published = $this->getState('filter.state');
 
+	    if(!$imc_raw || $published == 1) {
             if (is_numeric($published)) {
                 $query->where('a.state = ' . (int)$published);
             } else if ($published === '' || is_null($published)) {

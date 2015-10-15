@@ -243,6 +243,8 @@ class ImcControllerApi extends ImcController
 			}
 
 			$issuesModel->setState('filter.imcapi.raw', true); //Do not unset anything in getItems()
+			$issuesModel->setState('filter.state', 1); //we need only published issues
+
             //handle unexpected warnings from model
             set_error_handler(array($this, 'exception_error_handler'));
 			//get items and sanitize them
@@ -1074,6 +1076,11 @@ class ImcControllerApi extends ImcController
         self::getTop('voters');
     }
 
+    public function topcommenters()
+    {
+        self::getTop('commenters');
+    }
+
     private function getTop($type)
     {
 		$result = null;
@@ -1126,6 +1133,9 @@ class ImcControllerApi extends ImcController
                 case 'voters':
                     $result = ImcFrontendHelper::getTopVoters($lim, $ts, $prior_to);
                 break;
+                case 'commenters':
+                    $result = ImcFrontendHelper::getTopCommenters($lim, $ts, $prior_to);
+                break;
             }
 			restore_error_handler();
 
@@ -1177,4 +1187,30 @@ class ImcControllerApi extends ImcController
 			echo new JResponseJson($e);
 		}
     }
+
+	public function totals()
+	{
+		$result = null;
+		$app = JFactory::getApplication();
+		try {
+		    self::validateRequest();
+
+			if($app->input->getMethod() != 'GET')
+			{
+			    throw new Exception('You cannot use other method than GET to fetch totals');
+			}
+
+            //handle unexpected warnings from model
+            set_error_handler(array($this, 'exception_error_handler'));
+			$result = ImcFrontendHelper::getTotals();
+			restore_error_handler();
+
+    	    $app->enqueueMessage('size: '.sizeof($result), 'info');
+			echo new JResponseJson($result, 'Totals fetched successfully');
+		}
+		catch(Exception $e)	{
+			header("HTTP/1.0 202 Accepted");
+			echo new JResponseJson($e);
+		}
+	}
 }
