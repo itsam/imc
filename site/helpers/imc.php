@@ -92,7 +92,7 @@ class ImcFrontendHelper
 				unset($issue->category_image);
 				foreach ($issue->photos as &$photo) {
 					unset($photo->name);
-					unset($photo->size);
+					//unset($photo->size);
 					unset($photo->mediumUrl);
 				}
 				foreach ($issue->attachments as &$attachment) {
