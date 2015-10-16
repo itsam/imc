@@ -724,7 +724,7 @@ class ImcFrontendHelper
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
 
-		$query->select('COUNT(*) AS `count_issues`, a.stepid, b.title');
+		$query->select('COUNT(*) AS `count_issues`, a.stepid, b.stepcolor, b.title');
 		$query->from('`#__imc_issues` AS a');
 		$query->join('LEFT', '#__imc_steps AS b ON b.id = a.stepid');
 		$query->where('a.state = 1');
