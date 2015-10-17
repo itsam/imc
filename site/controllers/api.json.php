@@ -1286,4 +1286,39 @@ class ImcControllerApi extends ImcController
 		}
     }
 
+    public function calendar()
+    {
+		$result = null;
+		$app = JFactory::getApplication();
+		try {
+		    $userid = self::validateRequest();
+
+			if($app->input->getMethod() != 'GET')
+			{
+			    throw new Exception('You cannot use other method than GET to fetch calendar issues');
+			}
+
+            //get necessary arguments
+            $field = $app->input->getString('field', null);
+            $allowedFields = array('stepid', 'catid');
+            if(!in_array($field, $allowedFields))
+            {
+                $field = null;
+            }
+
+            //handle unexpected warnings
+            set_error_handler(array($this, 'exception_error_handler'));
+			$calendar = ImcFrontendHelper::calendar($field);
+			$result = ImcFrontendHelper::sanitizeCalendar($calendar);
+			restore_error_handler();
+
+			echo new JResponseJson($result, 'Calendar Issues fetched successfully');
+		}
+		catch(Exception $e)	{
+			header("HTTP/1.0 202 Accepted");
+			echo new JResponseJson($e);
+		}
+    }
+
+
 }

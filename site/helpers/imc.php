@@ -328,6 +328,40 @@ class ImcFrontendHelper
 		return $data;
 	}
 
+	public static function sanitizeCalendar($data)
+	{
+		if(!is_array($data)){
+			throw new Exception('Calendar sanitization bad input');
+		}
+
+		//do the casting
+		foreach ($data as &$d) {
+			$d['Year'] = (int)$d['Year'];
+			$d['Jan'] = (int)$d['Jan'];
+			$d['Feb'] = (int)$d['Feb'];
+			$d['Mar'] = (int)$d['Mar'];
+			$d['Apr'] = (int)$d['Apr'];
+			$d['May'] = (int)$d['May'];
+			$d['Jun'] = (int)$d['Jun'];
+			$d['Jul'] = (int)$d['Jul'];
+			$d['Aug'] = (int)$d['Aug'];
+			$d['Sep'] = (int)$d['Sep'];
+			$d['Oct'] = (int)$d['Oct'];
+			$d['Nov'] = (int)$d['Nov'];
+			$d['Dec'] = (int)$d['Dec'];
+			if(isset($d['stepid']))
+			{
+				$d['stepid'] = (int)$d['stepid'];
+			}
+			if(isset($d['catid']))
+			{
+				$d['catid'] = (int)$d['catid'];
+			}
+		}
+
+		return $data;
+	}
+
 	public static function getModifiedCategories($ts)
 	{
 		$db = JFactory::getDbo();
@@ -935,4 +969,47 @@ class ImcFrontendHelper
 
 		return $in;
 	}
+
+	public static function calendar($field = null)
+	{
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+
+		$query->select('
+		  YEAR(a.created) AS `Year`,
+		  COUNT(CASE WHEN MONTH(a.created) = 1 THEN a.id END) AS `Jan`,
+		  COUNT(CASE WHEN MONTH(a.created) = 2 THEN a.id END) AS `Feb`,
+		  COUNT(CASE WHEN MONTH(a.created) = 3 THEN a.id END) AS `Mar`,
+		  COUNT(CASE WHEN MONTH(a.created) = 4 THEN a.id END) AS `Apr`,
+		  COUNT(CASE WHEN MONTH(a.created) = 5 THEN a.id END) AS `May`,
+		  COUNT(CASE WHEN MONTH(a.created) = 6 THEN a.id END) AS `Jun`,
+		  COUNT(CASE WHEN MONTH(a.created) = 7 THEN a.id END) AS `Jul`,
+		  COUNT(CASE WHEN MONTH(a.created) = 8 THEN a.id END) AS `Aug`,
+		  COUNT(CASE WHEN MONTH(a.created) = 9 THEN a.id END) AS `Sep`,
+		  COUNT(CASE WHEN MONTH(a.created) = 10 THEN a.id END) AS `Oct`,
+		  COUNT(CASE WHEN MONTH(a.created) = 11 THEN a.id END) AS `Nov`,
+		  COUNT(CASE WHEN MONTH(a.created) = 12 THEN a.id END) AS `Dec`
+		');
+		$query->from('#__imc_issues AS a');
+		$query->where('a.state=1');
+		$query->group('YEAR(a.created)');
+
+		switch($field)
+		{
+			case 'stepid':
+				$query->select('b.title, b.stepcolor, a.stepid');
+				$query->join('LEFT', '#__imc_steps AS b ON b.id = a.stepid');
+				$query->group('a.stepid');
+				break;
+			case 'catid':
+				$query->select('b.title, a.catid');
+				$query->join('LEFT', '#__categories AS b ON b.id = a.catid');
+				$query->group('a.catid');
+				break;
+		}
+
+		$db->setQuery($query);
+		return $db->loadAssocList();
+	}
+
 }
