@@ -1320,5 +1320,49 @@ class ImcControllerApi extends ImcController
 		}
     }
 
+    public function dailyCalendar()
+    {
+		$result = null;
+		$app = JFactory::getApplication();
+		try {
+		    $userid = self::validateRequest();
+
+			if($app->input->getMethod() != 'GET')
+			{
+			    throw new Exception('You cannot use other method than GET to fetch calendar issues');
+			}
+
+            //get necessary arguments
+            $field = $app->input->getString('field', null);
+            $allowedFields = array('stepid', 'catid');
+            if(!in_array($field, $allowedFields))
+            {
+                $field = null;
+            }
+
+            $year = $app->input->getInt('year', null);
+            $month = $app->input->getInt('month', null);
+            if(is_null($year))
+            {
+                throw new Exception('Year is mandatory');
+            }
+			if(is_null($month))
+            {
+	            throw new Exception('Month (1-12) is mandatory');
+            }
+
+            //handle unexpected warnings
+            set_error_handler(array($this, 'exception_error_handler'));
+			$calendar = ImcFrontendHelper::dailyCalendar($year, $month, $field);
+			$result = ImcFrontendHelper::sanitizeDailyCalendar($calendar, $year, $month);
+			restore_error_handler();
+
+			echo new JResponseJson($result, 'Daily Calendar Issues fetched successfully');
+		}
+		catch(Exception $e)	{
+			header("HTTP/1.0 202 Accepted");
+			echo new JResponseJson($e);
+		}
+    }
 
 }

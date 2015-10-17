@@ -362,6 +362,78 @@ class ImcFrontendHelper
 		return $data;
 	}
 
+	public static function sanitizeDailyCalendar($data, $year, $month)
+	{
+		if(!is_array($data)){
+			throw new Exception('Daily Calendar sanitization bad input');
+		}
+
+		//do the casting
+		foreach ($data as &$d) {
+			$d['Month'] = (int)$d['Month'];
+			$d['1']  = (int)$d['1'];
+			$d['2']  = (int)$d['2'];
+			$d['3']  = (int)$d['3'];
+			$d['4']  = (int)$d['4'];
+			$d['5']  = (int)$d['5'];
+			$d['6']  = (int)$d['6'];
+			$d['7']  = (int)$d['7'];
+			$d['8']  = (int)$d['8'];
+			$d['9']  = (int)$d['9'];
+			$d['10'] = (int)$d['10'];
+			$d['11'] = (int)$d['11'];
+			$d['12'] = (int)$d['12'];
+			$d['13'] = (int)$d['13'];
+			$d['14'] = (int)$d['14'];
+			$d['15'] = (int)$d['15'];
+			$d['16'] = (int)$d['16'];
+			$d['17'] = (int)$d['17'];
+			$d['18'] = (int)$d['18'];
+			$d['19'] = (int)$d['19'];
+			$d['20'] = (int)$d['20'];
+			$d['21'] = (int)$d['21'];
+			$d['22'] = (int)$d['22'];
+			$d['23'] = (int)$d['23'];
+			$d['24'] = (int)$d['24'];
+			$d['25'] = (int)$d['25'];
+			$d['26'] = (int)$d['26'];
+			$d['27'] = (int)$d['27'];
+			$d['28'] = (int)$d['28'];
+			$d['29'] = (int)$d['29'];
+			$d['30'] = (int)$d['30'];
+			$d['31'] = (int)$d['31'];
+
+			if(isset($d['stepid']))
+			{
+				$d['stepid'] = (int)$d['stepid'];
+			}
+			if(isset($d['catid']))
+			{
+				$d['catid'] = (int)$d['catid'];
+			}
+
+			$has30 = array(4, 6, 9, 11);
+			$leap = array(2000, 2004, 2008,2012, 2016, 2020, 2024, 2028, 2032, 2036, 2040);
+			//I'll be retired by then... let someone else add the next leap year or implement a decent algorithm :)
+
+			if(in_array($month, $has30))
+			{
+				unset($d['31']);
+			}
+			if($month == 2)
+			{
+				unset($d['31']);
+				unset($d['30']);
+				if(!in_array($year, $leap))
+				{
+					unset($d['29']);
+				}
+			}
+		}
+
+		return $data;
+	}
+
 	public static function getModifiedCategories($ts)
 	{
 		$db = JFactory::getDbo();
@@ -993,6 +1065,69 @@ class ImcFrontendHelper
 		$query->from('#__imc_issues AS a');
 		$query->where('a.state=1');
 		$query->group('YEAR(a.created)');
+
+		switch($field)
+		{
+			case 'stepid':
+				$query->select('b.title, b.stepcolor, a.stepid');
+				$query->join('LEFT', '#__imc_steps AS b ON b.id = a.stepid');
+				$query->group('a.stepid');
+				break;
+			case 'catid':
+				$query->select('b.title, a.catid');
+				$query->join('LEFT', '#__categories AS b ON b.id = a.catid');
+				$query->group('a.catid');
+				break;
+		}
+
+		$db->setQuery($query);
+		return $db->loadAssocList();
+	}
+
+	public static function dailyCalendar($year, $month, $field = null)
+	{
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+
+		$query->select('
+		  MONTH(a.created) AS `Month`,
+		  COUNT(CASE WHEN DAY(a.created) = 1 THEN a.id END) AS `1`,
+		  COUNT(CASE WHEN DAY(a.created) = 2 THEN a.id END) AS `2`,
+		  COUNT(CASE WHEN DAY(a.created) = 3 THEN a.id END) AS `3`,
+		  COUNT(CASE WHEN DAY(a.created) = 4 THEN a.id END) AS `4`,
+		  COUNT(CASE WHEN DAY(a.created) = 5 THEN a.id END) AS `5`,
+		  COUNT(CASE WHEN DAY(a.created) = 6 THEN a.id END) AS `6`,
+		  COUNT(CASE WHEN DAY(a.created) = 7 THEN a.id END) AS `7`,
+		  COUNT(CASE WHEN DAY(a.created) = 8 THEN a.id END) AS `8`,
+		  COUNT(CASE WHEN DAY(a.created) = 9 THEN a.id END) AS `9`,
+		  COUNT(CASE WHEN DAY(a.created) = 10 THEN a.id END) AS `10`,
+		  COUNT(CASE WHEN DAY(a.created) = 11 THEN a.id END) AS `11`,
+		  COUNT(CASE WHEN DAY(a.created) = 12 THEN a.id END) AS `12`,
+		  COUNT(CASE WHEN DAY(a.created) = 13 THEN a.id END) AS `13`,
+		  COUNT(CASE WHEN DAY(a.created) = 14 THEN a.id END) AS `14`,
+		  COUNT(CASE WHEN DAY(a.created) = 15 THEN a.id END) AS `15`,
+		  COUNT(CASE WHEN DAY(a.created) = 16 THEN a.id END) AS `16`,
+		  COUNT(CASE WHEN DAY(a.created) = 17 THEN a.id END) AS `17`,
+		  COUNT(CASE WHEN DAY(a.created) = 18 THEN a.id END) AS `18`,
+		  COUNT(CASE WHEN DAY(a.created) = 19 THEN a.id END) AS `19`,
+		  COUNT(CASE WHEN DAY(a.created) = 20 THEN a.id END) AS `20`,
+		  COUNT(CASE WHEN DAY(a.created) = 21 THEN a.id END) AS `21`,
+		  COUNT(CASE WHEN DAY(a.created) = 22 THEN a.id END) AS `22`,
+		  COUNT(CASE WHEN DAY(a.created) = 23 THEN a.id END) AS `23`,
+		  COUNT(CASE WHEN DAY(a.created) = 24 THEN a.id END) AS `24`,
+		  COUNT(CASE WHEN DAY(a.created) = 25 THEN a.id END) AS `25`,
+		  COUNT(CASE WHEN DAY(a.created) = 26 THEN a.id END) AS `26`,
+		  COUNT(CASE WHEN DAY(a.created) = 27 THEN a.id END) AS `27`,
+		  COUNT(CASE WHEN DAY(a.created) = 28 THEN a.id END) AS `28`,
+		  COUNT(CASE WHEN DAY(a.created) = 29 THEN a.id END) AS `29`,
+		  COUNT(CASE WHEN DAY(a.created) = 30 THEN a.id END) AS `30`,
+		  COUNT(CASE WHEN DAY(a.created) = 31 THEN a.id END) AS `31`
+		');
+		$query->from('#__imc_issues AS a');
+		$query->where('a.state=1');
+		$query->where('YEAR(a.created) = ' . $year);
+		$query->where('MONTH(a.created) = ' . $month);
+		$query->group('MONTH(a.created)');
 
 		switch($field)
 		{
