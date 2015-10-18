@@ -36,8 +36,8 @@ $statuses = $step->getOptions();
 ?>
 
 <script type="text/javascript">
-    js = jQuery.noConflict();
-    js(document).ready(function() {
+	js = jQuery.noConflict();
+	js(document).ready(function() {
 		js('#gallery').photobox('a', { thumbs:true, loop:false }, callback);
 		// using setTimeout to make sure all images were in the DOM, before the history.load() function is looking them up to match the url hash
 		setTimeout(window._photobox.history.load, 2000);
@@ -53,8 +53,10 @@ $statuses = $step->getOptions();
 		js('.delete-button').click(deleteItem);
 
 	    <?php if($this->showComments) : ?>
+		var token = '<?php echo JSession::getFormToken();?>';
+		var issueid = '<?php echo $this->item->id;?>';
 	    js('#comments-container').comments({
-		    profilePictureURL: '<?php echo JURI::base().'components/com_imc/assets/images/user-icon.png';?>',
+			profilePictureURL: '<?php echo JURI::base().'components/com_imc/assets/images/user-icon.png';?>',
 		    spinnerIconURL: '<?php echo JURI::base().'components/com_imc/assets/images/spinner.gif';?>',
 		    upvoteIconURL: '<?php echo JURI::base().'components/com_imc/assets/images/upvote-icon.png';?>',
 		    replyIconURL: '<?php echo JURI::base().'components/com_imc/assets/images/reply-icon.png';?>',
@@ -63,8 +65,8 @@ $statuses = $step->getOptions();
 		    popularText: 'Most popular',
 		    newestText: 'New',
 		    oldestText: 'Old',
-		    sendText: 'Comment',
-		    replyText: 'Answer',
+		    sendText: 'Send',
+		    replyText: 'Reply',
 		    editText: 'Modify',
 		    saveText: 'Update',
 		    deleteText: 'Remove',
@@ -73,19 +75,38 @@ $statuses = $step->getOptions();
 		    viewAllRepliesText: 'Show all replies (__replyCount__)',
 		    hideRepliesText: 'Hide',
 		    noCommentsText: 'There are no comments',
-		    getComments: function(success, error) {
-//			    var commentsArray = [];
-			    var commentsArray = [{
-				    id: 1,
-				    created: '2015-10-13',
-				    content: 'Lorem ipsum dolort sit amet',
-				    fullname: 'Yiannis Tsampoulatidis',
-				    profile_picture_url: '<?php echo JURI::base().'components/com_imc/assets/images/user-icon.png';?>',
-				    upvote_count: 2,
-				    user_has_upvoted: false
-			    }];
-			    success(commentsArray);
-		    }
+			enableReplying: true,
+			enableEditing: false,
+			enableUpvoting: false,
+			enableDeleting: false,
+			enableDeletingCommentWithReplies: false,
+			timeFormatter: function(time) {
+				return new Date(time).toLocaleString();
+				//return time;
+			},
+			fieldMappings: {
+				id: 'id',
+				parent: 'parentid',
+				created: 'created',
+				modified: 'updated',
+				content: 'description',
+				fullname: 'fullname',
+				profilePictureURL: 'profile_picture_url',
+				createdByAdmin: 'created_by_admin',
+				createdByCurrentUser: 'created_by_current_user',
+				upvoteCount: 'upvote_count',
+				userHasUpvoted: 'user_has_upvoted'
+			},
+			getComments: function(success, error) {
+				js.ajax({
+					type: 'get',
+					'url': "index.php?option=com_imc&task=comments.comments&format=json&issueid=" + issueid + "&" + token + "=1",
+					success: function(commentsArray) {
+						success(commentsArray.data)
+					},
+					error: error
+				});
+			}
 	    });
 	    <?php endif; ?>
     });
