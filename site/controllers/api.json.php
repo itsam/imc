@@ -1291,7 +1291,7 @@ class ImcControllerApi extends ImcController
 		$result = null;
 		$app = JFactory::getApplication();
 		try {
-		    $userid = self::validateRequest();
+		    self::validateRequest();
 
 			if($app->input->getMethod() != 'GET')
 			{
@@ -1325,7 +1325,7 @@ class ImcControllerApi extends ImcController
 		$result = null;
 		$app = JFactory::getApplication();
 		try {
-		    $userid = self::validateRequest();
+		    self::validateRequest();
 
 			if($app->input->getMethod() != 'GET')
 			{
@@ -1365,4 +1365,34 @@ class ImcControllerApi extends ImcController
 		}
     }
 
+    public function intervals()
+    {
+		$result = null;
+		$app = JFactory::getApplication();
+		try {
+		    self::validateRequest();
+
+			if($app->input->getMethod() != 'GET')
+			{
+			    throw new Exception('You cannot use other method than GET to fetch intervals');
+			}
+
+            //get necessary arguments
+            $by_step = $app->input->getString('by_step', null);
+            $by_category = $app->input->getString('by_category', null);
+            $by_step = ($by_step === 'true');
+            $by_category = ($by_category === 'true');
+
+            //handle unexpected warnings
+            set_error_handler(array($this, 'exception_error_handler'));
+			$result = ImcFrontendHelper::intervals($by_step, $by_category);
+			restore_error_handler();
+
+			echo new JResponseJson($result, 'Intervals fetched successfully');
+		}
+		catch(Exception $e)	{
+			header("HTTP/1.0 202 Accepted");
+			echo new JResponseJson($e);
+		}
+    }
 }

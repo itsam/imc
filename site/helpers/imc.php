@@ -1147,4 +1147,52 @@ class ImcFrontendHelper
 		return $db->loadAssocList();
 	}
 
+	public static function intervals($by_step = false, $by_category = false)
+	{
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+		$query->select('AVG(days_diff) AS avg_days, MIN(days_diff) AS min_days, MAX(days_diff) AS max_days, COUNT(issueid) AS count_issues');
+		$query->from('
+			(
+				SELECT a.issueid, a.stepid, b.catid, a.created,
+				  CASE WHEN (a.created - f.created) IS NULL THEN a.created + INTERVAL 1 SECOND ELSE f.created END AS vcreated,
+				  CASE WHEN (a.created - f.created) IS NULL THEN 0 ELSE ABS(DATEDIFF(a.created, f.created)) END AS days_diff
+
+				FROM #__imc_log AS a
+				  LEFT JOIN #__imc_log AS f ON a.created > f.created AND a.issueid = f.issueid
+				  LEFT JOIN #__imc_issues AS b ON b.id = a.issueid
+				WHERE a.issueid IN (
+				  SELECT id
+				  FROM #__imc_issues
+				  WHERE state = 1
+				)
+				AND a.action = "step"
+				GROUP BY vcreated
+			) AS intervals
+		');
+
+		if($by_step && !$by_category)
+		{
+			$query->select('stepid, s.title AS steptitle, s.stepcolor');
+			$query->join('LEFT', '#__imc_steps AS s ON s.id = intervals.stepid');
+			$query->group('stepid');
+		}
+		if($by_category && !$by_step)
+		{
+			$query->select('catid, c.title AS category');
+			$query->join('LEFT', '#__categories AS c ON c.id = intervals.catid');
+			$query->group('catid');
+		}
+		if($by_category && $by_step)
+		{
+			$query->select('stepid, s.title AS steptitle, s.stepcolor');
+			$query->select('catid, c.title AS category');
+			$query->join('LEFT', '#__imc_steps AS s ON s.id = intervals.stepid');
+			$query->join('LEFT', '#__categories AS c ON c.id = intervals.catid');
+			$query->group('catid, stepid');
+		}
+
+		$db->setQuery($query);
+		return $db->loadAssocList();
+	}
 }
