@@ -65,6 +65,16 @@ $statuses = $step->getOptions();
 
 </script>
 
+<?php
+	//make sure you are allowed to see the issue (in case of direct link)
+	if($this->item->moderation == 1 && !$canEdit) : ?>
+
+<div class="alert alert-danger">
+	<?php echo JText::_('COM_IMC_ITEM_NOT_LOADED'); ?>
+</div>
+
+<?php return; endif; ?>
+
 <?php if ($this->item && ($this->item->state == 1 || $canEditOwn ) ) : ?>
     <div class="container">
     <div class="row">
