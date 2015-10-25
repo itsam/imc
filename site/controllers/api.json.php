@@ -1097,6 +1097,7 @@ class ImcControllerApi extends ImcController
             $ts = $app->input->getString('ts', null);
             $prior_to = $app->input->getString('prior_to', null);
             $lim = $app->input->getInt('lim', null);
+            $ids = $app->input->getString('ids', null);
 
 		    if(!is_null($ts) && !ImcFrontendHelper::isValidTimeStamp($ts))
             {
@@ -1122,19 +1123,19 @@ class ImcControllerApi extends ImcController
             switch($type)
             {
                 case 'users':
-                    $result = ImcFrontendHelper::getTopUsers($lim, $ts, $prior_to);
+                    $result = ImcFrontendHelper::getTopUsers($lim, $ts, $prior_to, $ids);
                 break;
                 case 'categories':
-                    $result = ImcFrontendHelper::getTopCategories($lim, $ts, $prior_to);
+                    $result = ImcFrontendHelper::getTopCategories($lim, $ts, $prior_to, $ids);
                 break;
                 case 'steps':
-                    $result = ImcFrontendHelper::getTopSteps($lim, $ts, $prior_to);
+                    $result = ImcFrontendHelper::getTopSteps($lim, $ts, $prior_to, $ids);
                 break;
                 case 'voters':
-                    $result = ImcFrontendHelper::getTopVoters($lim, $ts, $prior_to);
+                    $result = ImcFrontendHelper::getTopVoters($lim, $ts, $prior_to, $ids);
                 break;
                 case 'commenters':
-                    $result = ImcFrontendHelper::getTopCommenters($lim, $ts, $prior_to);
+                    $result = ImcFrontendHelper::getTopCommenters($lim, $ts, $prior_to, $ids);
                 break;
             }
 			restore_error_handler();
@@ -1267,7 +1268,12 @@ class ImcControllerApi extends ImcController
 				'count_in_comments' => sizeof($arComments),
 				'count_in_description' => sizeof($arDescription),
 				'count_in_title' => sizeof($arTitle),
-				'count_in_address' => sizeof($arAddress)
+				'count_in_address' => sizeof($arAddress),
+				'ids_in_comments' => ImcFrontendHelper::getIds($arComments),
+				'ids_in_description' => ImcFrontendHelper::getIds($arDescription),
+				'ids_in_title' => ImcFrontendHelper::getIds($arTitle),
+				'ids_in_address' => ImcFrontendHelper::getIds($arAddress)
+
 	        );
 
 			$found = array(

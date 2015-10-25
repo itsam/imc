@@ -765,7 +765,7 @@ class ImcFrontendHelper
 
 	/* Analytics */
 
-	public static function getTopUsers($limit = null, $ts = null, $prior_to = null)
+	public static function getTopUsers($limit = null, $ts = null, $prior_to = null, $ids = null)
 	{
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
@@ -790,12 +790,16 @@ class ImcFrontendHelper
 			//$query->where('UNIX_TIMESTAMP(a.updated) <= ' . $prior_to);
 			$query->where('a.created <= "' . $prior_to .'"');
 		}
+		if(!is_null($ids))
+		{
+			$query->where('a.id IN ('.$ids.')');
+		}
 
 		$db->setQuery($query);
 		return $db->loadAssocList();
 	}
 
-	public static function getTopCategories($limit = null, $ts = null, $prior_to = null)
+	public static function getTopCategories($limit = null, $ts = null, $prior_to = null, $ids = null)
 	{
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
@@ -820,12 +824,16 @@ class ImcFrontendHelper
 			//$query->where('UNIX_TIMESTAMP(a.updated) <= ' . $prior_to);
 			$query->where('a.created <= "' . $prior_to .'"');
 		}
+		if(!is_null($ids))
+		{
+			$query->where('a.id IN ('.$ids.')');
+		}
 
 		$db->setQuery($query);
 		return $db->loadAssocList();
 	}
 
-	public static function getTopSteps($limit = null, $ts = null, $prior_to = null)
+	public static function getTopSteps($limit = null, $ts = null, $prior_to = null, $ids = null)
 	{
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
@@ -850,12 +858,16 @@ class ImcFrontendHelper
 			//$query->where('UNIX_TIMESTAMP(a.updated) <= ' . $prior_to);
 			$query->where('a.created <= "' . $prior_to .'"');
 		}
+		if(!is_null($ids))
+		{
+			$query->where('a.id IN ('.$ids.')');
+		}
 
 		$db->setQuery($query);
 		return $db->loadAssocList();
 	}
 
-	public static function getTopVoters($limit = null, $ts = null, $prior_to = null)
+	public static function getTopVoters($limit = null, $ts = null, $prior_to = null, $ids = null)
 	{
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
@@ -881,12 +893,16 @@ class ImcFrontendHelper
 			//$query->where('UNIX_TIMESTAMP(a.updated) <= ' . $prior_to);
 			$query->where('a.created <= "' . $prior_to .'"');
 		}
+		if(!is_null($ids))
+		{
+			$query->where('a.id IN ('.$ids.')');
+		}
 
 		$db->setQuery($query);
 		return $db->loadAssocList();
 	}
 
-	public static function getTopCommenters($limit = null, $ts = null, $prior_to = null)
+	public static function getTopCommenters($limit = null, $ts = null, $prior_to = null, $ids = null)
 	{
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
@@ -911,6 +927,10 @@ class ImcFrontendHelper
 		{
 			//$query->where('UNIX_TIMESTAMP(a.updated) <= ' . $prior_to);
 			$query->where('a.created <= "' . $prior_to .'"');
+		}
+		if(!is_null($ids))
+		{
+			$query->where('a.id IN ('.$ids.')');
 		}
 
 		$db->setQuery($query);
@@ -1195,4 +1215,15 @@ class ImcFrontendHelper
 		$db->setQuery($query);
 		return $db->loadAssocList();
 	}
+
+	public static function getIds($data)
+	{
+		$ids = array();
+		foreach ($data as $item) {
+			array_push($ids, $item['id']);
+		}
+
+		return implode(',', $ids);
+	}
+
 }
