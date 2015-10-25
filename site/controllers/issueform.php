@@ -257,7 +257,7 @@ class ImcControllerIssueForm extends ImcController {
 
             $data2['id'] = 0;
             $data2['state'] = 1;
-            $data2['action'] = JText::_('COM_IMC_LOGS_ACTION_INITIAL_COMMIT');
+            $data2['action'] = 'step'; //enum(step|category)
             $data2['issueid'] = $insertid; //$model->getItem()->get('id');
             $data2['stepid'] = $validData['stepid'];
             $data2['description'] = JText::_('COM_IMC_LOGS_ACTION_INITIAL_COMMIT') . ' ' . JText::_('COM_IMC_LOGS_AT_CATEGORY') . ' ' . $catTitle;
@@ -292,7 +292,7 @@ class ImcControllerIssueForm extends ImcController {
 
                 $data2['id'] = 0;
                 $data2['state'] = 1;
-                $data2['action'] = JText::_('COM_IMC_LOGS_ACTION_STEP_MODIFIED');
+                $data2['action'] = 'step'; //enum(step|category)
                 $data2['issueid'] = $validData['id'];
                 $data2['stepid'] = $validData['stepid'];
                 $data2['description'] = $validData['step_modified_description'];
@@ -326,7 +326,7 @@ class ImcControllerIssueForm extends ImcController {
 
                 $data2['id'] = 0;
                 $data2['state'] = 1;
-                $data2['action'] = JText::_('COM_IMC_LOGS_ACTION_CATEGORY_MODIFIED');
+                $data2['action'] = 'category'; //enum(step|category)
                 $data2['issueid'] = $validData['id'];
                 $data2['stepid'] = $validData['stepid'];
                 $data2['description'] = $validData['category_modified_description'];

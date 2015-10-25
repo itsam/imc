@@ -219,7 +219,6 @@ $statuses = $step->getOptions();
 					</div> 
 					<div class="cd-timeline-content">
 						<h3><?php echo $log['stepid_title']; ?></h3>
-						<!-- <h3><?php echo $log['action']; ?></h3> -->
 						<?php if($this->params->get('showuserdetailstimeline') && $first) : ?>
 							<p><strong><?php echo JText::_('COM_IMC_FORM_LBL_ISSUE_CREATED_BY'); ?>: </strong> 
 		    				<?php echo $log['created_by']; ?></p>
