@@ -1210,6 +1210,28 @@ class ImcFrontendHelper
 			$query->join('LEFT', '#__imc_steps AS s ON s.id = intervals.stepid');
 			$query->join('LEFT', '#__categories AS c ON c.id = intervals.catid');
 			$query->group('catid, stepid');
+
+			//nest steps by category
+			$db->setQuery($query);
+			$results =  $db->loadAssocList();
+
+			$nested = array();
+			$categories = array();
+			$cat = 'any';
+			foreach ($results as $ar)
+			{
+				if($ar['catid'] != $cat)
+				{
+					array_push($categories, $ar['catid']);
+				}
+				$cat = $ar['catid'];
+			}
+			foreach ($results as $ar)
+			{
+				$nested[$ar['catid']][] = $ar;
+			}
+
+			return $nested;
 		}
 
 		$db->setQuery($query);
