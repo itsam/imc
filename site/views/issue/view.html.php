@@ -21,6 +21,7 @@ class ImcViewIssue extends JViewLegacy {
     protected $item;
     ///protected $form;
     protected $params;
+    protected $showComments;
 
     /**
      * Display the view
@@ -33,6 +34,7 @@ class ImcViewIssue extends JViewLegacy {
         $this->state = $this->get('State');
         $this->item = $this->get('Data');
         $this->params = $app->getParams('com_imc');
+        $this->showComments = true; //TODO: Get this from options
 
         if (!empty($this->item)) {
             ///$this->form = $this->get('Form');
@@ -110,6 +112,14 @@ class ImcViewIssue extends JViewLegacy {
         // TODO: add this <!--[if lt IE 9]><link rel="stylesheet" href="photobox/photobox.ie.css"><![endif]-->
         $this->document->addScript(JURI::root(true).'/components/com_imc/assets/js/jquery.photobox.js');
         $this->document->addScript(JURI::root(true).'/components/com_imc/assets/js/imc.js');
+
+
+        if($this->showComments)
+        {
+            $this->document->addStyleSheet(JURI::root(true).'/components/com_imc/assets/css/jquery-comments.css');
+            $this->document->addScript(JURI::root(true).'/components/com_imc/assets/js/jquery-comments.min.js');
+        }
+
     }
 
 }

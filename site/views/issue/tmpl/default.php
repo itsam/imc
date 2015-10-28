@@ -36,8 +36,8 @@ $statuses = $step->getOptions();
 ?>
 
 <script type="text/javascript">
-    js = jQuery.noConflict();
-    js(document).ready(function() {
+	js = jQuery.noConflict();
+	js(document).ready(function() {
 		js('#gallery').photobox('a', { thumbs:true, loop:false }, callback);
 		// using setTimeout to make sure all images were in the DOM, before the history.load() function is looking them up to match the url hash
 		setTimeout(window._photobox.history.load, 2000);
@@ -52,9 +52,63 @@ $statuses = $step->getOptions();
 
 		js('.delete-button').click(deleteItem);
 
-		js('#new-comment').click(function() {
-			alert('<?php echo JText::_('COM_IMC_COMMENTS_NOT_ALLOWED'); ?>');
-		});
+	    <?php if($this->showComments) : ?>
+		var token = '<?php echo JSession::getFormToken();?>';
+		var issueid = '<?php echo $this->item->id;?>';
+	    js('#comments-container').comments({
+			profilePictureURL: '<?php echo JURI::base().'components/com_imc/assets/images/user-icon.png';?>',
+		    spinnerIconURL: '<?php echo JURI::base().'components/com_imc/assets/images/spinner.gif';?>',
+		    upvoteIconURL: '<?php echo JURI::base().'components/com_imc/assets/images/upvote-icon.png';?>',
+		    replyIconURL: '<?php echo JURI::base().'components/com_imc/assets/images/reply-icon.png';?>',
+		    noCommentsIconURL: '<?php echo JURI::base().'components/com_imc/assets/images/no-comments-icon.png';?>',
+		    textareaPlaceholderText: 'Leave a comment',
+		    popularText: 'Most popular',
+		    newestText: 'New',
+		    oldestText: 'Old',
+		    sendText: 'Send',
+		    replyText: 'Reply',
+		    editText: 'Modify',
+		    saveText: 'Update',
+		    deleteText: 'Remove',
+		    editedText: 'Modified',
+		    youText: 'Me',
+		    viewAllRepliesText: 'Show all replies (__replyCount__)',
+		    hideRepliesText: 'Hide',
+		    noCommentsText: 'There are no comments',
+			enableReplying: true,
+			enableEditing: false,
+			enableUpvoting: false,
+			enableDeleting: false,
+			enableDeletingCommentWithReplies: false,
+			timeFormatter: function(time) {
+				return new Date(time).toLocaleString();
+				//return time;
+			},
+			fieldMappings: {
+				id: 'id',
+				parent: 'parentid',
+				created: 'created',
+				modified: 'updated',
+				content: 'description',
+				fullname: 'fullname',
+				profilePictureURL: 'profile_picture_url',
+				createdByAdmin: 'created_by_admin',
+				createdByCurrentUser: 'created_by_current_user',
+				upvoteCount: 'upvote_count',
+				userHasUpvoted: 'user_has_upvoted'
+			},
+			getComments: function(success, error) {
+				js.ajax({
+					type: 'get',
+					'url': "index.php?option=com_imc&task=comments.comments&format=json&issueid=" + issueid + "&" + token + "=1",
+					success: function(commentsArray) {
+						success(commentsArray.data)
+					},
+					error: error
+				});
+			}
+	    });
+	    <?php endif; ?>
     });
 
     function deleteItem() {
@@ -193,11 +247,15 @@ $statuses = $step->getOptions();
 				<?php endif; ?>
 				</p>
 				<hr />
-				<?php if (JFactory::getUser()->guest) : ?>
+				<?php if($this->showComments) : ?>
+				<div id="comments-container"></div>
+				<?php endif; ?>
+
+				<?php /*if (JFactory::getUser()->guest) : ?>
 					<p><button id="new-comment" class="btn btn-success disabled"><i class="icon-comment"></i> <?php echo JText::_('COM_IMC_COMMENTS_ADD'); ?></button></p>
 				<?php else : ?>
 					<p><button id="new-comment" class="btn btn-success"><i class="icon-comment"></i> <?php echo JText::_('COM_IMC_COMMENTS_ADD'); ?></button></p>
-				<?php endif;?>
+				<?php endif; */?>
 
 	    	</div>
 	    </div>

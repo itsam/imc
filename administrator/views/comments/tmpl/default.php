@@ -113,6 +113,12 @@ if (!empty($this->extra_sidebar)) {
 				<?php echo JHtml::_('grid.sort',  'COM_IMC_COMMENTS_ISSUEID', 'a.issueid', $listDirn, $listOrder); ?>
 				</th>
 				<th class='left'>
+					<?php echo JHtml::_('grid.sort',  'COM_IMC_COMMENTS_DESCRIPTION', 'a.description', $listDirn, $listOrder); ?>
+				</th>
+				<th class='left'>
+					<?php echo JHtml::_('grid.sort',  'COM_IMC_COMMENTS_CREATED', 'a.created', $listDirn, $listOrder); ?>
+				</th>
+				<th class='left'>
 				<?php echo JHtml::_('grid.sort',  'COM_IMC_COMMENTS_CREATED_BY', 'a.created_by', $listDirn, $listOrder); ?>
 				</th>
                     
@@ -179,11 +185,20 @@ if (!empty($this->extra_sidebar)) {
                 <?php endif; ?>
                     
 				<td>
-
 					<?php echo $item->issueid; ?>
 				</td>
 				<td>
-
+					<?php if ($canEdit) : ?>
+						<a href="<?php echo JRoute::_('index.php?option=com_imc&task=comment.edit&id='.(int) $item->id); ?>">
+							<?php echo $this->escape($item->description); ?></a>
+					<?php else : ?>
+						<?php echo $this->escape($item->description); ?>
+					<?php endif; ?>
+				</td>
+				<td>
+					<?php echo JHtml::_('date', $item->created, JText::_('DATE_FORMAT_LC2')); ?>
+				</td>
+				<td>
 					<?php echo $item->created_by; ?>
 				</td>
 

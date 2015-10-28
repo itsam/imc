@@ -84,24 +84,24 @@ class ImcModelComments extends JModelList {
 
         // Select the required fields from the table.
         $query->select(
-                $this->getState(
-                        'list.select', 'DISTINCT a.*'
-                )
+            $this->getState(
+                    'list.select', 'DISTINCT a.*'
+            )
         );
 
         $query->from('`#__imc_comments` AS a');
 
-        
         // Join over the users for the checked out user.
         $query->select('uc.name AS editor');
         $query->join('LEFT', '#__users AS uc ON uc.id=a.checked_out');
-    
-		// Join over the foreign key 'issueid'
-		$query->select('#__imc_issues_1382371.title AS issues_title_1382371');
-		$query->join('LEFT', '#__imc_issues AS #__imc_issues_1382371 ON #__imc_issues_1382371.id = a.issueid');
-		// Join over the created by field 'created_by'
-		$query->join('LEFT', '#__users AS created_by ON created_by.id = a.created_by');
-        
+
+        // Join over the foreign key 'issueid'
+        $query->select('b.title AS issue_title');
+        $query->join('LEFT', '#__imc_issues AS b ON b.id = a.issueid');
+
+        $query->join('LEFT', '#__users AS u ON u.id = a.created_by');
+        $query->select('u.name AS fullname');
+
 
         // Filter by search in title
         $search = $this->getState('filter.search');
@@ -117,10 +117,16 @@ class ImcModelComments extends JModelList {
         
 
 		//Filtering issueid
-		$filter_issueid = $this->state->get("filter.issueid");
-		if ($filter_issueid) {
-			$query->where("a.issueid = '".$filter_issueid."'");
+		$filter_issueid = $this->getState('imc.filter.issueid', null);
+		if (!is_null($filter_issueid)) {
+			$query->where("a.issueid = ".$filter_issueid);
 		}
+
+        //Filtering state
+        $filter_state = $this->getState('imc.filter.state', null);
+        if (!is_null($filter_state)) {
+            $query->where('a.state = '.$filter_state);
+        }
 
         // Add the list ordering clause.
         $orderCol = $this->state->get('list.ordering');
@@ -134,34 +140,34 @@ class ImcModelComments extends JModelList {
 
     public function getItems() {
         $items = parent::getItems();
-        foreach($items as $item){
-	
-
-			if (isset($item->issueid) && $item->issueid != '') {
-				if(is_object($item->issueid)){
-					$item->issueid = JArrayHelper::fromObject($item->issueid);
-				}
-				$values = (is_array($item->issueid)) ? $item->issueid : explode(',',$item->issueid);
-
-				$textValue = array();
-				foreach ($values as $value){
-					$db = JFactory::getDbo();
-					$query = $db->getQuery(true);
-					$query
-							->select('title')
-							->from('`#__imc_issues`')
-							->where('id = ' . $db->quote($db->escape($value)));
-					$db->setQuery($query);
-					$results = $db->loadObject();
-					if ($results) {
-						$textValue[] = $results->title;
-					}
-				}
-
-			$item->issueid = !empty($textValue) ? implode(', ', $textValue) : $item->issueid;
-
-			}
-}
+//        foreach($items as $item){
+//
+//
+//			if (isset($item->issueid) && $item->issueid != '') {
+//				if(is_object($item->issueid)){
+//					$item->issueid = JArrayHelper::fromObject($item->issueid);
+//				}
+//				$values = (is_array($item->issueid)) ? $item->issueid : explode(',',$item->issueid);
+//
+//				$textValue = array();
+//				foreach ($values as $value){
+//					$db = JFactory::getDbo();
+//					$query = $db->getQuery(true);
+//					$query
+//							->select('title')
+//							->from('`#__imc_issues`')
+//							->where('id = ' . $db->quote($db->escape($value)));
+//					$db->setQuery($query);
+//					$results = $db->loadObject();
+//					if ($results) {
+//						$textValue[] = $results->title;
+//					}
+//				}
+//
+//			$item->issueid = !empty($textValue) ? implode(', ', $textValue) : $item->issueid;
+//
+//			}
+//        }
         return $items;
     }
 
