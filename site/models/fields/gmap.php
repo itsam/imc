@@ -128,7 +128,7 @@ class JFormFieldGmap extends JFormField
 
 		$params = JComponentHelper::getParams('com_imc');
 		$api_key = $params->get('api_key');
-		
+
 		if($api_key == '')
 			echo '<span style="color: red; font-weight:bold;">'.JText::_('COM_IMC_JFIELD_GMAP_MISSING_KEY').'</span>';
 		
@@ -143,9 +143,11 @@ class JFormFieldGmap extends JFormField
 		if(!$lng)  $lng  = '22.948426';
 
 		$scrollwheel = ($params->get('scrollwheel') == 1 ? true : false);
+		$lockaddressbtn = ($params->get('lockaddressbtn') == 1 ? true : false);
 		$language   = $params->get('maplanguage');
 		$hiddenterm = $params->get('hiddenterm');
 		$boundaries = $params->get('boundaries', null);
+
 
 		if($api_key != '')
 			JFactory::getDocument()->addScript('https://maps.googleapis.com/maps/api/js?key='.$api_key.'&language='.$language);
@@ -223,7 +225,9 @@ class JFormFieldGmap extends JFormField
         $html[] = '<div style="'.implode("", $style).'display:table-cell;clear:both;padding-bottom: 100px;">';
 		if(!$disabled) {
 			$html[] = '		<button id="searchaddress" class="btn btn-mini" type="button"><i class="icon-search icon-white"></i> '. JText::_('COM_IMC_CUSTOM_FIELD_LOCATE_ADDRESS') . '</button>';
-			$html[] = '		<button id="lockaddress" class="btn btn-mini" type="button"><i class="icon-lock"></i> '. JText::_('COM_IMC_CUSTOM_FIELD_LOCK_ADDRESS') . '</button>';
+			if($lockaddressbtn) {
+				$html[] = '		<button id="lockaddress" class="btn btn-mini" type="button"><i class="icon-lock"></i> ' . JText::_('COM_IMC_CUSTOM_FIELD_LOCK_ADDRESS') . '</button>';
+			}
 			$html[] = '		<button id="locateposition" style="float:right;" class="btn btn-mini" type="button"><i class="icon-screenshot"></i> '. JText::_('COM_IMC_CUSTOM_FIELD_LOCATE_POSITION') . '</button>';
 		}
 		$html[] = ' <textarea placeholder="'.JText::_('COM_IMC_FORM_LBL_ISSUE_ADDRESS').'" '. ($disabled ? "disabled=\"\"" : "").' class="imc-gmap-textarea" rows="3" cols="75" id="' . $this->id . '" name="' . $this->name . '">'.htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8').'</textarea>';
