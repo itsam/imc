@@ -57,7 +57,7 @@ class ImcViewComment extends JViewLegacy {
         }
         $canDo = ImcHelper::getActions();
 
-        JToolBarHelper::title(JText::_('COM_IMC_TITLE_COMMENT'), 'comment-2');
+        JToolBarHelper::title(JText::_('COM_IMC_TITLE_COMMENT'), 'comments-2');
 
         // If not checked out, can save the item.
         if (!$checkedOut && ($canDo->get('core.edit') || ($canDo->get('core.create')))) {
