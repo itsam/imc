@@ -34,7 +34,7 @@ class ImcViewIssue extends JViewLegacy {
         $this->state = $this->get('State');
         $this->item = $this->get('Data');
         $this->params = $app->getParams('com_imc');
-        $this->showComments = true; //TODO: Get this from options
+        $this->showComments = $this->params->get('enablecomments');
 
         if (!empty($this->item)) {
             ///$this->form = $this->get('Form');

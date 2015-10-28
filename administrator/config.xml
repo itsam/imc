@@ -119,7 +119,28 @@
         </field>
 
     </fieldset>
-    
+    <fieldset
+            name="comments"
+            class="form-horizontal"
+            label="COM_IMC_SETTINGS_COMMENTS_LABEL"
+            description="COM_IMC_SETTINGS_COMMENTS_DESC">
+
+
+        <field name="enablecomments" type="radio" default="1" class="btn-group btn-group-yesno" label="COM_IMC_SETTINGS_COMMENTS_ENABLE_LABEL" description="COM_IMC_SETTINGS_COMMENTS_ENABLE_DESC">
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+
+        <field type="spacer" name="myspacer" hr="true" />
+
+        <field name="directpublishingcomment" type="radio" default="1" class="btn-group btn-group-yesno" label="COM_IMC_SETTINGS_COMMENTS_DIRECT_PUBLISHING_LABEL" description="COM_IMC_SETTINGS_COMMENTS_DIRECT_PUBLISHING_DESC">
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+
+    </fieldset>
+
+
     <fieldset name="permissions"
         description="JCONFIG_PERMISSIONS_DESC"
         label="JCONFIG_PERMISSIONS_LABEL">
