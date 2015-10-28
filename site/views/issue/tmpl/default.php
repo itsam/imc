@@ -13,6 +13,7 @@ defined('_JEXEC') or die;
 $lang = JFactory::getLanguage();
 $lang->load('com_imc', JPATH_ADMINISTRATOR);
 $user = JFactory::getUser();
+$canCreate = $user->authorise('core.create', 'com_imc');
 $canEdit = $user->authorise('core.edit', 'com_imc.issue.' . $this->item->id);
 $canChange = $user->authorise('core.edit.state', 'com_imc.issue.' . $this->item->id);
 $canEditOwn = $user->authorise('core.edit.own', 'com_imc.issue.' . $this->item->id);
@@ -53,61 +54,75 @@ $statuses = $step->getOptions();
 		js('.delete-button').click(deleteItem);
 
 	    <?php if($this->showComments) : ?>
-		var token = '<?php echo JSession::getFormToken();?>';
-		var issueid = '<?php echo $this->item->id;?>';
-	    js('#comments-container').comments({
-			profilePictureURL: '<?php echo JURI::base().'components/com_imc/assets/images/user-icon.png';?>',
-		    spinnerIconURL: '<?php echo JURI::base().'components/com_imc/assets/images/spinner.gif';?>',
-		    upvoteIconURL: '<?php echo JURI::base().'components/com_imc/assets/images/upvote-icon.png';?>',
-		    replyIconURL: '<?php echo JURI::base().'components/com_imc/assets/images/reply-icon.png';?>',
-		    noCommentsIconURL: '<?php echo JURI::base().'components/com_imc/assets/images/no-comments-icon.png';?>',
-		    textareaPlaceholderText: '<?php echo JText::_('COM_IMC_COMMENTS_LEAVE_COMMENT');?>',
-		    popularText: '<?php echo JText::_('COM_IMC_COMMENTS_MOST_POPULAR');?>',
-		    newestText: '<?php echo JText::_('COM_IMC_COMMENTS_NEWEST');?>',
-		    oldestText: '<?php echo JText::_('COM_IMC_COMMENTS_OLDEST');?>',
-		    sendText: '<?php echo JText::_('COM_IMC_COMMENTS_SEND');?>',
-		    replyText: '<?php echo JText::_('COM_IMC_COMMENTS_REPLY');?>',
-		    editText: '<?php echo JText::_('COM_IMC_COMMENTS_EDIT');?>',
-		    saveText: '<?php echo JText::_('COM_IMC_COMMENTS_SAVE');?>',
-		    deleteText: '<?php echo JText::_('COM_IMC_COMMENTS_DELETE');?>',
-		    editedText: '<?php echo JText::_('COM_IMC_COMMENTS_EDITED');?>',
-		    youText: '<?php echo JText::_('COM_IMC_COMMENTS_YOU');?>',
-		    viewAllRepliesText: '<?php echo JText::_('COM_IMC_COMMENTS_VIEW_ALL_REPLIES');?> (__replyCount__)',
-		    hideRepliesText: '<?php echo JText::_('COM_IMC_COMMENTS_HIDE');?>',
-		    noCommentsText: '<?php echo JText::_('COM_IMC_COMMENTS_NO_COMMENTS');?>',
-			enableReplying: true,
-			enableEditing: false,
-			enableUpvoting: false,
-			enableDeleting: false,
-			enableDeletingCommentWithReplies: false,
-			timeFormatter: function(time) {
-				return new Date(time).toLocaleString();
-				//return time;
-			},
-			fieldMappings: {
-				id: 'id',
-				parent: 'parentid',
-				created: 'created',
-				modified: 'updated',
-				content: 'description',
-				fullname: 'fullname',
-				profilePictureURL: 'profile_picture_url',
-				createdByAdmin: 'created_by_admin',
-				createdByCurrentUser: 'created_by_current_user',
-				upvoteCount: 'upvote_count',
-				userHasUpvoted: 'user_has_upvoted'
-			},
-			getComments: function(success, error) {
-				js.ajax({
-					type: 'get',
-					'url': "index.php?option=com_imc&task=comments.comments&format=json&issueid=" + issueid + "&" + token + "=1",
-					success: function(commentsArray) {
-						success(commentsArray.data)
-					},
-					error: error
-				});
-			}
-	    });
+			var token = '<?php echo JSession::getFormToken();?>';
+			var issueid = '<?php echo $this->item->id;?>';
+			js('#comments-container').comments({
+				profilePictureURL: '<?php echo JURI::base().'components/com_imc/assets/images/user-icon.png';?>',
+				spinnerIconURL: '<?php echo JURI::base().'components/com_imc/assets/images/spinner.gif';?>',
+				upvoteIconURL: '<?php echo JURI::base().'components/com_imc/assets/images/upvote-icon.png';?>',
+				replyIconURL: '<?php echo JURI::base().'components/com_imc/assets/images/reply-icon.png';?>',
+				noCommentsIconURL: '<?php echo JURI::base().'components/com_imc/assets/images/no-comments-icon.png';?>',
+				textareaPlaceholderText: '<?php echo JText::_('COM_IMC_COMMENTS_LEAVE_COMMENT');?>',
+				popularText: '<?php echo JText::_('COM_IMC_COMMENTS_MOST_POPULAR');?>',
+				newestText: '<?php echo JText::_('COM_IMC_COMMENTS_NEWEST');?>',
+				oldestText: '<?php echo JText::_('COM_IMC_COMMENTS_OLDEST');?>',
+				sendText: '<?php echo JText::_('COM_IMC_COMMENTS_SEND');?>',
+				replyText: '<?php echo JText::_('COM_IMC_COMMENTS_REPLY');?>',
+				editText: '<?php echo JText::_('COM_IMC_COMMENTS_EDIT');?>',
+				saveText: '<?php echo JText::_('COM_IMC_COMMENTS_SAVE');?>',
+				deleteText: '<?php echo JText::_('COM_IMC_COMMENTS_DELETE');?>',
+				editedText: '<?php echo JText::_('COM_IMC_COMMENTS_EDITED');?>',
+				youText: '<?php echo JText::_('COM_IMC_COMMENTS_YOU');?>',
+				viewAllRepliesText: '<?php echo JText::_('COM_IMC_COMMENTS_VIEW_ALL_REPLIES');?> (__replyCount__)',
+				hideRepliesText: '<?php echo JText::_('COM_IMC_COMMENTS_HIDE');?>',
+				noCommentsText: '<?php echo JText::_('COM_IMC_COMMENTS_NO_COMMENTS');?>',
+				enableReplying: true,
+				enableEditing: false,
+				enableUpvoting: false,
+				enableDeleting: false,
+				enableDeletingCommentWithReplies: false,
+				timeFormatter: function(time) {
+					return new Date(time).toLocaleString();
+					//return time;
+				},
+				fieldMappings: {
+					id: 'id',
+					parent: 'parentid',
+					created: 'created',
+					modified: 'updated',
+					content: 'description',
+					fullname: 'fullname',
+					profilePictureURL: 'profile_picture_url',
+					createdByAdmin: 'created_by_admin',
+					createdByCurrentUser: 'created_by_current_user',
+					upvoteCount: 'upvote_count',
+					userHasUpvoted: 'user_has_upvoted'
+				},
+				getComments: function(success, error) {
+					js.ajax({
+						type: 'get',
+						'url': "index.php?option=com_imc&task=comments.comments&format=json&issueid=" + issueid + "&" + token + "=1",
+						success: function(commentsArray) {
+							success(commentsArray.data)
+						},
+						error: error
+					});
+				}
+				<?php if (!$canCreate) : ?>
+				,
+				refresh: function() {
+					js('div.commenting-field').hide();
+
+				},
+				enableReplying: false
+				<?php endif; ?>
+
+			});
+
+
+
+
+
 	    <?php endif; ?>
     });
 
