@@ -20,11 +20,14 @@ class ImcViewComments extends JViewLegacy {
     protected $items;
     protected $pagination;
     protected $state;
+    protected $canManageComments;
 
     /**
      * Display the view
      */
     public function display($tpl = null) {
+        $canDo = ImcHelper::getActions();
+        $this->canManageComments = $canDo->get('imc.manage.comments');
         $this->state = $this->get('State');
         $this->items = $this->get('Items');
         $this->pagination = $this->get('Pagination');
@@ -38,6 +41,11 @@ class ImcViewComments extends JViewLegacy {
 
         $this->addToolbar();
 
+        if(!$this->canManageComments){
+            JFactory::getApplication()->enqueueMessage(JText::_('COM_IMC_ACTION_NOT_ALLOWED'), 'error');
+            return;
+        }
+
         $this->sidebar = JHtmlSidebar::render();
         parent::display($tpl);
     }
@@ -48,6 +56,13 @@ class ImcViewComments extends JViewLegacy {
      * @since	1.6
      */
     protected function addToolbar() {
+        if(!$this->canManageComments){
+            JToolBarHelper::title(JText::_('COM_IMC_TITLE_COMMENTS'), 'comments-2');
+            //JToolBarHelper::back();
+            $bar = JToolBar::getInstance('toolbar');
+            $bar->appendButton('Link', 'leftarrow', 'COM_IMC_BACK', JRoute::_('index.php?option=com_imc', false));
+            return;
+        }
         require_once JPATH_COMPONENT . '/helpers/imc.php';
 
         $state = $this->get('State');

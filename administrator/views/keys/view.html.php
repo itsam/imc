@@ -26,10 +26,8 @@ class ImcViewKeys extends JViewLegacy {
      * Display the view
      */
     public function display($tpl = null) {
-        $user = JFactory::getUser();
         $canDo = ImcHelper::getActions();
         $this->canManageKeys = $canDo->get('imc.manage.keys');
-
         $this->state = $this->get('State');
         $this->items = $this->get('Items');
         $this->pagination = $this->get('Pagination');

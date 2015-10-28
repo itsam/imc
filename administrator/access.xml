@@ -9,6 +9,7 @@
 		<action name="core.edit.state" title="JACTION_EDITSTATE" description="JACTION_EDITSTATE_COMPONENT_DESC" />
 		<action name="core.edit.own" title="JACTION_EDITOWN" description="JACTION_EDITOWN_COMPONENT_DESC" />
 		<action name="imc.manage.keys" title="COM_IMC_JACTION_MANAGE_KEYS" description="COM_IMC_JACTION_MANAGE_KEYS_DESC" />
+		<action name="imc.manage.comments" title="COM_IMC_JACTION_MANAGE_COMMENTS" description="COM_IMC_JACTION_MANAGE_COMMENTS_DESC" />
 		<action name="imc.manage.steps" title="COM_IMC_JACTION_MANAGE_STEPS" description="COM_IMC_JACTION_MANAGE_STEPS_DESC" />
 		<action name="imc.manage.logs" title="COM_IMC_JACTION_MANAGE_LOGS" description="COM_IMC_JACTION_MANAGE_LOGS_DESC" />
 		<action name="imc.showall.issues" title="COM_IMC_JACTION_SHOWALL_ISSUES" description="COM_IMC_JACTION_SHOWALL_ISSUES_DESC" />

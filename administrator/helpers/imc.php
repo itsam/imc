@@ -20,6 +20,8 @@ class ImcHelper {
      * Configure the Linkbar.
      */
     public static function addSubmenu($vName = '') {
+        $canDo = ImcHelper::getActions();
+
         JHtmlSidebar::addEntry(
 			JText::_('COM_IMC_TITLE_ISSUES'),
 			'index.php?option=com_imc&view=issues',
@@ -38,28 +40,40 @@ class ImcHelper {
 			'index.php?option=com_imc&view=logs',
 			$vName == 'logs'
 		);
-		/*
+
+		/* TODO: Remove vote.php and votes.php
 		JHtmlSidebar::addEntry(
 			JText::_('COM_IMC_TITLE_VOTES'),
 			'index.php?option=com_imc&view=votes',
 			$vName == 'votes'
 		);
 		*/
-		JHtmlSidebar::addEntry(
-			JText::_('COM_IMC_TITLE_COMMENTS'),
-			'index.php?option=com_imc&view=comments',
-			$vName == 'comments'
-		);
-		JHtmlSidebar::addEntry(
-			JText::_('COM_IMC_TITLE_STEPS'),
-			'index.php?option=com_imc&view=steps',
-			$vName == 'steps'
-		);
-		JHtmlSidebar::addEntry(
-			JText::_('COM_IMC_TITLE_KEYS'),
-			'index.php?option=com_imc&view=keys',
-			$vName == 'keys'
-		);
+
+        if($canDo->get('imc.manage.keys')) {
+            JHtmlSidebar::addEntry(
+                JText::_('COM_IMC_TITLE_COMMENTS'),
+                'index.php?option=com_imc&view=comments',
+                $vName == 'comments'
+            );
+        }
+
+        if($canDo->get('imc.manage.steps')) {
+            JHtmlSidebar::addEntry(
+                JText::_('COM_IMC_TITLE_STEPS'),
+                'index.php?option=com_imc&view=steps',
+                $vName == 'steps'
+            );
+        }
+
+
+        if($canDo->get('imc.manage.keys'))
+        {
+            JHtmlSidebar::addEntry(
+                JText::_('COM_IMC_TITLE_KEYS'),
+                'index.php?option=com_imc&view=keys',
+                $vName == 'keys'
+            );
+        }
 
     }
 
@@ -84,6 +98,7 @@ class ImcHelper {
             'core.edit.state', 
             'core.delete',
             'imc.manage.keys',
+            'imc.manage.comments',
             'imc.manage.steps',
             'imc.manage.logs',
             'imc.showall.issues'

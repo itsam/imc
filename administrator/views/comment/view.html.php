@@ -20,11 +20,15 @@ class ImcViewComment extends JViewLegacy {
     protected $state;
     protected $item;
     protected $form;
+    protected $canManageComments;
 
     /**
      * Display the view
      */
     public function display($tpl = null) {
+        $canDo = ImcHelper::getActions();
+        $this->canManageComments = $canDo->get('imc.manage.comments');
+
         $this->state = $this->get('State');
         $this->item = $this->get('Item');
         $this->form = $this->get('Form');
