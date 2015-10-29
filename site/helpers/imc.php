@@ -1167,7 +1167,7 @@ class ImcFrontendHelper
 		return $db->loadAssocList();
 	}
 
-	public static function intervals($by_step = false, $by_category = false)
+	public static function intervals($by_step = false, $by_category = false, $ts = null, $prior_to = null)
 	{
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
@@ -1184,7 +1184,9 @@ class ImcFrontendHelper
 				WHERE a.issueid IN (
 				  SELECT id
 				  FROM #__imc_issues
-				  WHERE state = 1
+				  WHERE state = 1'.
+					(!is_null($ts) ? ' AND created >= "' . $ts .'"' : '').
+					(!is_null($prior_to) ? ' AND created <= "' . $prior_to .'"' : '').'
 				)
 				AND a.action = "step"
 				GROUP BY vcreated

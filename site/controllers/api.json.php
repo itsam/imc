@@ -1388,10 +1388,31 @@ class ImcControllerApi extends ImcController
             $by_category = $app->input->getString('by_category', null);
             $by_step = ($by_step === 'true');
             $by_category = ($by_category === 'true');
+            $ts = $app->input->getString('ts', null);
+            $prior_to = $app->input->getString('prior_to', null);
+
+		    if(!is_null($ts) && !ImcFrontendHelper::isValidTimeStamp($ts))
+            {
+                throw new Exception('Invalid timestamp ts');
+            }
+		    if(!is_null($prior_to) && !ImcFrontendHelper::isValidTimeStamp($prior_to))
+            {
+                throw new Exception('Invalid timestamp prior_to');
+            }
+
+			//get date from ts
+            if(!is_null($ts))
+            {
+                $ts = gmdate('Y-m-d H:i:s', $ts);
+            }
+			if(!is_null($prior_to))
+            {
+	            $prior_to = gmdate('Y-m-d H:i:s', $prior_to);
+            }
 
             //handle unexpected warnings
             set_error_handler(array($this, 'exception_error_handler'));
-			$result = ImcFrontendHelper::intervals($by_step, $by_category);
+			$result = ImcFrontendHelper::intervals($by_step, $by_category, $ts, $prior_to);
 			restore_error_handler();
 
 			echo new JResponseJson($result, 'Intervals fetched successfully');
