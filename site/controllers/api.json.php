@@ -121,13 +121,13 @@ class ImcControllerApi extends ImcController
 			{
 		        $match = JUserHelper::verifyPassword($objToken->p, $user->password, $userid);
 		        if(!$match){
-		            $app->enqueueMessage('Either username or password do not match', 'error');
+		            $app->enqueueMessage(JText::_('COM_IMC_API_USERNAME_PASSWORD_NO_MATCH'), 'error');
 		            throw new Exception('Token does not match');
 		        }
 
 		        if($user->block){
-		            $app->enqueueMessage('User is found but probably is not yet activated', 'error');
-		            throw new Exception('User is blocked');
+		            $app->enqueueMessage(JText::_('COM_IMC_API_USER_NOT_ACTIVATED'), 'error');
+		            throw new Exception(JText::_('COM_IMC_API_USER_BLOCKED'));
 		        }
 			}
 		}
@@ -380,17 +380,17 @@ class ImcControllerApi extends ImcController
                     restore_error_handler();
 
                     if(!is_object($data)){
-                        throw new Exception('Issue does not exist');
+                        throw new Exception(JText::_('COM_IMC_API_ISSUE_NOT_EXIST'));
                     }
 
                     $result = ImcFrontendHelper::sanitizeIssue($data, $userid);
 
                     //check for any restrictions
                     if(!$result->myIssue && $result->moderation){
-                        throw new Exception('Issue is under moderation');
+                        throw new Exception(JText::_('COM_IMC_API_ISSUE_UNDER_MODERATION') );
                     }
                     if($result->state != 1){
-                        throw new Exception('Issue is not published');
+                        throw new Exception(JText::_('COM_IMC_API_ISSUE_NOT_PUBLISHED'));
                     }
 
                     //be consistent return as array (of size 1)
@@ -407,7 +407,7 @@ class ImcControllerApi extends ImcController
                     //TODO: get this from settings
                     if($userid == 0)
                     {
-                        throw new Exception('Guests are now allowed to post new issues');
+                        throw new Exception(JText::_('COM_IMC_API_NO_GUESTS_NO_POST'));
                     }
 
                     //get necessary arguments
@@ -424,7 +424,7 @@ class ImcControllerApi extends ImcController
                     //check if category exists
                     if( is_null(ImcFrontendHelper::getCategoryNameByCategoryId($args['catid'], true)) )
                     {
-                        throw new Exception('Category does not exist or unpublished');
+                        throw new Exception(JText::_('COM_IMC_API_CATEGORY_NOT_EXIST') );
                     }
 
                     $args['userid'] = $userid;
@@ -464,7 +464,7 @@ class ImcControllerApi extends ImcController
                         }
                         else
                         {
-                            throw new Exception('Upload failed');
+                            throw new Exception(JText::_('COM_IMC_API_UPLOAD_FAILED'));
                         }
                     }
                     else
@@ -616,13 +616,13 @@ class ImcControllerApi extends ImcController
 			$userid = JUserHelper::getUserId($args['username']);
 			if($userid > 0)
 			{
-				$app->enqueueMessage('Username exists', 'info');
+				$app->enqueueMessage(JText::_('COM_IMC_API_USERNAME_EXISTS'), 'info');
 				$usernameExists = true;
 			}
 
 			if(ImcFrontendHelper::emailExists($args['email']))
 			{
-				$app->enqueueMessage('Email exists', 'info');
+				$app->enqueueMessage(JText::_('COM_IMC_API_EMAIL_EXISTS'), 'info');
 				$emailExists = true;
 			}
 
@@ -670,7 +670,7 @@ class ImcControllerApi extends ImcController
                     $userInfo = self::validateRequest(true);
 
 					if(JComponentHelper::getParams('com_users')->get('allowUserRegistration') == 0) {
-						throw new Exception('Registration is not allowed');
+						throw new Exception(JText::_('COM_IMC_API_REGISTRATION_NOT_ALLOWED'));
 					}
 
                     //get necessary arguments
@@ -750,7 +750,7 @@ class ImcControllerApi extends ImcController
             //TODO: get this from settings
             if($userid == 0)
             {
-                throw new Exception('Guests are now allowed to vote/unvote');
+                throw new Exception(JText::_('COM_IMC_API_GUESTS_NO_VOTE'));
             }
 
             //get votes model
