@@ -618,7 +618,7 @@ class ImcFrontendHelper
 
 		if(is_null($joomlaLang))
 		{
-			throw new Exception('Language is not available');
+			$joomlaLang = JFactory::getLanguage()->getDefault();
 		}
 
 		$base_dir = JPATH_SITE;
