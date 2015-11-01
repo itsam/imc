@@ -1001,30 +1001,29 @@ class ImcControllerApi extends ImcController
 
 	private function getModifications($ts, $userid)
 	{
-		$tsDate = date("Y-m-d H:i:s", $ts);
-		$offsetDate = JDate::getInstance($tsDate, JFactory::getConfig()->get('offset') );
-		$givenDate = gmdate('Y-m-d H:i:s', $ts);
+		$offsetDate = JDate::getInstance(date("Y-m-d H:i:s", $ts), JFactory::getConfig()->get('offset') );
+        $offset = $offsetDate->format('Y-m-d H:i:s');
 
         //1. get issues
         $issuesModel = JModelLegacy::getInstance( 'Issues', 'ImcModel', array('ignore_request' => true) );
-        $issuesModel->setState('filter.imcapi.ts', $givenDate);
+        $issuesModel->setState('filter.imcapi.ts', $offset);
         $issuesModel->setState('filter.imcapi.raw', true); //Do not unset anything in getItems()
 		$data = $issuesModel->getItems();
 		$issues = ImcFrontendHelper::sanitizeIssues($data, $userid, true);
 
         //2. get categories
-        $categories = ImcFrontendHelper::getModifiedCategories($givenDate);
+        $categories = ImcFrontendHelper::getModifiedCategories($offset);
         $categories = ImcFrontendHelper::sanitizeCategories($categories);
 
         //3. get steps
         $stepsModel = JModelLegacy::getInstance( 'Steps', 'ImcModel', array('ignore_request' => true) );
-        $stepsModel->setState('filter.imcapi.ts', $givenDate);
+        $stepsModel->setState('filter.imcapi.ts', $offset);
         $stepsModel->setState('filter.imcapi.raw', true);
         $data = $stepsModel->getItems();
         $steps = ImcFrontendHelper::sanitizeSteps($data, true);
 
         //4. get votes
-        $data = ImcFrontendHelper::getModifiedVotes($givenDate);
+        $data = ImcFrontendHelper::getModifiedVotes($offset);
         $votes = ImcFrontendHelper::sanitizeModifiedVotes($data);
 
 		//5. full categories structure if modified categories are found
@@ -1040,9 +1039,9 @@ class ImcControllerApi extends ImcController
 			'count_steps' => sizeof($steps),
 			'count_votes' => sizeof($votes),
 			'count_allcategories' => sizeof($allCategories),
-			'given_ts'   => $ts,
-			'given_date'   => $givenDate,
-			'offset'     => $offsetDate,
+			'given_ts' => $ts,
+			'given_date' => gmdate('Y-m-d H:i:s', $ts),
+			'offset' => $offsetDate
         );
 
 		$updated = array(
