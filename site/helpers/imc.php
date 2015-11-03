@@ -1169,6 +1169,7 @@ class ImcFrontendHelper
 
 	public static function intervals($by_step = false, $by_category = false, $ts = null, $prior_to = null)
 	{
+		$primary_stepid = self::getPrimaryStepId();
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('AVG(days_diff) AS avg_days, MIN(days_diff) AS min_days, MAX(days_diff) AS max_days, COUNT(issueid) AS count_issues');
@@ -1189,6 +1190,7 @@ class ImcFrontendHelper
 					(!is_null($prior_to) ? ' AND created <= "' . $prior_to .'"' : '').'
 				)
 				AND a.action = "step"
+				AND a.stepid <> '.$primary_stepid.'
 				GROUP BY vcreated
 			) AS intervals
 		');
