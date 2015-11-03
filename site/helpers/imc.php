@@ -1174,22 +1174,28 @@ class ImcFrontendHelper
 		$query->select('AVG(days_diff) AS avg_days, MIN(days_diff) AS min_days, MAX(days_diff) AS max_days, COUNT(issueid) AS count_issues');
 		$query->from('
 			(
-				SELECT a.issueid, a.stepid, b.catid, a.created,
-				  CASE WHEN (a.created - f.created) IS NULL THEN a.created + INTERVAL 1 SECOND ELSE f.created END AS vcreated,
-				  CASE WHEN (a.created - f.created) IS NULL THEN 0 ELSE ABS(DATEDIFF(a.created, f.created)) END AS days_diff
+				SELECT DISTINCT * FROM (
 
-				FROM #__imc_log AS a
-				  LEFT JOIN #__imc_log AS f ON a.created > f.created AND a.issueid = f.issueid
-				  LEFT JOIN #__imc_issues AS b ON b.id = a.issueid
-				WHERE a.issueid IN (
-				  SELECT id
-				  FROM #__imc_issues
-				  WHERE state = 1'.
-					(!is_null($ts) ? ' AND created >= "' . $ts .'"' : '').
-					(!is_null($prior_to) ? ' AND created <= "' . $prior_to .'"' : '').'
-				)
-				AND a.action = "step"
-				GROUP BY vcreated
+					SELECT a.issueid, a.stepid, b.catid, a.created,
+					  CASE WHEN (a.created - f.created) IS NULL THEN a.created + INTERVAL 1 SECOND ELSE f.created END AS vcreated,
+					  CASE WHEN (a.created - f.created) IS NULL THEN 0 ELSE ABS(DATEDIFF(a.created, f.created)) END AS days_diff
+
+					FROM #__imc_log AS a
+					  LEFT JOIN #__imc_log AS f ON a.created > f.created AND a.issueid = f.issueid
+					  LEFT JOIN #__imc_issues AS b ON b.id = a.issueid
+					WHERE a.issueid IN (
+					  SELECT id
+					  FROM #__imc_issues AS p
+					  WHERE p.state = 1'.
+						(!is_null($ts) ? ' AND p.created >= "' . $ts .'"' : '').
+						(!is_null($prior_to) ? ' AND p.created <= "' . $prior_to .'"' : '').'
+					)
+					AND a.action = "step"
+					GROUP BY vcreated
+
+				) AS dis
+				GROUP BY issueid
+
 			) AS intervals
 		');
 
