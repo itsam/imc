@@ -56,6 +56,7 @@ $statuses = $step->getOptions();
 	    <?php if($this->showComments) : ?>
 			var token = '<?php echo JSession::getFormToken();?>';
 			var issueid = '<?php echo $this->item->id;?>';
+			var userid = '<?php echo $user->id;?>';
 			js('#comments-container').comments({
 				profilePictureURL: '<?php echo JURI::base().'components/com_imc/assets/images/user-icon.png';?>',
 				spinnerIconURL: '<?php echo JURI::base().'components/com_imc/assets/images/spinner.gif';?>',
@@ -117,6 +118,21 @@ $statuses = $step->getOptions();
 				enableReplying: false
 				<?php endif; ?>
 
+				<?php if($canCreate) : ?>
+				,
+				postComment: function(commentJSON, success, error) {
+					console.log(commentJSON);
+					js.ajax({
+						type: 'post',
+						'url': "index.php?option=com_imc&task=comments.postComment&format=json&userid="+userid+"&issueid=" + issueid + "&" + token + "=1",
+						data: commentJSON,
+						success: function(comment) {
+							success(comment)
+						},
+						error: error
+					});
+				}
+				<?php endif; ?>
 			});
 
 

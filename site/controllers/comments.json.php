@@ -28,6 +28,16 @@ class ImcControllerComments extends ImcController
 		return $model;
 	}
 
+	public function postComment()
+	{
+		// Check for request forgeries.
+		if(!JSession::checkToken('get')){
+			echo new JResponseJson(null, 'Invalid Token', true);
+			jexit();
+		}
+
+	}
+
 	public function comments()
 	{
         // Check for request forgeries.
