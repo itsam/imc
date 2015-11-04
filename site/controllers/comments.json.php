@@ -30,30 +30,70 @@ class ImcControllerComments extends ImcController
 
 	public function postComment()
 	{
-		// Check for request forgeries.
-		if(!JSession::checkToken('get')){
-			echo new JResponseJson(null, 'Invalid Token', true);
-			jexit();
+		$app = JFactory::getApplication();
+		$params = $app->getParams('com_imc');
+		$showComments = $params->get('enablecomments');
+		$directpublishing = $params->get('directpublishingcomment');
+
+		try {
+
+			// Check for request forgeries.
+			if (!JSession::checkToken('get')) {
+				throw new Exception('Invalid session token');
+			}
+
+			if(!$showComments)
+			{
+				throw new Exception('Comments are not allowed');
+			}
+
+			$issueid = $app->input->getInt('issueid', null);
+			$userid = $app->input->getInt('userid', null);
+			$parentid = $app->input->getInt('parentid', 0);
+			$description = $app->input->getString('description', '');
+
+			if(is_null($issueid) || is_null($userid))
+			{
+				throw new Exception('issueid or userid are missing');
+			}
+
+			//post comment to the model
+			//test with dummy
+			$comment = new StdClass();
+			$comment->id = 444;
+			$comment->created = ImcFrontendHelper::convert2UTC(date('Y-m-d H:i:s'));
+			$comment->fullname = JFactory::getUser($userid)->name;
+			$comment->description = $description;
+			$comment->profile_picture_url = JURI::base().'components/com_imc/assets/images/user-icon.png';
+			//TODO: check for admin and own comment
+			$comment->created_by_admin = false;
+			$comment->created_by_current_user = false;
+			$comment->under_moderation = $directpublishing ? true : false;
+			//--------
+
+			echo new JResponseJson($comment);
+		}
+		catch(Exception $e)	{
+			header("HTTP/1.0 403 Accepted");
+			echo new JResponseJson($e);
 		}
 
 	}
 
 	public function comments()
 	{
-        // Check for request forgeries.
-		if(!JSession::checkToken('get')){
-			echo new JResponseJson(null, 'Invalid Token', true);
-			jexit();
-		}
-		$app = JFactory::getApplication();
-		$issueid = $app->input->getInt('issueid', null);
-		if(is_null($issueid))
-		{
-			echo new JResponseJson(null, 'Invalid issueid');
-			jexit();
-		}
-
 		try {
+			// Check for request forgeries.
+			if(!JSession::checkToken('get')){
+				throw new Exception('Invalid session token');
+			}
+			$app = JFactory::getApplication();
+			$issueid = $app->input->getInt('issueid', null);
+			if(is_null($issueid))
+			{
+				throw new Exception('Invalid issueid');
+			}
+
 			//$commentsModel = JModelLegacy::getInstance( 'Comments', 'ImcModel', array('ignore_request' => true) );
 			$commentsModel = $this->getModel();
 			$commentsModel->setState('imc.filter.issueid', $issueid);
@@ -81,6 +121,7 @@ class ImcControllerComments extends ImcController
 			echo new JResponseJson($comments);
 		}
 		catch(Exception $e)	{
+			header("HTTP/1.0 403 Accepted");
 			echo new JResponseJson($e);
 		}
 	}	

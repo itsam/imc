@@ -58,6 +58,7 @@ $statuses = $step->getOptions();
 			var issueid = '<?php echo $this->item->id;?>';
 			var userid = '<?php echo $user->id;?>';
 			js('#comments-container').comments({
+				maxRepliesVisible: 3,
 				profilePictureURL: '<?php echo JURI::base().'components/com_imc/assets/images/user-icon.png';?>',
 				spinnerIconURL: '<?php echo JURI::base().'components/com_imc/assets/images/spinner.gif';?>',
 				upvoteIconURL: '<?php echo JURI::base().'components/com_imc/assets/images/upvote-icon.png';?>',
@@ -121,23 +122,27 @@ $statuses = $step->getOptions();
 				<?php if($canCreate) : ?>
 				,
 				postComment: function(commentJSON, success, error) {
-					console.log(commentJSON);
+					//console.log(commentJSON);
 					js.ajax({
 						type: 'post',
 						'url': "index.php?option=com_imc&task=comments.postComment&format=json&userid="+userid+"&issueid=" + issueid + "&" + token + "=1",
 						data: commentJSON,
 						success: function(comment) {
-							success(comment)
+							if(comment.data.under_moderation) {
+								alert('Your comment will be published after moderation');
+								js('div.textarea').html('');
+
+							}
+							else {
+								success(comment.data);
+							}
 						},
 						error: error
+
 					});
 				}
 				<?php endif; ?>
 			});
-
-
-
-
 
 	    <?php endif; ?>
     });
