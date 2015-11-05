@@ -183,4 +183,17 @@ class ImcModelComments extends JModelList {
         $count = $db->loadResult();
         return $count;
     }
+
+    public function add($commentObj)
+    {
+        $db = JFactory::getDBO();
+        $result = $db->insertObject('#__imc_comments', $commentObj);
+        if(!$result)
+        {
+            throw new Exception('Cannot store new comment');
+        }
+        $lastinsertid = $db->insertid();
+        return $lastinsertid;
+
+    }
 }

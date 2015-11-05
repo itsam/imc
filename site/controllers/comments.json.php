@@ -57,19 +57,45 @@ class ImcControllerComments extends ImcController
 				throw new Exception('issueid or userid are missing');
 			}
 
-			//post comment to the model
-			//test with dummy
-			$comment = new StdClass();
-			$comment->id = 444;
-			$comment->created = ImcFrontendHelper::convert2UTC(date('Y-m-d H:i:s'));
-			$comment->fullname = JFactory::getUser($userid)->name;
-			$comment->description = $description;
-			$comment->profile_picture_url = JURI::base().'components/com_imc/assets/images/user-icon.png';
 			//TODO: check for admin and own comment
-			$comment->created_by_admin = false;
-			$comment->created_by_current_user = false;
-			$comment->under_moderation = $directpublishing ? true : false;
-			//--------
+			$created_by_admin = false;
+			$created_by_current_user = true;
+
+			//make comment
+			$comment = new StdClass();
+			$comment->issueid = $issueid;
+			if($parentid > 0){
+				$comment->parentid = $parentid;
+			}
+			$comment->created = ImcFrontendHelper::convert2UTC(date('Y-m-d H:i:s'));
+			$comment->updated = $comment->created;
+			$comment->created_by = $userid;
+			$comment->description = $description;
+			$comment->state = (!$directpublishing && !$created_by_admin) ? 0 : 1;
+			$comment->language = "*";
+
+			//post comment to the model
+			$commentModel = $this->getModel();
+			$insertedId = $commentModel->add($comment);
+
+			//fill missing fields and send back to the client
+			$comment->id = $insertedId;
+			$comment->fullname = JFactory::getUser($userid)->name;
+			$comment->profile_picture_url = JURI::base().'components/com_imc/assets/images/user-icon.png';
+			$comment->under_moderation = false;
+			$comment->created_by_admin = $created_by_admin;
+			$comment->created_by_current_user = $created_by_current_user;
+
+			if(!$directpublishing && !$created_by_admin)
+			{
+				$comment->under_moderation = true;
+				$comment->profile_picture_url = JURI::base().'components/com_imc/assets/images/user-icon-moderated.png';
+			}
+
+			if($created_by_admin)
+			{
+				$comment->profile_picture_url = JURI::base().'components/com_imc/assets/images/admin-user-icon.png';
+			}
 
 			echo new JResponseJson($comment);
 		}

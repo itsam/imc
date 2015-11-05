@@ -128,14 +128,7 @@ $statuses = $step->getOptions();
 						'url': "index.php?option=com_imc&task=comments.postComment&format=json&userid="+userid+"&issueid=" + issueid + "&" + token + "=1",
 						data: commentJSON,
 						success: function(comment) {
-							if(comment.data.under_moderation) {
-								alert('Your comment will be published after moderation');
-								js('div.textarea').html('');
-
-							}
-							else {
-								success(comment.data);
-							}
+							success(comment.data);
 						},
 						error: error
 
