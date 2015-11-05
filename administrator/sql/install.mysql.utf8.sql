@@ -119,6 +119,9 @@ CREATE TABLE IF NOT EXISTS `#__imc_comments` (
 `updated_by` INT(11)  NOT NULL ,
 `language` VARCHAR(255)  NOT NULL ,
 `modality` SMALLINT(6)  NOT NULL ,
+`isAdmin` TINYINT(1)  NOT NULL,
+`fullname` VARCHAR(255)  NOT NULL ,
+`moderation` TINYINT(1)  NOT NULL ,
 PRIMARY KEY (`id`)
 ) DEFAULT COLLATE=utf8_general_ci;
 

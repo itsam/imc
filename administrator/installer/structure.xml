@@ -111,6 +111,9 @@
     <field field_name="updated_by" field_type="INT" field_length="11" index="index" description=""/>
     <field field_name="language" field_type="VARCHAR" field_length="255" description=""/>
     <field field_name="modality" field_type="SMALLINT" field_length="6" description=""/>
+    <field field_name="isAdmin" field_type="TINYINT" field_length="1" index="index" description=""/>
+    <field field_name="fullname" field_type="VARCHAR" field_length="255" description=""/>
+    <field field_name="moderation" field_type="TINYINT" field_length="1" description=""/>
   </table>
   <table action="add" table_name="#__imc_tokens" storage_engine="" collation="utf8_general_ci">
     <field field_name="id" field_type="INT" field_length="11" is_autoincrement="1" index="primary" description=""/>
