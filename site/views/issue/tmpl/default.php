@@ -8,6 +8,7 @@
  */
 // no direct access
 defined('_JEXEC') or die;
+require_once JPATH_COMPONENT_ADMINISTRATOR . '/helpers/imc.php';
 
 //Load admin language file
 $lang = JFactory::getLanguage();
@@ -57,9 +58,12 @@ $statuses = $step->getOptions();
 			var token = '<?php echo JSession::getFormToken();?>';
 			var issueid = '<?php echo $this->item->id;?>';
 			var userid = '<?php echo $user->id;?>';
+			var picURL = '<?php echo JURI::base().'components/com_imc/assets/images/user-icon.png';?>';
+			<?php if(ImcHelper::getActions()->get('imc.manage.comments')) :?>
+				picURL = '<?php echo JURI::base().'components/com_imc/assets/images/admin-user-icon.png';?>';
+			<?php endif; ?>
 			js('#comments-container').comments({
-				maxRepliesVisible: 3,
-				profilePictureURL: '<?php echo JURI::base().'components/com_imc/assets/images/user-icon.png';?>',
+				profilePictureURL: picURL,
 				spinnerIconURL: '<?php echo JURI::base().'components/com_imc/assets/images/spinner.gif';?>',
 				upvoteIconURL: '<?php echo JURI::base().'components/com_imc/assets/images/upvote-icon.png';?>',
 				replyIconURL: '<?php echo JURI::base().'components/com_imc/assets/images/reply-icon.png';?>',
@@ -103,7 +107,7 @@ $statuses = $step->getOptions();
 				getComments: function(success, error) {
 					js.ajax({
 						type: 'get',
-						'url': "index.php?option=com_imc&task=comments.comments&format=json&issueid=" + issueid + "&" + token + "=1",
+						'url': "index.php?option=com_imc&task=comments.comments&format=json&userid="+userid+"&issueid=" + issueid + "&" + token + "=1",
 						success: function(commentsArray) {
 							success(commentsArray.data)
 						},

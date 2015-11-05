@@ -78,6 +78,21 @@ class ImcModelComments extends JModelList {
      * @since	1.6
      */
     protected function getListQuery() {
+        $userid = $this->getState('filter.imcapi.userid', 0);
+        $guest = $this->getState('filter.imcapi.guest', false);
+        if($userid > 0)
+        {
+            $user = JFactory::getUser($userid);
+        }
+        elseif ($guest)
+        {
+            $user = JFactory::getUser(0);
+        }
+        else
+        {
+            $user = JFactory::getUser();
+        }
+
         // Create a new query object.
         $db = $this->getDbo();
         $query = $db->getQuery(true);
@@ -114,8 +129,6 @@ class ImcModelComments extends JModelList {
             }
         }
 
-        
-
 		//Filtering issueid
 		$filter_issueid = $this->getState('imc.filter.issueid', null);
 		if (!is_null($filter_issueid)) {
@@ -127,6 +140,15 @@ class ImcModelComments extends JModelList {
         if (!is_null($filter_state)) {
             $query->where('a.state = '.$filter_state);
         }
+
+        // Filter by moderation
+        $query->where('
+            (
+            (a.created_by > 0 AND a.created_by  =' . $user->id . ' AND a.moderation IN (0,1)) OR
+            (a.created_by > 0 AND a.created_by !=' . $user->id . ' AND a.moderation = 0)
+            )
+        ');
+
 
         // Add the list ordering clause.
         $orderCol = $this->state->get('list.ordering');

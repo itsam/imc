@@ -12,6 +12,7 @@ defined('_JEXEC') or die;
 
 require_once JPATH_COMPONENT.'/controller.php';
 require_once JPATH_COMPONENT_SITE . '/helpers/imc.php';
+require_once JPATH_COMPONENT_ADMINISTRATOR . '/helpers/imc.php';
 
 /**
  * Issues list controller class.
@@ -57,12 +58,12 @@ class ImcControllerComments extends ImcController
 				throw new Exception('issueid or userid are missing');
 			}
 
-			//TODO: check for admin and own comment
-			$created_by_admin = false;
-			$created_by_current_user = true;
+			//check is user is admin
+			$created_by_admin = ImcHelper::getActions()->get('imc.manage.comments');
 
 			//make comment
 			$comment = new StdClass();
+			$comment->state = 1;
 			$comment->issueid = $issueid;
 			if($parentid > 0){
 				$comment->parentid = $parentid;
@@ -71,24 +72,23 @@ class ImcControllerComments extends ImcController
 			$comment->updated = $comment->created;
 			$comment->created_by = $userid;
 			$comment->description = $description;
-			$comment->state = (!$directpublishing && !$created_by_admin) ? 0 : 1;
+			$comment->fullname = JFactory::getUser($userid)->name;
+			$comment->moderation = (!$directpublishing && !$created_by_admin) ? 1 : 0;
 			$comment->language = "*";
+			$comment->isAdmin = (int)$created_by_admin;
 
 			//post comment to the model
 			$commentModel = $this->getModel();
 			$insertedId = $commentModel->add($comment);
 
-			//fill missing fields and send back to the client
+			//fill missing fields to be aligned with jquery-comments and send back to the client
 			$comment->id = $insertedId;
-			$comment->fullname = JFactory::getUser($userid)->name;
 			$comment->profile_picture_url = JURI::base().'components/com_imc/assets/images/user-icon.png';
-			$comment->under_moderation = false;
 			$comment->created_by_admin = $created_by_admin;
-			$comment->created_by_current_user = $created_by_current_user;
+			$comment->created_by_current_user = true;
 
-			if(!$directpublishing && !$created_by_admin)
+			if($comment->moderation)
 			{
-				$comment->under_moderation = true;
 				$comment->profile_picture_url = JURI::base().'components/com_imc/assets/images/user-icon-moderated.png';
 			}
 
@@ -119,10 +119,12 @@ class ImcControllerComments extends ImcController
 			{
 				throw new Exception('Invalid issueid');
 			}
+			$userid = $app->input->getInt('userid', 0);
 
 			//$commentsModel = JModelLegacy::getInstance( 'Comments', 'ImcModel', array('ignore_request' => true) );
 			$commentsModel = $this->getModel();
 			$commentsModel->setState('imc.filter.issueid', $issueid);
+			$commentsModel->setState('imc.filter.userid', $userid);
 			$commentsModel->setState('imc.filter.state', 1);
 			$items = $commentsModel->getItems();
 			//$items contains too much overhead, set only necessary data
@@ -134,13 +136,21 @@ class ImcControllerComments extends ImcController
 				$comment->fullname = $item->fullname;
 				$comment->description = $item->description;
 				$comment->profile_picture_url = JURI::base().'components/com_imc/assets/images/user-icon.png';
+				if($item->moderation)
+				{
+					$comment->profile_picture_url = JURI::base().'components/com_imc/assets/images/user-icon-moderated.png';
+				}
+
+				if($item->isAdmin)
+				{
+					$comment->profile_picture_url = JURI::base().'components/com_imc/assets/images/admin-user-icon.png';
+				}
 				if($item->parentid > 0)
 				{
 					$comment->parentid = $item->parentid;
 				}
-				//TODO: check for admin and own comment
-				$comment->created_by_admin = false;
-				$comment->created_by_current_user = false;
+				$comment->created_by_admin = (boolean) $item->isAdmin;
+				$comment->created_by_current_user = $item->created_by == $userid ? true : false;
 
 				$comments[] = $comment;
 			}
