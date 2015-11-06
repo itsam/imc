@@ -141,14 +141,16 @@ class ImcModelComments extends JModelList {
             $query->where('a.state = '.$filter_state);
         }
 
-        // Filter by moderation
-        $query->where('
-            (
-            (a.created_by > 0 AND a.created_by  =' . $user->id . ' AND a.moderation IN (0,1)) OR
-            (a.created_by > 0 AND a.created_by !=' . $user->id . ' AND a.moderation = 0)
-            )
-        ');
-
+        // Filter by moderation (for non-admin users)
+	    if(!ImcHelper::getActions()->get('imc.manage.comments'))
+	    {
+		    $query->where('
+	            (
+	            (a.created_by > 0 AND a.created_by  =' . $user->id . ' AND a.moderation IN (0,1)) OR
+	            (a.created_by > 0 AND a.created_by !=' . $user->id . ' AND a.moderation = 0)
+	            )
+            ');
+	    }
 
         // Add the list ordering clause.
         $orderCol = $this->state->get('list.ordering');
