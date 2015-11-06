@@ -2,3 +2,4 @@ build.xml
 build.properties
 cache.properties
 package/
+.idea
