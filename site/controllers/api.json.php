@@ -1421,4 +1421,149 @@ class ImcControllerApi extends ImcController
 			echo new JResponseJson($e);
 		}
     }
+
+	public function slogin()
+	{
+		$result = null;
+		$app = JFactory::getApplication();
+
+		try {
+			switch($app->input->getMethod())
+			{
+				case 'GET':
+					$userInfo = self::validateRequest(true);
+
+					//get necessary arguments
+					$provider = $app->input->getString('provider', 'whatever');
+					$f_name = $app->input->getString('f_name', null);
+					$l_name = $app->input->getString('l_name', null);
+					$phone = $app->input->getString('phone', null);
+					$address = $app->input->getString('address', null);
+					$secret = JComponentHelper::getParams('com_slogin')->get('secret');
+
+					if(!JPluginHelper::isEnabled('slogin_auth', $provider))
+					{
+						throw new Exception('sLogin is not available or given provider is not supported');
+					}
+
+					$slogin_id = $userInfo['username']; //'111309200021517229400';
+					$username = $f_name.'-'.$l_name.'-'.$provider; //'Ioannis-Tsampoulatidis-google';
+					$email = $userInfo['password'];
+					$password = $slogin_id.$provider.$secret;
+
+					//handle unexpected warnings
+					set_error_handler(array($this, 'exception_error_handler'));
+
+					//check if user exists on social table
+					$sUser = ImcFrontendHelper::getSocialUser($slogin_id);
+					if(is_null($sUser))
+					{
+						//register new user by temporary deactivating user validation
+						$params = JComponentHelper::getParams('com_users');
+						$activation = $params->get('useractivation');
+
+						$params->set('useractivation', 0);
+						$username = ImcFrontendHelper::checkUniqueName($username);
+						$args = array (
+							'name' => $f_name.' '.$l_name,
+							'username' => $username,
+							'password1' => $password,
+							'email1' => ImcFrontendHelper::getFreeMail($email),
+                            'phone' => $phone,
+                            'address' => $address,
+						);
+
+						JModelLegacy::addIncludePath(JPATH_SITE . '/components/com_users/models/');
+						$userModel = JModelLegacy::getInstance( 'Registration', 'UsersModel');
+						$userid = (int)$userModel->register($args);
+
+						//restore activation
+						$params->set('useractivation', $activation);
+
+						if ($userid == 0)
+						{
+							$userid = ImcFrontendHelper::getUserId($args['username'], $args['email1']);
+						}
+
+						//create new social user
+						ImcFrontendHelper::createSloginUser($userid, $slogin_id, $provider);
+
+						//create new social profile
+						ImcFrontendHelper::createSocialProfile($userid, $slogin_id, $provider, $f_name, $l_name, $email, $phone);
+
+					}
+					else
+					{
+						//user exists
+						$userid = $sUser['user_id'];
+						//match password
+						$user = JUser::getInstance($userid);
+						$hashed_password = $user->password;
+
+						if($user->username != $username)
+						{
+							//update joomla user username
+							$newUsername = ImcFrontendHelper::checkUniqueName($username);
+							$newName = $f_name.' '.$l_name;
+							ImcFrontendHelper::updateUserUsername($userid, $newUsername);
+							ImcFrontendHelper::updateUserName($userid, $newName);
+						}
+
+						if($user->email != $email)
+						{
+							//update joomla user email
+							$newEmail = ImcFrontendHelper::getFreeMail($email);
+							ImcFrontendHelper::updateUserEmail($userid, $newEmail);
+						}
+
+						//update social profile
+						ImcFrontendHelper::updateSocialProfile($userid, $slogin_id, $f_name, $l_name, $email, $phone);
+
+						//TODO: update imc profile if plugin is enabled
+						//ImcFrontendHelper::checkImcProfile($userid, $phone, $address);
+
+						$match = JUserHelper::verifyPassword($password, $hashed_password, $userid);
+						if(!$match)
+						{
+							throw new Exception('Unexpected error: User cannot authenticate');
+						}
+
+					}
+
+					//all set, return same as GET/user
+					$votesModel = JModelLegacy::getInstance( 'Votes', 'ImcModel', array('ignore_request' => true) );
+					$votesModel->setState('filter.imcapi.userid', $userid);
+					$votesModel->setState('filter.state', 1);
+					//get items and sanitize them
+					$data = $votesModel->getItems();
+					$votedIssues = ImcFrontendHelper::sanitizeVotes($data);
+					restore_error_handler();
+
+					//..and also the user's real credentials encrypted
+					$credentials = array('u'=>$username, 'p'=>$password);
+					$encryptedCredentials = $this->mcrypt->encrypt(json_encode($credentials));
+					$result = array(
+						'userid' => $userid,
+						'u' => $username,  //temporary for debug
+						'p' => $password,  //temporary for debug
+						'credentials' => $encryptedCredentials,
+						'votedIssues' => $votedIssues
+					);
+
+					//be consistent return as array (of size 1)
+					$result = array($result);
+					break;
+
+				default:
+					throw new Exception('HTTP method is not supported');
+			}
+
+			echo new JResponseJson($result, $msg = 'User action completed successfully');
+		}
+		catch(Exception $e)	{
+			header("HTTP/1.0 202 Accepted");
+			echo new JResponseJson($e);
+		}
+	}
+
 }

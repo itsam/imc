@@ -1256,4 +1256,154 @@ class ImcFrontendHelper
 		return implode(',', $ids);
 	}
 
+	public static function checkUniqueName($username)
+	{
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+		$uname = $username;
+		$i = 0;
+		$name = '';
+		while($uname)
+		{
+			$name = ($i == 0) ? $username : $username.'-'.$i;
+
+			$query->clear();
+			$query->select($db->quoteName('username'));
+			$query->from($db->quoteName('#__users'));
+			$query->where($db->quoteName('username') . ' = ' . $db->quote($name));
+			$db->setQuery($query, 0, 1);
+			$uname = $db->loadResult();
+
+			$i++;
+		}
+		return $name;
+	}
+
+	public static function getFreeMail($email){
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+		$umail = $email;
+		$parts = explode('@', $email);
+
+		$i = 0;
+		while($umail){
+			$mail = ($i == 0) ? $email : $parts[0].'-'.$i.'@'.$parts[1];
+
+			$query->clear();
+			$query->select($db->quoteName('email'));
+			$query->from($db->quoteName('#__users'));
+			$query->where($db->quoteName('email') . ' = ' . $db->quote($mail));
+			$db->setQuery($query, 0, 1);
+			$umail = $db->loadResult();
+
+			$i++;
+		}
+		return $mail;
+	}
+
+	public static function getSocialUser($slogin_id)
+	{
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+		$query->select('*');
+		$query->from($db->quoteName('#__slogin_users'));
+		$query->where($db->quoteName('slogin_id') . ' = ' . $db->quote($slogin_id));
+		$db->setQuery($query);
+
+		return $db->loadAssoc();
+	}
+
+	public static function updateSocialProfile($userid, $slogin_id, $f_name, $l_name, $email, $phone = null)
+	{
+		$object = new stdClass();
+		$object->user_id = $userid;
+		$object->slogin_id = $slogin_id;
+		$object->f_name = $f_name;
+		$object->l_name = $l_name;
+		$object->email = $email;
+		if(!is_null($phone))
+		{
+			$object->phone = $phone;
+		}
+		$result = JFactory::getDbo()->updateObject('#__plg_slogin_profile', $object, array('user_id', 'slogin_id') );
+		return $result;
+	}
+
+    public static function updateUserUsername($userid, $newUsername)
+    {
+	    $object = new stdClass();
+	    $object->id = $userid;
+	    $object->username = $newUsername;
+	    $result = JFactory::getDbo()->updateObject('#__users', $object, 'id');
+	    return $result;
+    }
+
+	public static function updateUserName($userid, $newName)
+	{
+		$object = new stdClass();
+		$object->id = $userid;
+		$object->name = $newName;
+		$result = JFactory::getDbo()->updateObject('#__users', $object, 'id');
+		return $result;
+	}
+
+	public static function updateUserEmail($userid, $newEmail)
+	{
+		$object = new stdClass();
+		$object->id = $userid;
+		$object->username = $newEmail;
+		$result = JFactory::getDbo()->updateObject('#__users', $object, 'id');
+		return $result;
+	}
+
+	public static function createSloginUser($userid, $slogin_id, $provider)
+	{
+		$db = JFactory::getDbo();
+
+		// Create and populate an object.
+		$object = new stdClass();
+		$object->user_id = $userid;
+		$object->slogin_id = $slogin_id;
+		$object->provider = $provider;
+
+		$result = $db->insertObject('#__slogin_users', $object);
+		if(!$result)
+		{
+			throw new Exception('Cannot store new social user');
+		}
+
+		return $result;
+	}
+
+	public static function createSocialProfile($userid, $slogin_id, $provider, $f_name, $l_name, $email, $phone = '')
+	{
+		$object = new stdClass();
+		$object->user_id = $userid;
+		$object->slogin_id = $slogin_id;
+		$object->provider = $provider;
+		$object->f_name = $f_name;
+		$object->l_name = $l_name;
+		$object->email = $email;
+		$object->phone = $phone;
+
+		$result = JFactory::getDbo()->insertObject('#__plg_slogin_profile', $object);
+		if(!$result)
+		{
+			throw new Exception('Cannot store new social user profile');
+		}
+		return $result;
+	}
+
+	public static function getUserId($username, $email)
+	{
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+		$query->select('`id`')
+				->from('`#__users`')
+				->where('`username` = '.$db->quote($username))
+				->where('`email` = '.$db->quote($email))
+		;
+		$userid	= (int)$db->setQuery($query,0,1)->loadResult();
+		return $userid;
+	}
 }
