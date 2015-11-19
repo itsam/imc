@@ -1458,11 +1458,20 @@ class ImcControllerApi extends ImcController
 					$sUser = ImcFrontendHelper::getSocialUser($slogin_id);
 					if(is_null($sUser))
 					{
-						//register new user by temporary deactivating user validation
+						//register new user by temporary deactivating user activation, etc
 						$params = JComponentHelper::getParams('com_users');
-						$activation = $params->get('useractivation');
+						$plugin = JPluginHelper::getPlugin('user', 'joomla');
+						$plg_params = new JRegistry($plugin->params);
 
+						$allowUserRegistration = $params->get('allowUserRegistration');
+						$useractivation = $params->get('useractivation');
+						$sendpassword = $params->get('sendpassword');
+						$notificationMail = $plg_params->get('mail_to_user');
+
+						$params->set('allowUserRegistration', 1);
 						$params->set('useractivation', 0);
+						$params->set('sendpassword', 0);
+						$plg_params->set('mail_to_user', 0);
 						$username = ImcFrontendHelper::checkUniqueName($username);
 						$args = array (
 							'name' => $f_name.' '.$l_name,
@@ -1470,15 +1479,18 @@ class ImcControllerApi extends ImcController
 							'password1' => $password,
 							'email1' => ImcFrontendHelper::getFreeMail($email),
                             'phone' => $phone,
-                            'address' => $address,
+                            'address' => $address
 						);
 
 						JModelLegacy::addIncludePath(JPATH_SITE . '/components/com_users/models/');
 						$userModel = JModelLegacy::getInstance( 'Registration', 'UsersModel');
 						$userid = (int)$userModel->register($args);
 
-						//restore activation
-						$params->set('useractivation', $activation);
+						//restore params
+						$params->set('useractivation', $useractivation);
+						$params->set('allowUserRegistration', $allowUserRegistration);
+						$params->set('sendpassword', $sendpassword);
+						$plg_params->set('mail_to_user', $notificationMail);
 
 						if ($userid == 0)
 						{
