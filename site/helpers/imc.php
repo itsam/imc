@@ -126,7 +126,7 @@ class ImcFrontendHelper
 
 		if($data->category_image != '')
 		{
-			$data->category_image = JUri::base() . $data->category_image;
+			$data->category_image = JUri::base() . str_replace('%2F', '/', rawurlencode($data->category_image));
 		}
 
         //separate photos and file attachments
@@ -143,14 +143,14 @@ class ImcFrontendHelper
 
 				if (isset($file->thumbnailUrl))
 				{
-					$file->url = JUri::base() . 'images/imc/' . $data->id . '/' . $file->name;
-					$file->mediumUrl = JUri::base() . 'images/imc/' . $data->id . '/medium/' . $file->name;
-					$file->thumbnailUrl = JUri::base() . 'images/imc/' . $data->id . '/thumbnail/' . $file->name;
+					$file->url = JUri::base() . 'images/imc/' . $data->id . '/' . rawurlencode($file->name);
+					$file->mediumUrl = JUri::base() . 'images/imc/' . $data->id . '/medium/' . rawurlencode($file->name);
+					$file->thumbnailUrl = JUri::base() . 'images/imc/' . $data->id . '/thumbnail/' . rawurlencode($file->name);
 					array_push($data->photos, $file);
 				}
 				elseif(isset($file->url))
 				{
-					$file->url = JUri::base() . 'images/imc/' . $data->id . '/' . $file->name;
+					$file->url = JUri::base() . 'images/imc/' . $data->id . '/' . rawurlencode($file->name);
 					array_push($data->attachments, $file);
 				}
 			}
