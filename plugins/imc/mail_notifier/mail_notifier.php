@@ -301,6 +301,17 @@ class plgImcmail_notifier extends JPlugin
 		$username = JFactory::getUser($userid)->name;
 		$usermail = JFactory::getUser($userid)->email;
 
+		//check if social plugin is enabled and user is on social table
+		if(JPluginHelper::isEnabled('slogin_integration', 'profile'))
+		{
+			$socialEmail = ImcFrontendHelper::getSocialEmail($userid);
+
+			if(JFactory::getMailer()->ValidateAddress($socialEmail))
+			{
+				$usermail = $socialEmail;
+			}
+		}
+
 		$details = new stdClass();
 		$details->issueid = $issueid;
 		$details->emails = $emails;

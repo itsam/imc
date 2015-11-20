@@ -1313,6 +1313,18 @@ class ImcFrontendHelper
 		return $db->loadAssoc();
 	}
 
+	public static function getSocialEmail($userid)
+	{
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+		$query->select('email');
+		$query->from($db->quoteName('#__plg_slogin_profile'));
+		$query->where($db->quoteName('user_id') . ' = ' . $db->quote($userid));
+		$db->setQuery($query);
+
+		return $db->loadResult();
+	}
+
 	public static function updateSocialProfile($userid, $slogin_id, $f_name, $l_name, $email, $phone = null)
 	{
 		$object = new stdClass();
