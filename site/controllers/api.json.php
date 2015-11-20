@@ -1435,8 +1435,7 @@ class ImcControllerApi extends ImcController
 
 					//get necessary arguments
 					$provider = $app->input->getString('provider', 'whatever');
-					$f_name = $app->input->getString('f_name', null);
-					$l_name = $app->input->getString('l_name', null);
+					$fullname = $app->input->getString('fullname', null);
 					$phone = $app->input->getString('phone', null);
 					$address = $app->input->getString('address', null);
 					$secret = JComponentHelper::getParams('com_slogin')->get('secret');
@@ -1447,7 +1446,7 @@ class ImcControllerApi extends ImcController
 					}
 
 					$slogin_id = $userInfo['username']; //'111309200021517229400';
-					$username = $f_name.'-'.$l_name.'-'.$provider; //'Ioannis-Tsampoulatidis-google';
+					$username = str_replace(" ","-",$fullname).'-'.$provider; //'Ioannis-Tsampoulatidis-google';
 					$email = $userInfo['password'];
 					$password = $slogin_id.$provider.$secret;
 
@@ -1474,7 +1473,7 @@ class ImcControllerApi extends ImcController
 						$plg_params->set('mail_to_user', 0);
 						$username = ImcFrontendHelper::checkUniqueName($username);
 						$args = array (
-							'name' => $f_name.' '.$l_name,
+							'name' => $fullname,
 							'username' => $username,
 							'password1' => $password,
 							'email1' => ImcFrontendHelper::getFreeMail($email),
@@ -1501,7 +1500,7 @@ class ImcControllerApi extends ImcController
 						ImcFrontendHelper::createSloginUser($userid, $slogin_id, $provider);
 
 						//create new social profile
-						ImcFrontendHelper::createSocialProfile($userid, $slogin_id, $provider, $f_name, $l_name, $email, $phone);
+						ImcFrontendHelper::createSocialProfile($userid, $slogin_id, $provider, $fullname, $fullname, $email, $phone);
 
 					}
 					else
@@ -1516,7 +1515,7 @@ class ImcControllerApi extends ImcController
 						{
 							//update joomla user username
 							$newUsername = ImcFrontendHelper::checkUniqueName($username);
-							$newName = $f_name.' '.$l_name;
+							$newName = $fullname;
 							ImcFrontendHelper::updateUserUsername($userid, $newUsername);
 							ImcFrontendHelper::updateUserName($userid, $newName);
 						}
@@ -1529,7 +1528,7 @@ class ImcControllerApi extends ImcController
 						}
 
 						//update social profile
-						ImcFrontendHelper::updateSocialProfile($userid, $slogin_id, $f_name, $l_name, $email, $phone);
+						ImcFrontendHelper::updateSocialProfile($userid, $slogin_id, $fullname, $fullname, $email, $phone);
 
 						//TODO: update imc profile if plugin is enabled
 						//ImcFrontendHelper::checkImcProfile($userid, $phone, $address);
