@@ -1430,7 +1430,7 @@ class ImcControllerApi extends ImcController
 		try {
 			switch($app->input->getMethod())
 			{
-				case 'GET':
+				case 'POST':
 					$userInfo = self::validateRequest(true);
 
 					//get necessary arguments
@@ -1500,7 +1500,7 @@ class ImcControllerApi extends ImcController
 						ImcFrontendHelper::createSloginUser($userid, $slogin_id, $provider);
 
 						//create new social profile
-						ImcFrontendHelper::createSocialProfile($userid, $slogin_id, $provider, $fullname, $fullname, $email, $phone);
+						ImcFrontendHelper::createSocialProfile($userid, $slogin_id, $provider, $fullname, '', $email, $phone);
 
 					}
 					else
@@ -1528,7 +1528,7 @@ class ImcControllerApi extends ImcController
 						}
 
 						//update social profile
-						ImcFrontendHelper::updateSocialProfile($userid, $slogin_id, $fullname, $fullname, $email, $phone);
+						ImcFrontendHelper::updateSocialProfile($userid, $slogin_id, $fullname, '', $email, $phone);
 
 						//TODO: update imc profile if plugin is enabled
 						//ImcFrontendHelper::checkImcProfile($userid, $phone, $address);
