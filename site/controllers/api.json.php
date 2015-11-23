@@ -1448,7 +1448,7 @@ class ImcControllerApi extends ImcController
 					$slogin_id = $userInfo['username']; //'111309200021517229400';
 					$username = str_replace(" ","-",$fullname).'-'.$provider; //'Ioannis-Tsampoulatidis-google';
 					$email = $userInfo['password'];
-					$password = $slogin_id.$provider.$secret;
+					$password = md5($slogin_id.$provider.$secret);
 
 					//handle unexpected warnings
 					set_error_handler(array($this, 'exception_error_handler'));
@@ -1507,16 +1507,16 @@ class ImcControllerApi extends ImcController
 					{
 						//user exists
 						$userid = $sUser['user_id'];
-						//match password
+
 						$user = JUser::getInstance($userid);
 						$hashed_password = $user->password;
 
 						if($user->username != $username)
 						{
 							//update joomla user username
-							$newUsername = ImcFrontendHelper::checkUniqueName($username);
+							$username = ImcFrontendHelper::checkUniqueName($username);
+							ImcFrontendHelper::updateUserUsername($userid, $username);
 							$newName = $fullname;
-							ImcFrontendHelper::updateUserUsername($userid, $newUsername);
 							ImcFrontendHelper::updateUserName($userid, $newName);
 						}
 
@@ -1533,6 +1533,7 @@ class ImcControllerApi extends ImcController
 						//TODO: update imc profile if plugin is enabled
 						//ImcFrontendHelper::checkImcProfile($userid, $phone, $address);
 
+						//match password
 						$match = JUserHelper::verifyPassword($password, $hashed_password, $userid);
 						if(!$match)
 						{
