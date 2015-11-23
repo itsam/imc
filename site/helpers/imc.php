@@ -1363,7 +1363,7 @@ class ImcFrontendHelper
 	{
 		$object = new stdClass();
 		$object->id = $userid;
-		$object->username = $newEmail;
+		$object->email = $newEmail;
 		$result = JFactory::getDbo()->updateObject('#__users', $object, 'id');
 		return $result;
 	}
