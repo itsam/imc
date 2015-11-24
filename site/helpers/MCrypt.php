@@ -30,6 +30,7 @@ class MCrypt
     }
 
     public function encrypt($str) {
+        $str = base64_encode($str);
         $td = mcrypt_module_open('rijndael-128', '', 'cbc', $this->iv);
         mcrypt_generic_init($td, $this->key, $this->iv);
         $encrypted = mcrypt_generic($td, $str);
@@ -38,13 +39,15 @@ class MCrypt
         return bin2hex($encrypted);
     }
 
-    public function decrypt($code) {
+    public function decrypt($code)
+    {
         $code = $this->hex2bin($code);
-        $td = mcrypt_module_open('rijndael-128', '', 'cbc', $this->iv);
+        $td   = mcrypt_module_open('rijndael-128', '', 'cbc', $this->iv);
         mcrypt_generic_init($td, $this->key, $this->iv);
         $decrypted = mdecrypt_generic($td, $code);
         mcrypt_generic_deinit($td);
         mcrypt_module_close($td);
+        $decrypted = base64_decode($decrypted);
         return utf8_encode(trim($decrypted));
     }
 
