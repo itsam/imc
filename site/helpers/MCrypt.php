@@ -30,7 +30,6 @@ class MCrypt
     }
 
     public function encrypt($str) {
-        $str = base64_encode($str);
         $td = mcrypt_module_open('rijndael-128', '', 'cbc', $this->iv);
         mcrypt_generic_init($td, $this->key, $this->iv);
         $encrypted = mcrypt_generic($td, $str);
@@ -47,7 +46,6 @@ class MCrypt
         $decrypted = mdecrypt_generic($td, $code);
         mcrypt_generic_deinit($td);
         mcrypt_module_close($td);
-        $decrypted = base64_decode($decrypted);
         return utf8_encode(trim($decrypted));
     }
 

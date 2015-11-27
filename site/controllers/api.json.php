@@ -88,6 +88,7 @@ class ImcControllerApi extends ImcController
 
         //3. decrypt and check token validity
         $decryptedToken = $this->mcrypt->decrypt($token);
+	    $decryptedToken = base64_decode($decryptedToken);
         $objToken = json_decode($decryptedToken);
 
         if(!is_object($objToken)){
@@ -1553,7 +1554,7 @@ class ImcControllerApi extends ImcController
 
 					//..and also the user's real credentials encrypted
 					$credentials = array('u'=>$username, 'p'=>$password);
-					$encryptedCredentials = $this->mcrypt->encrypt(json_encode($credentials));
+					$encryptedCredentials = $this->mcrypt->encrypt(base64_encode(json_encode($credentials)));
 					$result = array(
 						'userid' => $userid,
 						'u' => $username,  //temporary for debug
