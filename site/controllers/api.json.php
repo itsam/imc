@@ -969,30 +969,46 @@ class ImcControllerApi extends ImcController
 		try {
 		    $userid = self::validateRequest();
 
-			if($app->input->getMethod() != 'GET')
+			if($app->input->getMethod() != 'GET' && $app->input->getMethod() != 'HEAD')
 			{
-			    throw new Exception('You cannot use other method than GET to fetch timestamp');
+				throw new Exception('You cannot use other method than GET or HEAD to fetch modifications');
 			}
 
-            $args = array (
-                'ts' => $app->input->getString('ts'),
-            );
-            ImcFrontendHelper::checkNullArguments($args);
+			$args = array(
+				'ts' => $app->input->getString('ts'),
+			);
+			ImcFrontendHelper::checkNullArguments($args);
 
-            if(!ImcFrontendHelper::isValidTimeStamp($args['ts']))
-            {
-                throw new Exception('Invalid timestamp');
-            }
+			if (!ImcFrontendHelper::isValidTimeStamp($args['ts']))
+			{
+				throw new Exception('Invalid timestamp');
+			}
 
-            //handle unexpected warnings
-            set_error_handler(array($this, 'exception_error_handler'));
+			//handle unexpected warnings
+			set_error_handler(array($this, 'exception_error_handler'));
 			$result = self::getModifications($args['ts'], $userid);
-            restore_error_handler();
+			restore_error_handler();
 
-            //be consistent return as array (of size 1)
-            $result = array($result);
+			//be consistent return as array (of size 1)
+			$result = array($result);
 
-			echo new JResponseJson($result, 'Modifications since timestamp fetched successfully');
+			switch($app->input->getMethod())
+			{
+				case 'GET':
+					$response = new JResponseJson($result, 'Modifications since timestamp fetched successfully');
+					$length = mb_strlen($response, 'UTF-8');
+					header('Content-Length: '.$length);
+					echo $response;
+
+				break;
+				case 'HEAD':
+					$response = new JResponseJson($result, 'Modifications since timestamp fetched successfully');
+					$length = mb_strlen($response, 'UTF-8');
+					header('Content-Length: '.$length);
+				break;
+				default:
+					throw new Exception('HTTP method is not supported');
+			}
 		}
 		catch(Exception $e)	{
 			header("HTTP/1.0 202 Accepted");
