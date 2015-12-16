@@ -29,7 +29,7 @@ class ImcControllerComments extends ImcController
 		return $model;
 	}
 
-	public function postComment()
+	public function postComment($api = false, $userid = null)
 	{
 		$app = JFactory::getApplication();
 		$params = $app->getParams('com_imc');
@@ -39,7 +39,7 @@ class ImcControllerComments extends ImcController
 		try {
 
 			// Check for request forgeries.
-			if (!JSession::checkToken('get')) {
+			if (!$api && !JSession::checkToken('get')) {
 				throw new Exception('Invalid session token');
 			}
 
@@ -49,17 +49,48 @@ class ImcControllerComments extends ImcController
 			}
 
 			$issueid = $app->input->getInt('issueid', null);
-			$userid = $app->input->getInt('userid', null);
-			$parentid = $app->input->getInt('parentid', 0);
-			$description = $app->input->getString('description', '');
+			if($api)
+			{
+				$issueid = $app->input->getInt('id', null);
+			}
+
+			//check if issue exists
+			$issueModel = JModelLegacy::getInstance( 'Issue', 'ImcModel', array('ignore_request' => true) );
+			$issue = $issueModel->getData($issueid);
+			if(!is_object($issue))
+			{
+				throw new Exception(JText::_('COM_IMC_API_ISSUE_NOT_EXIST'));
+			}
+
+			if(is_null($userid))
+			{
+				$userid = $app->input->getInt('userid', null);
+			}
 
 			if(is_null($issueid) || is_null($userid))
 			{
 				throw new Exception('issueid or userid are missing');
 			}
 
+			if($userid == 0)
+			{
+				throw new Exception('guests cannot post comments');
+			}
+
+			$parentid = $app->input->getInt('parentid', 0);
+
+			//check if parentid is valid
+			$commentsModel = $this->getModel();
+			$ids = $commentsModel->getIds($issueid);
+			if(!in_array($parentid, $ids))
+			{
+				throw new Exception('parentid is invalid');
+			}
+
+			$description = $app->input->getString('description', '');
+
 			//check is user is admin
-			$created_by_admin = ImcHelper::getActions()->get('imc.manage.comments');
+			$created_by_admin = ImcHelper::getActions(JFactory::getUser($userid))->get('imc.manage.comments');
 
 			//make comment
 			$comment = new StdClass();
@@ -78,8 +109,7 @@ class ImcControllerComments extends ImcController
 			$comment->isAdmin = (int)$created_by_admin;
 
 			//post comment to the model
-			$commentModel = $this->getModel();
-			$insertedId = $commentModel->add($comment);
+			$insertedId = $commentsModel->add($comment);
 
 			//fill missing fields to be aligned with jquery-comments and send back to the client
 			$comment->id = $insertedId;
@@ -97,7 +127,17 @@ class ImcControllerComments extends ImcController
 				$comment->profile_picture_url = JURI::base().'components/com_imc/assets/images/admin-user-icon.png';
 			}
 
-			echo new JResponseJson($comment);
+			if($api)
+			{
+				$result = ImcFrontendHelper::sanitizeComment($comment, $userid);
+				//be consistent return as array (of size 1)
+				$result = array($result);
+				echo new JResponseJson($result, 'Comment post successfully');
+			}
+			else
+			{
+				echo new JResponseJson($comment);
+			}
 		}
 		catch(Exception $e)	{
 			header("HTTP/1.0 403 Accepted");

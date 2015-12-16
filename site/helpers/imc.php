@@ -123,6 +123,18 @@ class ImcFrontendHelper
 		unset($data->updated);
 		unset($data->updated_by);
 		unset($data->issue_title);
+		if(isset($data->profile_picture_url))
+		{
+			unset($data->profile_picture_url);
+		}
+		if(isset($data->created_by_admin))
+		{
+			unset($data->creted_by_admin);
+		}
+		if(isset($data->created_by_current_user))
+		{
+			unset($data->created_by_currentJ_user);
+		}
 
 		//set dates to server timezone
 		$data->created_TZ = $data->created == '0000-00-00 00:00:00' ? $data->created : self::convertFromUTC($data->created);

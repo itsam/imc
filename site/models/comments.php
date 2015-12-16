@@ -157,34 +157,6 @@ class ImcModelComments extends JModelList {
 
     public function getItems() {
         $items = parent::getItems();
-//        foreach($items as $item){
-//
-//
-//			if (isset($item->issueid) && $item->issueid != '') {
-//				if(is_object($item->issueid)){
-//					$item->issueid = JArrayHelper::fromObject($item->issueid);
-//				}
-//				$values = (is_array($item->issueid)) ? $item->issueid : explode(',',$item->issueid);
-//
-//				$textValue = array();
-//				foreach ($values as $value){
-//					$db = JFactory::getDbo();
-//					$query = $db->getQuery(true);
-//					$query
-//							->select('title')
-//							->from('`#__imc_issues`')
-//							->where('id = ' . $db->quote($db->escape($value)));
-//					$db->setQuery($query);
-//					$results = $db->loadObject();
-//					if ($results) {
-//						$textValue[] = $results->title;
-//					}
-//				}
-//
-//			$item->issueid = !empty($textValue) ? implode(', ', $textValue) : $item->issueid;
-//
-//			}
-//        }
         return $items;
     }
 
@@ -224,5 +196,17 @@ class ImcModelComments extends JModelList {
         $lastinsertid = $db->insertid();
         return $lastinsertid;
 
+    }
+
+    public function getIds($issueid)
+    {
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query->select('id');
+        $query->from($db->quoteName('#__imc_comments'));
+        $query->where($db->quoteName('issueid')." = ".$issueid);
+        $db->setQuery($query);
+        $result = $db->loadColumn();
+        return $result;
     }
 }

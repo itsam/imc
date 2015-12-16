@@ -14,6 +14,7 @@ require_once JPATH_COMPONENT.'/controller.php';
 require_once JPATH_COMPONENT_SITE . '/helpers/imc.php';
 require_once JPATH_COMPONENT_SITE . '/helpers/MCrypt.php';
 require_once JPATH_COMPONENT_SITE . '/models/tokens.php';
+require_once JPATH_COMPONENT_SITE . '/controllers/comments.json.php';
 
 /**
  * IMC API controller class.
@@ -1645,6 +1646,27 @@ class ImcControllerApi extends ImcController
 			restore_error_handler();
 
 			echo new JResponseJson($result, 'Comments fetched successfully');
+		}
+		catch(Exception $e)	{
+			header("HTTP/1.0 202 Accepted");
+			echo new JResponseJson($e);
+		}
+	}
+
+	public function comment()
+	{
+		$result = null;
+		$app = JFactory::getApplication();
+		try {
+			$userid = self::validateRequest();
+
+			if($app->input->getMethod() != 'POST')
+			{
+				throw new Exception('You cannot use other method than POST to create comment');
+			}
+
+			$commentCtrl = new ImcControllerComments();
+			$commentCtrl->postComment(true, $userid);
 		}
 		catch(Exception $e)	{
 			header("HTTP/1.0 202 Accepted");
