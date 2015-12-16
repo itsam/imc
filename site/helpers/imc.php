@@ -167,6 +167,8 @@ class ImcFrontendHelper
 
 		$data->myIssue = ($data->created_by == $userid);
 
+		$params = JFactory::getApplication()->getParams('com_imc');
+
 		//do the casting
 		$data->moderation = (boolean)$data->moderation;
 		$data->id = (int)$data->id;
@@ -179,11 +181,15 @@ class ImcFrontendHelper
 		$data->subgroup = (int)$data->subgroup;
 		if(isset($data->comments))
 		{
+			//check if comments are globally disabled
+			if ($params->get('enablecomments') == 0)
+			{
+				$data->comments = -1;
+			}
 			$data->comments = (int)$data->comments;
 		}
 
 		//check confidentiality and sanitize logs
-		$params = JFactory::getApplication()->getParams('com_imc');
 
 
 		if(isset($data->timeline))
