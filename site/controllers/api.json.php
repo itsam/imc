@@ -1629,16 +1629,11 @@ class ImcControllerApi extends ImcController
 			}
 			$commentsModel->setState('imc.filter.issueid', $issueid);
 
-
-
-
 			//handle unexpected warnings from model
 			set_error_handler(array($this, 'exception_error_handler'));
 			//get items and sanitize them
 			$data = $commentsModel->getItems();
-
-			//$result = ImcFrontendHelper::sanitizeComments($data);
-			$result = $data;
+			$result = ImcFrontendHelper::sanitizeComments($data, $userid);
 			$app->enqueueMessage('size: '.sizeof($result), 'info');
 			restore_error_handler();
 

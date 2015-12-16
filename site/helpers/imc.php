@@ -106,6 +106,56 @@ class ImcFrontendHelper
 		return $issues;
 	}
 
+	public static function sanitizeComment($data, $userid)
+	{
+		if(!is_object($data)){
+			throw new Exception('Comment sanitization bad input');
+		}
+		//unset overhead
+		unset($data->asset_id);
+		unset($data->ordering);
+		unset($data->checked_out);
+		unset($data->checked_out_time);
+		unset($data->language);
+		unset($data->modality);
+		unset($data->editor);
+		unset($data->photo);
+		unset($data->updated);
+		unset($data->updated_by);
+		unset($data->issue_title);
+
+		//set dates to server timezone
+		$data->created_TZ = $data->created == '0000-00-00 00:00:00' ? $data->created : self::convertFromUTC($data->created);
+		$data->created_ts = $data->created == '0000-00-00 00:00:00' ? 1 :  strtotime($data->created_TZ);
+
+		$data->myComment = ($data->created_by == $userid);
+
+		//do the casting
+		$data->moderation = (boolean)$data->moderation;
+		$data->isAdmin = (boolean)$data->isAdmin;
+		$data->id = (int)$data->id;
+		$data->issueid = (int)$data->issueid;
+		$data->parentid = (int)$data->parentid;
+		$data->state = (int)$data->state;
+		$data->created_by = (int)$data->created_by;
+
+		return $data;
+	}
+
+	public static function sanitizeComments($data, $userid)
+	{
+		if(!is_array($data)){
+			throw new Exception('Comments sanitization bad input');
+		}
+
+		foreach ($data as &$comment)
+		{
+			self::sanitizeComment($comment, $userid);
+		}
+
+		return $data;
+	}
+
 	public static function sanitizeIssue($data, $userid)
 	{
 		if(!is_object($data)){
