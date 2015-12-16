@@ -366,23 +366,28 @@ class ImcControllerApi extends ImcController
                     //get issue model
                     $issueModel = JModelLegacy::getInstance( 'Issue', 'ImcModel', array('ignore_request' => true) );
                     $logsModel = JModelLegacy::getInstance( 'Logs', 'ImcModel', array('ignore_request' => true) );
+					$votesModel = JModelLegacy::getInstance( 'Votes', 'ImcModel', array('ignore_request' => true) );
+					$commentsModel = JModelLegacy::getInstance( 'Comments', 'ImcModel', array('ignore_request' => true) );
 
-                    //handle unexpected warnings from model
-                    set_error_handler(array($this, 'exception_error_handler'));
-                    $data = $issueModel->getData($id);
-                    //merge logs as timeline
-                    if(is_object($data))
-                    {
-                        $data->timeline = $logsModel->getItemsByIssue($id);
-		                $votesModel = JModelLegacy::getInstance( 'Votes', 'ImcModel', array('ignore_request' => true) );
-		                $data->hasVoted = $votesModel->hasVoted($data->id, $userid);
+					//handle unexpected warnings from model
+					set_error_handler(array($this, 'exception_error_handler'));
+					$data = $issueModel->getData($id);
+					if(is_object($data))
+					{
+						//merge logs as timeline
+						$data->timeline = $logsModel->getItemsByIssue($id);
+						//merge hasVoted
+						$data->hasVoted = $votesModel->hasVoted($data->id, $userid);
+						//merge comments count if enabled
+						require_once JPATH_COMPONENT_SITE . '/models/comments.php';
+						$data->comments = $commentsModel->count($id, $userid);
                     }
+					else
+					{
+						throw new Exception(JText::_('COM_IMC_API_ISSUE_NOT_EXIST'));
+					}
 
-                    restore_error_handler();
-
-                    if(!is_object($data)){
-                        throw new Exception(JText::_('COM_IMC_API_ISSUE_NOT_EXIST'));
-                    }
+					restore_error_handler();
 
                     $result = ImcFrontendHelper::sanitizeIssue($data, $userid);
 

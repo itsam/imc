@@ -114,10 +114,6 @@ class ImcModelIssue extends JModelItem {
                 $this->_item->catid_title = 'CATEGORY IS NO LONGER PUBLISHED';
             }
 
-            //count comments
-            require_once JPATH_COMPONENT_SITE . '/models/comments.php';
-            $commentsModel = JModelLegacy::getInstance( 'Comments', 'ImcModel', array('ignore_request' => true) );
-            $this->_item->comments = $commentsModel->count($this->_item->id);
         }
         return $this->_item;
     }

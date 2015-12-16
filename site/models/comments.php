@@ -141,7 +141,7 @@ class ImcModelComments extends JModelList {
             $query->where('a.state = '.$filter_state);
         }
 
-        // Filter by moderation (for non-admin users)
+        // Filter by moderation (for non-comment-admin users)
 	    if(!ImcHelper::getActions(JFactory::getUser($userid))->get('imc.manage.comments'))
 	    {
 		    $query->where('
@@ -188,14 +188,26 @@ class ImcModelComments extends JModelList {
         return $items;
     }
 
-    public function count($issueid)
+    public function count($issueid, $userid = null)
     {
         $db = JFactory::getDbo();
         $query = $db->getQuery(true);
         $query->select('COUNT(*)');
         $query->from($db->quoteName('#__imc_comments'));
         $query->where($db->quoteName('issueid')." = ".$db->quote($issueid));
-
+        if(!is_null($userid))
+        {
+            // Filter by moderation (for non-comments-admin users)
+            if(!ImcHelper::getActions(JFactory::getUser($userid))->get('imc.manage.comments'))
+            {
+                $query->where('
+	            (
+	            (created_by > 0 AND created_by  =' . $userid . ' AND moderation IN (0,1)) OR
+	            (created_by > 0 AND created_by !=' . $userid . ' AND moderation = 0)
+	            )
+            ');
+            }
+        }
         $db->setQuery($query);
         $count = $db->loadResult();
         return $count;
