@@ -8,7 +8,7 @@
  * @author      Ioannis Tsampoulatidis <tsampoulatidis@gmail.com> - https://github.com/itsam
  */
 defined('_JEXEC') or die;
-
+require_once JPATH_COMPONENT_ADMINISTRATOR . '/helpers/imc.php';
 jimport('joomla.application.component.modellist');
 
 /**
@@ -142,7 +142,7 @@ class ImcModelComments extends JModelList {
         }
 
         // Filter by moderation (for non-admin users)
-	    if(!ImcHelper::getActions()->get('imc.manage.comments'))
+	    if(!ImcHelper::getActions(JFactory::getUser($userid))->get('imc.manage.comments'))
 	    {
 		    $query->where('
 	            (
@@ -151,13 +151,6 @@ class ImcModelComments extends JModelList {
 	            )
             ');
 	    }
-
-        // Add the list ordering clause.
-        $orderCol = $this->state->get('list.ordering');
-        $orderDirn = $this->state->get('list.direction');
-        if ($orderCol && $orderDirn) {
-            $query->order($db->escape($orderCol . ' ' . $orderDirn));
-        }
 
         return $query;
     }

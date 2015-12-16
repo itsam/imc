@@ -83,8 +83,11 @@ class ImcHelper {
      * @return	JObject
      * @since	1.6
      */
-    public static function getActions() {
-        $user = JFactory::getUser();
+    public static function getActions($user = null) {
+        if(is_null($user))
+        {
+            $user = JFactory::getUser();
+        }
         $result = new JObject;
 
         $assetName = 'com_imc';

@@ -1595,4 +1595,53 @@ class ImcControllerApi extends ImcController
 		}
 	}
 
+	public function comments()
+	{
+		$result = null;
+		$app = JFactory::getApplication();
+		try {
+			$userid = self::validateRequest();
+
+			if($app->input->getMethod() != 'GET')
+			{
+				throw new Exception('You cannot use other method than GET to fetch comments');
+			}
+
+			//get necessary arguments
+			$issueid = $app->input->getInt('id', null);
+			if ($issueid == null){
+				throw new Exception('issueId is not set');
+			}
+
+
+			//get comments model
+			$commentsModel = JModelLegacy::getInstance( 'Comments', 'ImcModel', array('ignore_request' => true) );
+			//set states
+			$commentsModel->setState('filter.imcapi.userid', $userid);
+			if($userid == 0)
+			{
+				$commentsModel->setState('filter.imcapi.guest', true);
+			}
+			$commentsModel->setState('imc.filter.issueid', $issueid);
+
+
+
+
+			//handle unexpected warnings from model
+			set_error_handler(array($this, 'exception_error_handler'));
+			//get items and sanitize them
+			$data = $commentsModel->getItems();
+
+			//$result = ImcFrontendHelper::sanitizeComments($data);
+			$result = $data;
+			$app->enqueueMessage('size: '.sizeof($result), 'info');
+			restore_error_handler();
+
+			echo new JResponseJson($result, 'Comments fetched successfully');
+		}
+		catch(Exception $e)	{
+			header("HTTP/1.0 202 Accepted");
+			echo new JResponseJson($e);
+		}
+	}
 }
