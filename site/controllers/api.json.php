@@ -363,7 +363,7 @@ class ImcControllerApi extends ImcController
                         throw new Exception('Id is not set');
                     }
 
-                    //get issue model
+                    //get models
                     $issueModel = JModelLegacy::getInstance( 'Issue', 'ImcModel', array('ignore_request' => true) );
                     $logsModel = JModelLegacy::getInstance( 'Logs', 'ImcModel', array('ignore_request' => true) );
 					$votesModel = JModelLegacy::getInstance( 'Votes', 'ImcModel', array('ignore_request' => true) );
@@ -1618,6 +1618,13 @@ class ImcControllerApi extends ImcController
 				throw new Exception('issueId is not set');
 			}
 
+			//check if issue exists
+			$issueModel = JModelLegacy::getInstance( 'Issue', 'ImcModel', array('ignore_request' => true) );
+			$issue = $issueModel->getData($issueid);
+			if(!is_object($issue))
+			{
+				throw new Exception(JText::_('COM_IMC_API_ISSUE_NOT_EXIST'));
+			}
 
 			//get comments model
 			$commentsModel = JModelLegacy::getInstance( 'Comments', 'ImcModel', array('ignore_request' => true) );
