@@ -164,8 +164,13 @@ class ImcControllerComments extends ImcController
 			//$commentsModel = JModelLegacy::getInstance( 'Comments', 'ImcModel', array('ignore_request' => true) );
 			$commentsModel = $this->getModel();
 			$commentsModel->setState('imc.filter.issueid', $issueid);
-			$commentsModel->setState('imc.filter.userid', $userid);
 			$commentsModel->setState('imc.filter.state', 1);
+			$commentsModel->setState('filter.imcapi.userid', $userid);
+			if($userid == 0)
+			{
+				$commentsModel->setState('filter.imcapi.guest', true);
+			}
+
 			$items = $commentsModel->getItems();
 			//$items contains too much overhead, set only necessary data
 			$comments = array();
