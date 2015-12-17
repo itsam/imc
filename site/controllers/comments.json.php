@@ -82,6 +82,7 @@ class ImcControllerComments extends ImcController
 			//check if parentid is valid
 			$commentsModel = $this->getModel();
 			$ids = $commentsModel->getIds($issueid);
+			$ids[] = 0;
 			if(!in_array($parentid, $ids))
 			{
 				throw new Exception('parentid is invalid');

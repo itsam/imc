@@ -147,7 +147,10 @@ class ImcFrontendHelper
 		$data->isAdmin = (boolean)$data->isAdmin;
 		$data->id = (int)$data->id;
 		$data->issueid = (int)$data->issueid;
-		$data->parentid = (int)$data->parentid;
+		if(isset($data->parentid))
+		{
+			$data->parentid = (int)$data->parentid;
+		}
 		$data->state = (int)$data->state;
 		$data->created_by = (int)$data->created_by;
 
