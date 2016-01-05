@@ -208,4 +208,3 @@ class ImcControllerComments extends ImcController
 		}
 	}	
 }
-

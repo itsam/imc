@@ -666,7 +666,8 @@ class ImcControllerApi extends ImcController
 					$data = $votesModel->getItems();
 					$votedIssues = ImcFrontendHelper::sanitizeVotes($data);
 					restore_error_handler();
-					$result = array('userid' => $userid, 'votedIssues' => $votedIssues);
+					$fullname= JFactory::getUser($userid)->name;
+					$result = array('userid' => $userid, 'fullname' => $fullname, 'votedIssues' => $votedIssues);
 
 					//be consistent return as array (of size 1)
                     $result = array($result);
@@ -1582,6 +1583,7 @@ class ImcControllerApi extends ImcController
 						'u' => $username,  //temporary for debug
 						'p' => $password,  //temporary for debug
 						'credentials' => $encryptedCredentials,
+						'fullname' => $fullname,
 						'votedIssues' => $votedIssues
 					);
 
