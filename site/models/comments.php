@@ -135,6 +135,13 @@ class ImcModelComments extends JModelList {
 			$query->where("a.issueid = ".$filter_issueid);
 		}
 
+        //Filtering parentid
+        $filter_parentid = $this->getState('imc.filter.parentid', null);
+        if (!is_null($filter_parentid)) {
+            $query->where("a.parentid = ".$filter_parentid);
+        }
+
+
         //Filtering state
         $filter_state = $this->getState('imc.filter.state', null);
         if (!is_null($filter_state)) {
@@ -157,7 +164,24 @@ class ImcModelComments extends JModelList {
 
     public function getItems() {
         $items = parent::getItems();
+
+        foreach ($items as &$item)
+        {
+            $item->children_count = $this->count_children($item->id);
+        }
         return $items;
+    }
+
+    private function count_children($id)
+    {
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query->select('COUNT(*)');
+        $query->from($db->quoteName('#__imc_comments'));
+        $query->where($db->quoteName('parentid')." = ".$db->quote($id));
+        $db->setQuery($query);
+        $count = $db->loadResult();
+        return $count;
     }
 
     public function count($issueid, $userid = null)

@@ -1620,6 +1620,7 @@ class ImcControllerApi extends ImcController
 			if ($issueid == null){
 				throw new Exception('issueId is not set');
 			}
+			$parentid = $app->input->getInt('parentid', null);
 
 			//check if issue exists
 			$issueModel = JModelLegacy::getInstance( 'Issue', 'ImcModel', array('ignore_request' => true) );
@@ -1633,6 +1634,12 @@ class ImcControllerApi extends ImcController
 			$commentsModel = JModelLegacy::getInstance( 'Comments', 'ImcModel', array('ignore_request' => true) );
 			//set states
 			$commentsModel->setState('filter.imcapi.userid', $userid);
+
+			if(!is_null($parentid))
+			{
+				$commentsModel->setState('imc.filter.parentid', $parentid);
+			}
+
 			if($userid == 0)
 			{
 				$commentsModel->setState('filter.imcapi.guest', true);

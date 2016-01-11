@@ -244,6 +244,7 @@ class ImcFrontendHelper
 		$data->hits = (int)$data->hits;
 		$data->votes = (int)$data->votes;
 		$data->subgroup = (int)$data->subgroup;
+		$data->children_count = (int)$data->children_count;
 		if(isset($data->comments))
 		{
 			//check if comments are globally disabled
