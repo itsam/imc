@@ -46,19 +46,28 @@ if($clusterer){
 	$doc->addScript('http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/src/markerclusterer.js');
 }
 
+$borders = array();
 if(!is_null($boundaries))
 {
-	$boundaries = str_replace("\r", "", $boundaries);
-	$bounds = array();
-	$arBoundaries = explode("\n", $boundaries);
-	foreach ($arBoundaries as $bnd)
-	{
-		$latLng = explode(',', $bnd);
-		array_push($bounds, array('lng'=>(double)$latLng[0], 'lat'=>(double)$latLng[1]));
-	}
-	$boundaries = json_encode($bounds);
-}
+	$arPolygons = explode(";", $boundaries);
 
+	foreach ($arPolygons as $poly) {
+		$polygon = str_replace("\r", "", $poly);
+
+		$bounds = array();
+		$arBoundaries = explode("\n", $polygon);
+		foreach ($arBoundaries as $bnd)
+		{
+			if(strlen($bnd) > 1) {
+				$latLng = explode(',', $bnd);
+				array_push($bounds, array('lng' => (double)$latLng[0], 'lat' => (double)$latLng[1]));
+			}
+		}
+
+		array_push($borders, $bounds);
+	}
+	$boundaries = json_encode($borders);
+}
 ?>
 
 

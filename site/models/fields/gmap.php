@@ -154,17 +154,27 @@ class JFormFieldGmap extends JFormField
 		else
 			JFactory::getDocument()->addScript('https://maps.googleapis.com/maps/api/js?language='.$language);
 
+		$borders = array();
 		if(!is_null($boundaries))
 		{
-			$boundaries = str_replace("\r", "", $boundaries);
-			$bounds = array();
-			$arBoundaries = explode("\n", $boundaries);
-			foreach ($arBoundaries as $bnd)
-			{
-				$latLng = explode(',', $bnd);
-				array_push($bounds, array('lng'=>(double)$latLng[0], 'lat'=>(double)$latLng[1]));
+			$arPolygons = explode(";", $boundaries);
+
+			foreach ($arPolygons as $poly) {
+				$polygon = str_replace("\r", "", $poly);
+
+				$bounds = array();
+				$arBoundaries = explode("\n", $polygon);
+				foreach ($arBoundaries as $bnd)
+				{
+					if(strlen($bnd) > 1) {
+						$latLng = explode(',', $bnd);
+						array_push($bounds, array('lng' => (double)$latLng[0], 'lat' => (double)$latLng[1]));
+					}
+				}
+
+				array_push($borders, $bounds);
 			}
-			$boundaries = json_encode($bounds);
+			$boundaries = json_encode($borders);
 		}
 
 		JFactory::getDocument()->addScript(JURI::root(true).'/components/com_imc/models/fields/gmap/js/gmap.js');

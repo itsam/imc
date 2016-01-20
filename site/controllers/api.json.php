@@ -1187,7 +1187,7 @@ class ImcControllerApi extends ImcController
 			$params = JComponentHelper::getParams('com_imc');
 			$boundaries = $params->get('boundaries', null);
 
-			if(!is_null($boundaries))
+/*			if(!is_null($boundaries))
 			{
 				$boundaries = str_replace("\r", "", $boundaries);
 				$bounds = array();
@@ -1201,7 +1201,30 @@ class ImcControllerApi extends ImcController
 				{
 					$result = $bounds;
 				}
-			}
+			}*/
+
+            $borders = array();
+            if(!is_null($boundaries))
+            {
+                $arPolygons = explode(";", $boundaries);
+
+                foreach ($arPolygons as $poly) {
+                    $polygon = str_replace("\r", "", $poly);
+
+                    $bounds = array();
+                    $arBoundaries = explode("\n", $polygon);
+                    foreach ($arBoundaries as $bnd)
+                    {
+                        if(strlen($bnd) > 1) {
+                            $latLng = explode(',', $bnd);
+                            array_push($bounds, array('lng' => (double)$latLng[0], 'lat' => (double)$latLng[1]));
+                        }
+                    }
+
+                    array_push($borders, $bounds);
+                }
+                $result = $borders;
+            }
 
             $app->enqueueMessage('size: '.sizeof($result), 'info');
 			echo new JResponseJson($result, 'Boundaries fetched successfully');
