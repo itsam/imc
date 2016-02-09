@@ -5,7 +5,7 @@ Build Status
 ---------------------
 Travis-CI: [![Build Status](https://travis-ci.org/itsam/imc.svg)](https://travis-ci.org/itsam/imc)
 
-*Important note: Do not use in production site yet. Please refer to JED for the official release*
+*Important note: Currently use only on Twitter Bootstrap compatible themes*
 
 At current state you need a Bootstrap-compatible theme to get the most out of the IMC app.
 [Demo](http://mklab.iti.gr/joomla3/en/) is based on open source template [Purity III from Joomlart](http://www.joomlart.com/joomla/templates/purity-iii)
