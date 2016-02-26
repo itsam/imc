@@ -161,8 +161,9 @@ class ImcModelIssues extends JModelList {
         // Join over the imc steps.
         $query->select('st.title AS stepid_title, st.stepcolor AS stepid_color')
             ->join('LEFT', '#__imc_steps AS st ON st.id = a.stepid');
-        
-        // Filter by published state
+
+
+	    // Filter by published state
         $imc_raw = $this->state->get('filter.imcapi.raw', false);
 	    $published = $this->getState('filter.state');
 
@@ -321,6 +322,7 @@ class ImcModelIssues extends JModelList {
             $canChange = $user->authorise('core.edit.state', 'com_imc');
             $groups = $user->getAuthorisedViewLevels();
             $categories = JCategories::getInstance('imc');
+	        $commentsModel = JModelLegacy::getInstance( 'Comments', 'ImcModel', array('ignore_request' => true) );
 
             $imc_raw = $this->state->get('filter.imcapi.raw', false);
             for ($x = 0, $count = count($items); $x < $count; $x++)
@@ -367,6 +369,9 @@ class ImcModelIssues extends JModelList {
                         continue;
                     }
                 }
+
+	            //TODO: that's maybe not so efficient
+	            $items[$x]->comments = $commentsModel->count($items[$x]->id, $items[$x]->created_by);
             }
 
             //avoid using model limit ($query->setlimit(x)) at getListQuery() when called from API
