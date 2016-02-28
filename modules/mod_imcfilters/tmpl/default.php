@@ -75,6 +75,18 @@ $id = $jinput->get('id', null);
 				<?php if($params->get('show_help') == 1) : ?>
 					<a id="help_btn" href="<?php echo $params->get('help_link'); ?>" role="button" class="btn btn-default"><i class="icon-help"></i> <?php echo JText::_('MOD_IMCFILTERS_HELP'); ?></a>
 				<?php endif; ?>
+
+				<?php if($params->get('app_store_link') != '') : ?>
+					<br />
+					<?php $appStore = JURI::base() . '/modules/mod_imcfilters/assets/images/Download_on_the_App_Store_Badge_US-UK_135x40.png'; ?>
+					<a href="<?php echo $params->get('app_store_link'); ?>" target="_blank"><img src="<?php echo $appStore; ?>" title="<?php echo JText::_('MOD_IMCFILTERS_DOWNLOAD_APPSTORE'); ?>" alt="AppStore badge" /></a>
+				<?php endif; ?>
+				<?php if($params->get('google_play_link') != '') : ?>
+					<?php $googlePlay = JURI::base() . '/modules/mod_imcfilters/assets/images/google-play-badge.png'; ?>
+					<a href="<?php echo $params->get('google_play_link'); ?>" target="_blank"><img src="<?php echo $googlePlay; ?>" title="<?php echo JText::_('MOD_IMCFILTERS_DOWNLOAD_GOOGLEPLAY'); ?>" alt="Google Play badge" /></a>
+				<?php endif; ?>
+
+
 				<?php /*
 				TODO: Set layout state
 				<div class="btn-group">
@@ -89,16 +101,6 @@ $id = $jinput->get('id', null);
 					</span>	
 				</div>					
 				*/ ?>
-			</div>
-			<div class="imc_btn_right">
-				<?php if($params->get('app_store_link') != '') : ?>
-					<?php $appStore = JURI::base() . '/modules/mod_imcfilters/assets/images/Download_on_the_App_Store_Badge_US-UK_135x40.png'; ?>
-					<a href="<?php echo $params->get('app_store_link'); ?>" target="_blank"><img src="<?php echo $appStore; ?>" title="<?php echo JText::_('MOD_IMCFILTERS_DOWNLOAD_APPSTORE'); ?>" alt="AppStore badge" /></a>
-				<?php endif; ?>
-				<?php if($params->get('google_play_link') != '') : ?>
-					<?php $googlePlay = JURI::base() . '/modules/mod_imcfilters/assets/images/google-play-badge.png'; ?>
-					<a href="<?php echo $params->get('google_play_link'); ?>" target="_blank"><img src="<?php echo $googlePlay; ?>" title="<?php echo JText::_('MOD_IMCFILTERS_DOWNLOAD_GOOGLEPLAY'); ?>" alt="Google Play badge" /></a>
-				<?php endif; ?>
 			</div>
 		<?php endif; ?>
 
