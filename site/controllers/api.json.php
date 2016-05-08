@@ -667,7 +667,16 @@ class ImcControllerApi extends ImcController
 					$votedIssues = ImcFrontendHelper::sanitizeVotes($data);
 					restore_error_handler();
 					$fullname= JFactory::getUser($userid)->name;
-					$result = array('userid' => $userid, 'fullname' => $fullname, 'votedIssues' => $votedIssues);
+
+        			//check is user is admin
+        			//TODO: Check ACL according to user's department, etc.
+		        	$isAdmin = ImcHelper::getActions(JFactory::getUser($userid))->get('core.admin');
+		        	if(is_null($isAdmin))
+		        	{
+		        	    $isAdmin = false;
+		        	}
+
+					$result = array('userid' => $userid, 'fullname' => $fullname, 'isAdmin' => $isAdmin, 'votedIssues' => $votedIssues);
 
 					//be consistent return as array (of size 1)
                     $result = array($result);
