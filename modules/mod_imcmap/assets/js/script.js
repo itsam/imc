@@ -85,7 +85,9 @@ function setMarkers(center, map) {
                 }
                 resetBounds(map, imc_markers);
                 if(clusterer){
-                  mc = new MarkerClusterer(map, imc_markers);
+                  mc = new MarkerClusterer(map, imc_markers, {
+                        imagePath: 'https://rawgit.com/googlemaps/js-marker-clusterer/gh-pages/images/m'
+                    });
                 }
              },
              'error': function (error) {

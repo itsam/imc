@@ -35,15 +35,15 @@ $clusterer 	= ($com_imc_params->get('clusterer') == 1 ? true : false);
 
 if($api_key == ''){
 	echo '<span style="color: red; font-weight:bold;">Module IMC Map :: Google Maps API KEY missing</span>';
-	$doc->addScript('https://maps.googleapis.com/maps/api/js?language='.$language);
+	$doc->addScript('https://maps.googleapis.com/maps/api/js?language='.$language.'&libraries=geometry');
 }
 else{
-	$doc->addScript('https://maps.googleapis.com/maps/api/js?key='.$api_key.'&language='.$language);
+	$doc->addScript('https://maps.googleapis.com/maps/api/js?key='.$api_key.'&language='.$language.'&libraries=geometry');
 }
 
 //clusterer
 if($clusterer){
-	$doc->addScript('http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/src/markerclusterer.js');
+	$doc->addScript('https://rawgit.com/googlemaps/js-marker-clusterer/gh-pages/src/markerclusterer.js');
 }
 
 $borders = array();
