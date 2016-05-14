@@ -6,6 +6,11 @@ var	infowindow = new google.maps.InfoWindow({
 var geocoder = new google.maps.Geocoder();
 
 jQuery(document).ready(function() {
+
+	document.formvalidator.setHandler('boundaries', function(value) {
+		return insideBoundaries();
+	});
+
 	jQuery( "#locateposition" ).click(function() {
 	  // Try HTML5 geolocation
 	  infowindow.setContent('Locating your position...<br /><span style="color: red">Please wait</span>');
@@ -63,6 +68,36 @@ function handleNoGeolocation(errorFlag) {
   infowindow.open(map, marker);
 }
 
+function insideBoundaries()
+{
+
+	//return map.getBounds().contains(marker.getPosition());
+
+	if(typeof boundaries != 'undefined') {
+		var b=0;
+		for (var i = 0; i < boundaries.length; i++) {
+
+			var bounds = new google.maps.Polygon({
+				paths: boundaries[i]
+			});
+			if(google.maps.geometry.poly.containsLocation(marker.getPosition(), bounds))
+			{
+				b++;
+			}
+
+		}
+
+		if(b==0)
+		{
+			return false;
+		}
+		return true;
+	}
+
+
+
+
+}
 
 function codeAddress() {
 	var address = jQuery('#'+addrfield).val() + hiddenterm;

@@ -150,9 +150,9 @@ class JFormFieldGmap extends JFormField
 
 
 		if($api_key != '')
-			JFactory::getDocument()->addScript('https://maps.googleapis.com/maps/api/js?key='.$api_key.'&language='.$language);
+			JFactory::getDocument()->addScript('https://maps.googleapis.com/maps/api/js?key='.$api_key.'&language='.$language.'&libraries=geometry');
 		else
-			JFactory::getDocument()->addScript('https://maps.googleapis.com/maps/api/js?language='.$language);
+			JFactory::getDocument()->addScript('https://maps.googleapis.com/maps/api/js?language='.$language.'&libraries=geometry');
 
 		$borders = array();
 		if(!is_null($boundaries))
@@ -240,7 +240,7 @@ class JFormFieldGmap extends JFormField
 			}
 			$html[] = '		<button id="locateposition" style="float:right;" class="btn btn-mini" type="button"><i class="icon-screenshot"></i> '. JText::_('COM_IMC_CUSTOM_FIELD_LOCATE_POSITION') . '</button>';
 		}
-		$html[] = ' <textarea placeholder="'.JText::_('COM_IMC_FORM_LBL_ISSUE_ADDRESS').'" '. ($disabled ? "disabled=\"\"" : "").' class="imc-gmap-textarea" rows="3" cols="75" id="' . $this->id . '" name="' . $this->name . '">'.htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8').'</textarea>';
+		$html[] = ' <textarea placeholder="'.JText::_('COM_IMC_FORM_LBL_ISSUE_ADDRESS').'" '. ($disabled ? "disabled=\"\"" : "").' class="imc-gmap-textarea validate-boundaries" rows="3" cols="75" id="' . $this->id . '" name="' . $this->name . '">'.htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8').'</textarea>';
         $html[] = '	<div id="imc-map-canvas"></div>';
 		$html[] = '</div>';
 

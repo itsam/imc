@@ -108,7 +108,7 @@ $id = $jinput->get('id', null);
 		
 		<?php if ($canCreate && $option == 'com_imc' && $view == 'issues'): ?>
 			<div class="imc_btn_right">
-		    	<a href="<?php echo JRoute::_('index.php?option=com_imc&task=issue.edit&id=0', false, 2); ?>" class="btn btn-success btn-large btn-lg"><i class="icon-plus"></i> <?php echo JText::_('MOD_IMCFILTERS_ADD_ITEM'); ?></a>
+		    	<a href="<?php echo JRoute::_('index.php?option=com_imc&view=issueform', false, 2); ?>" class="btn btn-success btn-large btn-lg"><i class="icon-plus"></i> <?php echo JText::_('MOD_IMCFILTERS_ADD_ITEM'); ?></a>
 		    </div>
 		<?php endif; ?>
 		<?php if ($canCreate && $option == 'com_imc' && $view == 'issue'): ?>
@@ -117,7 +117,7 @@ $id = $jinput->get('id', null);
 		    	<button id="new-vote" class="btn btn-success btn-large btn-lg"><i class="icon-thumbs-up"></i> +1 <?php echo JText::_('MOD_IMCFILTERS_VOTE'); ?></button>
 		    	<span id="votes-counter" class="btn btn-success btn-large btn-lg disabled"><?php echo ModImcfiltersHelper::getVotes($id); ?></span>
 		    	</div>
-		    	<a href="<?php echo JRoute::_('index.php?option=com_imc&task=issue.edit&id=0', false, 2); ?>" class="btn btn-default btn-large btn-lg"><i class="icon-plus"></i> <?php echo JText::_('MOD_IMCFILTERS_ADD_ITEM'); ?></a>
+		    	<a href="<?php echo JRoute::_('index.php?option=com_imc&view=issueform', false, 2); ?>" class="btn btn-default btn-large btn-lg"><i class="icon-plus"></i> <?php echo JText::_('MOD_IMCFILTERS_ADD_ITEM'); ?></a>
 		    </div>
 		<?php elseif(JFactory::getUser()->guest && $option == 'com_imc' && $view == 'issue') : ?>
 			<div class="imc_btn_right">
