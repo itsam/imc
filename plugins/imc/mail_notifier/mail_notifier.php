@@ -248,7 +248,57 @@ class plgImcmail_notifier extends JPlugin
 			}
 
 		}
-	}	
+	}
+
+	public function onBeforeIssueMail($model, $id, $recipient)
+	{
+		$app = JFactory::getApplication();
+
+		//$issueModel = new ImcModelIssue();
+		$stepid = $model->getItem($id)->get('stepid');
+
+		$step = ImcFrontendHelper::getStepByStepId($stepid);
+
+		$DOMAIN = $this->params->get('domain');
+		if($DOMAIN == '')
+		{
+			$DOMAIN = $_SERVER['HTTP_HOST'];
+		}
+		$MENUALIAS = $this->params->get('menualias');
+		$appSite = JApplication::getInstance('site');
+		$router = $appSite->getRouter();
+		$uri = $router->build('index.php?option=com_imc&view=issue&id='.(int)$id );
+		$parsed_url = $uri->toString();
+		$parsed_url = str_replace('administrator/', '', $parsed_url);
+		$parsed_url = str_replace('component/imc', $MENUALIAS, $parsed_url);
+		$issueLink = $DOMAIN . $parsed_url;
+
+		//Prepare email for user
+
+		$subject = sprintf(
+			JText::_('PLG_IMC_MAIL_ISSUE_SUBJECT'),
+			$id
+		);
+
+		$body = sprintf(
+			JText::_('PLG_IMC_MAIL_ISSUE_BODY'),
+			$model->getItem($id)->get('title'),
+			$step['stepid_title']
+		);
+
+		$body .= '<a href="'.$issueLink.'">'.$issueLink.'</a>';
+
+
+		if ($this->sendMail($subject, $body, $recipient) ) {
+			$app->enqueueMessage('Mail sent to '. $recipient);
+		}
+		else
+		{
+			$app->enqueueMessage('Mail to '.$recipient.' failed', 'error');
+		}
+
+
+	}
 
 	private function sendMail($subject, $body, $recipients) 
 	{

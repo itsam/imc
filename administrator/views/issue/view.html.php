@@ -86,10 +86,20 @@ class ImcViewIssue extends JViewLegacy {
                     'doTask' => 'print', //$url,
                     'class' => 'icon-print',
                     'text' => JText::_('COM_IMC_PRINT'),
-                    'name' => 'imc-print'
-            ));
+                    'name' => 'imc-print')
+            );
             $bar->appendButton('Custom', $dhtml);
-            
+
+            $dhtml = $layout->render(
+                array(
+                    'doTask' => 'mail',
+                    'class' => 'icon-mail',
+                    'text' => JText::_('COM_IMC_MAIL'),
+                    'name' => 'imc-mail')
+
+            );
+            $bar->appendButton('Custom', $dhtml);
+
             //$url = 'index.php?option=com_imc&amp;view=issue&amp;task=issue.printIssue&amp;id='.$this->item->id.'&amp;tmpl=component';
             //$bar->appendButton('Popup', 'print', 'JTOOLBAR_EXPORT', $url);
         }

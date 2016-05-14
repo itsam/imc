@@ -194,4 +194,20 @@ class ImcControllerIssue extends JControllerForm
     }
     */
 
+    public function mail($pk = null)
+    {
+        // Get the input
+        $input = JFactory::getApplication()->input;
+        $issueid = $input->get('id', 0);
+        $recipient = $input->get('recipient', '', 'raw');
+        $model = $this->getModel();
+
+
+        $dispatcher = JEventDispatcher::getInstance();
+        $dispatcher->trigger( 'onBeforeIssueMail', array( $model, $issueid, $recipient ) );
+        // Redirect to the list screen.
+        $this->setRedirect(JRoute::_('index.php?option=com_imc&view=issue&layout=edit&id='.$issueid, false));
+    }
+
+
 }

@@ -269,3 +269,4 @@ require_once JPATH_COMPONENT_SITE . '/helpers/imc.php';
     </div>
 </form>
 <?php echo $this->loadTemplate('print'); ?>
+<?php echo $this->loadTemplate('mail'); ?>
