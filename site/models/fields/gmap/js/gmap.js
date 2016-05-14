@@ -93,9 +93,7 @@ function insideBoundaries()
 		}
 		return true;
 	}
-
-
-
+	return true;
 
 }
 
