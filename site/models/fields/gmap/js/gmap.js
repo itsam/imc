@@ -7,9 +7,11 @@ var geocoder = new google.maps.Geocoder();
 
 jQuery(document).ready(function() {
 
-	document.formvalidator.setHandler('boundaries', function(value) {
-		return insideBoundaries();
-	});
+	if(document.formvalidator) {
+		document.formvalidator.setHandler('boundaries', function (value) {
+			return insideBoundaries();
+		});
+	}
 
 	jQuery( "#locateposition" ).click(function() {
 	  // Try HTML5 geolocation
