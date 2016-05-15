@@ -4,6 +4,7 @@
     <field field_name="id" field_type="INT" field_length="11" is_autoincrement="1" index="primary" description=""/>
     <field field_name="asset_id" field_type="INT" field_length="10" description=""/>
     <field field_name="title" field_type="VARCHAR" field_length="255" description=""/>
+    <field action="add" field_name="alias" field_type="VARCHAR" field_length="255" description=""/>
     <field field_name="stepid" field_type="TEXT" description=""/>
     <field field_name="catid" field_type="INT" field_length="11" description=""/>
     <field field_name="regnum" field_type="VARCHAR" field_length="128" description=""/>

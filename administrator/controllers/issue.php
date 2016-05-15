@@ -209,5 +209,25 @@ class ImcControllerIssue extends JControllerForm
         $this->setRedirect(JRoute::_('index.php?option=com_imc&view=issue&layout=edit&id='.$issueid, false));
     }
 
+    /**
+     * Method to run batch operations.
+     *
+     * @param   object  $model  The model.
+     *
+     * @return  boolean   True if successful, false otherwise and internal error is set.
+     *
+     * @since   1.6
+     */
+    public function batch($model = null)
+    {
+        JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
+        // Set the model
+        $model = $this->getModel('Issue', '', array());
+
+        // Preset the redirect
+        $this->setRedirect(JRoute::_('index.php?option=com_imc&view=issues' . $this->getRedirectToListAppend(), false));
+
+        return parent::batch($model);
+    }
 }

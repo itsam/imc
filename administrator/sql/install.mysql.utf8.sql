@@ -2,6 +2,7 @@ CREATE TABLE IF NOT EXISTS `#__imc_issues` (
 `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
 `asset_id` INT(10) UNSIGNED NOT NULL DEFAULT '0',
 `title` VARCHAR(255)  NOT NULL ,
+`alias` VARCHAR(255)  NOT NULL ,
 `stepid` TEXT NOT NULL ,
 `catid` INT(11)  NOT NULL ,
 `regnum` VARCHAR(128)  NOT NULL ,

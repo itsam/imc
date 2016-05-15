@@ -88,6 +88,15 @@ class ImcViewIssues extends JViewLegacy {
             }
         }
 
+        // add batch button
+        $bar = JToolBar::getInstance('toolbar');
+        JHtml::_('bootstrap.modal', 'collapseModal');
+        $title = JText::_('JTOOLBAR_BATCH');
+        // Instantiate a new JLayoutFile instance and render the batch button
+        $layout = new JLayoutFile('joomla.toolbar.batch');
+        $dhtml = $layout->render(array('title' => $title));
+        $bar->appendButton('Custom', $dhtml, 'batch');
+
         //Show trash and delete for components that uses the state field
         if (isset($this->items[0]->state)) {
             if ($state->get('filter.state') == -2 && $canDo->get('core.delete')) {

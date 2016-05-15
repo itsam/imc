@@ -210,4 +210,26 @@ class ImcModelIssue extends JModelAdmin
 		}
 	}
 
+	public function batch($commands, $pks, $contexts)
+	{
+
+		$app = JFactory::getApplication();
+
+		parent::batch($commands, $pks, $contexts);
+
+		$cmd = JArrayHelper::getValue($commands, 'move_copy', 'c');
+
+		if ($cmd == 'c')
+		{
+			$app->enqueueMessage('Copy is under construction. No images, logs and notifications are created', 'info');
+		}
+		elseif ($cmd == 'm')
+		{
+			//$app->enqueueMessage('After move do the magic', 'info');
+		}
+
+		return true;
+
+	}
+
 }
