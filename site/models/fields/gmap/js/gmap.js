@@ -76,6 +76,10 @@ function insideBoundaries()
 	//return map.getBounds().contains(marker.getPosition());
 
 	if(typeof boundaries != 'undefined') {
+		if(boundaries.length == 1)
+		{
+			return true;
+		}
 		var b=0;
 		for (var i = 0; i < boundaries.length; i++) {
 
