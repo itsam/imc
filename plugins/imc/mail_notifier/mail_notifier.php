@@ -13,7 +13,19 @@ class plgImcmail_notifier extends JPlugin
 		$showMsgsFrontend = ($this->params->get('messagesfrontend') && !$app->isAdmin());
 		$showMsgsBackend  = ($this->params->get('messagesbackend') && $app->isAdmin());
 
-		$issueLink =  rtrim(JURI::base(), '/') . JRoute::_('index.php?option=com_imc&view=issue&id='.(int) $id); 
+		$DOMAIN = $this->params->get('domain');
+		if($DOMAIN == '')
+		{
+			$DOMAIN = $_SERVER['HTTP_HOST'];
+		}
+		$MENUALIAS = $this->params->get('menualias');
+		$appSite = JApplication::getInstance('site');
+		$router = $appSite->getRouter();
+		$uri = $router->build('index.php?option=com_imc&view=issue&id='.(int) ($id == null ? $validData['id'] : $id));
+		$parsed_url = $uri->toString();
+		$parsed_url = str_replace('administrator/', '', $parsed_url);
+		$parsed_url = str_replace('component/imc', $MENUALIAS, $parsed_url);
+		$issueLink = $DOMAIN . $parsed_url;
 
 		//Prepare email for admins
 		if ($this->params->get('mailnewissueadmins')){
