@@ -17,47 +17,9 @@ $userId = $user->get('id');
 // $canEdit = $user->authorise('core.edit', 'com_imc');
 // $canDelete = $user->authorise('core.delete', 'com_imc');
 ?>
-
-
-<script src="https://npmcdn.com/masonry-layout@4.0/dist/masonry.pkgd.min.js"></script>
-<script src="<?php echo  JURI::root(true) . '/components/com_imc/assets/js/imagesloaded.pkgd.min.js'; ?>"></script>
-
-<script type="text/javascript">
-    js = jQuery.noConflict();
-    js(document).ready(function() {
-
-//	    var container = document.querySelector('.masonry');
-//        var msnry = new Masonry( container, {
-//          // options
-//          //columnWidth: 70,
-//          itemSelector: '.masonry-element'
-//        });
-//
-//        imagesLoaded( container, function() {
-//          msnry.layout();
-//        });
-
-	    var grid = js('.grid').masonry({
-		    // set itemSelector so .grid-sizer is not used in layout
-		    itemSelector: '.grid-item',
-		    // use element for option
-		    columnWidth: '.grid-sizer',
-		    gutter: '.gutter-sizer',
-		    percentPosition: true
-	    });
-	    //grid.masonry('layout');
-	    grid.imagesLoaded().progress( function() {
-		    grid.masonry('layout');
-	    });
-
-    });
-</script>
-
-
-    <div class="grid">
-	    <!-- width of .grid-sizer used for columnWidth -->
-	    <div class="grid-sizer"></div>
-	    <div class="gutter-sizer"></div>
+<h2>LIST VIEW</h2>
+<div id="columns">
+    <div class="row masonry" id="masonry-sample">
         <?php foreach ($this->items as $i => $item) : ?>
             <?php
                 $canCreate = $user->authorise('core.create', 'com_imc.issue.'.$item->id);
@@ -80,7 +42,7 @@ $userId = $user->get('id');
                 <?php $canEdit = JFactory::getUser()->id == $item->created_by; ?>
             <?php endif; ?>
                 
-            <div class="grid-item">
+            <div class="col-sm-6 col-md-4 col-xs-12 masonry-element">
                 <div id="imc-panel-<?php echo $item->id;?>" class="panel panel-default">
                     <?php if (JFactory::getUser()->id == $item->created_by) : ?>  
                       <div class="ribbon-wrapper-corner"><div class="ribbon-corner"><?php echo JText::_('COM_IMC_ISSUES_MY_ISSUE');?></div></div>
@@ -109,7 +71,7 @@ $userId = $user->get('id');
                         }
                     ?>
 
-                    <div class="<?php echo ($item->moderation == 1 ? 'issue-unmoderated ' : ''); ?>imc-panel-body">
+                    <div class="<?php echo ($item->moderation == 1 ? 'issue-unmoderated ' : ''); ?>panel-body">
                         <p class="lead">
                             <?php if($item->category_image != '') : ?>
                             <img src="<?php echo $item->category_image; ?>" alt="category image" />
@@ -150,9 +112,9 @@ $userId = $user->get('id');
                         <?php endif; ?>                        
                     </div>
                 </div><!-- /imc-panel-X -->
-            </div><!--/grid-item-->
+            </div><!--/col--> 
         <?php endforeach; ?>
     </div>
-
+</div><!-- /columns -->
 
 <?php echo $this->pagination->getListFooter(); ?>
