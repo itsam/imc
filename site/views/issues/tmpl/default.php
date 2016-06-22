@@ -94,9 +94,9 @@ $userId = $user->get('id');
                             <?php endif; ?>
                             <?php if ($canEdit && $canEditOnStatus) : ?>
                               <a href="<?php echo JRoute::_('index.php?option=com_imc&task=issue.edit&id='.(int) $item->id); ?>">
-                              <i class="icon-edit"></i> <?php echo $this->escape($item->title); ?></a>
+                              <i class="icon-edit"></i> <span class="imc-list-id"><?php echo '#'. (int) $item->id . ' '; ?></span><?php echo $this->escape($item->title); ?></a>
                             <?php else : ?>
-                              <?php echo $this->escape($item->title); ?>
+                                <span class="imc-list-id"><?php echo '#'. (int) $item->id . ' '; ?></span><?php echo $this->escape($item->title); ?>
                             <?php endif; ?>
                             <?php /*uncomment if you like to display a lock icon */
                               /*if (isset($item->checked_out) && $item->checked_out) : ?>
