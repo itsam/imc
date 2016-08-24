@@ -71,13 +71,23 @@ class ImcTableissue extends JTable {
             $array['metadata'] = (string) $registry;
         }
         if (!JFactory::getUser()->authorise('core.admin', 'com_imc.issue.' . $array['id'])) {
-            $actions = JFactory::getACL()->getActions('com_imc', 'issue');
-            $default_actions = JFactory::getACL()->getAssetRules('com_imc.issue.' . $array['id'])->getData();
-            $array_jaccess = array();
-            foreach ($actions as $action) {
-                $array_jaccess[$action->name] = $default_actions[$action->name];
-            }
-            $array['rules'] = $this->JAccessRulestoArray($array_jaccess);
+
+	        $actions = JAccess::getActionsFromFile(
+		        JPATH_ADMINISTRATOR . '/components/com_imc/access.xml',
+		        "/access/section[@name='issue']/"
+	        );
+	        $default_actions = JAccess::getAssetRules('com_imc.issue.' . $array['id'], true)->getData();
+	        $array_jaccess   = array();
+
+	        foreach ($actions as $action)
+	        {
+		        $array_jaccess[$action->name] =
+			        $default_actions[$action->name];
+	        }
+
+	        $array['rules'] = $this->JAccessRulestoArray($array_jaccess);
+
+
         }
         //Bind the rules for ACL where supported.
         if (isset($array['rules']) && is_array($array['rules'])) {
@@ -95,10 +105,14 @@ class ImcTableissue extends JTable {
         $rules = array();
         foreach ($jaccessrules as $action => $jaccess) {
             $actions = array();
-            foreach ($jaccess->getData() as $group => $allow) {
-                $actions[$group] = ((bool) $allow);
-            }
-            $rules[$action] = $actions;
+	        if(is_object($jaccess))
+	        {
+		        foreach ($jaccess->getData() as $group => $allow)
+		        {
+			        $actions[$group] = ((bool) $allow);
+		        }
+		        $rules[$action] = $actions;
+	        }
         }
         return $rules;
     }
