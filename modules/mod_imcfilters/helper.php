@@ -13,7 +13,7 @@ class ModImcfiltersHelper {
     
     private static $filters;
 
-    public function getVotes($id) 
+    public static function getVotes($id)
     {
         $db = JFactory::getDbo();
         $db->setQuery('SELECT votes FROM #__imc_issues WHERE id='.$id);
@@ -21,7 +21,7 @@ class ModImcfiltersHelper {
         return $votes;
     }
 
-    public static function createStatuses() 
+    public static function createStatuses()
     {
         $app = JFactory::getApplication();
         $filter_steps = $app->getUserStateFromRequest('com_imc.issues.filter.steps', 'steps', array());
@@ -142,7 +142,7 @@ class ModImcfiltersHelper {
         return $ar;
     }
 
-    public function createLimitBox($lim)
+    public static function createLimitBox($lim)
     {
         // Initialise variables.
         $app = JFactory::getApplication();
