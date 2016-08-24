@@ -21,7 +21,7 @@ class ImcControllerVotes extends ImcController
 	 * Proxy for getModel.
 	 * @since	1.6
 	 */
-	public function &getModel($name = 'Votes', $prefix = 'ImcModel')
+	public function getModel($name = 'Votes', $prefix = 'ImcModel', $config = array())
 	{
 		JModelLegacy::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/models');
 		$model = parent::getModel($name, $prefix, array('ignore_request' => true));

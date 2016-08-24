@@ -23,7 +23,8 @@ class ImcControllerComments extends ImcController
 	 * Proxy for getModel.
 	 * @since	1.6
 	 */
-	public function &getModel($name = 'Comments', $prefix = 'ImcModel')
+
+	public function getModel($name = 'Comments', $prefix = 'ImcModel', $config = array())
 	{
 		$model = parent::getModel($name, $prefix, array('ignore_request' => true));
 		return $model;
