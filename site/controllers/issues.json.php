@@ -21,7 +21,7 @@ class ImcControllerIssues extends ImcController
 	 * Proxy for getModel.
 	 * @since	1.6
 	 */
-	public function &getModel($name = 'Issues', $prefix = 'ImcModel')
+	public function getModel($name = 'Issues', $prefix = 'ImcModel', $config = array())
 	{
 		$model = parent::getModel($name, $prefix, array('ignore_request' => false));
 		return $model;
