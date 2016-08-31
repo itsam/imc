@@ -57,8 +57,12 @@ class ImcTablekey extends JTable {
             $array['metadata'] = (string) $registry;
         }
         if (!JFactory::getUser()->authorise('core.admin', 'com_imc.key.' . $array['id'])) {
-            $actions = JFactory::getACL()->getActions('com_imc', 'key');
-            $default_actions = JFactory::getACL()->getAssetRules('com_imc.key.' . $array['id'])->getData();
+	        $actions = JAccess::getActionsFromFile(
+		        JPATH_ADMINISTRATOR . '/components/com_imc/access.xml',
+		        "/access/section[@name='key']/"
+	        );
+	        $default_actions = JAccess::getAssetRules('com_imc.key.' . $array['id'], true)->getData();
+
             $array_jaccess = array();
             foreach ($actions as $action) {
                 $array_jaccess[$action->name] = $default_actions[$action->name];

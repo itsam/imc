@@ -86,12 +86,18 @@ class ImcTablelog extends JTable {
             $array['metadata'] = (string) $registry;
         }
         if (!JFactory::getUser()->authorise('core.admin', 'com_imc.log.' . $array['id'])) {
-            $actions = JFactory::getACL()->getActions('com_imc', 'log');
-            $default_actions = JFactory::getACL()->getAssetRules('com_imc.log.' . $array['id'])->getData();
-            $array_jaccess = array();
+
+	        $actions = JAccess::getActionsFromFile(
+		        JPATH_ADMINISTRATOR . '/components/com_imc/access.xml',
+		        "/access/section[@name='log']/"
+	        );
+	        $default_actions = JAccess::getAssetRules('com_imc.log.' . $array['id'], true)->getData();
+
+	        $array_jaccess = array();
             foreach ($actions as $action) {
                 $array_jaccess[$action->name] = $default_actions[$action->name];
             }
+
             $array['rules'] = $this->JAccessRulestoArray($array_jaccess);
         }
         //Bind the rules for ACL where supported.

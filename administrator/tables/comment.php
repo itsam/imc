@@ -70,8 +70,13 @@ class ImcTablecomment extends JTable {
             $array['metadata'] = (string) $registry;
         }
         if (!JFactory::getUser()->authorise('core.admin', 'com_imc.comment.' . $array['id'])) {
-            $actions = JFactory::getACL()->getActions('com_imc', 'comment');
-            $default_actions = JFactory::getACL()->getAssetRules('com_imc.comment.' . $array['id'])->getData();
+            
+	        $actions = JAccess::getActionsFromFile(
+		        JPATH_ADMINISTRATOR . '/components/com_imc/access.xml',
+		        "/access/section[@name='comment']/"
+	        );
+	        $default_actions = JAccess::getAssetRules('com_imc.comment.' . $array['id'], true)->getData();
+
             $array_jaccess = array();
             foreach ($actions as $action) {
                 $array_jaccess[$action->name] = $default_actions[$action->name];
