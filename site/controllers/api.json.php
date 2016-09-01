@@ -251,7 +251,7 @@ class ImcControllerApi extends ImcController
             set_error_handler(array($this, 'exception_error_handler'));
 			//get items and sanitize them
 			$data = $issuesModel->getItems();
-			$result = ImcFrontendHelper::sanitizeIssues($data, $userid);
+			$result = ImcFrontendHelper::sanitizeRawAnalyticsIssues($data, $userid, true);
 			$app->enqueueMessage('size: '.sizeof($result), 'info');
 			restore_error_handler();
 

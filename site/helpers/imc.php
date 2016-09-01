@@ -106,6 +106,65 @@ class ImcFrontendHelper
 		return $issues;
 	}
 
+	public static function sanitizeRawAnalyticsIssues($data, $userid, $extensive = false)
+	{
+		if(!is_array($data)){
+			throw new Exception('Issues sanitization bad input');
+		}
+
+		$issues = array();
+
+		foreach ($data as $issue)
+		{
+			//$issue = self::sanitizeIssue($issue, $userid);
+
+			/*
+			 * lat, lng, issueid, votes per issue
+			 *
+			 * */
+			/*TODO: The following is used only @ analytics but is bad -> Solution: Create the appropriate model and get what's needed directly */
+
+			unset($issue->asset_id);
+			unset($issue->title);
+			unset($issue->stepid);
+			unset($issue->catid);
+			unset($issue->description);
+			unset($issue->address);
+			unset($issue->photo);
+			unset($issue->ordering);
+			unset($issue->state);
+			unset($issue->checked_out);
+			unset($issue->checked_out_time);
+			unset($issue->access);
+			unset($issue->created);
+			unset($issue->updated);
+			unset($issue->created_by);
+			unset($issue->updated_by);
+			unset($issue->comments);
+			unset($issue->language);
+			unset($issue->hits);
+			unset($issue->note);
+			unset($issue->modality);
+			unset($issue->regnum);
+			unset($issue->regdate);
+			unset($issue->responsible);
+			unset($issue->extra);
+			unset($issue->moderation);
+			unset($issue->subgroup);
+			unset($issue->alias);
+			unset($issue->editor);
+			unset($issue->catid_title);
+			unset($issue->access_level);
+			unset($issue->stepid_title);
+			unset($issue->stepid_color);
+			unset($issue->created_by_name);
+			unset($issue->category_image);
+
+			array_push($issues, $issue);
+		}
+		return $issues;
+	}
+
 	public static function sanitizeComment($data, $userid)
 	{
 		if(!is_object($data)){
