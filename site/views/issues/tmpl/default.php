@@ -19,7 +19,7 @@ $userId = $user->get('id');
 ?>
 
 
-<script src="https://npmcdn.com/masonry-layout@4.0/dist/masonry.pkgd.min.js"></script>
+<script src="https://unpkg.com/masonry-layout@4.0/dist/masonry.pkgd.min.js"></script>
 <script src="<?php echo  JURI::root(true) . '/components/com_imc/assets/js/imagesloaded.pkgd.min.js'; ?>"></script>
 
 <script type="text/javascript">
