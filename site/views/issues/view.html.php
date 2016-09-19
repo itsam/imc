@@ -48,7 +48,7 @@ class ImcViewIssues extends JViewLegacy
 			throw new Exception(implode("\n", $errors));
 		}
 
-		$layout = $app->getUserStateFromRequest('imc.layout', 'layout');
+		$layout = $app->getUserStateFromRequest('imc.layout', 'layout', 'list');
 
 		$this->setLayout($layout);
 		$this->_prepareDocument();
