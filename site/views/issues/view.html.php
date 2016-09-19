@@ -48,7 +48,7 @@ class ImcViewIssues extends JViewLegacy
 			throw new Exception(implode("\n", $errors));
 		}
 
-		$this->setLayout(JFactory::getApplication()->input->get('layout', 'default'));
+		$this->setLayout(JFactory::getApplication()->input->get('layout', 'list'));
 		$this->_prepareDocument();
 		parent::display($tpl);
 	}

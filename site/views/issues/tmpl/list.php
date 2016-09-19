@@ -13,26 +13,7 @@ JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
 $user = JFactory::getUser();
 $userId = $user->get('id');
-
-// $canEdit = $user->authorise('core.edit', 'com_imc');
-// $canDelete = $user->authorise('core.delete', 'com_imc');
 ?>
-
-<!--<script type="text/javascript">-->
-<!--    js = jQuery.noConflict();-->
-<!--    js(document).ready(function() {-->
-<!--        var container = document.querySelector('.masonry');-->
-<!--        var msnry = new Masonry( container, {-->
-<!--          // options-->
-<!--          //columnWidth: 70,-->
-<!--          itemSelector: '.masonry-element'-->
-<!--        });-->
-<!---->
-<!--        imagesLoaded( container, function() {-->
-<!--          msnry.layout();-->
-<!--        });-->
-<!--    });-->
-<!--</script>-->
 
     <style>
         .col-imclist{width:100%;float:left;}
@@ -66,8 +47,8 @@ $userId = $user->get('id');
 
     </style>
 
-<div id="columns" style="height:100%">
-    <div class="row masonry total-imclist" id="masonry-sample">
+<div class="container-fluid">
+    <div class="row">
         <?php foreach ($this->items as $i => $item) : ?>
             <?php
                 $canCreate = $user->authorise('core.create', 'com_imc.issue.'.$item->id);
@@ -92,7 +73,7 @@ $userId = $user->get('id');
 
 
 
-            <div class="col-imclist masonry-element">
+            <div class="col-imclist">
                 <div id="imc-panel-<?php echo $item->id;?>" class="panel panel-default panel-list">
                     <?php if (JFactory::getUser()->id == $item->created_by) : ?>
                         <div class="ribbon-wrapper-corner">
@@ -115,7 +96,6 @@ $userId = $user->get('id');
                             <?php endif; ?>
                         </p>
                     </div>
-
 
                     <div class="imc-column imc-med-col">
                         <div class="imc-list-title">
@@ -179,7 +159,7 @@ $userId = $user->get('id');
                         $tempArray = $attachments->files;
                         if($tempArray==null){
                             echo '<i class="icon-picture icon-4x"></i><div style="clear:both"></div>';
-                            echo '<span class="imc-right-col-noimage">No photo submitted</span>';
+                            echo '<span class="imc-right-col-noimage">'. JText::_('COM_IMC_NO_PHOTO') . '</span>';
                         }
                         ?>
                     </div>
@@ -192,5 +172,5 @@ $userId = $user->get('id');
 
         <div style="text-align:center"><?php echo $this->pagination->getListFooter(); ?></div>
     </div>
-</div><!-- /columns -->
 
+</div>
