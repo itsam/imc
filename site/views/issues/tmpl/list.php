@@ -13,6 +13,7 @@ JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
 $user = JFactory::getUser();
 $userId = $user->get('id');
+$this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/css/list.css');
 ?>
 
 <div class="container-fluid">
@@ -99,7 +100,7 @@ $userId = $user->get('id');
                             <?php endif; ?>
                             <span class="label label-info" style="background-color: <?php echo $item->stepid_color;?>" title="<?php echo JText::_('COM_IMC_ISSUES_STEPID');?>"><?php echo $item->stepid_title; ?></span>
                             <span class="label label-default" title="<?php echo JText::_('COM_IMC_TITLE_COMMENTS');?>"><i class="icon-comment"></i> <?php echo $item->comments;?></span>
-                            <span class="label label-default" title="<?php echo JText::_('COM_IMC_TITLE_COMMENTS');?>"><i class="icon-thumbs-up"></i> <?php echo $item->votes;?></span>
+                            <span class="label label-default" title="<?php echo JText::_('COM_IMC_FORM_LBL_ISSUE_VOTES');?>"><i class="icon-thumbs-up"></i> <?php echo $item->votes;?></span>
 
                         </div>
 

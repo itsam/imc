@@ -16,8 +16,9 @@ $userId = $user->get('id');
 
 // $canEdit = $user->authorise('core.edit', 'com_imc');
 // $canDelete = $user->authorise('core.delete', 'com_imc');
-?>
 
+$this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/css/card.css');
+?>
 
 <script src="https://unpkg.com/masonry-layout@4.0/dist/masonry.pkgd.min.js"></script>
 <script src="<?php echo  JURI::root(true) . '/components/com_imc/assets/js/imagesloaded.pkgd.min.js'; ?>"></script>
