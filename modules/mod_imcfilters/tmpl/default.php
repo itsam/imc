@@ -71,7 +71,16 @@ $id = $jinput->get('id', null);
 				  <ul class="dropdown-menu" role="menu">
 				  	<?php echo ModImcfiltersHelper::createLimitBox($state->get('list.limit')); ?>
 				  </ul>
-				</div>		
+				</div>
+
+				<?php
+					$layout = $app->getUserStateFromRequest('imc.layout', 'layout', 'list');
+				?>
+				<div class="btn-group">
+					<a class="btn <?php echo ($layout == 'list' ? 'btn-default': ''); ?>" role="button" title="list layout" href="<?php echo JRoute::_('index.php?option=com_imc&layout=list', false, 2); ?>" class="btn btn-default"><i class="icon-align-justify"></i></a>
+					<a class="btn <?php echo ($layout == 'default' ? 'btn-default': ''); ?>" role="button" title="card layout" href="<?php echo JRoute::_('index.php?option=com_imc&layout=default', false, 2); ?>" class="btn btn-default"><i class="icon-th"></i></a>
+				</div>
+
 				<?php if($params->get('show_help') == 1) : ?>
 					<a id="help_btn" href="<?php echo $params->get('help_link'); ?>" role="button" class="btn btn-default"><i class="icon-help"></i> <?php echo JText::_('MOD_IMCFILTERS_HELP'); ?></a>
 				<?php endif; ?>
@@ -86,21 +95,6 @@ $id = $jinput->get('id', null);
 					<a href="<?php echo $params->get('google_play_link'); ?>" target="_blank"><img src="<?php echo $googlePlay; ?>" title="<?php echo JText::_('MOD_IMCFILTERS_DOWNLOAD_GOOGLEPLAY'); ?>" alt="Google Play badge" /></a>
 				<?php endif; ?>
 
-
-				<?php /*
-				TODO: Set layout state
-				<div class="btn-group">
-					<span class="imc_btn_left">
-						<a title="list layout" href="<?php echo JRoute::_('index.php?option=com_imc&layout=default', false, 2); ?>" class="btn btn-default"><i class="icon-align-justify"></i></a>		
-					</span>	
-					<span class="imc_btn_left">
-						<a title="tabular layout" href="<?php echo JRoute::_('index.php?option=com_imc&layout=tabular', false, 2); ?>" class="btn btn-default"><i class="icon-list"></i></a>		
-					</span>	
-					<span class="imc_btn_left">
-						<a title="media layout" href="<?php echo JRoute::_('index.php?option=com_imc&layout=media', false, 2); ?>" class="btn btn-default"><i class="icon-th"></i></a>		
-					</span>	
-				</div>					
-				*/ ?>
 			</div>
 		<?php endif; ?>
 
