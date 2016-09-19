@@ -15,56 +15,24 @@ $user = JFactory::getUser();
 $userId = $user->get('id');
 ?>
 
-    <style>
-        .col-imclist{width:100%;float:left;}
-        .col-imclist:nth-child(2n+1){background-color: #f0f0f0;border: 2px solid #f0f0f0;border-bottom: 2px solid rgba(0,0,0,0.08);}
-        .col-imclist:nth-child(2n){background-color: white;border: 2px solid white;border-bottom: 2px solid rgba(0,0,0,0.08);}
-        .panel-list{margin-bottom:0;border:none;box-shadow:none;padding:18px;}
-        .col-imclist .panel{background-color:transparent;}
-
-        .total-imclist{background-color:#e4e4e4;height:100%;}
-
-        .imc-column{float:left;line-height:120%;box-sizing:border-box;}
-        .imc-left-col{width: 4.66666666667%;margin-left:0;text-align:center;}
-        .imc-med-col{width:74.0%;margin-left:4%;}
-        .imc-right-col{width:13.3333333333%;text-align:center;margin-left:4%;color:rgba(0, 0, 0, 0.23);}
-        .imc-list-id{font-size:130%;line-height: 140%;}
-        .imc-list-title{font-size:150%;width:100%;margin:0 0 10px;}
-        .imc-list-categories{width:100%;margin-bottom:10px;}
-        .imc-list-address{width:100%;margin-bottom:10px;}
-        .imc-HorizontalSeparator{background:0;padding:0;background-color:#d1d1d1;border:0;height:1px;margin:0 0 10px;}
-        .imc-list-content{width:100%;}
-        .imc-list-info{width:100%;margin-bottom:10px;}
-        .imc-list-info span{margin-right:20px;}
-        .imc-list-info .icon-comment{margin-right:5px;}
-        .imc-list-info .icon-thumbs-up{margin-right:5px;}
-        @media screen and (max-width:619px){
-            .imc-left-col{width:10%;}
-            .imc-med-col{width:80%;}
-            .imc-right-col{width:100%;margin: 10px 0px 20px;}
-            .imc-list-info span{margin-right:0;}
-        }
-
-    </style>
-
 <div class="container-fluid">
     <div class="row">
         <?php foreach ($this->items as $i => $item) : ?>
             <?php
-                $canCreate = $user->authorise('core.create', 'com_imc.issue.'.$item->id);
-                $canEdit = $user->authorise('core.edit', 'com_imc.issue.'.$item->id);
-                $canCheckin = $user->authorise('core.manage', 'com_imc.issue.'.$item->id);
-                $canChange = $user->authorise('core.edit.state', 'com_imc.issue.'.$item->id);
-                $canDelete = $user->authorise('core.delete', 'com_imc.issue.'.$item->id);
-                //$canEditOwn = $user->authorise('core.edit.own', 'com_imc.issue.' . $item->id);
-                $attachments = json_decode($item->photo);
-                
-                //Edit Own only if issue status is the initial one
-                $firstStep = ImcFrontendHelper::getStepByStepId($item->stepid);
-                $canEditOnStatus = true;
-                if ($firstStep['ordering'] != 1){
-                    $canEditOnStatus = false;
-                }
+            $canCreate = $user->authorise('core.create', 'com_imc.issue.'.$item->id);
+            $canEdit = $user->authorise('core.edit', 'com_imc.issue.'.$item->id);
+            $canCheckin = $user->authorise('core.manage', 'com_imc.issue.'.$item->id);
+            $canChange = $user->authorise('core.edit.state', 'com_imc.issue.'.$item->id);
+            $canDelete = $user->authorise('core.delete', 'com_imc.issue.'.$item->id);
+            //$canEditOwn = $user->authorise('core.edit.own', 'com_imc.issue.' . $item->id);
+            $attachments = json_decode($item->photo);
+
+            //Edit Own only if issue status is the initial one
+            $firstStep = ImcFrontendHelper::getStepByStepId($item->stepid);
+            $canEditOnStatus = true;
+            if ($firstStep['ordering'] != 1){
+                $canEditOnStatus = false;
+            }
 
             ?>
             <?php if (!$canEdit && $user->authorise('core.edit.own', 'com_imc.issue.'.$item->id)): ?>
@@ -147,8 +115,8 @@ $userId = $user->get('id');
                             foreach ($attachments->files as $file) {
                                 if (isset($file->thumbnailUrl)){
                                     echo '<div class="panel-thumbnail">'. "\n";
-                                    echo '<a href="'. JRoute::_('index.php?option=com_imc&view=issue&id='.(int) $item->id).'">';
-                                    echo '<img src="'.$attachments->imagedir .'/'. $attachments->id . '/medium/' . ($attachments->files[$i]->name) .'" alt="issue photo" class="img-responsive" />' . "\n";
+                                    echo '<a class="imc-OverviewListImageStyle" href="'. JRoute::_('index.php?option=com_imc&view=issue&id='.(int) $item->id).'">';
+                                    echo '<img src="'.$attachments->imagedir .'/'. $attachments->id . '/medium/' . ($attachments->files[$i]->name) .'" alt="issue photo" class="img-responsive" sizes="(max-width: 200px) 85vw, 200px" width="200" height="85" />' . "\n";
                                     echo '</a>';
                                     echo '</div>'. "\n";
                                     break;
