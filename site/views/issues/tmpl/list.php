@@ -49,11 +49,11 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
                             <div class="ribbon-corner"><?php echo JText::_('COM_IMC_ISSUES_MY_ISSUE');?></div>
                         </div>
                     <?php else : ?>
-                        <?php if($item->votes > 0) : ?>
+                        <?php /*if($item->votes > 0) : ?>
                             <div title="<?php echo JText::_('COM_IMC_ISSUES_VOTES');?>" class="book-ribbon">
                                 <div>+<?php echo $item->votes; ?></div>
                             </div>
-                        <?php endif; ?>
+                        <?php endif; */?>
                     <?php endif; ?>
 
 
