@@ -71,7 +71,7 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
                         <span class="imc-list-id"><?php echo (int) $item->id; ?></span>
                         <p class="lead">
                             <?php if($item->category_image != '') : ?>
-                                <img src="<?php echo $item->category_image; ?>" alt="category image" />
+                                <img src="<?php echo $item->category_image; ?>" alt="category image" class="imc-issue-cat-img"/>
                             <?php endif; ?>
                         </p>
                     </div>

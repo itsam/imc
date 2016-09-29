@@ -187,3 +187,7 @@ div.list-footer div.counter{
     -ms-transform: translate(-50%,-50%);
     transform: translate(-50%,-50%);
 }
+
+.imc-issue-cat-img {
+    max-width: 100%;
+}
