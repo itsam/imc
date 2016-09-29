@@ -16,6 +16,16 @@ $userId = $user->get('id');
 $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/css/list.css');
 ?>
 
+
+<script>
+    js = jQuery.noConflict();
+    js(document).ready(function() {
+        <!--Bugfix on map vanishing when admin hovers on it.-->
+        js('#map-sidebar').children().css("position", "static");
+
+    });
+</script>
+
 <div class="container-fluid">
     <div class="row">
         <?php foreach ($this->items as $i => $item) : ?>
@@ -78,19 +88,20 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
                             <?php endif; ?>
                         </div>
 
-                        <div class="imc-list-categories">
-                            <span class="label label-default" title="<?php echo JText::_('COM_IMC_ISSUES_CATID');?>"><?php echo $item->catid_title; ?></span>
+                        <div class="imc-overview-cat-style">
+                            <span class="label label-default imc-overview-label-style" title="<?php echo JText::_('COM_IMC_ISSUES_CATID');?>"><?php echo $item->catid_title; ?></span>
                         </div>
 
                         <div class="imc-list-content">
                             <p><?php echo ImcFrontendHelper::cutString($item->description, 200); ?></p>
+                            <p><a href="<?php echo JRoute::_('index.php?option=com_imc&view=issue&id='.(int) $item->id); ?>"><?php echo JText::_('COM_IMC_ISSUES_MORE');?></a></p>
                         </div>
 
                         <div class="imc-list-address">
-                            <span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> <?php echo $item->address;?>
+                            <span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> <span><?php echo $item->address;?></span>
                         </div>
 
-                        <hr class="imc-HorizontalSeparator"></hr>
+                        <hr class="imc-HorizontalSeparator"/>
 
                         <div class="imc-list-info">
                             <?php if($item->updated == $item->created) : ?>
@@ -127,7 +138,9 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
                         }
                         $tempArray = $attachments->files;
                         if($tempArray==null){
-                            echo '<i class="icon-picture icon-4x"></i><div style="clear:both"></div>';
+                            echo '<i class="hidden-xs icon-picture icon-4x"></i>';
+                            echo '<i class="visible-xs icon-picture icon-2x"></i>';
+                            echo '<div style="clear:both"></div>';
                             echo '<span class="imc-right-col-noimage">'. JText::_('COM_IMC_NO_PHOTO') . '</span>';
                         }
                         ?>

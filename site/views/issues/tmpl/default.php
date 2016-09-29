@@ -20,12 +20,12 @@ $userId = $user->get('id');
 $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/css/card.css');
 ?>
 
-<script src="https://unpkg.com/masonry-layout@4.0/dist/masonry.pkgd.min.js"></script>
-<script src="<?php echo  JURI::root(true) . '/components/com_imc/assets/js/imagesloaded.pkgd.min.js'; ?>"></script>
+    <script src="https://unpkg.com/masonry-layout@4.0/dist/masonry.pkgd.min.js"></script>
+    <script src="<?php echo  JURI::root(true) . '/components/com_imc/assets/js/imagesloaded.pkgd.min.js'; ?>"></script>
 
-<script type="text/javascript">
-    js = jQuery.noConflict();
-    js(document).ready(function() {
+    <script type="text/javascript">
+        js = jQuery.noConflict();
+        js(document).ready(function() {
 
 //	    var container = document.querySelector('.masonry');
 //        var msnry = new Masonry( container, {
@@ -38,106 +38,119 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
 //          msnry.layout();
 //        });
 
-	    var grid = js('.grid').masonry({
-		    // set itemSelector so .grid-sizer is not used in layout
-		    itemSelector: '.grid-item',
-		    // use element for option
-		    columnWidth: '.grid-sizer',
-		    gutter: '.gutter-sizer',
-		    percentPosition: true
-	    });
-	    //grid.masonry('layout');
-	    grid.imagesLoaded().progress( function() {
-		    grid.masonry('layout');
-	    });
+            <!--Bugfix on map vanishing when admin hovers on it.-->
+            js('#map-sidebar').children().css("position", "static");
 
-    });
-</script>
+            var grid = js('.grid').masonry({
+                // set itemSelector so .grid-sizer is not used in layout
+                itemSelector: '.grid-item',
+                // use element for option
+                columnWidth: '.grid-sizer',
+                gutter: '.gutter-sizer',
+                percentPosition: true
+            });
+            //grid.masonry('layout');
+            grid.imagesLoaded().progress( function() {
+                grid.masonry('layout');
+            });
+
+        });
+    </script>
 
 
     <div class="grid">
-	    <!-- width of .grid-sizer used for columnWidth -->
-	    <div class="grid-sizer"></div>
-	    <div class="gutter-sizer"></div>
+        <!-- width of .grid-sizer used for columnWidth -->
+        <div class="grid-sizer"></div>
+        <div class="gutter-sizer"></div>
         <?php foreach ($this->items as $i => $item) : ?>
             <?php
-                $canCreate = $user->authorise('core.create', 'com_imc.issue.'.$item->id);
-                $canEdit = $user->authorise('core.edit', 'com_imc.issue.'.$item->id);
-                $canCheckin = $user->authorise('core.manage', 'com_imc.issue.'.$item->id);
-                $canChange = $user->authorise('core.edit.state', 'com_imc.issue.'.$item->id);
-                $canDelete = $user->authorise('core.delete', 'com_imc.issue.'.$item->id);
-                //$canEditOwn = $user->authorise('core.edit.own', 'com_imc.issue.' . $item->id);
-                $attachments = json_decode($item->photo);
-                
-                //Edit Own only if issue status is the initial one
-                $firstStep = ImcFrontendHelper::getStepByStepId($item->stepid);
-                $canEditOnStatus = true;
-                if ($firstStep['ordering'] != 1){
-                    $canEditOnStatus = false;
-                }
+            $canCreate = $user->authorise('core.create', 'com_imc.issue.'.$item->id);
+            $canEdit = $user->authorise('core.edit', 'com_imc.issue.'.$item->id);
+            $canCheckin = $user->authorise('core.manage', 'com_imc.issue.'.$item->id);
+            $canChange = $user->authorise('core.edit.state', 'com_imc.issue.'.$item->id);
+            $canDelete = $user->authorise('core.delete', 'com_imc.issue.'.$item->id);
+            //$canEditOwn = $user->authorise('core.edit.own', 'com_imc.issue.' . $item->id);
+            $attachments = json_decode($item->photo);
+
+            //Edit Own only if issue status is the initial one
+            $firstStep = ImcFrontendHelper::getStepByStepId($item->stepid);
+            $canEditOnStatus = true;
+            if ($firstStep['ordering'] != 1){
+                $canEditOnStatus = false;
+            }
 
             ?>
             <?php if (!$canEdit && $user->authorise('core.edit.own', 'com_imc.issue.'.$item->id)): ?>
                 <?php $canEdit = JFactory::getUser()->id == $item->created_by; ?>
             <?php endif; ?>
-                
+
             <div class="grid-item">
                 <div id="imc-panel-<?php echo $item->id;?>" class="panel panel-default">
-                    <?php if (JFactory::getUser()->id == $item->created_by) : ?>  
-                      <div class="ribbon-wrapper-corner"><div class="ribbon-corner"><?php echo JText::_('COM_IMC_ISSUES_MY_ISSUE');?></div></div>
+                    <?php if (JFactory::getUser()->id == $item->created_by) : ?>
+                        <div class="ribbon-wrapper-corner"><div class="ribbon-corner"><?php echo JText::_('COM_IMC_ISSUES_MY_ISSUE');?></div></div>
                     <?php else : ?>
                         <?php if($item->votes > 0) : ?>
-                        <div title="<?php echo JText::_('COM_IMC_ISSUES_VOTES');?>" class="book-ribbon">
-                            <div>+<?php echo $item->votes; ?></div>
-                        </div>
+                            <div title="<?php echo JText::_('COM_IMC_ISSUES_VOTES');?>" class="book-ribbon">
+                                <div>+<?php echo $item->votes; ?></div>
+                            </div>
                         <?php endif; ?>
                     <?php endif; ?>
-                    
+
                     <?php //show photo if any
-                        $i = 0;
-                        if(isset($attachments->files)){
-                            foreach ($attachments->files as $file) {
-                                if (isset($file->thumbnailUrl)){
-                                    echo '<div class="panel-thumbnail">'. "\n";
-                                    echo '<a href="'. JRoute::_('index.php?option=com_imc&view=issue&id='.(int) $item->id).'">';
-                                    echo '<img src="'.$attachments->imagedir .'/'. $attachments->id . '/medium/' . ($attachments->files[$i]->name) .'" alt="issue photo" class="img-responsive" />' . "\n";
-                                    echo '</a>';
-                                    echo '</div>'. "\n";
-                                    break;
-                                }  
-                                $i++;  
+                    $i = 0;
+                    if(isset($attachments->files)){
+                        foreach ($attachments->files as $file) {
+                            if (isset($file->thumbnailUrl)){
+                                echo '<div class="panel-thumbnail">'. "\n";
+                                echo '<a href="'. JRoute::_('index.php?option=com_imc&view=issue&id='.(int) $item->id).'">';
+                                echo '<img src="'.$attachments->imagedir .'/'. $attachments->id . '/medium/' . ($attachments->files[$i]->name) .'" alt="issue photo" class="img-responsive imc-card-img" />' . "\n";
+                                echo '</a>';
+                                echo '</div>'. "\n";
+                                break;
                             }
+                            $i++;
                         }
+                    }
                     ?>
 
                     <div class="<?php echo ($item->moderation == 1 ? 'issue-unmoderated ' : ''); ?>imc-panel-body">
-                        <p class="lead">
+                        <div class="imc-card-header">
                             <?php if($item->category_image != '') : ?>
-                            <img src="<?php echo $item->category_image; ?>" alt="category image" />
+                                <img src="<?php echo $item->category_image; ?>" alt="category image" />
                             <?php endif; ?>
+
                             <?php if ($canEdit && $canEditOnStatus) : ?>
-                              <a href="<?php echo JRoute::_('index.php?option=com_imc&task=issue.edit&id='.(int) $item->id); ?>">
-                              <i class="icon-edit"></i> <span class="imc-list-id"><?php echo '#'. (int) $item->id . ' '; ?></span><?php echo $this->escape($item->title); ?></a>
+                                <span class="imc-list-id"><?php echo '#'. (int) $item->id . ' '; ?></span>
+                                <a class="imc-grid-title" href="<?php echo JRoute::_('index.php?option=com_imc&task=issue.edit&id='.(int) $item->id); ?>">
+                                    <i class="icon-edit"></i> <?php echo $this->escape($item->title); ?></a>
                             <?php else : ?>
-                                <span class="imc-list-id"><?php echo '#'. (int) $item->id . ' '; ?></span><?php echo $this->escape($item->title); ?>
+                                <span class="imc-list-id"><?php echo '#'. (int) $item->id . ' '; ?></span>
+                                <a href="<?php echo JRoute::_('index.php?option=com_imc&view=issue&id='.(int) $item->id)?>" class="imc-grid-title"> <?php echo $this->escape($item->title); ?></a>
                             <?php endif; ?>
                             <?php /*uncomment if you like to display a lock icon */
-                              /*if (isset($item->checked_out) && $item->checked_out) : ?>
-                              <i class="icon-lock"></i> <?php echo JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, 'issues.', $canCheckin); ?>
-                            <?php endif; */ ?>
-                        </p>
+                            /*if (isset($item->checked_out) && $item->checked_out) : ?>
+                            <i class="icon-lock"></i> <?php echo JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, 'issues.', $canCheckin); ?>
+                          <?php endif; */ ?>
+                        </div>
 
-                        <?php if($item->updated == $item->created) : ?>
-                        <span class="label label-default" title="<?php echo JText::_('COM_IMC_ISSUES_CREATED');?>"><?php echo ImcFrontendHelper::getRelativeTime($item->created); ?></span>
-                        <?php else : ?>
-                        <span class="label label-info" title="<?php echo JText::_('COM_IMC_ISSUES_UPDATED');?>"><?php echo ImcFrontendHelper::getRelativeTime($item->updated); ?></span>
-                        <?php endif; ?>
-                        <span class="label label-info" style="background-color: <?php echo $item->stepid_color;?>" title="<?php echo JText::_('COM_IMC_ISSUES_STEPID');?>"><?php echo $item->stepid_title; ?></span>
-                        <span class="label label-default" title="<?php echo JText::_('COM_IMC_ISSUES_CATID');?>"><?php echo $item->catid_title; ?></span>
-                        <br /><span class="label label-default" title="<?php echo JText::_('COM_IMC_TITLE_COMMENTS');?>"><i class="icon-comment"></i> <?php echo $item->comments;?></span>
-                        <?php if (JFactory::getUser()->id == $item->created_by && $item->votes > 0) : ?>
-                        <span class="label label-default" title="<?php echo JText::_('COM_IMC_ISSUES_VOTES');?>">+<?php echo $item->votes; ?></span>
-                        <?php endif; ?>
+                        <div class="imc-overview-cat-style">
+                            <span class="label label-default imc-overview-cat-label-style" title="<?php echo JText::_('COM_IMC_ISSUES_CATID');?>"><?php echo $item->catid_title; ?></span>
+                        </div>
+
+                        <div class="imc-card-section-style">
+                            <?php if($item->updated == $item->created) : ?>
+                                <span class="label label-default" title="<?php echo JText::_('COM_IMC_ISSUES_CREATED');?>"><?php echo ImcFrontendHelper::getRelativeTime($item->created); ?></span>
+                            <?php else : ?>
+                                <span class="label label-info" title="<?php echo JText::_('COM_IMC_ISSUES_UPDATED');?>"><?php echo ImcFrontendHelper::getRelativeTime($item->updated); ?></span>
+                            <?php endif; ?>
+                            <span class="label label-info" style="background-color: <?php echo $item->stepid_color;?>" title="<?php echo JText::_('COM_IMC_ISSUES_STEPID');?>"><?php echo $item->stepid_title; ?></span>
+
+                            <span class="label label-default" title="<?php echo JText::_('COM_IMC_TITLE_COMMENTS');?>"><i class="icon-comment"></i> <?php echo $item->comments;?></span>
+                            <?php if (JFactory::getUser()->id == $item->created_by && $item->votes > 0) : ?>
+                                <span class="label label-default" title="<?php echo JText::_('COM_IMC_ISSUES_VOTES');?>">+<?php echo $item->votes; ?></span>
+                            <?php endif; ?>
+                        </div>
+
 
                         <p><?php echo ImcFrontendHelper::cutString($item->description, 200); ?></p>
 
@@ -148,12 +161,11 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
                         <?php endif; ?>
                         <?php if (!$canEditOnStatus && JFactory::getUser()->id == $item->created_by) : ?>
                             <p class="imc-info"><i class="icon-info-sign"></i> <?php echo JText::_('COM_IMC_ISSUE_CANNOT_EDIT_ANYMORE'); ?></p>
-                        <?php endif; ?>                        
+                        <?php endif; ?>
                     </div>
                 </div><!-- /imc-panel-X -->
             </div><!--/grid-item-->
         <?php endforeach; ?>
     </div>
-
 
 <?php echo $this->pagination->getListFooter(); ?>

@@ -6,6 +6,24 @@
  * @author      Ioannis Tsampoulatidis <tsampoulatidis@gmail.com> - https://github.com/itsam
  */
 
+body {
+    /* Helvetica/Arial-based sans serif stack */
+    font-family:
+            Frutiger, "Frutiger Linotype",
+            Univers,
+            Calibri,
+            "Gill Sans", "Gill Sans MT",
+            "Myriad Pro", Myriad,
+            "DejaVu Sans Condensed",
+            "Liberation Sans",
+            "Nimbus Sans L",
+            Tahoma,
+            Geneva,
+            "Helvetica Neue", Helvetica,
+            Arial,
+            sans-serif;
+}
+
 table.front-end-list{
     width: 100%;
     border-spacing: 1px;
@@ -77,22 +95,75 @@ div.list-footer div.counter{
 .imc-column{float:left;line-height:120%;box-sizing:border-box;}
 .imc-left-col{width: 4.66666666667%;margin-left:0;text-align:center;}
 .imc-med-col{width:74.0%;margin-left:4%;}
-.imc-right-col{width:13.3333333333%;text-align:center;margin-left:4%;color:rgba(0, 0, 0, 0.23);}
-.imc-list-id{font-size:130%;line-height: 140%;}
-.imc-list-title{font-size:150%;width:100%;margin:0 0 10px;}
-.imc-list-categories{width:100%;margin-bottom:10px;}
+.imc-right-col {
+    width: 13.3333333333%;
+    text-align: center;
+    margin-left:4%;
+    color:rgba(0, 0, 0, 0.54);
+    height: 100%;
+    vertical-align: middle;
+}
+
+.imc-list-id {
+    font-size:calc(12px + 0.2vw);
+    line-height: 140%;
+}
+
+.imc-list-title {
+    font-size: 20px;
+    width: 100%;
+    margin: 0 0 10px;
+    line-height: 20px;
+}
+
+.imc-overview-cat-style {
+    margin-bottom:10px;
+    display: flex;
+}
+
 .imc-list-address{width:100%;margin-bottom:10px;}
 .imc-HorizontalSeparator{background:0;padding:0;background-color:#d1d1d1;border:0;height:1px;margin:0 0 10px;}
-.imc-list-content{width:100%;}
-.imc-list-info{width:100%;margin-bottom:10px;}
-.imc-list-info span{margin-right:20px;}
+.imc-list-content {
+    width:100%;
+
+}
+.imc-list-info {
+    width:100%;
+    margin-bottom:10px;
+    line-height: 24px;
+}
+
+.imc-list-info span {
+    margin-right:20px;
+    font-size: 12px;
+}
+
 .imc-list-info .icon-comment{margin-right:5px;}
 .imc-list-info .icon-thumbs-up{margin-right:5px;}
 @media screen and (max-width:619px){
     .imc-left-col{width:10%;}
     .imc-med-col{width:80%;}
-    .imc-right-col{width:100%;margin: 10px 0px 20px;}
+    .imc-right-col{width:100%;margin: 10px 0 20px;}
     .imc-list-info span{margin-right:0;}
+}
+
+.imc-overview-label-style {
+    text-align: left;
+    text-overflow: ellipsis;
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    font-size: 14px;
+}
+
+.imc-right-col-noimage {
+    word-wrap: normal;
+    line-height: 120%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+    display: block;
+    width: 100%;
 }
 
 .imc-OverviewListImageStyle {
