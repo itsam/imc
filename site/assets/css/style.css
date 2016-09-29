@@ -1,3 +1,21 @@
+body {
+  /* Helvetica/Arial-based sans serif stack */
+  font-family:
+          Frutiger, "Frutiger Linotype",
+          Univers,
+          Calibri,
+          "Gill Sans", "Gill Sans MT",
+          "Myriad Pro", Myriad,
+          "DejaVu Sans Condensed",
+          "Liberation Sans",
+          "Nimbus Sans L",
+          Tahoma,
+          Geneva,
+          "Helvetica Neue", Helvetica,
+          Arial,
+          sans-serif;
+}
+
 .imc-info-wrapper {
   padding: 10px 20px;
   border: 1px solid #e3e3e3;
@@ -12,7 +30,8 @@
 }
 
 .imc-statuses {
-  color: #ccc;font-weight: bold;
+  color: #ccc;
+  font-weight: 600;
   border-bottom: 2px dotted #e3e3e3;
   padding-bottom: 10px;
   margin-bottom: 20px;
@@ -106,7 +125,7 @@ Terms (http://codyhouse.co/terms/)!
   height: 40px;
   border-radius: 50%;
   box-shadow: 0 0 0 4px #d7e4ed, inset 0 2px 0 rgba(0, 0, 0, 0.08), 0 3px 0 4px rgba(0, 0, 0, 0.05);
-  
+
 }
 .cd-timeline-img img {
   display: block;
