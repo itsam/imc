@@ -254,18 +254,18 @@ if($this->item->moderation == 1 && !$canEdit) : ?>
 						<div id='gallery'>
 							<?php $count = 1; ?>
 							<?php foreach ($photos->files as $photo) : ?>
-								<a href="<?php echo $photos->imagedir .'/'. $photos->id . '/' . ($photo->name) ;?>">
+								<a style="text-decoration: none;" href="<?php echo $photos->imagedir .'/'. $photos->id . '/' . ($photo->name) ;?>">
 									<?php if($count == 1) : ?>
 										<img src="<?php echo $photos->imagedir .'/'. $photos->id . '/medium/' . ($photo->name) ;?>" alt="<?php echo JText::_('COM_IMC_ISSUES_PHOTO') . ' '. $count;?>" class="img-responsive" /><br />
 									<?php else :?>
-										<img src="<?php echo $photos->imagedir .'/'. $photos->id . '/thumbnail/' . ($photo->name) ;?>" alt="<?php echo JText::_('COM_IMC_ISSUES_PHOTO') . ' '. $count;?>" class="img-responsive" />
+										<img style="display: inline-block; padding-right: 6px;" src="<?php echo $photos->imagedir .'/'. $photos->id . '/thumbnail/' . ($photo->name) ;?>" alt="<?php echo JText::_('COM_IMC_ISSUES_PHOTO') . ' '. $count;?>" class="img-responsive" />
 									<?php endif; ?>
 								</a>
 								<?php $count++;?>
 							<?php endforeach; ?>
 						</div>
 					<?php endif; ?>
-					</p>
+
 					<hr />
 					<?php if($this->showComments) : ?>
 						<div id="comments-container"></div>
