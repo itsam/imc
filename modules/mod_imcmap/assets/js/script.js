@@ -164,7 +164,7 @@ function markerBounce(id) {
   var index;
   for (var i=0; i<imc_markers.length; i++) {       
     if(imc_markers[i].id == id){
-      imc_mod_map.setCenter( imc_markers[i].getPosition() );
+      // imc_mod_map.setCenter( imc_markers[i].getPosition() );
       imc_markers[i].setAnimation(google.maps.Animation.BOUNCE);
       //google.maps.event.trigger(imc_markers[i], 'click');
       break;
@@ -184,7 +184,7 @@ function markerIdle(id) {
 
 function resetBounds(map, gmarkers) {
   var a = 0;
-  bounds = null;
+  var bounds = null;
   bounds = new google.maps.LatLngBounds();
   for (var i=0; i<gmarkers.length; i++) {
     if(gmarkers[i].getVisible()){
