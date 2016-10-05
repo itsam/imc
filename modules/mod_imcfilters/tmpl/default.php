@@ -58,9 +58,9 @@ $id = $jinput->get('id', null);
 				    <?php echo JText::_('MOD_IMCFILTERS_ORDERING'); ?> <span class="caret"></span>
 				  </button>
 				  <ul class="dropdown-menu" role="menu">
-				    <li><?php echo JHtml::_('grid.sort',  'COM_IMC_ISSUES_TITLE', 'a.title', $listDirn, $listOrder); ?></li>
-					<li><?php echo JHtml::_('grid.sort',  'COM_IMC_ISSUES_STEPID', 'a.stepid', $listDirn, $listOrder); ?></li>
-					<li><?php echo JHtml::_('grid.sort',  'JDATE', 'a.updated', $listDirn, $listOrder); ?></li>
+					  <li><?php echo JHtml::_('grid.sort',  'JDATE', 'a.updated', $listDirn, $listOrder); ?></li>
+					  <li><?php echo JHtml::_('grid.sort',  'COM_IMC_ISSUES_VOTES', 'a.votes', $listDirn, $listOrder); ?></li>
+					  <li><?php echo JHtml::_('grid.sort',  'COM_IMC_ISSUES_STEPID', 'a.stepid', $listDirn, $listOrder); ?></li>
 				  </ul>
 				</div>
 
