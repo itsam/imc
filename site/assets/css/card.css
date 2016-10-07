@@ -38,9 +38,12 @@ body {
 
 /* hover effect */
 
-.panel:hover {
-  border-color: #0077BB;
+.panel {
+  background-color: rgb(255,255,255);
+  border-radius: 1px;
+  box-shadow: 0 2px 2px rgba(0,0,0,0.12);
 }
+
 .imc-focus {
   border-color: #0077BB;
   opacity: 1;
@@ -50,7 +53,7 @@ body {
   opacity: 0.25;
 }
 
-.imc-panel-body {padding: 5px; }
+.imc-panel-body {padding: 12px; }
 .imc-panel-body .label { white-space: normal; }
 
 
@@ -72,7 +75,7 @@ body {
 }
 
 .imc-overview-cat-label-style {
-  text-align: left;
+  text-align: center;
   text-overflow: ellipsis;
   display: block;
   overflow: hidden;
