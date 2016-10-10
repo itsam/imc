@@ -72,7 +72,7 @@ function setMarkers(center, map) {
                         id: data.id
                     });
                     if(data.category_image == '')
-                      marker.setIcon('http://maps.google.com/mapfiles/ms/icons/red-dot.png');
+                      marker.setIcon('https://maps.google.com/mapfiles/ms/icons/red-dot.png');
                     
                     imc_markers.push(marker);
                     //bounds.extends(marker.position);
@@ -80,7 +80,7 @@ function setMarkers(center, map) {
                     infoBox(map, marker, data);
 
                     if(data.moderation == 1){
-                      marker.setIcon('http://maps.google.com/mapfiles/ms/icons/blue-dot.png');
+                      marker.setIcon('https://maps.google.com/mapfiles/ms/icons/blue-dot.png');
                     }
                 }
                 resetBounds(map, imc_markers);
