@@ -20,7 +20,7 @@ body {
 .grid-sizer,
 .grid-item { width: 32%;}
 .gutter-sizer { width: 2%; }
-.grid-item {margin-bottom: 10px;}
+.grid-item { margin-bottom: 10px; }
 .grid:after {
   content: '';
   display: block;
@@ -33,7 +33,7 @@ body {
 }
 
 .imc-card-header {
-  margin-bottom: 6px;
+  margin: 0 auto;
 }
 
 /* hover effect */
@@ -81,7 +81,8 @@ body {
   overflow: hidden;
   white-space: nowrap;
   font-size: 14px;
-
+  font-weight: 700;
+  color: rgba(0,0,0,0.87);
 }
 
 .imc-panel-body .label {
@@ -103,7 +104,6 @@ body {
   text-align: center;
   overflow: hidden;
   position: relative;
-
 }
 
 .imc-card-img {
@@ -122,7 +122,6 @@ body {
 
 
 .masonry .panel { position: relative; z-index:90;}
-/*.masonry .panel-body {position: relative;}*/
 .issue-unmoderated { /*background-color: #efefef;*/ }
 
 

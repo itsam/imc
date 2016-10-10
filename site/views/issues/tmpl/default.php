@@ -142,7 +142,7 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
                         </div>
 
                         <div class="imc-overview-cat-style">
-                            <span class="label label-default imc-overview-cat-label-style" title="<?php echo JText::_('COM_IMC_ISSUES_CATID');?>"><?php echo $item->catid_title; ?></span>
+                            <span class="imc-overview-cat-label-style" title="<?php echo JText::_('COM_IMC_ISSUES_CATID');?>"><?php echo $item->catid_title; ?></span>
                         </div>
 
                         <div class="imc-card-section-style">
