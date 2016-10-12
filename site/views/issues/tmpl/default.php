@@ -101,19 +101,17 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
 
                     echo '<div class="panel-thumbnail">'. "\n";
                     echo '<a href="'. JRoute::_('index.php?option=com_imc&view=issue&id='.(int) $item->id).'">';
-                    if(isset($attachments->files)){
+                    if(!empty($attachments->files)){
                         foreach ($attachments->files as $file) {
                             if (isset($file->thumbnailUrl)){
+
                                 echo '<img src="'.$attachments->imagedir .'/'. $attachments->id . '/medium/' . ($attachments->files[$i]->name) .'" alt="issue photo" class="imc-card-img" />' . "\n";
                                 break;
                             }
                             $i++;
                         }
                     } else {
-                        echo '<div class="imc-OverviewGridNoPhotoWrapperStyle">
-                        <i class="imc-EmptyStateIconStyle material-icons md-huge">landscape</i>
-                        <span class="imc-DisplayBlock imc-ReportGenericLabelStyle imc-TextColorHint">No photo submitted</span>
-                    </div>' . "\n";
+                        echo '<div class="imc-no-img-grid"><i class="hidden-xs icon-picture icon-4x"></i><i class="visible-xs icon-picture icon-2x"></i><div style="clear:both"></div><span class="imc-right-col-noimage">Χωρίς φωτογραφία</span></div>';
                     }
 
                     echo '</a>';

@@ -97,6 +97,13 @@ body {
   margin-bottom: 6px;
 }
 
+.imc-no-img-grid {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
 .panel-thumbnail {
   min-height: 240px;
   min-width: 100%;
