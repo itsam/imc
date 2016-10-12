@@ -77,8 +77,8 @@ $id = $jinput->get('id', null);
 					$layout = $app->getUserStateFromRequest('imc.layout', 'layout', 'list');
 				?>
 				<div class="btn-group">
-					<a class="btn <?php echo ($layout == 'list' ? 'btn-default': ''); ?>" role="button" title="<?php echo JText::_('MOD_IMCFILTERS_LIST_LAYOUT'); ?>" href="<?php echo JRoute::_('index.php?option=com_imc&layout=list', false, 2); ?>" class="btn btn-default"><i class="icon-align-justify"></i></a>
-					<a class="btn <?php echo ($layout == 'default' ? 'btn-default': ''); ?>" role="button" title="<?php echo JText::_('MOD_IMCFILTERS_CARD_LAYOUT'); ?>" href="<?php echo JRoute::_('index.php?option=com_imc&layout=default', false, 2); ?>" class="btn btn-default"><i class="icon-th"></i></a>
+					<a class="btn <?php echo ($layout == 'list' ? 'btn-default': ''); ?>" role="button" title="<?php echo JText::_('MOD_IMCFILTERS_LIST_LAYOUT'); ?>" href="<?php echo JRoute::_('index.php?option=com_imc&layout=list', false, 2); ?>" ><i class="icon-align-justify"></i></a>
+					<a class="btn <?php echo ($layout == 'default' ? 'btn-default': ''); ?>" role="button" title="<?php echo JText::_('MOD_IMCFILTERS_CARD_LAYOUT'); ?>" href="<?php echo JRoute::_('index.php?option=com_imc&layout=default', false, 2); ?>" ><i class="icon-th"></i></a>
 				</div>
 
 				<?php if($params->get('show_help') == 1) : ?>
