@@ -10,7 +10,7 @@
 defined('_JEXEC') or die;
 require_once JPATH_COMPONENT_ADMINISTRATOR . '/helpers/imc.php';
 
-//Load admin language file
+// Load admin language file
 $lang = JFactory::getLanguage();
 $lang->load('com_imc', JPATH_ADMINISTRATOR);
 $user = JFactory::getUser();
@@ -23,134 +23,134 @@ if (!$canEdit && $user->authorise('core.edit.own', 'com_imc.issue.' . $this->ite
 	$canEdit = $user->id == $this->item->created_by;
 }
 
-//Edit Own only if issue status is the initial one
+// Edit Own only if issue status is the initial one
 $firstStep = ImcFrontendHelper::getStepByStepId($this->item->stepid);
 $canEditOnStatus = true;
 if ($firstStep['ordering'] != 1){
 	$canEditOnStatus = false;
 }
 
-//issue statuses
+// Issue statuses
 JFormHelper::addFieldPath(JPATH_ROOT . '/components/com_imc/models/fields');
 $step = JFormHelper::loadFieldType('Step', false);
 $statuses = $step->getOptions();
 
 ?>
 
-<script type="text/javascript">
-	js = jQuery.noConflict();
-	js(document).ready(function() {
-		js('#gallery').photobox('a', { thumbs:true, loop:false }, callback);
-		// using setTimeout to make sure all images were in the DOM, before the history.load() function is looking them up to match the url hash
-		setTimeout(window._photobox.history.load, 2000);
-		function callback(){
-			//console.log('callback for loaded content:', this);
-		}
+	<script type="text/javascript">
+		js = jQuery.noConflict();
+		js(document).ready(function() {
+			js('#gallery').photobox('a', { thumbs:true, loop:false }, callback);
+			// using setTimeout to make sure all images were in the DOM, before the history.load() function is looking them up to match the url hash
+			setTimeout(window._photobox.history.load, 2000);
+			function callback(){
+				//console.log('callback for loaded content:', this);
+			}
 
-		js( "#timeline" ).click(function() {
-			js('#cd-timeline').toggle();
-			js('#cd-timeline')[0].scrollIntoView( true );
+			js( "#timeline" ).click(function() {
+				js('#cd-timeline').toggle();
+				js('#cd-timeline')[0].scrollIntoView( true );
+			});
+
+			js('.delete-button').click(deleteItem);
+
+			<?php if($this->showComments) : ?>
+			var token = '<?php echo JSession::getFormToken();?>';
+			var issueid = '<?php echo $this->item->id;?>';
+			var userid = '<?php echo $user->id;?>';
+			var picURL = '<?php echo JURI::base().'components/com_imc/assets/images/user-icon.png';?>';
+			<?php if(ImcHelper::getActions()->get('imc.manage.comments')) :?>
+			picURL = '<?php echo JURI::base().'components/com_imc/assets/images/admin-user-icon.png';?>';
+			<?php endif; ?>
+			js('#comments-container').comments({
+				profilePictureURL: picURL,
+				spinnerIconURL: '<?php echo JURI::base().'components/com_imc/assets/images/spinner.gif';?>',
+				upvoteIconURL: '<?php echo JURI::base().'components/com_imc/assets/images/upvote-icon.png';?>',
+				replyIconURL: '<?php echo JURI::base().'components/com_imc/assets/images/reply-icon.png';?>',
+				noCommentsIconURL: '<?php echo JURI::base().'components/com_imc/assets/images/no-comments-icon.png';?>',
+				textareaPlaceholderText: '<?php echo JText::_('COM_IMC_COMMENTS_LEAVE_COMMENT');?>',
+				popularText: '<?php echo JText::_('COM_IMC_COMMENTS_MOST_POPULAR');?>',
+				newestText: '<?php echo JText::_('COM_IMC_COMMENTS_NEWEST');?>',
+				oldestText: '<?php echo JText::_('COM_IMC_COMMENTS_OLDEST');?>',
+				sendText: '<?php echo JText::_('COM_IMC_COMMENTS_SEND');?>',
+				replyText: '<?php echo JText::_('COM_IMC_COMMENTS_REPLY');?>',
+				editText: '<?php echo JText::_('COM_IMC_COMMENTS_EDIT');?>',
+				saveText: '<?php echo JText::_('COM_IMC_COMMENTS_SAVE');?>',
+				deleteText: '<?php echo JText::_('COM_IMC_COMMENTS_DELETE');?>',
+				editedText: '<?php echo JText::_('COM_IMC_COMMENTS_EDITED');?>',
+				youText: '<?php echo JText::_('COM_IMC_COMMENTS_YOU');?>',
+				viewAllRepliesText: '<?php echo JText::_('COM_IMC_COMMENTS_VIEW_ALL_REPLIES');?> (__replyCount__)',
+				hideRepliesText: '<?php echo JText::_('COM_IMC_COMMENTS_HIDE');?>',
+				noCommentsText: '<?php echo JText::_('COM_IMC_COMMENTS_NO_COMMENTS');?>',
+				enableReplying: true,
+				enableEditing: false,
+				enableUpvoting: false,
+				enableDeleting: false,
+				enableDeletingCommentWithReplies: false,
+				timeFormatter: function(time) {
+					return new Date(time).toLocaleString();
+					//return time;
+				},
+				fieldMappings: {
+					id: 'id',
+					parent: 'parentid',
+					created: 'created',
+					modified: 'updated',
+					content: 'description',
+					fullname: 'fullname',
+					profilePictureURL: 'profile_picture_url',
+					createdByAdmin: 'created_by_admin',
+					createdByCurrentUser: 'created_by_current_user',
+					upvoteCount: 'upvote_count',
+					userHasUpvoted: 'user_has_upvoted'
+				},
+				getComments: function(success, error) {
+					js.ajax({
+						type: 'get',
+						'url': "index.php?option=com_imc&task=comments.comments&format=json&userid="+userid+"&issueid=" + issueid + "&" + token + "=1",
+						success: function(commentsArray) {
+							success(commentsArray.data)
+						},
+						error: error
+					});
+				}
+				<?php if (!$canCreate) : ?>
+				,
+				refresh: function() {
+					js('div.commenting-field').hide();
+
+				},
+				enableReplying: false
+				<?php endif; ?>
+
+				<?php if($canCreate) : ?>
+				,
+				postComment: function(commentJSON, success, error) {
+					//console.log(commentJSON);
+					js.ajax({
+						type: 'post',
+						'url': "index.php?option=com_imc&task=comments.postComment&format=json&userid="+userid+"&issueid=" + issueid + "&" + token + "=1",
+						data: commentJSON,
+						success: function(comment) {
+							success(comment.data);
+						},
+						error: error
+
+					});
+				}
+				<?php endif; ?>
+			});
+
+			<?php endif; ?>
 		});
 
-		js('.delete-button').click(deleteItem);
-
-		<?php if($this->showComments) : ?>
-		var token = '<?php echo JSession::getFormToken();?>';
-		var issueid = '<?php echo $this->item->id;?>';
-		var userid = '<?php echo $user->id;?>';
-		var picURL = '<?php echo JURI::base().'components/com_imc/assets/images/user-icon.png';?>';
-		<?php if(ImcHelper::getActions()->get('imc.manage.comments')) :?>
-		picURL = '<?php echo JURI::base().'components/com_imc/assets/images/admin-user-icon.png';?>';
-		<?php endif; ?>
-		js('#comments-container').comments({
-			profilePictureURL: picURL,
-			spinnerIconURL: '<?php echo JURI::base().'components/com_imc/assets/images/spinner.gif';?>',
-			upvoteIconURL: '<?php echo JURI::base().'components/com_imc/assets/images/upvote-icon.png';?>',
-			replyIconURL: '<?php echo JURI::base().'components/com_imc/assets/images/reply-icon.png';?>',
-			noCommentsIconURL: '<?php echo JURI::base().'components/com_imc/assets/images/no-comments-icon.png';?>',
-			textareaPlaceholderText: '<?php echo JText::_('COM_IMC_COMMENTS_LEAVE_COMMENT');?>',
-			popularText: '<?php echo JText::_('COM_IMC_COMMENTS_MOST_POPULAR');?>',
-			newestText: '<?php echo JText::_('COM_IMC_COMMENTS_NEWEST');?>',
-			oldestText: '<?php echo JText::_('COM_IMC_COMMENTS_OLDEST');?>',
-			sendText: '<?php echo JText::_('COM_IMC_COMMENTS_SEND');?>',
-			replyText: '<?php echo JText::_('COM_IMC_COMMENTS_REPLY');?>',
-			editText: '<?php echo JText::_('COM_IMC_COMMENTS_EDIT');?>',
-			saveText: '<?php echo JText::_('COM_IMC_COMMENTS_SAVE');?>',
-			deleteText: '<?php echo JText::_('COM_IMC_COMMENTS_DELETE');?>',
-			editedText: '<?php echo JText::_('COM_IMC_COMMENTS_EDITED');?>',
-			youText: '<?php echo JText::_('COM_IMC_COMMENTS_YOU');?>',
-			viewAllRepliesText: '<?php echo JText::_('COM_IMC_COMMENTS_VIEW_ALL_REPLIES');?> (__replyCount__)',
-			hideRepliesText: '<?php echo JText::_('COM_IMC_COMMENTS_HIDE');?>',
-			noCommentsText: '<?php echo JText::_('COM_IMC_COMMENTS_NO_COMMENTS');?>',
-			enableReplying: true,
-			enableEditing: false,
-			enableUpvoting: false,
-			enableDeleting: false,
-			enableDeletingCommentWithReplies: false,
-			timeFormatter: function(time) {
-				return new Date(time).toLocaleString();
-				//return time;
-			},
-			fieldMappings: {
-				id: 'id',
-				parent: 'parentid',
-				created: 'created',
-				modified: 'updated',
-				content: 'description',
-				fullname: 'fullname',
-				profilePictureURL: 'profile_picture_url',
-				createdByAdmin: 'created_by_admin',
-				createdByCurrentUser: 'created_by_current_user',
-				upvoteCount: 'upvote_count',
-				userHasUpvoted: 'user_has_upvoted'
-			},
-			getComments: function(success, error) {
-				js.ajax({
-					type: 'get',
-					'url': "index.php?option=com_imc&task=comments.comments&format=json&userid="+userid+"&issueid=" + issueid + "&" + token + "=1",
-					success: function(commentsArray) {
-						success(commentsArray.data)
-					},
-					error: error
-				});
+		function deleteItem() {
+			if (confirm("<?php echo JText::_('COM_IMC_DELETE_MESSAGE'); ?>")) {
+				window.location.href = '<?php echo JRoute::_('index.php?option=com_imc&task=issue.remove&id=' . $this->item->id, false, 2); ?>'
 			}
-			<?php if (!$canCreate) : ?>
-			,
-			refresh: function() {
-				js('div.commenting-field').hide();
-
-			},
-			enableReplying: false
-			<?php endif; ?>
-
-			<?php if($canCreate) : ?>
-			,
-			postComment: function(commentJSON, success, error) {
-				//console.log(commentJSON);
-				js.ajax({
-					type: 'post',
-					'url': "index.php?option=com_imc&task=comments.postComment&format=json&userid="+userid+"&issueid=" + issueid + "&" + token + "=1",
-					data: commentJSON,
-					success: function(comment) {
-						success(comment.data);
-					},
-					error: error
-
-				});
-			}
-			<?php endif; ?>
-		});
-
-		<?php endif; ?>
-	});
-
-	function deleteItem() {
-		if (confirm("<?php echo JText::_('COM_IMC_DELETE_MESSAGE'); ?>")) {
-			window.location.href = '<?php echo JRoute::_('index.php?option=com_imc&task=issue.remove&id=' . $this->item->id, false, 2); ?>'
 		}
-	}
 
-</script>
+	</script>
 
 <?php
 //make sure you are allowed to see the issue (in case of direct link)
@@ -254,18 +254,18 @@ if($this->item->moderation == 1 && !$canEdit) : ?>
 						<div id='gallery'>
 							<?php $count = 1; ?>
 							<?php foreach ($photos->files as $photo) : ?>
-								<a href="<?php echo $photos->imagedir .'/'. $photos->id . '/' . ($photo->name) ;?>">
+								<a style="text-decoration: none;" href="<?php echo $photos->imagedir .'/'. $photos->id . '/' . ($photo->name) ;?>">
 									<?php if($count == 1) : ?>
 										<img src="<?php echo $photos->imagedir .'/'. $photos->id . '/medium/' . ($photo->name) ;?>" alt="<?php echo JText::_('COM_IMC_ISSUES_PHOTO') . ' '. $count;?>" class="img-responsive" /><br />
 									<?php else :?>
-										<img src="<?php echo $photos->imagedir .'/'. $photos->id . '/thumbnail/' . ($photo->name) ;?>" alt="<?php echo JText::_('COM_IMC_ISSUES_PHOTO') . ' '. $count;?>" class="img-responsive" />
+										<img style="display: inline-block; padding-right: 6px;" src="<?php echo $photos->imagedir .'/'. $photos->id . '/thumbnail/' . ($photo->name) ;?>" alt="<?php echo JText::_('COM_IMC_ISSUES_PHOTO') . ' '. $count;?>" class="img-responsive" />
 									<?php endif; ?>
 								</a>
 								<?php $count++;?>
 							<?php endforeach; ?>
 						</div>
 					<?php endif; ?>
-					</p>
+
 					<hr />
 					<?php if($this->showComments) : ?>
 						<div id="comments-container"></div>
