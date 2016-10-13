@@ -20,7 +20,7 @@ $userId = $user->get('id');
 $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/css/card.css');
 ?>
 
-    <script src="https://unpkg.com/masonry-layout@4.0/dist/masonry.pkgd.min.js"></script>
+    <script src="https://unpkg.com/masonry-layout@4.1/dist/masonry.pkgd.min.js"></script>
     <script src="<?php echo  JURI::root(true) . '/components/com_imc/assets/js/imagesloaded.pkgd.min.js'; ?>"></script>
 
     <script type="text/javascript">
@@ -98,20 +98,26 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
 
                     <?php //show photo if any
                     $i = 0;
-                    if(isset($attachments->files)){
+
+                    echo '<div class="panel-thumbnail">'. "\n";
+                    echo '<a href="'. JRoute::_('index.php?option=com_imc&view=issue&id='.(int) $item->id).'">';
+                    if(!empty($attachments->files)){
                         foreach ($attachments->files as $file) {
                             if (isset($file->thumbnailUrl)){
-                                echo '<div class="panel-thumbnail">'. "\n";
-                                echo '<a href="'. JRoute::_('index.php?option=com_imc&view=issue&id='.(int) $item->id).'">';
-                                echo '<img src="'.$attachments->imagedir .'/'. $attachments->id . '/medium/' . ($attachments->files[$i]->name) .'" alt="issue photo" class="img-responsive imc-card-img" />' . "\n";
-                                echo '</a>';
-                                echo '</div>'. "\n";
+
+                                echo '<img src="'.$attachments->imagedir .'/'. $attachments->id . '/medium/' . ($attachments->files[$i]->name) .'" alt="issue photo" class="imc-card-img" />' . "\n";
                                 break;
                             }
                             $i++;
                         }
+                    } else {
+                        echo '<div class="imc-no-img-grid"><i class="hidden-xs icon-picture icon-4x"></i><i class="visible-xs icon-picture icon-2x"></i><div style="clear:both"></div><span class="imc-right-col-noimage">Χωρίς φωτογραφία</span></div>';
                     }
+
+                    echo '</a>';
+                    echo '</div>'. "\n";
                     ?>
+
 
                     <div class="<?php echo ($item->moderation == 1 ? 'issue-unmoderated ' : ''); ?>imc-panel-body">
                         <div class="imc-card-header">
@@ -134,7 +140,7 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
                         </div>
 
                         <div class="imc-overview-cat-style">
-                            <span class="label label-default imc-overview-cat-label-style" title="<?php echo JText::_('COM_IMC_ISSUES_CATID');?>"><?php echo $item->catid_title; ?></span>
+                            <span class="imc-overview-cat-label-style" title="<?php echo JText::_('COM_IMC_ISSUES_CATID');?>"><?php echo $item->catid_title; ?></span>
                         </div>
 
                         <div class="imc-card-section-style">
