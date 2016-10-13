@@ -35,6 +35,14 @@
                     <option value="0">JNO</option>
                     <option value="1">JYES</option>
                 </field>
+                <field name="imc_display"
+                       type="radio"
+                       default="default"
+                       class="btn-group btn-group-yesno"
+                       label="MOD_IMCFILTERS_GRID_LIST">
+                    <option value="default">MOD_IMCFILTERS_CARD_LAYOUT</option>
+                    <option value="list">MOD_IMCFILTERS_LIST_LAYOUT</option>
+                </field>
                 <field name="show_help"
                     type="radio"
                     default="0"

@@ -74,7 +74,7 @@ $id = $jinput->get('id', null);
 				</div>
 
 				<?php
-					$layout = $app->getUserStateFromRequest('imc.layout', 'layout', 'list');
+					$layout = $app->getUserStateFromRequest('imc.layout', 'layout', $params->get('imc_display') );
 				?>
 				<div class="btn-group">
 					<a class="btn <?php echo ($layout == 'list' ? 'btn-default': ''); ?>" role="button" title="<?php echo JText::_('MOD_IMCFILTERS_LIST_LAYOUT'); ?>" href="<?php echo JRoute::_('index.php?option=com_imc&layout=list', false, 2); ?>" ><i class="icon-align-justify"></i></a>

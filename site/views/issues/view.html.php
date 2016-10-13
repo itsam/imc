@@ -48,7 +48,8 @@ class ImcViewIssues extends JViewLegacy
 			throw new Exception(implode("\n", $errors));
 		}
 
-		$layout = $app->getUserStateFromRequest('imc.layout', 'layout', 'list');
+		$imcfiltersParams = new JRegistry(  JModuleHelper::getModule('mod_imcfilters')->params );
+		$layout = $app->getUserStateFromRequest('imc.layout', 'layout', $imcfiltersParams['imc_display']);
 
 		$this->setLayout($layout);
 		$this->_prepareDocument();
