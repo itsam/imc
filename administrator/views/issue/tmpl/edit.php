@@ -147,8 +147,21 @@ require_once JPATH_COMPONENT_SITE . '/helpers/imc.php';
 								<p><strong><?php echo JText::_('COM_IMC_USER_DETAILS');?>:</strong></p>
 								<?php 
 								foreach ($this->item->creatorDetails as $key => $value) {
-									echo $key.':'.$value . '<br />';
+									echo $key.': <strong>'.$value . '</strong><br />';
 								}
+								// get default profile
+								if(isset($this->item->userProfile->profile) ) {
+									foreach ($this->item->userProfile->profile as $key => $value) {
+										echo $key.': <strong>'.$value . '</strong><br />';
+									}
+								}
+								// get imc profile
+								if(isset($this->item->userProfile->imcprofile) ) {
+									foreach ($this->item->userProfile->imcprofile as $key => $value) {
+										echo $key.': <strong>'.$value . '</strong><br />';
+									}
+								}
+
 								?>
 								<br />
 								<?php echo $this->form->getLabel('extra'); ?>

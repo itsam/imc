@@ -177,11 +177,13 @@ class ImcModelIssue extends JModelAdmin
 	        	$item->category_image = '';
 
 	        $user = JFactory::getUser($item->created_by);
-	        $item->creatorDetails = array(
+			$userProfile = JUserHelper::getProfile( $item->created_by );
+			$item->creatorDetails = array(
 	        	'name'=>$user->name,
 	        	'username'=>$user->username,
-	        	'email'=>$user->email,
-	        ); 
+	        	'email'=>$user->email
+	        );
+			$item->userProfile = $userProfile;
 
 		}
 
