@@ -12,6 +12,7 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.view');
 JHtml::_('jquery.framework');
+require_once JPATH_COMPONENT_ADMINISTRATOR . '/helpers/imc.php';
 /**
  * View to edit
  */
@@ -22,6 +23,7 @@ class ImcViewIssue extends JViewLegacy {
     ///protected $form;
     protected $params;
     protected $showComments;
+	protected $logs;
 
     /**
      * Display the view
@@ -34,7 +36,40 @@ class ImcViewIssue extends JViewLegacy {
         $this->state = $this->get('State');
         $this->item = $this->get('Data');
         $this->params = $app->getParams('com_imc');
-        $this->showComments = $this->params->get('enablecomments');
+
+		//define if comments should be available
+	    $commentsEnabled = $this->params->get('enablecomments', false);
+	    $commentsMode = $this->params->get('commentsmode');
+	    $ownIssue = $user->id == $this->item->created_by;
+
+	    //if mode is private and user is the owner of the issue then show comments
+	    if ($commentsMode == 'private' && $ownIssue)
+	    {
+		    $this->showComments = true;
+	    }
+	    else
+	    {
+		    $this->showComments = false;
+	    }
+
+	    //if user is comments-administrator then show the comments in any case
+	    if(ImcHelper::getActions()->get('imc.manage.comments'))
+	    {
+		    $this->showComments = true;
+	    }
+
+	    //also if mode is public then show the comments in any case
+	    if ($commentsMode == 'public')
+	    {
+		    $this->showComments = true;
+	    }
+
+	    //finally, if comments are disabled then do not show comments in any case
+	    if(!$commentsEnabled)
+	    {
+		    $this->showComments = false;
+	    }
+
 
         if (!empty($this->item)) {
             ///$this->form = $this->get('Form');

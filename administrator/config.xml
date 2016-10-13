@@ -125,13 +125,20 @@
             label="COM_IMC_SETTINGS_COMMENTS_LABEL"
             description="COM_IMC_SETTINGS_COMMENTS_DESC">
 
-
         <field name="enablecomments" type="radio" default="1" class="btn-group btn-group-yesno" label="COM_IMC_SETTINGS_COMMENTS_ENABLE_LABEL" description="COM_IMC_SETTINGS_COMMENTS_ENABLE_DESC">
             <option value="0">JNO</option>
             <option value="1">JYES</option>
         </field>
 
         <field type="spacer" name="myspacer" hr="true" />
+
+        <field name="commentsmode" type="radio" default="public"
+               class="btn-group btn-group-yesno"
+               label="COM_IMC_SETTINGS_COMMENTS_MODE_LABEL"
+               description="COM_IMC_SETTINGS_COMMENTS_MOD_DESC">
+            <option value="public">COM_IMC_SETTINGS_COMMENTS_MODE_PUBLIC</option>
+            <option value="private">COM_IMC_SETTINGS_COMMENTS_MODE_PRIVATE</option>
+        </field>
 
         <field name="directpublishingcomment" type="radio" default="1" class="btn-group btn-group-yesno" label="COM_IMC_SETTINGS_COMMENTS_DIRECT_PUBLISHING_LABEL" description="COM_IMC_SETTINGS_COMMENTS_DIRECT_PUBLISHING_DESC">
             <option value="0">JNO</option>
