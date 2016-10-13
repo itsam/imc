@@ -72,24 +72,15 @@ function setMarkers(center, map) {
                         id: data.id
                     });
                     if(data.category_image == '')
-<<<<<<< HEAD
-                      marker.setIcon('https://maps.google.com/mapfiles/ms/icons/red-dot.png');
-                    
-=======
-                        marker.setIcon('http://maps.google.com/mapfiles/ms/icons/red-dot.png');
+                        marker.setIcon('https://maps.google.com/mapfiles/ms/icons/red-dot.png');
 
->>>>>>> 78e6c7715526135c1a8601adbe875c4f6a2a23ec
                     imc_markers.push(marker);
                     //bounds.extends(marker.position);
 
                     infoBox(map, marker, data);
 
                     if(data.moderation == 1){
-<<<<<<< HEAD
-                      marker.setIcon('https://maps.google.com/mapfiles/ms/icons/blue-dot.png');
-=======
-                        marker.setIcon('http://maps.google.com/mapfiles/ms/icons/blue-dot.png');
->>>>>>> 78e6c7715526135c1a8601adbe875c4f6a2a23ec
+                        marker.setIcon('https://maps.google.com/mapfiles/ms/icons/blue-dot.png');
                     }
                 }
                 resetBounds(map, imc_markers);
@@ -121,7 +112,7 @@ function infoBox(map, marker, data) {
         panelFocusReset();
     });
 
-    // Creating a closure to retain the correct data 
+    // Creating a closure to retain the correct data
     // Pass the current data in the loop into the closure (marker, data)
     (function(marker, data) {
         // Attaching a click event to the current marker
