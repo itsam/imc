@@ -34,7 +34,7 @@ class ImcControllerComments extends ImcController
 	{
 		$app = JFactory::getApplication();
 		$params = $app->getParams('com_imc');
-		$showComments = $params->get('enablecomments');
+		//$showComments = $params->get('enablecomments');
 		$directpublishing = $params->get('directpublishingcomment');
 
 		try {
@@ -42,11 +42,6 @@ class ImcControllerComments extends ImcController
 			// Check for request forgeries.
 			if (!$api && !JSession::checkToken('get')) {
 				throw new Exception('Invalid session token');
-			}
-
-			if(!$showComments)
-			{
-				throw new Exception('Comments are not allowed');
 			}
 
 			$issueid = $app->input->getInt('issueid', null);
@@ -76,6 +71,12 @@ class ImcControllerComments extends ImcController
 			if($userid == 0)
 			{
 				throw new Exception('guests cannot post comments');
+			}
+
+            $showComments = ImcFrontendHelper::showComments(JFactory::getUser($userid), $issue);
+			if(!$showComments)
+			{
+				throw new Exception('Comments are not allowed (by setting)');
 			}
 
 			$parentid = $app->input->getInt('parentid', 0);

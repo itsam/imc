@@ -250,8 +250,9 @@ class ImcFrontendHelper
 		}
 		if(isset($data->comments))
 		{
-			//check if comments are globally disabled
-			if ($params->get('enablecomments') == 0)
+			//check if comments are allowed
+			$showComments = self::showComments(JFactory::getUser($userid), $data);
+			if (!$showComments)
 			{
 				$data->comments = -1;
 			}
@@ -1528,4 +1529,45 @@ class ImcFrontendHelper
 		return $result;
 
 	}
+
+	public static function showComments($user, $issue)
+	{
+		$showComments = true;
+
+		$params = JFactory::getApplication()->getParams('com_imc');
+		$commentsEnabled = $params->get('enablecomments', false);
+		$commentsMode = $params->get('commentsmode');
+		$ownIssue = $user->id == $issue->created_by;
+
+		//if mode is private and user is the owner of the issue then show comments
+		if ($commentsMode == 'private' && $ownIssue)
+		{
+			$showComments = true;
+		}
+		else
+		{
+			$showComments = false;
+		}
+
+		//if user is comments-administrator then show the comments in any case
+		if(ImcHelper::getActions($user)->get('imc.manage.comments'))
+		{
+			$showComments = true;
+		}
+
+		//also if mode is public then show the comments in any case
+		if ($commentsMode == 'public')
+		{
+			$showComments = true;
+		}
+
+		//finally, if comments are disabled then do not show comments in any case
+		if(!$commentsEnabled)
+		{
+			$showComments = false;
+		}
+
+		return $showComments;
+	}
+
 }
