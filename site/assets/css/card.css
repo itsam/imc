@@ -86,10 +86,6 @@ body {
   text-overflow: ellipsis;
 }
 
-.imc-grid-title:hover {
-  text-decoration: none;
-}
-
 .imc-overview-cat-label-style {
   text-align: center;
   text-overflow: ellipsis;

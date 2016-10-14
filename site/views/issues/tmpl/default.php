@@ -87,8 +87,6 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
             <div class="grid-item">
                 <div id="imc-panel-<?php echo $item->id;?>" class="panel panel-default">
 
-
-
                     <?php if (JFactory::getUser()->id == $item->created_by) : ?>
                         <div class="ribbon-wrapper-corner"><div class="ribbon-corner"><?php echo JText::_('COM_IMC_ISSUES_MY_ISSUE');?></div></div>
                     <?php else : ?>
@@ -114,7 +112,11 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
                             $i++;
                         }
                     } else {
-                        echo '<div class="imc-no-img-grid"><i class="hidden-xs icon-picture icon-4x"></i><i class="visible-xs icon-picture icon-2x"></i><div style="clear:both"></div><span class="imc-right-col-noimage">Χωρίς φωτογραφία</span></div>';
+                        echo '<div class="imc-no-img-grid">
+                                    <i class="hidden-xs icon-picture icon-4x"></i> <i class="visible-xs icon-picture icon-2x"></i>
+                                    <div style="clear:both"></div>
+                                    <span class="imc-right-col-noimage">Χωρίς φωτογραφία</span>
+                              </div>';
                     }
 
                     echo '</a>'; ?>
@@ -126,7 +128,6 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
                             <?php if($item->category_image != '') : ?>
                                 <img src="<?php echo $item->category_image; ?>" alt="category image" />
                             <?php endif; ?>
-
 
                             <?php if ($canEdit && $canEditOnStatus) : ?>
                                 <a title="<?php echo $this->escape($item->title); ?>" class="imc-grid-title" href="<?php echo JRoute::_('index.php?option=com_imc&task=issue.edit&id='.(int) $item->id); ?>">
