@@ -86,6 +86,9 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
 
             <div class="grid-item">
                 <div id="imc-panel-<?php echo $item->id;?>" class="panel panel-default">
+
+
+
                     <?php if (JFactory::getUser()->id == $item->created_by) : ?>
                         <div class="ribbon-wrapper-corner"><div class="ribbon-corner"><?php echo JText::_('COM_IMC_ISSUES_MY_ISSUE');?></div></div>
                     <?php else : ?>
@@ -114,10 +117,9 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
                         echo '<div class="imc-no-img-grid"><i class="hidden-xs icon-picture icon-4x"></i><i class="visible-xs icon-picture icon-2x"></i><div style="clear:both"></div><span class="imc-right-col-noimage">Χωρίς φωτογραφία</span></div>';
                     }
 
-                    echo '</a>';
-                    echo '</div>'. "\n";
-                    ?>
-
+                    echo '</a>'; ?>
+                    <span class="imc-card-id"><?php echo '#'. (int) $item->id . ' '; ?></span>
+                    <?php echo '</div>'. "\n"; ?>
 
                     <div class="<?php echo ($item->moderation == 1 ? 'issue-unmoderated ' : ''); ?>imc-panel-body">
                         <div class="imc-card-header">
@@ -125,18 +127,22 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
                                 <img src="<?php echo $item->category_image; ?>" alt="category image" />
                             <?php endif; ?>
 
+
                             <?php if ($canEdit && $canEditOnStatus) : ?>
-                                <span class="imc-list-id"><?php echo '#'. (int) $item->id . ' '; ?></span>
-                                <a class="imc-grid-title" href="<?php echo JRoute::_('index.php?option=com_imc&task=issue.edit&id='.(int) $item->id); ?>">
-                                    <i class="icon-edit"></i> <?php echo $this->escape($item->title); ?></a>
+                                <a title="<?php echo $this->escape($item->title); ?>" class="imc-grid-title" href="<?php echo JRoute::_('index.php?option=com_imc&task=issue.edit&id='.(int) $item->id); ?>">
+                                    <i class="icon-edit"></i> <?php echo $this->escape($item->title); ?>
+                                </a>
                             <?php else : ?>
-                                <span class="imc-list-id"><?php echo '#'. (int) $item->id . ' '; ?></span>
-                                <a href="<?php echo JRoute::_('index.php?option=com_imc&view=issue&id='.(int) $item->id)?>" class="imc-grid-title"> <?php echo $this->escape($item->title); ?></a>
+                                <a title="<?php echo $this->escape($item->title); ?>" class="imc-grid-title" href="<?php echo JRoute::_('index.php?option=com_imc&view=issue&id='.(int) $item->id)?>">
+                                    <?php echo $this->escape($item->title); ?>
+                                </a>
                             <?php endif; ?>
+
                             <?php /*uncomment if you like to display a lock icon */
                             /*if (isset($item->checked_out) && $item->checked_out) : ?>
                             <i class="icon-lock"></i> <?php echo JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, 'issues.', $canCheckin); ?>
                           <?php endif; */ ?>
+
                         </div>
 
                         <div class="imc-overview-cat-style">

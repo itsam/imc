@@ -60,18 +60,34 @@ body {
 .imc-warning {color: #e21d1d; font-size: small;}
 .imc-info {color: #999999; font-size: small;}
 
-.imc-list-id {
-  font-size:calc(12px + 0.2vw);
+.imc-card-id {
+  font-size:14px;
   line-height: 140%;
-  padding-right: 4px;
+  padding: 0 6px 0 6px;
+  border-radius: 4px;
+  z-index:20;
+  color:#ffffff;
+  background-color: rgb(117,117,117);
+  background-color: rgba(0,0,0,0.54);
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  letter-spacing: 0.3pt;
 }
 
 .imc-grid-title {
   font-size: 20px;
-  width: 100%;
-  margin: 0 0 10px;
+  display: block;
+  margin: 0 0 4px;
   line-height: 20px;
   font-weight: 400;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.imc-grid-title:hover {
+  text-decoration: none;
 }
 
 .imc-overview-cat-label-style {
@@ -82,6 +98,7 @@ body {
   white-space: nowrap;
   font-size: 14px;
   font-weight: 700;
+  color: rgb(33,33,33);
   color: rgba(0,0,0,0.87);
 }
 
