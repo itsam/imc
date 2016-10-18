@@ -20,6 +20,10 @@ JHtml::_('behavior.keepalive');
 $document = JFactory::getDocument();
 $document->addStyleSheet('components/com_imc/assets/css/imc.css');
 require_once JPATH_COMPONENT_SITE . '/helpers/imc.php';
+
+$canDo = ImcHelper::getActions();
+$canManageModeration = $canDo->get('imc.manage.moderation');
+
 ?>
 <script type="text/javascript">
 
@@ -67,13 +71,16 @@ require_once JPATH_COMPONENT_SITE . '/helpers/imc.php';
         <div class="row-fluid">
             <div class="span6">
                 <fieldset class="adminform">
+					<?php if($canManageModeration) : ?>
 	                <div class="control-group">
 	                	<div class="control-label"><?php echo $this->form->getLabel('moderation'); ?></div>
 	                	<div class="controls"><?php echo $this->form->getInput('moderation'); ?></div>
 		                <div class="control-label"><?php echo $this->form->getLabel('is_moderation_modified'); ?></div>
 		                <div class="controls"><?php echo $this->form->getInput('is_moderation_modified'); ?></div>
-
-	                </div>                 
+	                </div>
+					<?php else: ?>
+						<div class="alert alert-info"><?php echo JText::_('COM_IMC_MODERATION_INFO_ALERT'); ?></div>
+					<?php endif ?>
 		            <div class="control-group">
 						<div class="control-label"><?php echo $this->form->getLabel('id'); ?></div>
 						<div class="controls"><?php echo $this->form->getInput('id'); ?></div>

@@ -104,7 +104,8 @@ class ImcHelper {
             'imc.manage.comments',
             'imc.manage.steps',
             'imc.manage.logs',
-            'imc.showall.issues'
+            'imc.showall.issues',
+            'imc.manage.moderation'
         );
 
         foreach ($actions as $action) {
