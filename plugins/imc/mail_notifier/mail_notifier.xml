@@ -56,7 +56,7 @@
                   <option value="1">JYES</option>
                 </field>  
 
-                <field type="spacer" name="myspacer2" hr="true" />  
+                <field type="spacer" name="myspacer_2" hr="true" />
 
                 <field name="mailcategorychangeadmins" type="radio" default="1" class="btn-group btn-group-yesno" label="PLG_IMC_MAIL_NOTIFIER_SETTINGS_ON_CHANGE_CATEGORY_TO_ADMINS_LABEL" description="PLG_IMC_MAIL_NOTIFIER_SETTINGS_ON_CHANGE_CATEGORY_TO_ADMINS_DESC">
                   <option value="0">JNO</option>
@@ -76,7 +76,18 @@
                 <field name="mailstatuschangeuser" type="radio" default="1" class="btn-group btn-group-yesno" label="PLG_IMC_MAIL_NOTIFIER_SETTINGS_ON_CHANGE_STATUS_TO_USER_LABEL" description="PLG_IMC_MAIL_NOTIFIER_SETTINGS_ON_CHANGE_STATUS_TO_USER_DESC">
                   <option value="0">JNO</option>
                   <option value="1">JYES</option>
-                </field>                    
+                </field>
+
+                <field type="spacer" name="myspacer_3" hr="true" />
+
+                <field name="mailmoderationchangeadmins" type="radio" default="1" class="btn-group btn-group-yesno" label="PLG_IMC_MAIL_NOTIFIER_SETTINGS_ON_CHANGE_MODERATION_TO_ADMINS_LABEL" description="PLG_IMC_MAIL_NOTIFIER_SETTINGS_ON_CHANGE_MODERATION_TO_ADMINS_DESC">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
+                <field name="mailmoderationchangeuser" type="radio" default="0" class="btn-group btn-group-yesno" label="PLG_IMC_MAIL_NOTIFIER_SETTINGS_ON_CHANGE_MODERATION_TO_USER_LABEL" description="PLG_IMC_MAIL_NOTIFIER_SETTINGS_ON_CHANGE_MODERATION_TO_USER_DESC">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
             </fieldset>
             <fieldset 
                 name="messages"

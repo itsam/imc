@@ -22,19 +22,23 @@ $document->addStyleSheet('components/com_imc/assets/css/imc.css');
 require_once JPATH_COMPONENT_SITE . '/helpers/imc.php';
 ?>
 <script type="text/javascript">
-    /*
+
     js = jQuery.noConflict();
     js(document).ready(function() {
-        
-	js('input:hidden.stepid').each(function(){
-		var name = js(this).attr('name');
-		if(name.indexOf('stepidhidden')){
-			js('#jform_stepid option[value="'+js(this).val()+'"]').attr('selected',true);
-		}
-	});
-	js("#jform_stepid").trigger("liszt:updated");
+	    var init_moderation = js('input[name="jform[moderation]"]:checked').val();
+	    console.log( init_moderation );
+	    js('input[name="jform[moderation]"]').change(function () {
+		    if(this.value == init_moderation)
+		    {
+			    js('#jform_is_moderation_modified').val(false);
+		    }
+		    else
+		    {
+			    js('#jform_is_moderation_modified').val(true);
+		    }
+	    });
     });
-    */
+
     Joomla.submitbutton = function(task)
     {
         if (task == 'issue.cancel') {
@@ -66,6 +70,9 @@ require_once JPATH_COMPONENT_SITE . '/helpers/imc.php';
 	                <div class="control-group">
 	                	<div class="control-label"><?php echo $this->form->getLabel('moderation'); ?></div>
 	                	<div class="controls"><?php echo $this->form->getInput('moderation'); ?></div>
+		                <div class="control-label"><?php echo $this->form->getLabel('is_moderation_modified'); ?></div>
+		                <div class="controls"><?php echo $this->form->getInput('is_moderation_modified'); ?></div>
+
 	                </div>                 
 		            <div class="control-group">
 						<div class="control-label"><?php echo $this->form->getLabel('id'); ?></div>

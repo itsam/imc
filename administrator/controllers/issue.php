@@ -140,6 +140,11 @@ class ImcControllerIssue extends JControllerForm
                 $dispatcher->trigger( 'onAfterCategoryModified', array( $model, $validData ) );                
             }
 
+	        //c. check for moderation modification
+	        if(isset($validData['is_moderation_modified']) && $validData['is_moderation_modified'] === 'true'){
+		        $dispatcher = JEventDispatcher::getInstance();
+		        $dispatcher->trigger( 'onAfterModerationModified', array( $model, $validData ) );
+	        }
         }   
 
         //B: move any images only if record is new
