@@ -14,6 +14,14 @@ JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 $user = JFactory::getUser();
 $userId = $user->get('id');
 
+$isAllowedToEdit = $user->authorise('core.edit', 'com_imc');
+if(is_null($isAllowedToEdit))
+{
+    $isAllowedToEdit = 0;
+}
+
+$allowed_catids = ImcHelper::getCategoriesByUserGroups();
+
 // $canEdit = $user->authorise('core.edit', 'com_imc');
 // $canDelete = $user->authorise('core.delete', 'com_imc');
 
@@ -57,13 +65,13 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
         });
     </script>
 
-
     <div class="grid">
         <!-- width of .grid-sizer used for columnWidth -->
         <div class="grid-sizer"></div>
         <div class="gutter-sizer"></div>
         <?php foreach ($this->items as $i => $item) : ?>
             <?php
+
             $canCreate = $user->authorise('core.create', 'com_imc.issue.'.$item->id);
             $canEdit = $user->authorise('core.edit', 'com_imc.issue.'.$item->id);
             $canCheckin = $user->authorise('core.manage', 'com_imc.issue.'.$item->id);
@@ -75,7 +83,7 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
             //Edit Own only if issue status is the initial one
             $firstStep = ImcFrontendHelper::getStepByStepId($item->stepid);
             $canEditOnStatus = true;
-            if ($firstStep['ordering'] != 1){
+            if ($firstStep['ordering'] != 1 && !$isAllowedToEdit){
                 $canEditOnStatus = false;
             }
 
@@ -125,14 +133,14 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
                                 <img src="<?php echo $item->category_image; ?>" alt="category image" />
                             <?php endif; ?>
 
-                            <?php if ($canEdit && $canEditOnStatus) : ?>
+                            <?php if ( ($canEdit && $canEditOnStatus && empty($allowed_catids)) || (in_array($item->catid,$allowed_catids)) ) : ?>
                                 <span class="imc-list-id"><?php echo '#'. (int) $item->id . ' '; ?></span>
                                 <a class="imc-grid-title" href="<?php echo JRoute::_('index.php?option=com_imc&task=issue.edit&id='.(int) $item->id); ?>">
                                     <i class="icon-edit"></i> <?php echo $this->escape($item->title); ?></a>
                             <?php else : ?>
                                 <span class="imc-list-id"><?php echo '#'. (int) $item->id . ' '; ?></span>
                                 <a href="<?php echo JRoute::_('index.php?option=com_imc&view=issue&id='.(int) $item->id)?>" class="imc-grid-title"> <?php echo $this->escape($item->title); ?></a>
-                            <?php endif; ?>
+                            <?php endif ?>
                             <?php /*uncomment if you like to display a lock icon */
                             /*if (isset($item->checked_out) && $item->checked_out) : ?>
                             <i class="icon-lock"></i> <?php echo JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, 'issues.', $canCheckin); ?>

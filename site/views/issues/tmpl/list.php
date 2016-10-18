@@ -13,6 +13,15 @@ JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
 $user = JFactory::getUser();
 $userId = $user->get('id');
+
+$isAllowedToEdit = $user->authorise('core.edit', 'com_imc');
+if(is_null($isAllowedToEdit))
+{
+    $isAllowedToEdit = 0;
+}
+
+$allowed_catids = ImcHelper::getCategoriesByUserGroups();
+
 $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/css/list.css');
 ?>
 
@@ -41,7 +50,7 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
             //Edit Own only if issue status is the initial one
             $firstStep = ImcFrontendHelper::getStepByStepId($item->stepid);
             $canEditOnStatus = true;
-            if ($firstStep['ordering'] != 1){
+            if ($firstStep['ordering'] != 1 && !$isAllowedToEdit){
                 $canEditOnStatus = false;
             }
 
@@ -78,7 +87,7 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
 
                     <div class="imc-column imc-med-col">
                         <div class="imc-list-title">
-                            <?php if ($canEdit && $canEditOnStatus) : ?>
+                            <?php if ( ($canEdit && $canEditOnStatus && empty($allowed_catids)) || (in_array($item->catid,$allowed_catids)) ) : ?>
                                 <a href="<?php echo JRoute::_('index.php?option=com_imc&task=issue.edit&id='.(int) $item->id); ?>">
                                     <i class="icon-edit"></i> <?php echo $this->escape($item->title); ?></a>
                             <?php else : ?>
