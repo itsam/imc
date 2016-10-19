@@ -83,18 +83,21 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
                                 <img src="<?php echo $item->category_image; ?>" alt="category image" class="imc-issue-cat-img"/>
                             <?php endif; ?>
                         </p>
+
+                        <?php if ( ($canEdit && $canEditOnStatus && empty($allowed_catids)) || (in_array($item->catid,$allowed_catids)) ) : ?>
+                            <a href="<?php echo JRoute::_('index.php?option=com_imc&task=issue.edit&id='.(int) $item->id); ?>">
+                                <i class="icon-edit"></i> </a>
+                        <?php endif; ?>
+
                     </div>
 
                     <div class="imc-column imc-med-col">
                         <div class="imc-list-title">
-                            <?php if ( ($canEdit && $canEditOnStatus && empty($allowed_catids)) || (in_array($item->catid,$allowed_catids)) ) : ?>
-                                <a href="<?php echo JRoute::_('index.php?option=com_imc&task=issue.edit&id='.(int) $item->id); ?>">
-                                    <i class="icon-edit"></i> <?php echo $this->escape($item->title); ?></a>
-                            <?php else : ?>
-                                <a href="<?php echo JRoute::_('index.php?option=com_imc&view=issue&id='.(int) $item->id); ?>">
-                                    <?php echo $this->escape($item->title); ?>
-                                </a>
-                            <?php endif; ?>
+
+                            <a href="<?php echo JRoute::_('index.php?option=com_imc&view=issue&id='.(int) $item->id); ?>">
+                                <?php echo $this->escape($item->title); ?>
+                            </a>
+
                         </div>
 
                         <span class="imc-list-cat-label" title="<?php echo JText::_('COM_IMC_ISSUES_CATID');?>"><?php echo $item->catid_title; ?></span>
