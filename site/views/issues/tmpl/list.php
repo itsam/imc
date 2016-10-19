@@ -104,7 +104,7 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
 
                         <div class="imc-list-content">
                             <p><?php echo ImcFrontendHelper::cutString($item->description, 200); ?></p>
-                            <p><a href="<?php echo JRoute::_('index.php?option=com_imc&view=issue&id='.(int) $item->id); ?>"><?php echo JText::_('COM_IMC_ISSUES_MORE');?></a></p>
+                            <!--<p><a href="<?php /*echo JRoute::_('index.php?option=com_imc&view=issue&id='.(int) $item->id); */?>"><?php /*echo JText::_('COM_IMC_ISSUES_MORE');*/?></a></p>-->
                         </div>
 
                         <div class="imc-list-address">

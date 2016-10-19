@@ -132,9 +132,15 @@ div.list-footer div.counter{
 .imc-list-address{width:100%;margin-bottom:10px;}
 .imc-HorizontalSeparator{background:0;padding:0;background-color:#d1d1d1;border:0;height:1px;margin:0 0 10px;}
 .imc-list-content {
-    width:100%;
+    width: 100%;
 
 }
+.imc-list-content p {
+    margin: 0 auto;
+    padding-bottom: 6px;
+    line-height: 130%;
+}
+
 .imc-list-info {
     width:100%;
     margin-bottom:10px;
@@ -142,7 +148,7 @@ div.list-footer div.counter{
 }
 
 .imc-list-info span {
-    margin-right:20px;
+    margin-right: 12px;
     font-size: 12px;
 }
 
