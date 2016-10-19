@@ -88,9 +88,7 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
                             <?php endif; ?>
                         </div>
 
-                        <div class="imc-overview-cat-style">
-                            <span class="label label-default imc-overview-label-style" title="<?php echo JText::_('COM_IMC_ISSUES_CATID');?>"><?php echo $item->catid_title; ?></span>
-                        </div>
+                        <span class="imc-list-cat-label" title="<?php echo JText::_('COM_IMC_ISSUES_CATID');?>"><?php echo $item->catid_title; ?></span>
 
                         <div class="imc-list-content">
                             <p><?php echo ImcFrontendHelper::cutString($item->description, 200); ?></p>

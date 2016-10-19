@@ -124,21 +124,19 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
 
                     <?php if ($canEdit && $canEditOnStatus) : ?>
                         <span class="imc-card-edit-icon">
-                        <a title="edit <?php echo $this->escape($item->title); ?>" class="imc-grid-title" href="<?php echo JRoute::_('index.php?option=com_imc&task=issue.edit&id='.(int) $item->id); ?>">
-                            <i class="icon-edit"></i>
-                        </a>
-                            </span>
-                    <?php endif; ?>
-
-                    <?php echo '</div>'. "\n"; ?>
+                            <a title="edit <?php echo $this->escape($item->title); ?>" class="imc-grid-title" href="<?php echo JRoute::_('index.php?option=com_imc&task=issue.edit&id='.(int) $item->id); ?>">
+                                <i class="icon-edit"></i>
+                            </a>
+                        </span>
+                    <?php endif;
+                    echo '</div>'. "\n";
+                    ?>
 
                     <div class="<?php echo ($item->moderation == 1 ? 'issue-unmoderated ' : ''); ?>imc-panel-body">
                         <div class="imc-card-header">
                             <?php if($item->category_image != '') : ?>
                                 <img src="<?php echo $item->category_image; ?>" alt="category image" />
                             <?php endif; ?>
-
-
 
                             <a title="<?php echo $this->escape($item->title); ?>" class="imc-grid-title" href="<?php echo JRoute::_('index.php?option=com_imc&view=issue&id='.(int) $item->id)?>">
                                 <?php echo $this->escape($item->title); ?>
@@ -151,9 +149,7 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
 
                         </div>
 
-                        <div class="imc-overview-cat-style">
-                            <span class="imc-overview-cat-label-style" title="<?php echo JText::_('COM_IMC_ISSUES_CATID');?>"><?php echo $item->catid_title; ?></span>
-                        </div>
+                        <span class="imc-grid-cat-label" title="<?php echo JText::_('COM_IMC_ISSUES_CATID');?>"><?php echo $item->catid_title; ?></span>
 
                         <div class="imc-card-section-style">
                             <?php if($item->updated == $item->created) : ?>
@@ -163,7 +159,7 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
                             <?php endif; ?>
                             <span class="label label-info" style="background-color: <?php echo $item->stepid_color;?>" title="<?php echo JText::_('COM_IMC_ISSUES_STEPID');?>"><?php echo $item->stepid_title; ?></span>
 
-                            <span class="label label-default" title="<?php echo JText::_('COM_IMC_TITLE_COMMENTS');?>"><i class="icon-comment"></i> <?php echo $item->comments;?></span>
+                            <span class="label label-default" title="<?php echo JText::_('COM_IMC_TITLE_COMMENTS');?>"><i class="icon-comment"></i>&nbsp; <?php echo $item->comments;?></span>
                             <?php if (JFactory::getUser()->id == $item->created_by && $item->votes > 0) : ?>
                                 <span class="label label-default" title="<?php echo JText::_('COM_IMC_ISSUES_VOTES');?>">+<?php echo $item->votes; ?></span>
                             <?php endif; ?>
