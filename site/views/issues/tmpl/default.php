@@ -115,12 +115,21 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
                         echo '<div class="imc-no-img-grid">
                                     <i class="hidden-xs icon-picture icon-4x"></i> <i class="visible-xs icon-picture icon-2x"></i>
                                     <div style="clear:both"></div>
-                                    <span class="imc-right-col-noimage">Χωρίς φωτογραφία</span>
+                                    <span class="imc-right-col-noimage">'. JText::_('COM_IMC_NO_PHOTO').'</span>
                               </div>';
                     }
 
                     echo '</a>'; ?>
                     <span class="imc-card-id"><?php echo '#'. (int) $item->id . ' '; ?></span>
+
+                    <?php if ($canEdit && $canEditOnStatus) : ?>
+                        <span class="imc-card-edit-icon">
+                        <a title="edit <?php echo $this->escape($item->title); ?>" class="imc-grid-title" href="<?php echo JRoute::_('index.php?option=com_imc&task=issue.edit&id='.(int) $item->id); ?>">
+                            <i class="icon-edit"></i>
+                        </a>
+                            </span>
+                    <?php endif; ?>
+
                     <?php echo '</div>'. "\n"; ?>
 
                     <div class="<?php echo ($item->moderation == 1 ? 'issue-unmoderated ' : ''); ?>imc-panel-body">
@@ -129,15 +138,11 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
                                 <img src="<?php echo $item->category_image; ?>" alt="category image" />
                             <?php endif; ?>
 
-                            <?php if ($canEdit && $canEditOnStatus) : ?>
-                                <a title="<?php echo $this->escape($item->title); ?>" class="imc-grid-title" href="<?php echo JRoute::_('index.php?option=com_imc&task=issue.edit&id='.(int) $item->id); ?>">
-                                    <i class="icon-edit"></i> <?php echo $this->escape($item->title); ?>
-                                </a>
-                            <?php else : ?>
-                                <a title="<?php echo $this->escape($item->title); ?>" class="imc-grid-title" href="<?php echo JRoute::_('index.php?option=com_imc&view=issue&id='.(int) $item->id)?>">
-                                    <?php echo $this->escape($item->title); ?>
-                                </a>
-                            <?php endif; ?>
+
+
+                            <a title="<?php echo $this->escape($item->title); ?>" class="imc-grid-title" href="<?php echo JRoute::_('index.php?option=com_imc&view=issue&id='.(int) $item->id)?>">
+                                <?php echo $this->escape($item->title); ?>
+                            </a>
 
                             <?php /*uncomment if you like to display a lock icon */
                             /*if (isset($item->checked_out) && $item->checked_out) : ?>

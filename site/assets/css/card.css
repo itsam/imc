@@ -75,6 +75,18 @@ body {
   letter-spacing: 0.3pt;
 }
 
+.imc-card-edit-icon {
+  font-size:14px;
+  line-height: 140%;
+  padding: 0 6px 0 6px;
+  border-radius: 4px;
+  z-index:20;
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+
+}
+
 .imc-grid-title {
   font-size: 20px;
   display: block;
