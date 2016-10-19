@@ -124,15 +124,12 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
                             <span class="label label-default" title="<?php echo JText::_('COM_IMC_FORM_LBL_ISSUE_VOTES');?>"><i class="icon-thumbs-up"></i> <?php echo $item->votes;?></span>
 
                         </div>
-
-
                     </div>
-
 
                     <div class="imc-column imc-right-col">
                         <?php //show photo if any
                         $i = 0;
-
+                        echo '<a class="imc-list-img" href="'. JRoute::_('index.php?option=com_imc&view=issue&id='.(int) $item->id).'">';
                         if(isset($attachments->files)){
                             foreach ($attachments->files as $file) {
                                 if (isset($file->thumbnailUrl)){
@@ -153,7 +150,9 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
                             echo '<div style="clear:both"></div>';
                             echo '<span class="imc-right-col-noimage">'. JText::_('COM_IMC_NO_PHOTO') . '</span>';
                         }
+                        echo '</a>';
                         ?>
+
                     </div>
 
                 </div>

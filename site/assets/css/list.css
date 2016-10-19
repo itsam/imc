@@ -141,6 +141,11 @@ div.list-footer div.counter{
     line-height: 130%;
 }
 
+.imc-list-img:hover {
+    text-decoration: none;
+
+}
+
 .imc-list-info {
     width:100%;
     margin-bottom:10px;
