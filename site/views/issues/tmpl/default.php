@@ -169,10 +169,9 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
                             <?php endif; ?>
                         </div>
 
+                        <p class="imc-card-description"><?php echo ImcFrontendHelper::cutString($item->description, 200); ?></p>
 
-                        <p><?php echo ImcFrontendHelper::cutString($item->description, 200); ?></p>
-
-                        <p><a href="<?php echo JRoute::_('index.php?option=com_imc&view=issue&id='.(int) $item->id); ?>"><?php echo JText::_('COM_IMC_ISSUES_MORE');?></a></p>
+                        <!--<p><a href="<?php /*echo JRoute::_('index.php?option=com_imc&view=issue&id='.(int) $item->id); */?>"><?php /*echo JText::_('COM_IMC_ISSUES_MORE');*/?></a></p>-->
                         <?php if($item->moderation == 1) : ?>
                             <hr />
                             <p class="imc-warning"><i class="icon-info-sign"></i> <?php echo JText::_('COM_IMC_ISSUES_NOT_YET_PUBLISHED');?></p>
