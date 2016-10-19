@@ -14,6 +14,14 @@ JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 $user = JFactory::getUser();
 $userId = $user->get('id');
 
+$isAllowedToEdit = $user->authorise('core.edit', 'com_imc');
+if(is_null($isAllowedToEdit))
+{
+    $isAllowedToEdit = 0;
+}
+
+$allowed_catids = ImcHelper::getCategoriesByUserGroups();
+
 // $canEdit = $user->authorise('core.edit', 'com_imc');
 // $canDelete = $user->authorise('core.delete', 'com_imc');
 
@@ -57,13 +65,13 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
         });
     </script>
 
-
     <div class="grid">
         <!-- width of .grid-sizer used for columnWidth -->
         <div class="grid-sizer"></div>
         <div class="gutter-sizer"></div>
         <?php foreach ($this->items as $i => $item) : ?>
             <?php
+
             $canCreate = $user->authorise('core.create', 'com_imc.issue.'.$item->id);
             $canEdit = $user->authorise('core.edit', 'com_imc.issue.'.$item->id);
             $canCheckin = $user->authorise('core.manage', 'com_imc.issue.'.$item->id);
@@ -75,7 +83,7 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
             //Edit Own only if issue status is the initial one
             $firstStep = ImcFrontendHelper::getStepByStepId($item->stepid);
             $canEditOnStatus = true;
-            if ($firstStep['ordering'] != 1){
+            if ($firstStep['ordering'] != 1 && !$isAllowedToEdit){
                 $canEditOnStatus = false;
             }
 
@@ -122,7 +130,7 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
                     echo '</a>'; ?>
                     <span class="imc-card-id"><?php echo '#'. (int) $item->id . ' '; ?></span>
 
-                    <?php if ($canEdit && $canEditOnStatus) : ?>
+                    <?php if ( ($canEdit && $canEditOnStatus && empty($allowed_catids)) || (in_array($item->catid,$allowed_catids)) ) : ?>
                         <span class="imc-card-edit-icon">
                             <a title="edit <?php echo $this->escape($item->title); ?>" class="imc-grid-title" href="<?php echo JRoute::_('index.php?option=com_imc&task=issue.edit&id='.(int) $item->id); ?>">
                                 <i class="icon-edit"></i>
@@ -146,7 +154,6 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
                             /*if (isset($item->checked_out) && $item->checked_out) : ?>
                             <i class="icon-lock"></i> <?php echo JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, 'issues.', $canCheckin); ?>
                           <?php endif; */ ?>
-
                         </div>
 
                         <span class="imc-grid-cat-label" title="<?php echo JText::_('COM_IMC_ISSUES_CATID');?>"><?php echo $item->catid_title; ?></span>

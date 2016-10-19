@@ -13,6 +13,7 @@
 		<action name="imc.manage.steps" title="COM_IMC_JACTION_MANAGE_STEPS" description="COM_IMC_JACTION_MANAGE_STEPS_DESC" />
 		<action name="imc.manage.logs" title="COM_IMC_JACTION_MANAGE_LOGS" description="COM_IMC_JACTION_MANAGE_LOGS_DESC" />
 		<action name="imc.showall.issues" title="COM_IMC_JACTION_SHOWALL_ISSUES" description="COM_IMC_JACTION_SHOWALL_ISSUES_DESC" />
+		<action name="imc.manage.moderation" title="COM_IMC_JACTION_MANAGE_MODERATION" description="COM_IMC_JACTION_MANAGE_MODERATION_DESC" />
 	</section>
     <section name="category">
 		<action name="core.create" title="JACTION_CREATE" description="COM_CATEGORIES_ACCESS_CREATE_DESC" />

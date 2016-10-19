@@ -18,6 +18,11 @@
               <option value="0">JNO</option>
               <option value="1">JYES</option>
             </field>
+        <field name="is_moderation_modified"
+               type="hidden"
+               default="false"
+               label="Moderation modified?" />
+
 
         <field name="regnum" type="text"
                 label="COM_IMC_FORM_LBL_ISSUE_REGNUM"

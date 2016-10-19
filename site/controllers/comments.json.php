@@ -13,6 +13,7 @@ defined('_JEXEC') or die;
 require_once JPATH_COMPONENT.'/controller.php';
 require_once JPATH_COMPONENT_SITE . '/helpers/imc.php';
 require_once JPATH_COMPONENT_ADMINISTRATOR . '/helpers/imc.php';
+JPluginHelper::importPlugin('imc');
 
 /**
  * Issues list controller class.
@@ -51,8 +52,9 @@ class ImcControllerComments extends ImcController
 			}
 
 			//check if issue exists
+			require_once JPATH_COMPONENT_ADMINISTRATOR . '/models/issue.php';
 			$issueModel = JModelLegacy::getInstance( 'Issue', 'ImcModel', array('ignore_request' => true) );
-			$issue = $issueModel->getData($issueid);
+			$issue = $issueModel->getItem($issueid);
 			if(!is_object($issue))
 			{
 				throw new Exception(JText::_('COM_IMC_API_ISSUE_NOT_EXIST'));
@@ -129,6 +131,9 @@ class ImcControllerComments extends ImcController
 			{
 				$comment->profile_picture_url = JURI::base().'components/com_imc/assets/images/admin-user-icon.png';
 			}
+
+			$dispatcher = JEventDispatcher::getInstance();
+			$dispatcher->trigger( 'onAfterNewCommentAdded', array( $issueModel, array('id'=>$issueid, 'title'=>$issue->title), $issueid) );
 
 			if($api)
 			{
