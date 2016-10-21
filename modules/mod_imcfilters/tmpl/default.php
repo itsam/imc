@@ -52,10 +52,10 @@ $id = $jinput->get('id', null);
 					<a href="http://www.improve-my-city.com" target="_blank"><img src="<?php echo $powered_by; ?>" title="http://www.improve-my-city.com" alt="Powered by Improve My City" /></a>
 				<?php endif; ?>
 
-				<a id="search_btn" href="#IMC_advancedSearchModal" role="button" class="btn btn-primary" data-toggle="modal"><i class="icon-search"></i> <?php echo JText::_('MOD_IMCFILTERS_SEARCH'); ?></a>
+				<a id="search_btn" href="#IMC_advancedSearchModal" role="button" class="btn btn-primary" data-toggle="modal"><i class="icon-search"></i> <span class="hidden-sm hidden-md"><?php echo JText::_('MOD_IMCFILTERS_SEARCH'); ?></span></a>
 				<div class="btn-group">
 				  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-				    <?php echo JText::_('MOD_IMCFILTERS_ORDERING'); ?> <span class="caret"></span>
+					  <i class="icon-signal"></i> <span class="hidden-sm hidden-md"><?php echo JText::_('MOD_IMCFILTERS_ORDERING'); ?></span> <span class="caret"></span>
 				  </button>
 				  <ul class="dropdown-menu" role="menu">
 					  <li><?php echo JHtml::_('grid.sort',  'JDATE', 'a.updated', $listDirn, $listOrder); ?></li>
@@ -66,7 +66,7 @@ $id = $jinput->get('id', null);
 
 				<div class="btn-group">
 				  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-				    <?php echo JText::_('MOD_IMCFILTERS_DISPLAY'); ?> <span class="caret"></span>
+					  <i class="icon-eye-open"></i> <span class="hidden-sm hidden-md"><?php echo JText::_('MOD_IMCFILTERS_DISPLAY'); ?></span> <span class="caret"></span>
 				  </button>
 				  <ul class="dropdown-menu" role="menu">
 				  	<?php echo ModImcfiltersHelper::createLimitBox($state->get('list.limit')); ?>
