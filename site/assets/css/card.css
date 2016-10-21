@@ -42,6 +42,7 @@ body {
 
 .imc-card-header {
     margin: 0 auto;
+    display: flex;
 }
 
 /* hover effect */
@@ -190,6 +191,11 @@ body {
     text-align: center;
     overflow: hidden;
     position: relative;
+}
+
+.imc-card-cat-icon {
+    height: 24px;
+    padding-right: 6px;
 }
 
 .imc-card-img {
