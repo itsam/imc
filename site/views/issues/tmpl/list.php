@@ -83,27 +83,28 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
                                 <img src="<?php echo $item->category_image; ?>" alt="category image" class="imc-issue-cat-img"/>
                             <?php endif; ?>
                         </p>
+
+                        <?php if ( ($canEdit && $canEditOnStatus && empty($allowed_catids)) || (in_array($item->catid,$allowed_catids)) ) : ?>
+                            <a href="<?php echo JRoute::_('index.php?option=com_imc&task=issue.edit&id='.(int) $item->id); ?>">
+                                <i class="icon-edit"></i> </a>
+                        <?php endif; ?>
+
                     </div>
 
                     <div class="imc-column imc-med-col">
                         <div class="imc-list-title">
-                            <?php if ( ($canEdit && $canEditOnStatus && empty($allowed_catids)) || (in_array($item->catid,$allowed_catids)) ) : ?>
-                                <a href="<?php echo JRoute::_('index.php?option=com_imc&task=issue.edit&id='.(int) $item->id); ?>">
-                                    <i class="icon-edit"></i> <?php echo $this->escape($item->title); ?></a>
-                            <?php else : ?>
-                                <a href="<?php echo JRoute::_('index.php?option=com_imc&view=issue&id='.(int) $item->id); ?>">
-                                    <?php echo $this->escape($item->title); ?>
-                                </a>
-                            <?php endif; ?>
+
+                            <a href="<?php echo JRoute::_('index.php?option=com_imc&view=issue&id='.(int) $item->id); ?>">
+                                <?php echo $this->escape($item->title); ?>
+                            </a>
+
                         </div>
 
-                        <div class="imc-overview-cat-style">
-                            <span class="label label-default imc-overview-label-style" title="<?php echo JText::_('COM_IMC_ISSUES_CATID');?>"><?php echo $item->catid_title; ?></span>
-                        </div>
+                        <span class="imc-list-cat-label" title="<?php echo JText::_('COM_IMC_ISSUES_CATID');?>"><?php echo $item->catid_title; ?></span>
 
                         <div class="imc-list-content">
                             <p><?php echo ImcFrontendHelper::cutString($item->description, 200); ?></p>
-                            <p><a href="<?php echo JRoute::_('index.php?option=com_imc&view=issue&id='.(int) $item->id); ?>"><?php echo JText::_('COM_IMC_ISSUES_MORE');?></a></p>
+                            <!--<p><a href="<?php /*echo JRoute::_('index.php?option=com_imc&view=issue&id='.(int) $item->id); */?>"><?php /*echo JText::_('COM_IMC_ISSUES_MORE');*/?></a></p>-->
                         </div>
 
                         <div class="imc-list-address">
@@ -123,15 +124,12 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
                             <span class="label label-default" title="<?php echo JText::_('COM_IMC_FORM_LBL_ISSUE_VOTES');?>"><i class="icon-thumbs-up"></i> <?php echo $item->votes;?></span>
 
                         </div>
-
-
                     </div>
-
 
                     <div class="imc-column imc-right-col">
                         <?php //show photo if any
                         $i = 0;
-
+                        echo '<a class="imc-list-img" href="'. JRoute::_('index.php?option=com_imc&view=issue&id='.(int) $item->id).'">';
                         if(isset($attachments->files)){
                             foreach ($attachments->files as $file) {
                                 if (isset($file->thumbnailUrl)){
@@ -152,7 +150,9 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
                             echo '<div style="clear:both"></div>';
                             echo '<span class="imc-right-col-noimage">'. JText::_('COM_IMC_NO_PHOTO') . '</span>';
                         }
+                        echo '</a>';
                         ?>
+
                     </div>
 
                 </div>
