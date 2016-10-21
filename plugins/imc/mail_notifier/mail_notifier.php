@@ -532,9 +532,25 @@ class plgImcmail_notifier extends JPlugin
 		//JModelLegacy::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/models');
 		$issueModel = JModelLegacy::getInstance( 'Issue', 'ImcModel' );
 
-		$emails = $issueModel->getItem($issueid)->get('notification_emails');
+		$item = $issueModel->getItem($issueid);
 
-		$userid = $issueModel->getItem($issueid)->get('created_by');
+		$members = array();
+
+		$groupIds = $item->get('imc_category_usergroup');
+		foreach ($groupIds as $groupId) {
+			$membersIds = JAccess::getUsersByGroup($groupId); //getUsersByGroup($groupId, true) recursively
+			foreach ($membersIds as $userId) {
+				$user = JFactory::getUser($userId);
+				array_push($members, $user->email);
+			}
+		}
+
+		$extra_emails = $item->get('notification_emails');
+
+		$emails = array_merge($members, $extra_emails);
+		$emails = array_unique($emails);
+
+		$userid = $item->get('created_by');
 		$username = JFactory::getUser($userid)->name;
 		$usermail = JFactory::getUser($userid)->email;
 
