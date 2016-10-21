@@ -102,7 +102,7 @@ $id = $jinput->get('id', null);
 		
 		<?php if ($canCreate && $option == 'com_imc' && $view == 'issues'): ?>
 			<div class="imc_btn_right">
-		    	<a href="<?php echo JRoute::_('index.php?option=com_imc&view=issueform', false, 2); ?>" class="btn btn-success btn-large btn-lg"><i class="icon-plus"></i> <?php echo JText::_('MOD_IMCFILTERS_ADD_ITEM'); ?></a>
+		    	<a href="<?php echo JRoute::_('index.php?option=com_imc&view=issueform', false, 2); ?>" class="btn btn-success btn-large btn-lg"><i class="icon-plus"></i> <?php echo JText::_('MOD_IMCFILTERS_ADD_ITEM'); ?><br /><span style="font-size: 10px;">(<?php echo JFactory::getUser()->name;?>)</span></a>
 		    </div>
 		<?php endif; ?>
 		<?php if ($canCreate && $option == 'com_imc' && $view == 'issue'): ?>
