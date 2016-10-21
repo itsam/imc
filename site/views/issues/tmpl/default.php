@@ -130,6 +130,20 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
                     echo '</a>'; ?>
                     <span class="imc-card-id"><?php echo '#'. (int) $item->id . ' '; ?></span>
 
+                    <div class="imc-issue-msg">
+                    <?php if ( $item->moderation == 1 || !$canEditOnStatus && JFactory::getUser()->id == $item->created_by ) { ?>
+                        <i class="imc-card-msg-icon icon-exclamation-sign"></i>
+                        <span class="imc-msg-tooltip imc-grid-msg-tooltip">
+                        <?php if($item->moderation == 1) : ?>
+                            <?php echo JText::_('COM_IMC_ISSUES_NOT_YET_PUBLISHED');?>
+                        <?php endif; ?>
+                        <?php if (!$canEditOnStatus && JFactory::getUser()->id == $item->created_by) : ?>
+                            <?php echo JText::_('COM_IMC_ISSUE_CANNOT_EDIT_ANYMORE'); ?>
+                        <?php endif; ?>
+                        </span>
+                    <?php } ?>
+                    </div>
+
                     <?php if ( ($canEdit && $canEditOnStatus && empty($allowed_catids)) || (in_array($item->catid,$allowed_catids)) ) : ?>
                         <span class="imc-card-edit-icon">
                             <a title="<?php echo $this->escape($item->title); ?>" class="imc-grid-title" href="<?php echo JRoute::_('index.php?option=com_imc&task=issue.edit&id='.(int) $item->id); ?>">
@@ -175,13 +189,6 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
                         <p class="imc-card-description"><?php echo ImcFrontendHelper::cutString($item->description, 200); ?></p>
 
                         <!--<p><a href="<?php /*echo JRoute::_('index.php?option=com_imc&view=issue&id='.(int) $item->id); */?>"><?php /*echo JText::_('COM_IMC_ISSUES_MORE');*/?></a></p>-->
-                        <?php if($item->moderation == 1) : ?>
-                            <hr />
-                            <p class="imc-warning"><i class="icon-info-sign"></i> <?php echo JText::_('COM_IMC_ISSUES_NOT_YET_PUBLISHED');?></p>
-                        <?php endif; ?>
-                        <?php if (!$canEditOnStatus && JFactory::getUser()->id == $item->created_by) : ?>
-                            <p class="imc-info"><i class="icon-info-sign"></i> <?php echo JText::_('COM_IMC_ISSUE_CANNOT_EDIT_ANYMORE'); ?></p>
-                        <?php endif; ?>
                     </div>
                 </div><!-- /imc-panel-X -->
             </div><!--/grid-item-->

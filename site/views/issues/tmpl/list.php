@@ -89,6 +89,21 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
                                 <i class="icon-edit"></i> </a>
                         <?php endif; ?>
 
+                        <div class="imc-issue-msg">
+                              <?php if ( $item->moderation == 1 || !$canEditOnStatus && JFactory::getUser()->id == $item->created_by ) { ?>
+                            <i class="imc-card-msg-icon icon-exclamation-sign"></i>
+                            <span class="imc-msg-tooltip imc-list-msg-tooltip">
+                                <?php if($item->moderation == 1) : ?>
+                                    <?php echo JText::_('COM_IMC_ISSUES_NOT_YET_PUBLISHED');?>
+                                <?php endif; ?>
+                                <?php if (!$canEditOnStatus && JFactory::getUser()->id == $item->created_by) : ?>
+                                    <?php echo JText::_('COM_IMC_ISSUE_CANNOT_EDIT_ANYMORE'); ?>
+                                <?php endif; ?>
+                        </span>
+                            <?php } ?>
+                        </div>
+
+
                     </div>
 
                     <div class="imc-column imc-med-col">
