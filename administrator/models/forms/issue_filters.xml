@@ -55,6 +55,9 @@
                 JUNPUBLISHED</option>
         </field>
 
+        <field name="from_date" type="calendar" label="COM_IMC_FORM_LBL_ISSUE_FROM_DATE" format="%Y-%m-%d" />
+        <field name="to_date" type="calendar" label="COM_IMC_FORM_LBL_ISSUE_TO_DATE" format="%Y-%m-%d" />
+
     </fieldset> 
 
 </form>

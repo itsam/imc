@@ -10,7 +10,17 @@
 defined('_JEXEC') or die;
 
 jimport('joomla.application.component.modellist');
-require_once JPATH_COMPONENT . '/helpers/imc.php';
+
+
+/**
+ * Whilst using JPATH_COMPONENT and JPATH_COMPONENT_ADMINISTRATOR is highly useful in some cases,
+ * it has one big disadvantage: it immediately breaks all attempts to reuse the model from another component.
+ * That's something to keep in mind. So I am changing to JPATH_ROOT to make the model accessible to IMC-Reports
+*/
+//require_once JPATH_COMPONENT . '/helpers/imc.php';
+require_once JPATH_ROOT . '/administrator/components/com_imc/helpers/imc.php';
+
+
 /**
  * Methods supporting a list of Imc records.
  */
@@ -214,7 +224,19 @@ class ImcModelIssues extends JModelList {
             $query->where("a.subgroup = '".$db->escape($filter_subgroup)."'");
         }
 
-        // Add the list ordering clause.
+	    //Filtering by from_date
+	    $filter_fromdate = $this->state->get("filter.fromdate");
+	    if ($filter_fromdate) {
+		    $query->where("a.updated >= '".$db->escape($filter_fromdate)."'");
+	    }
+
+	    //Filtering by to_date
+	    $filter_todate = $this->state->get("filter.todate");
+	    if ($filter_todate) {
+		    $query->where("a.updated <= '".$db->escape($filter_todate)."'");
+	    }
+
+	    // Add the list ordering clause.
         $orderCol = $this->state->get('list.ordering');
         $orderDirn = $this->state->get('list.direction');
        
