@@ -206,8 +206,10 @@ class ImcModelIssues extends JModelList {
         $canDo = ImcHelper::getActions();
         $canShowAllIssues = $canDo->get('imc.showall.issues');
         if(!$canShowAllIssues){
-            require_once JPATH_COMPONENT . '/helpers/imc.php';
-            $allowed_catids = ImcHelper::getCategoriesByUserGroups();
+            //require_once JPATH_COMPONENT . '/helpers/imc.php';
+            require_once JPATH_ROOT . '/administrator/components/com_imc/helpers/imc.php';
+
+	        $allowed_catids = ImcHelper::getCategoriesByUserGroups();
             $allowed_catids = implode(',', $allowed_catids);
             if(!empty($allowed_catids)){
                 $query->where('a.catid IN (' . $allowed_catids . ')');

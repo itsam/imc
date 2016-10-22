@@ -70,7 +70,8 @@ class JFormFieldAclcategory extends JFormFieldList
 			
 			$isRoot = $user->authorise('core.admin');
 			if(!$isRoot) {
-				require_once JPATH_COMPONENT_ADMINISTRATOR . '/helpers/imc.php';
+				//require_once JPATH_COMPONENT_ADMINISTRATOR . '/helpers/imc.php';
+				require_once JPATH_ROOT . '/administrator/components/com_imc/helpers/imc.php';
 
 	            $allowed_catids = ImcHelper::getCategoriesByUserGroups();
 	            $allowed_catids = implode(',', $allowed_catids);
