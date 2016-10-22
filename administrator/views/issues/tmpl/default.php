@@ -225,7 +225,7 @@ if (!empty($this->extra_sidebar)) {
 				</td>
 				<td>
 
-					<?php echo $item->created_by; ?>
+					<?php echo $item->created_by_name; ?>
 				</td>
 				<td>
 

@@ -146,7 +146,7 @@ class ImcModelIssues extends JModelList {
 		$query->select('catid.title AS catid_title');
 		$query->join('LEFT', '#__categories AS catid ON catid.id = a.catid');
 		// Join over the user field 'created_by'
-		$query->select('created_by.name AS created_by');
+		$query->select('created_by.name AS created_by_name');
 		$query->join('LEFT', '#__users AS created_by ON created_by.id = a.created_by');
         // Join over the asset groups.
         $query->select('ag.title AS access_level')
