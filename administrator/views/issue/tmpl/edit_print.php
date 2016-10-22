@@ -41,15 +41,20 @@ require_once JPATH_COMPONENT_SITE . '/helpers/imc.php';
 	    visibility: hidden;
 	    height: 0;
 	  }
+
 	  #section-to-print, #section-to-print * {
 	    visibility: visible;
 	    height: auto;
-	    
 	  }
 	  #section-to-print {
 	    position: absolute;
 	    left: 0;
 	    top: 0;
+	  }
+
+	  img {
+		  max-height: 300px;
+		  max-width: 300px;
 	  }
 
 	  table {
@@ -110,6 +115,67 @@ require_once JPATH_COMPONENT_SITE . '/helpers/imc.php';
 
 		<p><strong><?php echo JText::_('COM_IMC_FORM_LBL_ISSUE_EXTRA'); ?></strong>:
 		<?php echo $this->item->extra; ?></p>
+
+		<p><strong><?php echo JText::_('COM_IMC_FORM_LBL_ISSUE_PHOTOS'); ?></strong>:
+			<br />
+
+			<?php
+				$photos = json_decode($this->item->photo);
+				$i=0;
+				foreach ($photos->files as $photo) {
+					if(!isset($photo->thumbnailUrl))
+						unset($photos->files[$i]);
+					$i++;
+				}
+				$attachments = json_decode($this->item->photo);
+				$i=0;
+				foreach ($attachments->files as $attachment) {
+					if(isset($attachment->thumbnailUrl))
+						unset($attachments->files[$i]);
+					$i++;
+				}
+			?>
+			<?php if(!empty($attachments->files)) : ?>
+				<div id="attachments">
+					<div class="imc-issue-subtitle"><?php echo JText::_('COM_IMC_ISSUE_ATTACHMENTS'); ?></div>
+					<?php foreach ($attachments->files as $attachment) : ?>
+						<ul>
+							<li><a href="<?php echo $attachment->url; ?>"><?php echo $attachment->name; ?></a></li>
+						</ul>
+					<?php endforeach ?>
+				</div>
+			<?php endif; ?>
+			<?php if(!empty($photos->files) && file_exists(JPATH_ROOT . '/' . $photos->imagedir .'/'. $photos->id . '/thumbnail/' . (@$photos->files[0]->name))) : ?>
+
+				<?php foreach ($photos->files as $photo) : ?>
+					<?php
+						$src = JURI::root() . '/'. $photos->imagedir .'/'. $photos->id . '/medium/' . ($photo->name);
+					?>
+					<img src="<?php echo $src ;?>" alt="" style="max-width: 350px;" /><br />
+				<?php endforeach; ?>
+
+			<?php endif; ?>
+
+		</p>
+
+		<p><strong><?php echo JText::_('COM_IMC_SETTINGS_GOOGLE_MAP_LABEL'); ?></strong>:
+			<br />
+			<?php
+			$api_key = JComponentHelper::getParams('com_imc')->get('api_key');
+			$center = $this->item->latitude . ',' . $this->item->longitude;
+
+			$map_src  = 'https://maps.googleapis.com/maps/api/staticmap';
+			$map_src .=	'?center=' . $center;
+			$map_src .=	'&markers=color:red%7Clabel:C%7C'. $center;
+			$map_src .=	'&zoom=17&size=400x400';
+			if($api_key != '')
+			{
+				$map_src .=	'&key='.$api_key;
+			}
+
+			?>
+			<img src="<?php echo $map_src;?>"/>
+		</p>
 
 	</div>
 	<div class="modal-footer">
