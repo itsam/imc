@@ -16,15 +16,24 @@ JHtml::_('behavior.formvalidator');
 JHtml::_('formbehavior.chosen', 'select');
 JHtml::_('behavior.keepalive');
 
+///JHtml::_('jquery.framework');
+
 // Import CSS
 $document = JFactory::getDocument();
 $document->addStyleSheet('components/com_imc/assets/css/imc.css');
 require_once JPATH_COMPONENT_SITE . '/helpers/imc.php';
 
+//$document->addScript('//ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js');
+$document->addScript(JURI::root(true).'/components/com_imc/assets/js/jquery-comments.min.js');
+$document->addStyleSheet(JURI::root(true).'/components/com_imc/assets/css/jquery-comments.css');
+
+$user = JFactory::getUser();
 $canDo = ImcHelper::getActions();
 $canManageModeration = $canDo->get('imc.manage.moderation');
-
+$canManageComments = $canDo->get('imc.manage.comments');
+$canCreate = true;
 ?>
+
 <script type="text/javascript">
 
     js = jQuery.noConflict();
@@ -60,6 +69,12 @@ $canManageModeration = $canDo->get('imc.manage.moderation');
         }
     }
 </script>
+
+
+
+
+
+
 
 <form action="<?php echo JRoute::_('index.php?option=com_imc&layout=edit&id=' . (int) $this->item->id); ?>" method="post" enctype="multipart/form-data" name="adminForm" id="issue-form" class="form-validate">
 
@@ -187,7 +202,113 @@ $canManageModeration = $canDo->get('imc.manage.moderation');
 			</div>
         </div>
         <?php echo JHtml::_('bootstrap.endTab'); ?>
-        
+
+		<?php if ($canManageComments) : ?>
+		<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'comments', JText::_('COM_IMC_TITLE_COMMENTS', true)); ?>
+
+			<script type="text/javascript">
+				js = jQuery.noConflict();
+				js(document).ready(function() {
+
+					var token = '<?php echo JSession::getFormToken();?>';
+					var issueid = '<?php echo $this->item->id;?>';
+					var userid = '<?php echo $user->id;?>';
+					var picURL = '<?php echo JURI::root().'components/com_imc/assets/images/user-icon.png';?>';
+					<?php if(ImcHelper::getActions()->get('imc.manage.comments')) :?>
+					picURL = '<?php echo JURI::root().'components/com_imc/assets/images/admin-user-icon.png';?>';
+					<?php endif; ?>
+					js('#comments-container').comments({
+						profilePictureURL: picURL,
+						spinnerIconURL: '<?php echo JURI::root().'components/com_imc/assets/images/spinner.gif';?>',
+						upvoteIconURL: '<?php echo JURI::root().'components/com_imc/assets/images/upvote-icon.png';?>',
+						replyIconURL: '<?php echo JURI::root().'components/com_imc/assets/images/reply-icon.png';?>',
+						noCommentsIconURL: '<?php echo JURI::root().'components/com_imc/assets/images/no-comments-icon.png';?>',
+						textareaPlaceholderText: '<?php echo JText::_('COM_IMC_COMMENTS_LEAVE_COMMENT');?>',
+						popularText: '<?php echo JText::_('COM_IMC_COMMENTS_MOST_POPULAR');?>',
+						newestText: '<?php echo JText::_('COM_IMC_COMMENTS_NEWEST');?>',
+						oldestText: '<?php echo JText::_('COM_IMC_COMMENTS_OLDEST');?>',
+						sendText: '<?php echo JText::_('COM_IMC_COMMENTS_SEND');?>',
+						replyText: '<?php echo JText::_('COM_IMC_COMMENTS_REPLY');?>',
+						editText: '<?php echo JText::_('COM_IMC_COMMENTS_EDIT');?>',
+						saveText: '<?php echo JText::_('COM_IMC_COMMENTS_SAVE');?>',
+						deleteText: '<?php echo JText::_('COM_IMC_COMMENTS_DELETE');?>',
+						editedText: '<?php echo JText::_('COM_IMC_COMMENTS_EDITED');?>',
+						youText: '<?php echo JText::_('COM_IMC_COMMENTS_YOU');?>',
+						viewAllRepliesText: '<?php echo JText::_('COM_IMC_COMMENTS_VIEW_ALL_REPLIES');?> (__replyCount__)',
+						hideRepliesText: '<?php echo JText::_('COM_IMC_COMMENTS_HIDE');?>',
+						noCommentsText: '<?php echo JText::_('COM_IMC_COMMENTS_NO_COMMENTS');?>',
+						enableReplying: true,
+						enableEditing: false,
+						enableUpvoting: false,
+						enableDeleting: false,
+						enableDeletingCommentWithReplies: false,
+						timeFormatter: function(time) {
+							return new Date(time).toLocaleString();
+							//return time;
+						},
+						fieldMappings: {
+							id: 'id',
+							parent: 'parentid',
+							created: 'created',
+							modified: 'updated',
+							content: 'description',
+							fullname: 'fullname',
+							profilePictureURL: 'profile_picture_url',
+							createdByAdmin: 'created_by_admin',
+							createdByCurrentUser: 'created_by_current_user',
+							upvoteCount: 'upvote_count',
+							userHasUpvoted: 'user_has_upvoted'
+						},
+						getComments: function(success, error) {
+							js.ajax({
+								type: 'get',
+								'url': "<?php echo JURI::root()?>administrator/index.php?option=com_imc&task=comments.comments&format=json&userid="+userid+"&issueid=" + issueid + "&" + token + "=1",
+								success: function(commentsArray) {
+									success(commentsArray.data)
+								},
+								error: error
+							});
+						}
+						<?php if (!$canCreate) : ?>
+						,
+						refresh: function() {
+							js('div.commenting-field').hide();
+
+						},
+						enableReplying: false
+						<?php endif; ?>
+
+						<?php if($canCreate) : ?>
+						,
+						postComment: function(commentJSON, success, error) {
+							//console.log(commentJSON);
+							js.ajax({
+								type: 'post',
+								'url': "<?php echo JURI::root()?>administrator/index.php?option=com_imc&task=comments.postComment&format=json&userid="+userid+"&issueid=" + issueid + "&" + token + "=1",
+								data: commentJSON,
+								success: function(comment) {
+									success(comment.data);
+								},
+								error: error
+
+							});
+						}
+						<?php endif; ?>
+					});
+
+
+				});
+
+
+			</script>
+
+
+			<div class="span12">
+				<div id="comments-container"></div>
+			</div>
+		<?php echo JHtml::_('bootstrap.endTab'); ?>
+		<?php endif ?>
+
         <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'logging', JText::_('COM_IMC_TITLE_LOGS', true)); ?>
         	<div class="span12">
 	        	<table class="table table-striped">
@@ -295,5 +416,5 @@ $canManageModeration = $canDo->get('imc.manage.moderation');
 
     </div>
 </form>
-<?php echo $this->loadTemplate('print'); ?>
+<?php //echo $this->loadTemplate('print'); ?>
 <?php echo $this->loadTemplate('mail'); ?>

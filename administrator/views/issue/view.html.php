@@ -41,6 +41,7 @@ class ImcViewIssue extends JViewLegacy {
         }
 
         $this->addToolbar();
+        $this->_prepareDocument();
         parent::display($tpl);
     }
 
@@ -111,4 +112,16 @@ class ImcViewIssue extends JViewLegacy {
         }
     }
 
+    /**
+     * Prepares the document
+     */
+    protected function _prepareDocument() {
+        $canDo = ImcHelper::getActions();
+        if($canDo->get('imc.manage.comments'))
+        {
+            //$this->document->addStyleSheet(JURI::root(true).'/components/com_imc/assets/css/jquery-comments.css');
+            //$this->document->addScript(JURI::root(true).'/components/com_imc/assets/js/jquery-comments.min.js');
+        }
+
+    }
 }
