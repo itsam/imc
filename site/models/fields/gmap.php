@@ -232,7 +232,7 @@ class JFormFieldGmap extends JFormField
 			return implode("\n", $html);
 		}
 
-        $html[] = '<div style="'.implode("", $style).'display:table-cell;clear:both;padding-bottom: 100px;">';
+        $html[] = '<div style="'.implode("", $style).'display:table-cell;clear:both;padding-bottom: 5px;">';
 		if(!$disabled) {
 			$html[] = '		<button id="searchaddress" class="btn btn-mini" type="button"><i class="icon-search icon-white"></i> '. JText::_('COM_IMC_CUSTOM_FIELD_LOCATE_ADDRESS') . '</button>';
 			if($lockaddressbtn) {
