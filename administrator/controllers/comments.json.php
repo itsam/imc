@@ -166,8 +166,9 @@ class ImcControllerComments extends ImcController
 			}
 			$userid = $app->input->getInt('userid', 0);
 
-			//$commentsModel = JModelLegacy::getInstance( 'Comments', 'ImcModel', array('ignore_request' => true) );
-			$commentsModel = $this->getModel();
+            require_once JPATH_ROOT . '/components/com_imc/models/comments.php';
+			$commentsModel = JModelLegacy::getInstance( 'Comments', 'ImcModel', array('ignore_request' => true) );
+			//$commentsModel = $this->getModel();
 			$commentsModel->setState('imc.filter.issueid', $issueid);
 			$commentsModel->setState('imc.filter.state', 1);
 			$commentsModel->setState('filter.imcapi.userid', $userid);
