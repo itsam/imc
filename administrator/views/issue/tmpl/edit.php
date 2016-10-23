@@ -416,5 +416,5 @@ $canCreate = true;
 
     </div>
 </form>
-<?php //echo $this->loadTemplate('print'); ?>
+<?php echo $this->loadTemplate('print'); ?>
 <?php echo $this->loadTemplate('mail'); ?>
