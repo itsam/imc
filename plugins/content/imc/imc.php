@@ -4,7 +4,7 @@ jimport('joomla.plugin.plugin');
 
 class plgContentimc extends JPlugin
 {
-	function plgContentImc(& $subject, $config)
+	public function __construct(&$subject, $config = array())
 	{
 		parent::__construct( $subject, $config);
 		if($this->params===false)
