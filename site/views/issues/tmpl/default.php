@@ -173,13 +173,17 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
                         <span class="imc-grid-cat-label" title="<?php echo JText::_('COM_IMC_ISSUES_CATID');?>"><?php echo $item->catid_title; ?></span>
 
                         <div class="imc-card-section-style">
+
+                            <span class="label label-info" style="background-color: <?php echo $item->stepid_color;?>" title="<?php echo JText::_('COM_IMC_ISSUES_STEPID');?>"><?php echo $item->stepid_title; ?></span>
+
                             <?php if($item->updated == $item->created) : ?>
                                 <span class="label label-default" title="<?php echo JText::_('COM_IMC_ISSUES_CREATED');?>"><?php echo ImcFrontendHelper::getRelativeTime($item->created); ?></span>
                             <?php else : ?>
                                 <span class="label label-info" title="<?php echo JText::_('COM_IMC_ISSUES_UPDATED');?>"><?php echo ImcFrontendHelper::getRelativeTime($item->updated); ?></span>
                             <?php endif; ?>
-                            <span class="label label-info" style="background-color: <?php echo $item->stepid_color;?>" title="<?php echo JText::_('COM_IMC_ISSUES_STEPID');?>"><?php echo $item->stepid_title; ?></span>
+                        </div>
 
+                        <div class="imc-card-section-style">
                             <span class="label label-default" title="<?php echo JText::_('COM_IMC_TITLE_COMMENTS');?>"><i class="icon-comment"></i>&nbsp; <?php echo $item->comments;?></span>
                             <?php if (JFactory::getUser()->id == $item->created_by && $item->votes > 0) : ?>
                                 <span class="label label-default" title="<?php echo JText::_('COM_IMC_ISSUES_VOTES');?>">+<?php echo $item->votes; ?></span>

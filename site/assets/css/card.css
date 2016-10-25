@@ -22,7 +22,7 @@ body {
     width: 32%;
 }
 .gutter-sizer { width: 2%; }
-.grid-item { margin-bottom: 10px; }
+.grid-item { margin-bottom: 8px; }
 .grid:after {
     content: '';
     display: block;
@@ -198,11 +198,12 @@ body {
 .imc-card-description {
     overflow: hidden;
     height: 48px;
+    margin: 6px 0 0 0;
 }
 
 .imc-card-description:before {
     content:"";
-    float: left;
+    float: none;
     width: 5px; height: 200px;
 }
 
@@ -271,7 +272,7 @@ body {
 }
 
 .imc-card-section-style {
-    margin-bottom: 6px;
+    margin-bottom: 4px;
 }
 
 .imc-no-img-grid {
@@ -282,9 +283,9 @@ body {
 }
 
 .panel-thumbnail {
-    min-height: 240px;
+    min-height: 220px;
     min-width: 100%;
-    max-height: 240px;
+    max-height: 220px;
     text-align: center;
     overflow: hidden;
     position: relative;
@@ -297,7 +298,7 @@ body {
 
 .imc-card-img {
     position: absolute;
-    min-height: 240px;
+    min-height: 220px;
     min-width: 100%;
     left: 50%;
     top: 50%;
