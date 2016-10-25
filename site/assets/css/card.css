@@ -242,7 +242,7 @@ body {
 }
 
 .imc-grid-cat-label {
-    text-align: center;
+    text-align: left;
     text-overflow: ellipsis;
     display: block;
     overflow: hidden;

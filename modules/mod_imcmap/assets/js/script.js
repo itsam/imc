@@ -73,8 +73,6 @@ function setMarkers(center, map, img_path) {
                         img = img_path + '/marker.png';
                     }
 
-                    console.log(img);
-
                     // Create image object, to set max size
                     var icon = {
                         url: img,
