@@ -156,9 +156,13 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
 
                     <div class="<?php echo ($item->moderation == 1 ? 'issue-unmoderated ' : ''); ?>imc-panel-body">
                         <div class="imc-card-header">
-                            <?php if($item->category_image != '') : ?>
+                            <?php if($item->category_image != '') { ?>
                                 <img class="imc-card-cat-icon" src="<?php echo $item->category_image; ?>" alt="category image" />
-                            <?php endif; ?>
+                            <?php } else { ?>
+                                <img class="imc-card-cat-icon" src="<?php echo JURI::base();?>modules/mod_imcmap/assets/images/marker.png" alt="category image" />
+                            <?php } ?>
+
+
 
                             <a title="<?php echo $this->escape($item->title); ?>" class="imc-grid-title" href="<?php echo JRoute::_('index.php?option=com_imc&view=issue&id='.(int) $item->id)?>">
                                 <?php echo $this->escape($item->title); ?>
