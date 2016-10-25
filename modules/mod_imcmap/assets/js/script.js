@@ -49,6 +49,7 @@ function imc_mod_map_initialize() {
 
 function setMarkers(center, map) {
     var json = (function () {
+
         var json = null;
 
         jQuery.ajax({
@@ -57,16 +58,27 @@ function setMarkers(center, map) {
             'url': "index.php?option=com_imc&task=issues.markers&format=json",
             'dataType': "json",
             'success': function (data) {
+
                 json = data;
 
                 //loop between each of the json elements
                 for (var i = 0, length = json.data.length; i < length; i++) {
                     var data = json.data[i],
                         latLng = new google.maps.LatLng(data.latitude, data.longitude);
+
+                    // Create image object, to set max size
+                    var icon = {
+                        url: data.category_image,
+                        scaledSize: new google.maps.Size(32, 37),
+                        origin: new google.maps.Point(0, 0),
+                        anchor: new google.maps.Point(0, 0)
+                    };
+
+
                     // Create marker and putting it on the map
                     var marker = new google.maps.Marker({
                         position: latLng,
-                        icon: data.category_image,
+                        icon: icon,
                         map: map,
                         title: data.title,
                         id: data.id
@@ -95,6 +107,7 @@ function setMarkers(center, map) {
                 console.log (error);
             }
         });
+
         return json;
     })();
 }
