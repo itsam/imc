@@ -108,11 +108,13 @@ if ($option == 'com_imc' && $view != 'issues') {
 </script>
 <script src="<?php echo JURI::base();?>modules/mod_imcmap/assets/js/script.js" type="text/javascript"></script>
 
+
+
 <?php
 //initialize and load map
 $script = array();
 $script[] = "jQuery(document).ready(function () {";
-$script[] = "  google.maps.event.addDomListener(window, 'load', imc_mod_map_initialize);";
+$script[] = "  google.maps.event.addDomListener(window, 'load', imc_mod_map_initialize('". JURI::base() ."modules/mod_imcmap/assets/images'));";
 $script[] = "});";
 $doc->addScriptDeclaration(implode("\n", $script));
 

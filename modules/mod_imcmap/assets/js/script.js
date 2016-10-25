@@ -6,7 +6,7 @@ var infoWindow = new google.maps.InfoWindow({
     maxWidth: 350
 });
 
-function imc_mod_map_initialize() {
+function imc_mod_map_initialize(img_path) {
     var center = new google.maps.LatLng(lat,lng);
     var mapOptions = {
         zoom: parseInt(zoom),
@@ -30,7 +30,7 @@ function imc_mod_map_initialize() {
         }
     }
 
-    setMarkers(center, imc_mod_map);
+    setMarkers(center, imc_mod_map, img_path);
 
     google.maps.event.addListener(imc_mod_map, 'click', function() {
         infoWindow.close();
@@ -47,7 +47,7 @@ function imc_mod_map_initialize() {
 }
 
 
-function setMarkers(center, map) {
+function setMarkers(center, map, img_path) {
     var json = (function () {
 
         var json = null;
@@ -66,14 +66,22 @@ function setMarkers(center, map) {
                     var data = json.data[i],
                         latLng = new google.maps.LatLng(data.latitude, data.longitude);
 
+                    var img = '';
+                    if (data.category_image) {
+                        img = data.category_image;
+                    } else {
+                        img = img_path + '/marker.png';
+                    }
+
+                    console.log(img);
+
                     // Create image object, to set max size
                     var icon = {
-                        url: data.category_image,
+                        url: img,
                         scaledSize: new google.maps.Size(32, 37),
                         origin: new google.maps.Point(0, 0),
                         anchor: new google.maps.Point(0, 0)
                     };
-
 
                     // Create marker and putting it on the map
                     var marker = new google.maps.Marker({
@@ -83,8 +91,9 @@ function setMarkers(center, map) {
                         title: data.title,
                         id: data.id
                     });
-                    if(data.category_image == '')
-                        marker.setIcon('https://maps.google.com/mapfiles/ms/icons/red-dot.png');
+
+                    /*if(data.category_image == '')
+                        marker.setIcon('https://maps.google.com/mapfiles/ms/icons/red-dot.png');*/
 
                     imc_markers.push(marker);
                     //bounds.extends(marker.position);
