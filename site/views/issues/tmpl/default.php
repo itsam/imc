@@ -162,8 +162,6 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
                                 <img class="imc-card-cat-icon" src="<?php echo JURI::base();?>modules/mod_imcmap/assets/images/marker.png" alt="category image" />
                             <?php } ?>
 
-
-
                             <a title="<?php echo $this->escape($item->title); ?>" class="imc-grid-title" href="<?php echo JRoute::_('index.php?option=com_imc&view=issue&id='.(int) $item->id)?>">
                                 <?php echo $this->escape($item->title); ?>
                             </a>

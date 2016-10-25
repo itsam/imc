@@ -129,6 +129,10 @@ div.list-footer div.counter{
     padding-bottom: 6px;
 }
 
+.imc-list-edit-icon a i {
+    font-size: 18px;
+}
+
 .imc-list-address{width:100%;margin-bottom:10px;}
 .imc-HorizontalSeparator{background:0;padding:0;background-color:#d1d1d1;border:0;height:1px;margin:0 0 10px;}
 .imc-list-content {

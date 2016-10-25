@@ -59,8 +59,6 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
                 <?php $canEdit = JFactory::getUser()->id == $item->created_by; ?>
             <?php endif; ?>
 
-
-
             <div class="col-imclist">
                 <div id="imc-panel-<?php echo $item->id;?>" class="panel panel-default panel-list">
                     <?php if (JFactory::getUser()->id == $item->created_by) : ?>
@@ -79,20 +77,25 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
                     <div class="imc-column imc-left-col">
                         <span class="imc-list-id"><?php echo (int) $item->id; ?></span>
                         <p class="lead">
-                            <?php if($item->category_image != '') : ?>
+                            <?php if($item->category_image != '') { ?>
                                 <img src="<?php echo $item->category_image; ?>" alt="category image" class="imc-issue-cat-img"/>
-                            <?php endif; ?>
+                            <?php } else { ?>
+                                <img src="<?php echo JURI::base();?>modules/mod_imcmap/assets/images/marker.png" alt="category image" class="imc-issue-cat-img"/>
+                            <?php } ?>
                         </p>
 
+
                         <?php if ( ($canEdit && $canEditOnStatus && empty($allowed_catids)) || (in_array($item->catid,$allowed_catids)) ) : ?>
+                            <span class="imc-list-edit-icon">
                             <a href="<?php echo JRoute::_('index.php?option=com_imc&task=issue.edit&id='.(int) $item->id); ?>">
                                 <i class="icon-edit"></i> </a>
+                            </span>
                         <?php endif; ?>
 
                         <div class="imc-issue-msg">
-                              <?php if ( $item->moderation == 1 || !$canEditOnStatus && JFactory::getUser()->id == $item->created_by ) { ?>
-                            <i class="imc-card-msg-icon icon-exclamation-sign"></i>
-                            <span class="imc-msg-tooltip imc-list-msg-tooltip">
+                            <?php if ( $item->moderation == 1 || !$canEditOnStatus && JFactory::getUser()->id == $item->created_by ) { ?>
+                                <i class="imc-card-msg-icon icon-exclamation-sign"></i>
+                                <span class="imc-msg-tooltip imc-list-msg-tooltip">
                                 <?php if($item->moderation == 1) : ?>
                                     <?php echo JText::_('COM_IMC_ISSUES_NOT_YET_PUBLISHED');?>
                                 <?php endif; ?>
