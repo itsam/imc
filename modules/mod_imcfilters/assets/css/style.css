@@ -39,7 +39,7 @@
   overflow-y: auto;
 }
 
-@media (max-width: 480px) {
+@media (max-width: 640px) {
     .imc_filters_buttons{text-align:center;line-height:42px;}
     .imc_btn_right{float:none; padding: 5px 0;}
     .imc_btn_left{float:none;}
