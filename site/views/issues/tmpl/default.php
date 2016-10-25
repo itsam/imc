@@ -97,12 +97,12 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
 
                     <?php if (JFactory::getUser()->id == $item->created_by) : ?>
                         <div class="ribbon-wrapper-corner"><div class="ribbon-corner"><?php echo JText::_('COM_IMC_ISSUES_MY_ISSUE');?></div></div>
-                    <?php else : ?>
-                        <?php if($item->votes > 0) : ?>
-                            <div title="<?php echo JText::_('COM_IMC_ISSUES_VOTES');?>" class="book-ribbon">
-                                <div>+<?php echo $item->votes; ?></div>
+                    <?php /*else : */?><!--
+                        <?php /*if($item->votes > 0) : */?>
+                            <div title="<?php /*echo JText::_('COM_IMC_ISSUES_VOTES');*/?>" class="book-ribbon">
+                                <div>+<?php /*echo $item->votes; */?></div>
                             </div>
-                        <?php endif; ?>
+                        --><?php /*endif; */?>
                     <?php endif; ?>
 
                     <?php //show photo if any
@@ -185,6 +185,7 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
 
                         <div class="imc-card-section-style">
                             <span class="label label-default" title="<?php echo JText::_('COM_IMC_TITLE_COMMENTS');?>"><i class="icon-comment"></i>&nbsp; <?php echo $item->comments;?></span>
+                            <span class="label label-default" title="<?php echo JText::_('COM_IMC_ISSUES_VOTES');?>"><i class="icon-thumbs-up"></i>&nbsp; <?php echo $item->votes;?></span>
                             <?php if (JFactory::getUser()->id == $item->created_by && $item->votes > 0) : ?>
                                 <span class="label label-default" title="<?php echo JText::_('COM_IMC_ISSUES_VOTES');?>">+<?php echo $item->votes; ?></span>
                             <?php endif; ?>
