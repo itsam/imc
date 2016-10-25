@@ -85,16 +85,25 @@ body {
 }
 
 .imc-card-edit-icon {
+
+    background-color: rgb(117,117,117);
+    background-color: rgba(0,0,0,0.54);
+    border-radius: 4px;
     padding: 0 6px 0 6px;
     z-index: 20;
     position: absolute;
-    bottom: 8px;
+    bottom: 12px;
     right: 12px;
     text-decoration: none;
 }
 
 .imc-card-edit-icon a {
-    margin:0 auto;
+    margin: 0 auto;
+}
+
+.imc-card-edit-icon a i {
+    font-size: 16px;
+    color:#ffffff;
 }
 
 .imc-card-msg-icon {
@@ -248,7 +257,7 @@ body {
     overflow: hidden;
     white-space: nowrap;
     font-size: 14px;
-    font-weight: 700;
+    font-weight: 600;
     color: rgb(33,33,33);
     color: rgba(0,0,0,0.87);
 }
