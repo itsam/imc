@@ -5,7 +5,7 @@
 	width: 100%;
 	min-height: 70px;
 	line-height: 70px;
-	padding: 0 10px;
+	padding: 0;
 	clear:both;
 }
 .imc_btn_left {float: left;}
@@ -37,4 +37,14 @@
 }
 .modal-wide .modal-body {
   overflow-y: auto;
+}
+
+@media (max-width: 480px) {
+    .imc_filters_buttons{text-align:center;line-height:42px;}
+    .imc_btn_right{float:none; padding: 5px 0;}
+    .imc_btn_left{float:none;}
+
+    .imc-mod-imcfilters-wrapper{
+        padding: 15px 0;
+    }
 }
