@@ -247,6 +247,7 @@ class ImcModelLogs extends JModelList {
         
         $query->order('a.created', 'desc');
         $query->where('a.issueid = '.($id == null ? $this->getState('issue.id') : $id) );
+        $query->where('a.state = 1');
 
 
         $db->setQuery($query);
