@@ -105,7 +105,7 @@ class PlgSearchImc extends JPlugin
             $rows = array();
             $query = $db->getQuery(true);
             
-            $query->clear()->select(array('a.id', 'title AS title', 'created AS created', 'title AS text', '"COM_IMC" AS section', '1 AS browsernav'))->from('#__imc_issues AS a')->where('(' . $where . ')')->group('a.id')->order($order);
+            $query->clear()->select(array('a.id', 'title AS title', 'created AS created', 'title AS text', '"Issue" AS section', '1 AS browsernav'))->from('#__imc_issues AS a')->where('(' . $where . ')')->group('a.id')->order($order);
             
             $db->setQuery($query, 0, $limit);
             $list = $db->loadObjectList();
