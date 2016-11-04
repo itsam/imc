@@ -536,15 +536,16 @@ class plgImcmail_notifier extends JPlugin
 
 		$members = array();
 
-		$groupIds = $item->get('imc_category_usergroup');
-		foreach ($groupIds as $groupId) {
-			$membersIds = JAccess::getUsersByGroup($groupId); //getUsersByGroup($groupId, true) recursively
-			foreach ($membersIds as $userId) {
-				$user = JFactory::getUser($userId);
-				array_push($members, $user->email);
-			}
-		}
-
+        if($this->params->get('enableusergroup')) {
+            $groupIds = $item->get('imc_category_usergroup');
+            foreach ($groupIds as $groupId) {
+                $membersIds = JAccess::getUsersByGroup($groupId); //getUsersByGroup($groupId, true) recursively
+                foreach ($membersIds as $userId) {
+                    $user = JFactory::getUser($userId);
+                    array_push($members, $user->email);
+                }
+            }
+        }
 		$extra_emails = $item->get('notification_emails');
 
 		$emails = array_merge($members, $extra_emails);
