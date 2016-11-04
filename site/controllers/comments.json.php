@@ -37,6 +37,7 @@ class ImcControllerComments extends ImcController
 		$params = $app->getParams('com_imc');
 		//$showComments = $params->get('enablecomments');
 		$directpublishing = $params->get('directpublishingcomment');
+        $commentsdisplayname = $params->get('commentsdisplayname');
 
 		try {
 
@@ -106,10 +107,10 @@ class ImcControllerComments extends ImcController
 			}
 			$comment->created = ImcFrontendHelper::convert2UTC(date('Y-m-d H:i:s'));
 			$comment->updated = $comment->created;
-			$comment->created_by = $userid;
-			$comment->description = $description;
-			$comment->fullname = JFactory::getUser($userid)->name;
-			$comment->moderation = (!$directpublishing && !$created_by_admin) ? 1 : 0;
+            $comment->created_by = $userid;
+            $comment->description = $description;
+            $comment->fullname = JFactory::getUser($userid)->name;
+            $comment->moderation = (!$directpublishing && !$created_by_admin) ? 1 : 0;
 			$comment->language = "*";
 			$comment->isAdmin = (int)$created_by_admin;
 
@@ -156,6 +157,10 @@ class ImcControllerComments extends ImcController
 
 	public function comments()
 	{
+        $app = JFactory::getApplication();
+        $params = $app->getParams('com_imc');
+        $commentsdisplayname = $params->get('commentsdisplayname');
+
 		try {
 			// Check for request forgeries.
 			if(!JSession::checkToken('get')){
@@ -186,7 +191,28 @@ class ImcControllerComments extends ImcController
 				$comment = new StdClass();
 				$comment->id = $item->id;
 				$comment->created = ImcFrontendHelper::convertFromUTC($item->created);
-				$comment->fullname = $item->fullname;
+				//$comment->fullname = $item->fullname;
+                $created_by_admin = (boolean) $item->isAdmin;
+                if ($commentsdisplayname == 'admin' || !$created_by_admin)
+                {
+                    //show administrator / user name
+                    $comment->fullname = $item->fullname;
+                }
+                elseif ($commentsdisplayname == 'dpt' && $created_by_admin)
+                {
+                    //show department name
+                    $dpts = array();
+                    //get user groups higher than 9
+                    $usergroups = JAccess::getGroupsByUser($item->created_by, false);
+                    for ($i=0; $i < count($usergroups); $i++) {
+                        if($usergroups[$i] > 9){
+                            $dpts[] = ImcFrontendHelper::getGroupNameById($usergroups[$i]);
+                        }
+                    }
+
+                    $comment->fullname = implode(', ', $dpts);
+                }
+
 				$comment->description = $item->description;
 				$comment->profile_picture_url = JURI::base().'components/com_imc/assets/images/user-icon.png';
 				if($item->moderation)
