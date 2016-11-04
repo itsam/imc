@@ -656,7 +656,10 @@ class com_imcInstallerScript {
             ->where("`name`='ImproveMyCity'");
         $db->setQuery($query);
         $db->execute();
-        
+
+        //clear tokens
+        $db->setQuery('TRUNCATE TABLE #__imc_tokens');
+        $db->execute();
         return true;        
     }
 
