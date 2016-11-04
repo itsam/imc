@@ -118,6 +118,11 @@
           <option value="1">JYES</option>
         </field>
 
+        <field name="advancedsecurity" type="radio" default="1" class="btn-group btn-group-yesno" label="COM_IMC_SETTINGS_ADVANCED_SECURITY_LABEL" description="COM_IMC_SETTINGS_ADVANCED_SECURITY_DESC">
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+
     </fieldset>
     <fieldset
             name="comments"

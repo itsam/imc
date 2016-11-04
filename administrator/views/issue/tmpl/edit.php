@@ -173,6 +173,7 @@ $canCreate = true;
 						<div class="control-label"><?php echo $this->form->getLabel('extra'); ?></div>
 						<div class="controls">
 							<div class="alert alert-warning">
+								<p style="height: 50px;"></p>
 								<p><strong><?php echo JText::_('COM_IMC_USER_DETAILS');?>:</strong></p>
 								<?php 
 								foreach ($this->item->creatorDetails as $key => $value) {
@@ -186,8 +187,12 @@ $canCreate = true;
 								}
 								// get imc profile
 								if(isset($this->item->userProfile->imcprofile) ) {
-									foreach ($this->item->userProfile->imcprofile as $key => $value) {
-										echo $key.': <strong>'.$value . '</strong><br />';
+									foreach ($this->item->userProfile->imcprofile as $key => $value)
+									{
+										if($key != 'is_citizen')
+										{
+											echo $key.': <strong>'.$value . '</strong><br />';
+										}
 									}
 								}
 
@@ -195,6 +200,19 @@ $canCreate = true;
 								<br />
 								<?php echo $this->form->getLabel('extra'); ?>
 								<?php echo $this->form->getInput('extra'); ?>
+
+								<?php
+								// get imc profile is_citizen
+								if(isset($this->item->userProfile->imcprofile) ) {
+									foreach ($this->item->userProfile->imcprofile as $key => $value)
+									{
+										if($key == 'is_citizen')
+										{
+											//echo 'Show checkbox is_citizen here:'.$value.'<br />';
+										}
+									}
+								}
+								?>
 							</div>
 						</div>
 					</div>

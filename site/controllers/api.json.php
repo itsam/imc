@@ -38,15 +38,17 @@ require_once JPATH_COMPONENT_SITE . '/controllers/comments.json.php';
 class ImcControllerApi extends ImcController
 {
     private $mcrypt;
-
     private $keyModel;
+    private $params;
 
     function __construct()
     {
+        $this->params = JComponentHelper::getParams('com_imc');
     	$this->mcrypt = new MCrypt();
         JModelLegacy::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/models');
         $this->keyModel = JModelLegacy::getInstance( 'Key', 'ImcModel', array('ignore_request' => true) );
     	parent::__construct();
+
     }
 
     public function exception_error_handler($errno, $errstr, $errfile, $errline){
@@ -72,10 +74,12 @@ class ImcControllerApi extends ImcController
         ImcFrontendHelper::setLanguage($app->input->getString('l'), array('com_users', 'com_imc'));
 
         //check for nonce (existing token)
-        if(ImcModelTokens::exists($token)){
-            throw new Exception('Token is already used');
+        if($this->params->get('advancedsecurity'))
+        {
+            if (ImcModelTokens::exists($token)) {
+                throw new Exception('Token is already used');
+            }
         }
-
         //2. get the appropriate key according to given modality
         $result = $this->keyModel->getItem($m_id);
         $key = $result->skey;
@@ -100,9 +104,10 @@ class ImcControllerApi extends ImcController
             throw new Exception('Token is not well formatted');
         }
 
-        //TODO: Set timeout at options
-        if((time() - $objToken->t) > 3 * 60){
-            throw new Exception('Token has expired');
+        if($this->params->get('advancedsecurity')) {
+            if ((time() - $objToken->t) > 3 * 60) {
+                throw new Exception('Token has expired');
+            }
         }
 
         //4. authenticate user
@@ -135,14 +140,16 @@ class ImcControllerApi extends ImcController
 		}
 
         //5. populate token table
-        $record = new stdClass();
-        $record->key_id = $m_id;
-        $record->user_id = $userid;
-        //$record->json_size = $json_size;
-        $record->method = $app->input->getMethod();
-        $record->token = $token;
-        $record->unixtime = $objToken->t;
-        ImcModelTokens::insertToken($record); //this static method throws exception on error
+        if($this->params->get('advancedsecurity')) {
+            $record = new stdClass();
+            $record->key_id = $m_id;
+            $record->user_id = $userid;
+            //$record->json_size = $json_size;
+            $record->method = $app->input->getMethod();
+            $record->token = $token;
+            $record->unixtime = $objToken->t;
+            ImcModelTokens::insertToken($record); //this static method throws exception on error
+        }
 
         return $isNew ? $userInfo : (int)$userid;
     }
