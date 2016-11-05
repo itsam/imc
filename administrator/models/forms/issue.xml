@@ -188,7 +188,14 @@
 
         <field name="checked_out" type="hidden" filter="unset" />
         
-        <field name="checked_out_time" type="hidden" filter="unset" /> 
+        <field name="checked_out_time" type="hidden" filter="unset" />
+
+        <field name="is_citizen" type="checkbox"
+               id="is_citizen"
+               label="COM_IMC_FORM_LBL_ISSUE_IS_CITIZEN"
+               default="0"
+               onchange="profile_change();" />
+
 
     </fieldset> 
 
