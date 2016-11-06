@@ -74,7 +74,7 @@ $canCreate = true;
     js(document).ready(function() {
 
 		var token = '<?php echo JSession::getFormToken();?>';
-		var userid = '<?php echo $user->id;?>';
+		var userid = '<?php echo $this->item->created_by;?>';
 
 		getProfile(userid, 'imcprofile.is_citizen', token);
 
@@ -95,7 +95,7 @@ $canCreate = true;
 	function profile_change()
 	{
 		var token = '<?php echo JSession::getFormToken();?>';
-		var userid = '<?php echo $user->id;?>';
+		var userid = '<?php echo $this->item->created_by;?>';
 		var sel = jQuery('input[name="jform[is_citizen]"]:checked').val();
 		sel = (sel ? 1 : 0);
 
@@ -247,16 +247,10 @@ $canCreate = true;
 								<?php echo $this->form->getInput('extra'); ?>
 
 								<?php
-								// get imc profile is_citizen
+								// show is_citizen
 								if(isset($this->item->userProfile->imcprofile) ) {
-									foreach ($this->item->userProfile->imcprofile as $key => $value)
-									{
-										if($key == 'is_citizen')
-										{
-											echo $this->form->getInput('is_citizen');
-											echo $this->form->getLabel('is_citizen');
-										}
-									}
+									echo $this->form->getInput('is_citizen');
+									echo $this->form->getLabel('is_citizen');
 								}
 								?>
 							</div>
