@@ -984,8 +984,8 @@ class ImcControllerApi extends ImcController
 			{
 				case 'GET':
 					$response = new JResponseJson($result, 'Modifications since timestamp fetched successfully');
-					$length = mb_strlen($response, 'UTF-8');
-					header('Content-Length: '.$length);
+					//$length = mb_strlen($response, 'UTF-8');
+					//header('Content-Length: '.$length);
 					echo $response;
 
 				break;
@@ -1012,6 +1012,7 @@ class ImcControllerApi extends ImcController
         //1. get issues
         $issuesModel = JModelLegacy::getInstance( 'Issues', 'ImcModel', array('ignore_request' => true) );
         $issuesModel->setState('filter.imcapi.ts', $offset);
+        $issuesModel->setState('filter.imcapi.limit', 1000);
         $issuesModel->setState('filter.imcapi.raw', true); //Do not unset anything in getItems()
 		$data = $issuesModel->getItems();
 		$issues = ImcFrontendHelper::sanitizeIssues($data, $userid, true);

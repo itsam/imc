@@ -310,6 +310,11 @@ class ImcModelIssues extends JModelList {
             $query->order($db->escape('a.updated' . ' ' . 'DESC'));       
         }
 
+        $imc_limit = $this->state->get('filter.imcapi.limit', null);
+        if(!is_null($imc_limit)) {
+            $query->setlimit($imc_limit);
+        }
+
         return $query;
     }
 
@@ -375,11 +380,13 @@ class ImcModelIssues extends JModelList {
             }
 
             //avoid using model limit ($query->setlimit(x)) at getListQuery() when called from API
+            /*
             $imc_limit =  $this->state->get('filter.imcapi.limit');
             if(!is_null($imc_limit) && $imc_limit > 0)
             {
                 $items = array_slice($items, 0, $imc_limit);
             }
+            */
 
         }
         return $items;
