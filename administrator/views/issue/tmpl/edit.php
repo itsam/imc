@@ -249,8 +249,8 @@ $canCreate = true;
 								<?php
 								// show is_citizen
 								if(isset($this->item->userProfile->imcprofile) ) {
-									echo $this->form->getInput('is_citizen');
 									echo $this->form->getLabel('is_citizen');
+									echo $this->form->getInput('is_citizen');
 								}
 								?>
 							</div>
