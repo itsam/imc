@@ -22,9 +22,10 @@ require_once JPATH_COMPONENT_SITE . '/helpers/imc.php';
 	jQuery(document).ready(function() {
 		jQuery("#mail_btn").click(function(){
 			var recipient = jQuery('#recipient').val();
+			var content = jQuery('textarea#content').val();
 			if(isEmail(recipient))
 			{
-				window.location="<?php echo 'index.php?option=com_imc&task=issue.mail&id='.$this->item->id.'&recipient='; ?>"+recipient;
+				window.location="<?php echo 'index.php?option=com_imc&task=issue.mail&id='.$this->item->id.'&recipient='; ?>"+recipient+'&content='+content;
 			}
 			else
 			{
@@ -40,6 +41,7 @@ require_once JPATH_COMPONENT_SITE . '/helpers/imc.php';
 		<button type="button" class="close" data-dismiss="modal">&#215;</button>
 		<h3><?php echo JText::_('COM_IMC_MAIL'); ?></h3>
 		<?php echo JText::_('COM_IMC_TO'); ?>: <input type="text" name="recipient" id="recipient" />
+		<?php echo JText::_('COM_IMC_SETTINGS_COMMENTS_LABEL'); ?>: <textarea name="content" id="content"></textarea>
 	</div>
 	<div class="modal-body">
 		

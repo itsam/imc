@@ -354,7 +354,7 @@ class plgImcmail_notifier extends JPlugin
 		}
 	}
 
-	public function onBeforeIssueMail($model, $id, $recipient)
+	public function onBeforeIssueMail($model, $id, $recipient, $content = '')
 	{
 		$app = JFactory::getApplication();
 
@@ -369,7 +369,7 @@ class plgImcmail_notifier extends JPlugin
 			$DOMAIN = $_SERVER['HTTP_HOST'];
 		}
 		$MENUALIAS = $this->params->get('menualias');
-		$appSite = JApplication::getInstance('site');
+		$appSite = JApplicationCms::getInstance('site');
 		$router = $appSite->getRouter();
 		$uri = $router->build('index.php?option=com_imc&view=issue&id='.(int)$id );
 		$parsed_url = $uri->toString();
@@ -391,7 +391,8 @@ class plgImcmail_notifier extends JPlugin
 		);
 
 		$body .= '<a href="'.$issueLink.'">'.$issueLink.'</a>';
-
+        $body .= '<p>' . JText::_('COM_IMC_SETTINGS_COMMENTS_LABEL') . ':<br />';
+        $body .= $content . '</p>';
 
 		if ($this->sendMail($subject, $body, $recipient) ) {
 			$app->enqueueMessage('Mail sent to '. $recipient);
