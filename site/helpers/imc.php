@@ -519,7 +519,9 @@ class ImcFrontendHelper
 			->select('a.id, a.title, a.parent_id, a.published AS state, a.params')
 			->from('#__categories AS a')
 			->where('extension = ' . $db->quote('com_imc'))
-			->where('a.modified_time >= "' . $ts . '"');
+			->order('lft asc')
+            ->where('a.modified_time >= "' . $ts . '"');
+
 		$db->setQuery($query);
 		$result = $db->loadAssocList();
 		foreach ($result as &$category) {

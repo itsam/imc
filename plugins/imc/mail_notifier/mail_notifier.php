@@ -406,7 +406,8 @@ class plgImcmail_notifier extends JPlugin
         $body .= $item->id. '</p>';
 
         $body .= '<p><strong>'. JText::_('COM_IMC_FORM_LBL_ISSUE_STEPID') . '</strong>:';
-        $body .= ImcFrontendHelper::getStepByStepId($item->stepid)['stepid_title'] . '</p>';
+        $st = ImcFrontendHelper::getStepByStepId($item->stepid);
+        $body .= $st['stepid_title'] . '</p>';
 
         $body .= '<p><strong>'. JText::_('COM_IMC_FORM_LBL_ISSUE_CATID') . '</strong>:';
         $body .= ImcFrontendHelper::getCategoryNameByCategoryId($item->catid) . '</p>';
