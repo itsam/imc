@@ -17,6 +17,12 @@ $state = $issuesModel->getState();
 $listOrder = $state->get('list.ordering');
 $listDirn  = $state->get('list.direction');
 
+if($listOrder == 'a.votes')
+{
+	$listDirn = 'desc';
+}
+
+
 $app = JFactory::getApplication();
 $search = $app->getUserStateFromRequest('com_imc.issues.filter.search', 'filter_search');
 $owned = $app->getUserStateFromRequest('com_imc.issues.filter.owned', 'filter_owned');
