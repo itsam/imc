@@ -1655,11 +1655,34 @@ class ImcControllerApi extends ImcController
 			set_error_handler(array($this, 'exception_error_handler'));
 			//get items and sanitize them
 			$data = $commentsModel->getItems();
-			$result = ImcFrontendHelper::sanitizeComments($data, $userid);
-			$app->enqueueMessage('size: '.sizeof($result), 'info');
+			$results = ImcFrontendHelper::sanitizeComments($data, $userid);
+
+            $params = $app->getParams('com_imc');
+            $commentsdisplayname = $params->get('commentsdisplayname');
+
+            foreach ($results as &$item)
+            {
+                $created_by_admin = (boolean) $item->isAdmin;
+                if ($commentsdisplayname == 'dpt' && $created_by_admin)
+                {
+                    //show department name
+                    $dpts = array();
+                    //get user groups higher than 9
+                    $usergroups = JAccess::getGroupsByUser($item->created_by, false);
+                    for ($i=0; $i < count($usergroups); $i++) {
+                        if($usergroups[$i] > 9){
+                            $dpts[] = ImcFrontendHelper::getGroupNameById($usergroups[$i]);
+                        }
+                    }
+
+                    $item->fullname = implode(', ', $dpts);
+                }
+            }
+
+			$app->enqueueMessage('size: '.sizeof($results), 'info');
 			restore_error_handler();
 
-			echo new JResponseJson($result, 'Comments fetched successfully');
+			echo new JResponseJson($results, 'Comments fetched successfully');
 		}
 		catch(Exception $e)	{
 			header("HTTP/1.0 202 Accepted");

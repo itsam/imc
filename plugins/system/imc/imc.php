@@ -29,9 +29,10 @@ class PlgSystemImc extends JPlugin
                 // Get an instance of the Toolbar
                 $toolbar = JToolbar::getInstance('toolbar');
 
-                // Add your custom button here
-                $url = JRoute::_('index.php?option=com_example&task=massemail&format=raw');
-                $toolbar->appendButton('Link', 'export', 'Renew timestamp', $url);
+                // Add custom button
+                $url = JRoute::_('index.php?option=com_imc&task=categories.renew&format=json', false);
+                $toolbar->appendButton('Link', 'refresh', JText::_('PLG_SYSTEM_BUTTON'), $url);
+
             }
         }
     }

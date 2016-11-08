@@ -79,6 +79,7 @@
     </administration>
     <plugins>
         <plugin group="search" plugin="imc"/>
+        <plugin group="system" plugin="imc"/>
         <plugin group="content" plugin="imc"/>
         <plugin group="imc" plugin="mail_notifier"/>
     </plugins>
