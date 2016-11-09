@@ -49,7 +49,8 @@
             description="" 
             required="true"
             descriptionfield="step_modified_description"
-            flagfield="is_step_modified" 
+            flagfield="is_step_modified"
+            side="backend"
             /> 
         <field name="step_modified_description"
             type="text"
@@ -69,9 +70,9 @@
             required="true" 
             extension="com_imc" 
             descriptionfield="category_modified_description"
-            flagfield="is_category_modified" 
-            
-            /> 
+            flagfield="is_category_modified"
+            side="backend"
+            />
 
         <field name="category_modified_description"
             type="text"
@@ -105,7 +106,8 @@
             longitudefield="longitude" 
             filter="safehtml" 
             width="100%"
-            height="300px" /> 
+            height="300px"
+            side="backend" />
 
         <field name="subgroup" type="subgrouplist"
             showempty="true"
