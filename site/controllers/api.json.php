@@ -1710,4 +1710,49 @@ class ImcControllerApi extends ImcController
 			echo new JResponseJson($e);
 		}
 	}
+
+    public function issuesbycategory()
+    {
+        $result = null;
+        $app = JFactory::getApplication();
+        try {
+            self::validateRequest();
+
+            if($app->input->getMethod() != 'GET')
+            {
+                throw new Exception('You cannot use other method than GET to fetch steps');
+            }
+
+            //get necessary arguments
+            $ts = null;
+            $catid = null;
+            $ts = $app->input->getString('ts');
+            $catid = $app->input->getString('catid');
+
+            if(!is_null($ts))
+            {
+                if(!ImcFrontendHelper::isValidTimeStamp($ts))
+                {
+                    throw new Exception('Invalid timestamp');
+                }
+                //get date from ts
+                $ts = gmdate('Y-m-d H:i:s', $ts);
+            }
+
+            //handle unexpected warnings from model
+            set_error_handler(array($this, 'exception_error_handler'));
+            //get items and sanitize them
+            $result = ImcFrontendHelper::issuesByCategory($ts, $catid);
+            restore_error_handler();
+
+            $app->enqueueMessage('size: '.sizeof($result), 'info');
+            echo new JResponseJson($result, 'Issues fetched successfully');
+        }
+        catch(Exception $e)	{
+            header("HTTP/1.0 202 Accepted");
+            echo new JResponseJson($e);
+        }
+    }
+
+
 }
