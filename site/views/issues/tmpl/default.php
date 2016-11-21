@@ -107,7 +107,7 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
 
                     <?php //show photo if any
                     $i = 0;
-
+                    $thumbnailFound = false;
                     echo '<div class="panel-thumbnail">'. "\n";
                     echo '<a href="'. JRoute::_('index.php?option=com_imc&view=issue&id='.(int) $item->id).'">';
                     if(!empty($attachments->files)){
@@ -115,10 +115,21 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
                             if (isset($file->thumbnailUrl)){
 
                                 echo '<img src="'.$attachments->imagedir .'/'. $attachments->id . '/medium/' . ($attachments->files[$i]->name) .'" alt="issue photo" class="imc-card-img" />' . "\n";
+                                $thumbnailFound = true;
                                 break;
                             }
                             $i++;
                         }
+
+                        if (!$thumbnailFound) {
+                            echo '<div class="imc-no-img-grid">
+                                    <i class="hidden-xs icon-picture icon-4x"></i> <i class="visible-xs icon-picture icon-2x"></i>
+                                    <div style="clear:both"></div>
+                                    <span class="imc-right-col-noimage">'. JText::_('COM_IMC_NO_PHOTO').'</span>
+                              </div>';
+                        }
+
+
                     } else {
                         echo '<div class="imc-no-img-grid">
                                     <i class="hidden-xs icon-picture icon-4x"></i> <i class="visible-xs icon-picture icon-2x"></i>

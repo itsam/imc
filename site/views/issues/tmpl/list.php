@@ -147,6 +147,7 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
                     <div class="imc-column imc-right-col">
                         <?php //show photo if any
                         $i = 0;
+                        $thumbnailFound = false;
                         echo '<a class="imc-list-img" href="'. JRoute::_('index.php?option=com_imc&view=issue&id='.(int) $item->id).'">';
                         if(isset($attachments->files)){
                             foreach ($attachments->files as $file) {
@@ -160,14 +161,22 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
                                 }
                                 $i++;
                             }
+
+                            if (!$thumbnailFound) {
+                                echo '<i class="hidden-xs icon-picture icon-4x"></i>';
+                                echo '<i class="visible-xs icon-picture icon-2x"></i>';
+                                echo '<div style="clear:both"></div>';
+                                echo '<span class="imc-right-col-noimage">'. JText::_('COM_IMC_NO_PHOTO') . '</span>';
+                            }
+
                         }
-                        $tempArray = $attachments->files;
-                        if($tempArray==null){
+                        else {
                             echo '<i class="hidden-xs icon-picture icon-4x"></i>';
                             echo '<i class="visible-xs icon-picture icon-2x"></i>';
                             echo '<div style="clear:both"></div>';
                             echo '<span class="imc-right-col-noimage">'. JText::_('COM_IMC_NO_PHOTO') . '</span>';
                         }
+
                         echo '</a>';
                         ?>
 
