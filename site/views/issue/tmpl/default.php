@@ -180,22 +180,26 @@ if($this->item->moderation == 1 && !$canEdit) : ?>
 			<?php endif; */?>
 			</div>
 
+			<div class="imc-statuses">
+				<?php foreach ($statuses as $status) : ?>
+					<?php if($status->value == $this->item->stepid) : ?>
+						<span style="color: <?php echo $this->logs[count($this->logs)-1]['stepid_color'];?>">
+		    				<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+							<?php echo $status->text; ?>
+		    			</span>
+					<?php else : ?>
+						<?php echo $status->text; ?>
+					<?php endif; ?>
+					&nbsp;&nbsp;
+				<?php endforeach; ?>
+			</div>
+
 
 			<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 pull-left">
 				<div class="imc-info-wrapper" style="margin-bottom: 24px;">
-					<div class="imc-statuses">
-						<?php foreach ($statuses as $status) : ?>
-							<?php if($status->value == $this->item->stepid) : ?>
-								<span style="color: <?php echo $this->logs[count($this->logs)-1]['stepid_color'];?>">
-		    				<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-									<?php echo $status->text; ?>
-		    			</span>
-							<?php else : ?>
-								<?php echo $status->text; ?>
-							<?php endif; ?>
-							&nbsp;&nbsp;
-						<?php endforeach; ?>
-					</div>
+
+					<!-- TODO - create a new label called "Description" -->
+					<div class="imc-issue-subtitle"><?php echo JText::_('COM_IMC_FORM_LBL_ISSUE_DESCRIPTION'); ?></div>
 
 					<p>
 						<strong><?php echo JText::_('COM_IMC_ISSUES_CATID'); ?>: </strong>
