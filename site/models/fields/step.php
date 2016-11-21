@@ -171,7 +171,7 @@ class JFormFieldStep extends JFormField
 		$html[] = '<a id="'.$this->type.'_reason_btn" href="#'.$this->type.'Modal" role="button" class="btn btn-mini hide" data-toggle="modal">'.JText::_('COM_IMC_JFIELD_STEP_REASON').'</a>';
 
 		$html[] = '<!-- Modal -->';
-		$html[] = '<div id="'.$this->type.'Modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="'.$this->type.'ModalLabel" aria-hidden="true">';
+		$html[] = '<div id="'.$this->type.'Modal" class="modal fade'.(isset($this->element['side']) && $this->element['side'] == 'backend' ? ' hide' : '').'" tabindex="-1" role="dialog" aria-labelledby="'.$this->type.'ModalLabel" aria-hidden="true">';
 		$html[] = '	<div class="modal-dialog modal-sm">';
 		$html[] = '		<div class="modal-content">';
 		$html[] = '			<div class="modal-header">';

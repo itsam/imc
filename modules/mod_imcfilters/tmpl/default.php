@@ -17,6 +17,12 @@ $state = $issuesModel->getState();
 $listOrder = $state->get('list.ordering');
 $listDirn  = $state->get('list.direction');
 
+if($listOrder == 'a.votes')
+{
+	$listDirn = 'desc';
+}
+
+
 $app = JFactory::getApplication();
 $search = $app->getUserStateFromRequest('com_imc.issues.filter.search', 'filter_search');
 $owned = $app->getUserStateFromRequest('com_imc.issues.filter.owned', 'filter_owned');
@@ -52,10 +58,10 @@ $id = $jinput->get('id', null);
 					<a href="http://www.improve-my-city.com" target="_blank"><img src="<?php echo $powered_by; ?>" title="http://www.improve-my-city.com" alt="Powered by Improve My City" /></a>
 				<?php endif; ?>
 
-				<a id="search_btn" href="#IMC_advancedSearchModal" role="button" class="btn btn-primary" data-toggle="modal"><i class="icon-search"></i> <span class="hidden-sm hidden-md"><?php echo JText::_('MOD_IMCFILTERS_SEARCH'); ?></span></a>
+				<a id="search_btn" href="#IMC_advancedSearchModal" role="button" class="btn btn-primary" data-toggle="modal"><i class="icon-search"></i> <span class="hidden-xs hidden-sm hidden-md"><?php echo JText::_('MOD_IMCFILTERS_SEARCH'); ?></span></a>
 				<div class="btn-group">
 				  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-					  <i class="icon-signal"></i> <span class="hidden-sm hidden-md"><?php echo JText::_('MOD_IMCFILTERS_ORDERING'); ?></span> <span class="caret"></span>
+					  <i class="icon-signal"></i> <span class="hidden-xs hidden-sm hidden-md"><?php echo JText::_('MOD_IMCFILTERS_ORDERING'); ?></span> <span class="caret"></span>
 				  </button>
 				  <ul class="dropdown-menu" role="menu">
 					  <li><?php echo JHtml::_('grid.sort',  'JDATE', 'a.updated', $listDirn, $listOrder); ?></li>
@@ -66,7 +72,7 @@ $id = $jinput->get('id', null);
 
 				<div class="btn-group">
 				  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-					  <i class="icon-eye-open"></i> <span class="hidden-sm hidden-md"><?php echo JText::_('MOD_IMCFILTERS_DISPLAY'); ?></span> <span class="caret"></span>
+					  <i class="icon-eye-open"></i> <span class="hidden-xs hidden-sm hidden-md"><?php echo JText::_('MOD_IMCFILTERS_DISPLAY'); ?></span> <span class="caret"></span>
 				  </button>
 				  <ul class="dropdown-menu" role="menu">
 				  	<?php echo ModImcfiltersHelper::createLimitBox($state->get('list.limit')); ?>
@@ -102,7 +108,7 @@ $id = $jinput->get('id', null);
 		
 		<?php if ($canCreate && $option == 'com_imc' && $view == 'issues'): ?>
 			<div class="imc_btn_right">
-		    	<a href="<?php echo JRoute::_('index.php?option=com_imc&view=issueform', false, 2); ?>" class="btn btn-success btn-large btn-lg"><i class="icon-plus"></i> <?php echo JText::_('MOD_IMCFILTERS_ADD_ITEM'); ?><br /><span style="font-size: 10px;">(<?php echo JFactory::getUser()->name;?>)</span></a>
+		    	<a href="<?php echo JRoute::_('index.php?option=com_imc&view=issueform', false, 2); ?>" class="btn btn-success"><i class="icon-plus"></i> <?php echo JText::_('MOD_IMCFILTERS_ADD_ITEM'); ?><br /><span style="font-size: 10px;">(<?php echo JFactory::getUser()->name;?>)</span></a>
 		    </div>
 		<?php endif; ?>
 		<?php if ($canCreate && $option == 'com_imc' && $view == 'issue'): ?>

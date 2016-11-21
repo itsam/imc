@@ -82,6 +82,7 @@ $statuses = $step->getOptions();
 				viewAllRepliesText: '<?php echo JText::_('COM_IMC_COMMENTS_VIEW_ALL_REPLIES');?> (__replyCount__)',
 				hideRepliesText: '<?php echo JText::_('COM_IMC_COMMENTS_HIDE');?>',
 				noCommentsText: '<?php echo JText::_('COM_IMC_COMMENTS_NO_COMMENTS');?>',
+				defaultNavigationSortKey: 'newest',
 				enableReplying: true,
 				enableEditing: false,
 				enableUpvoting: false,

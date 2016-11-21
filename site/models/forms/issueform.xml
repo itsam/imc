@@ -34,7 +34,8 @@
             description="" 
             required="false"
             descriptionfield="step_modified_description"
-            flagfield="is_step_modified" 
+            flagfield="is_step_modified"
+            side="frontend"
             /> 
         <field name="step_modified_description"
             type="text"
@@ -55,8 +56,8 @@
             action="edit"
             extension="com_imc" 
             descriptionfield="category_modified_description"
-            flagfield="is_category_modified" 
-            
+            flagfield="is_category_modified"
+            side="frontend"
             /> 
 
         <field name="category_modified_description"
@@ -90,7 +91,8 @@
             required="true" 
             filter="safehtml"
             width="100%"
-            height="200px" />
+            height="200px"
+            side="frontend" />
             
 
         <field name="latitude" type="hidden"

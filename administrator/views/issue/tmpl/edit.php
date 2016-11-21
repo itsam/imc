@@ -36,10 +36,49 @@ $canCreate = true;
 
 <script type="text/javascript">
 
+	function setProfile(userid, key, value, token) {
+		jQuery.ajax({
+			'async': true,
+			'global': false,
+			'url': "index.php?option=com_imc&task=users.setprofile&format=json&userid=" + userid + "&key=" + key + "&value=" + value + "&" + token + "=1",
+			'dataType': "json",
+			'success': function (data) {
+				var json = data;
+
+			},
+			'error': function (error) {
+				alert('Set profile failed - See console for more information');
+				console.log(error);
+			}
+		});
+	}
+	function getProfile(userid, key, token) {
+		jQuery.ajax({
+			'async': true,
+			'global': false,
+			'url': "index.php?option=com_imc&task=users.getProfile&format=json&userid=" + userid + "&key=" + key + "&" + token + "=1",
+			'dataType': "json",
+			'success': function (data) {
+				var json = data;
+				json.data = (json.data == 1 ? true : false);
+				jQuery('input[name="jform[is_citizen]"]').prop('checked', json.data);
+			},
+			'error': function (error) {
+				alert('Get profile failed - See console for more information');
+				console.log(error);
+			}
+		});
+	}
     js = jQuery.noConflict();
+
     js(document).ready(function() {
-	    var init_moderation = js('input[name="jform[moderation]"]:checked').val();
-	    console.log( init_moderation );
+
+		var token = '<?php echo JSession::getFormToken();?>';
+		var userid = '<?php echo $this->item->created_by;?>';
+
+		getProfile(userid, 'imcprofile.is_citizen', token);
+
+		var init_moderation = js('input[name="jform[moderation]"]:checked').val();
 	    js('input[name="jform[moderation]"]').change(function () {
 		    if(this.value == init_moderation)
 		    {
@@ -50,7 +89,18 @@ $canCreate = true;
 			    js('#jform_is_moderation_modified').val(true);
 		    }
 	    });
+
     });
+
+	function profile_change()
+	{
+		var token = '<?php echo JSession::getFormToken();?>';
+		var userid = '<?php echo $this->item->created_by;?>';
+		var sel = jQuery('input[name="jform[is_citizen]"]:checked').val();
+		sel = (sel ? 1 : 0);
+
+		setProfile(userid, 'imcprofile.is_citizen', sel, token);
+	}
 
     Joomla.submitbutton = function(task)
     {
@@ -68,13 +118,8 @@ $canCreate = true;
             }
         }
     }
+
 </script>
-
-
-
-
-
-
 
 <form action="<?php echo JRoute::_('index.php?option=com_imc&layout=edit&id=' . (int) $this->item->id); ?>" method="post" enctype="multipart/form-data" name="adminForm" id="issue-form" class="form-validate">
 
@@ -173,6 +218,7 @@ $canCreate = true;
 						<div class="control-label"><?php echo $this->form->getLabel('extra'); ?></div>
 						<div class="controls">
 							<div class="alert alert-warning">
+								<p style="height: 50px;"></p>
 								<p><strong><?php echo JText::_('COM_IMC_USER_DETAILS');?>:</strong></p>
 								<?php 
 								foreach ($this->item->creatorDetails as $key => $value) {
@@ -186,8 +232,12 @@ $canCreate = true;
 								}
 								// get imc profile
 								if(isset($this->item->userProfile->imcprofile) ) {
-									foreach ($this->item->userProfile->imcprofile as $key => $value) {
-										echo $key.': <strong>'.$value . '</strong><br />';
+									foreach ($this->item->userProfile->imcprofile as $key => $value)
+									{
+										if($key != 'is_citizen')
+										{
+											echo $key.': <strong>'.$value . '</strong><br />';
+										}
 									}
 								}
 
@@ -195,6 +245,14 @@ $canCreate = true;
 								<br />
 								<?php echo $this->form->getLabel('extra'); ?>
 								<?php echo $this->form->getInput('extra'); ?>
+
+								<?php
+								// show is_citizen
+								if(isset($this->item->userProfile->imcprofile) ) {
+									echo $this->form->getLabel('is_citizen');
+									echo $this->form->getInput('is_citizen');
+								}
+								?>
 							</div>
 						</div>
 					</div>

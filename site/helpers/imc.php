@@ -519,7 +519,9 @@ class ImcFrontendHelper
 			->select('a.id, a.title, a.parent_id, a.published AS state, a.params')
 			->from('#__categories AS a')
 			->where('extension = ' . $db->quote('com_imc'))
-			->where('a.modified_time >= "' . $ts . '"');
+			->order('lft asc')
+            ->where('a.modified_time >= "' . $ts . '"');
+
 		$db->setQuery($query);
 		$result = $db->loadAssocList();
 		foreach ($result as &$category) {
@@ -1569,5 +1571,30 @@ class ImcFrontendHelper
 
 		return $showComments;
 	}
+
+    public static function issuesByCategory($ts = null, $catid = null)
+    {
+        if(is_null($ts))
+        {
+            $ts = 0;
+        }
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query
+            ->select('a.id, a.title, a.stepid, a.description, a.address, a.latitude, a.longitude, a.state, a.created, a.updated')
+            ->from('#__imc_issues AS a')
+            ->where('a.state=1')
+            ->where('a.updated >= "' . $ts . '"');
+
+        if(!is_null($catid))
+        {
+            $query->where('a.catid='.$catid);
+        }
+
+        $db->setQuery($query);
+        $result = $db->loadAssocList();
+
+        return $result;
+    }
 
 }

@@ -59,20 +59,27 @@ class ImcModelIssues extends JModelList {
      *
      * @since	1.6
      */
-    protected function populateState($ordering = null, $direction = null) {
+    protected function populateState($ordering = 'a.updated', $direction = 'desc')
+    {
 
-        //set default ordering
-        if($ordering == null || empty($ordering)) {
-            $ordering = 'a.updated';
-        }
-
-        //set default ordering
-        if($direction == null || empty($direction)) {
-            $direction = 'DESC';
-        }
-
-        // Initialise variables.
         $app = JFactory::getApplication();
+        $orderCol = $app->input->get('filter_order', 'a.updated');
+
+        if (!in_array($orderCol, $this->filter_fields))
+        {
+            $orderCol = 'a.ordering';
+        }
+
+        $this->setState('list.ordering', $orderCol);
+
+        $listOrder = $app->input->get('filter_order_Dir', 'DESC');
+
+        if (!in_array(strtoupper($listOrder), array('ASC', 'DESC', '')))
+        {
+            $listOrder = 'DESC';
+        }
+
+        $this->setState('list.direction', $listOrder);
 
         // List state information
         $limit = $app->getUserStateFromRequest('global.list.limit', 'limit', $app->getCfg('list_limit'));
@@ -92,12 +99,12 @@ class ImcModelIssues extends JModelList {
         $access = $app->getUserStateFromRequest($this->context . '.filter.access', 'filter_access');
         $this->setState('filter.access', $access);
 
-        $category = $app->getUserStateFromRequest($this->context . '.filter.category', 'cat', array()); 
+        $category = $app->getUserStateFromRequest($this->context . '.filter.category', 'cat', array());
         $this->setState('filter.category', $category);
         //Filtering catid
         //$this->setState('filter.catid', $app->getUserStateFromRequest($this->context.'.filter.catid', 'filter_catid', '', 'string'));
 
-        $steps = $app->getUserStateFromRequest($this->context . '.filter.steps', 'steps', array()); 
+        $steps = $app->getUserStateFromRequest($this->context . '.filter.steps', 'steps', array());
         $this->setState('filter.steps', $steps);
         //Filtering stepid
         //$this->setState('filter.stepid', $app->getUserStateFromRequest($this->context.'.filter.stepid', 'filter_stepid', '', 'string'));
@@ -107,8 +114,8 @@ class ImcModelIssues extends JModelList {
 
         $this->setState('filter.language', JLanguageMultilang::isEnabled());
 
-	    // List state information.
-	    parent::populateState($ordering, $direction);
+        // List state information.
+        parent::populateState($ordering, $direction);
     }
 
     /**
@@ -286,10 +293,14 @@ class ImcModelIssues extends JModelList {
 		    $query->where('a.created <= "' . $prior_to .'"');
 	    }
 
-
 	    // Add the list ordering clause.
 	    $orderCol = $this->state->get('list.ordering');
 	    $orderDirn = $this->state->get('list.direction');
+
+        if($orderCol == 'a.votes')
+        {
+            $orderDirn = 'desc';
+        }
 
 	    if(!$orderCol && !$orderDirn)
 	    {
@@ -308,6 +319,11 @@ class ImcModelIssues extends JModelList {
         else {
             //set default ordering
             $query->order($db->escape('a.updated' . ' ' . 'DESC'));       
+        }
+
+        $imc_limit = $this->state->get('filter.imcapi.limit', null);
+        if(!is_null($imc_limit)) {
+            $query->setlimit($imc_limit);
         }
 
         return $query;
@@ -375,11 +391,13 @@ class ImcModelIssues extends JModelList {
             }
 
             //avoid using model limit ($query->setlimit(x)) at getListQuery() when called from API
+            /*
             $imc_limit =  $this->state->get('filter.imcapi.limit');
             if(!is_null($imc_limit) && $imc_limit > 0)
             {
                 $items = array_slice($items, 0, $imc_limit);
             }
+            */
 
         }
         return $items;

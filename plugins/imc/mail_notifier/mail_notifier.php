@@ -354,12 +354,13 @@ class plgImcmail_notifier extends JPlugin
 		}
 	}
 
-	public function onBeforeIssueMail($model, $id, $recipient)
+	public function onBeforeIssueMail($model, $id, $recipient, $content = '')
 	{
 		$app = JFactory::getApplication();
 
 		//$issueModel = new ImcModelIssue();
-		$stepid = $model->getItem($id)->get('stepid');
+        $item = $model->getItem($id);
+		$stepid = $item->get('stepid');
 
 		$step = ImcFrontendHelper::getStepByStepId($stepid);
 
@@ -369,7 +370,7 @@ class plgImcmail_notifier extends JPlugin
 			$DOMAIN = $_SERVER['HTTP_HOST'];
 		}
 		$MENUALIAS = $this->params->get('menualias');
-		$appSite = JApplication::getInstance('site');
+		$appSite = JApplicationCms::getInstance('site');
 		$router = $appSite->getRouter();
 		$uri = $router->build('index.php?option=com_imc&view=issue&id='.(int)$id );
 		$parsed_url = $uri->toString();
@@ -391,7 +392,89 @@ class plgImcmail_notifier extends JPlugin
 		);
 
 		$body .= '<a href="'.$issueLink.'">'.$issueLink.'</a>';
+        $body .= '<p>' . JText::_('COM_IMC_SETTINGS_COMMENTS_LABEL') . ':<br />';
+        $body .= $content . '</p>';
+        $body .= '<hr />';
 
+        //include images
+        $body .=  JText::_('COM_IMC_FORM_LBL_ISSUE_CREATED_BY') . '<br />';
+        foreach ($item->creatorDetails as $details) {
+            $body .= $details . ' / ';
+        }
+        $body .= '<strong>' . ImcFrontendHelper::convertFromUTC($item->created). '</strong>';
+        $body .= '<p><strong>'. JText::_('COM_IMC_FORM_LBL_ISSUE_ID') . '</strong>:';
+        $body .= $item->id. '</p>';
+
+        $body .= '<p><strong>'. JText::_('COM_IMC_FORM_LBL_ISSUE_STEPID') . '</strong>:';
+        $st = ImcFrontendHelper::getStepByStepId($item->stepid);
+        $body .= $st['stepid_title'] . '</p>';
+
+        $body .= '<p><strong>'. JText::_('COM_IMC_FORM_LBL_ISSUE_CATID') . '</strong>:';
+        $body .= ImcFrontendHelper::getCategoryNameByCategoryId($item->catid) . '</p>';
+
+        $body .= '<p><strong>'. JText::_('COM_IMC_FORM_LBL_ISSUE_ADDRESS') . '</strong>:';
+        $body .= $item->address . '</p>';
+
+        $body .= '<p><strong>'. JText::_('COM_IMC_FORM_LBL_ISSUE_DESCRIPTION') . '</strong>:';
+        $body .= $item->description . '</p>';
+
+        $body .= '<p><strong>'. JText::_('COM_IMC_FORM_LBL_ISSUE_EXTRA') . '</strong>:';
+        $body .= $item->extra . '</p>';
+
+        $body .= '<p><strong>'. JText::_('COM_IMC_FORM_LBL_ISSUE_PHOTOS') . '</strong>:<br />';
+
+        $photos = json_decode($item->photo);
+        $i=0;
+        foreach ($photos->files as $photo) {
+            if(!isset($photo->thumbnailUrl))
+                unset($photos->files[$i]);
+            $i++;
+        }
+        $attachments = json_decode($item->photo);
+        $i=0;
+        foreach ($attachments->files as $attachment) {
+            if(isset($attachment->thumbnailUrl))
+                unset($attachments->files[$i]);
+            $i++;
+        }
+
+        if(!empty($attachments->files))
+        {
+            $body .= JText::_('COM_IMC_ISSUE_ATTACHMENTS');
+            $body .= '<ul>';
+            foreach ($attachments->files as $attachment)
+            {
+                $body .= '<li><a href="'. $attachment->url.'">'. $attachment->name.'</a></li>';
+            }
+            $body .= '</ul>';
+        }
+
+        if(!empty($photos->files) && file_exists(JPATH_ROOT . '/' . $photos->imagedir .'/'. $photos->id . '/thumbnail/' . (@$photos->files[0]->name)))
+        {
+
+            foreach ($photos->files as $photo)
+            {
+                $src = JURI::root() . '/'. $photos->imagedir .'/'. $photos->id . '/medium/' . ($photo->name);
+                $body .= '<img src="'. $src .'" alt="" style="max-width: 350px;" /><br />';
+            }
+        }
+
+
+        $body .= '<p><strong>'. JText::_('COM_IMC_SETTINGS_GOOGLE_MAP_LABEL') .'</strong>:<br />';
+
+        $api_key = JComponentHelper::getParams('com_imc')->get('api_key');
+        $center = $item->latitude . ',' . $item->longitude;
+
+        $map_src  = 'https://maps.googleapis.com/maps/api/staticmap';
+        $map_src .=	'?center=' . $center;
+        $map_src .=	'&markers=color:red%7Clabel:C%7C'. $center;
+        $map_src .=	'&zoom=17&size=400x400';
+        if($api_key != '')
+        {
+            $map_src .=	'&key='.$api_key;
+        }
+
+        $body .= '<img src="'. $map_src.'"/></p>';
 
 		if ($this->sendMail($subject, $body, $recipient) ) {
 			$app->enqueueMessage('Mail sent to '. $recipient);
@@ -536,15 +619,16 @@ class plgImcmail_notifier extends JPlugin
 
 		$members = array();
 
-		$groupIds = $item->get('imc_category_usergroup');
-		foreach ($groupIds as $groupId) {
-			$membersIds = JAccess::getUsersByGroup($groupId); //getUsersByGroup($groupId, true) recursively
-			foreach ($membersIds as $userId) {
-				$user = JFactory::getUser($userId);
-				array_push($members, $user->email);
-			}
-		}
-
+        if($this->params->get('enableusergroup')) {
+            $groupIds = $item->get('imc_category_usergroup');
+            foreach ($groupIds as $groupId) {
+                $membersIds = JAccess::getUsersByGroup($groupId); //getUsersByGroup($groupId, true) recursively
+                foreach ($membersIds as $userId) {
+                    $user = JFactory::getUser($userId);
+                    array_push($members, $user->email);
+                }
+            }
+        }
 		$extra_emails = $item->get('notification_emails');
 
 		$emails = array_merge($members, $extra_emails);

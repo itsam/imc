@@ -10,8 +10,6 @@
 // no direct access
 defined('_JEXEC') or die;
 require_once JPATH_COMPONENT_SITE . '/helpers/imc.php';
-//print_r($this->item);
-//print_r($this->logs);
 ?>
 <style type="text/css">
 	
