@@ -152,6 +152,9 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
                         if(isset($attachments->files)){
                             foreach ($attachments->files as $file) {
                                 if (isset($file->thumbnailUrl)){
+
+                                    $thumbnailFound = true;
+
                                     echo '<div class="panel-thumbnail">'. "\n";
                                     echo '<a class="imc-OverviewListImageStyle" href="'. JRoute::_('index.php?option=com_imc&view=issue&id='.(int) $item->id).'">';
                                     echo '<img src="'.$attachments->imagedir .'/'. $attachments->id . '/medium/' . ($attachments->files[$i]->name) .'" alt="issue photo" class="img-responsive" sizes="(max-width: 200px) 85vw, 200px" width="200" height="85" />' . "\n";
