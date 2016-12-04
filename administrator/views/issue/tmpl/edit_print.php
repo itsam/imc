@@ -175,6 +175,56 @@ require_once JPATH_COMPONENT_SITE . '/helpers/imc.php';
 			<img src="<?php echo $map_src;?>"/>
 		</p>
 
+		<p><strong><?php echo JText::_('COM_IMC_TITLE_LOG'); ?></strong></p>
+		<table class="table table-striped">
+			<thead>
+			<tr>
+				<th><?php echo JText::_("JDATE");?></th>
+				<th><?php echo JText::_("COM_IMC_FORM_LBL_LOG_ACTION");?></th>
+				<th><?php echo JText::_("COM_IMC_LOGS_CREATED_BY");?></th>
+				<th><?php echo JText::_("COM_IMC_TITLE_STEP");?></th>
+				<th><?php echo JText::_("COM_IMC_LOGS_DESCRIPTION");?></th>
+			</tr>
+			</thead>
+			<tbody>
+			<?php foreach ($this->logs as $log) : ?>
+				<tr>
+
+					<td><?php echo ImcFrontendHelper::convertFromUTC($log['created']); ?></td>
+					<td><?php echo $log['action']; ?></td>
+					<td><?php echo $log['created_by']; ?></td>
+					<td>
+						<span style="font-size: 20px;color: <?php echo $log['stepid_color']; ?>">&marker;</span>
+						<?php echo $log['stepid_title']; ?>
+					</td>
+					<td><?php echo $log['description']; ?></td>
+				</tr>
+			<?php endforeach; ?>
+			</tbody>
+		</table>
+
+		<p><strong><?php echo JText::_('COM_IMC_TITLE_COMMENTS'); ?></strong></p>
+		<table class="table table-striped">
+			<thead>
+			<tr>
+				<th><?php echo JText::_("JDATE");?></th>
+				<th><?php echo JText::_("COM_IMC_LOGS_CREATED_BY");?></th>
+				<!--<th><?php /*echo JText::_("JADMIN");*/?></th>-->
+				<th><?php echo JText::_("COM_IMC_TITLE_COMMENT");?></th>
+			</tr>
+			</thead>
+			<tbody>
+			<?php foreach ($this->comments as $comment) : ?>
+				<tr>
+					<td><?php echo $comment->created; ?></td>
+					<td><?php echo $comment->fullname; ?></td>
+					<!--<td><?php /*echo $comment->isAdmin; */?></td>-->
+					<td><?php echo $comment->description; ?></td>
+				</tr>
+			<?php endforeach; ?>
+			</tbody>
+		</table>
+
 	</div>
 	<div class="modal-footer">
 		<button class="btn" type="button" data-dismiss="modal">
