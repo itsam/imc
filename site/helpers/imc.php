@@ -1597,4 +1597,13 @@ class ImcFrontendHelper
         return $result;
     }
 
+    public static function countModifiedIssues($ts = 0, $limit = 0)
+    {
+	    $db = JFactory::getDbo();
+	    $query = "SELECT COUNT(b.id) FROM (SELECT a.id FROM #__imc_issues AS a WHERE a.updated >= ".$ts." LIMIT ".$limit.") AS b";
+
+	    $db->setQuery($query);
+	    $result = $db->loadResult();
+	    return $result;
+    }
 }

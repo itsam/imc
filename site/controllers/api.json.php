@@ -984,21 +984,19 @@ class ImcControllerApi extends ImcController
 					$result = array($result);
 
 					$response = new JResponseJson($result, 'Modifications since timestamp fetched successfully');
+					$length = mb_strlen($response, 'UTF-8');
+					header('Content-Length: '.$length);
 					echo $response;
 
 				break;
 				case 'HEAD':
 					//handle unexpected warnings
 					set_error_handler(array($this, 'exception_error_handler'));
-					$result = self::getModifications($args['ts'], $userid, false);
+					//$result = self::getModifications($args['ts'], $userid, false);
+					$count = ImcFrontendHelper::countModifiedIssues($args['ts'], 1000);
+					$result = ($count * 700) + 3000;
 					restore_error_handler();
-
-					//be consistent return as array (of size 1)
-					$result = array($result);
-
-					$response = new JResponseJson($result, 'Modifications since timestamp fetched successfully');
-					$length = mb_strlen($response, 'UTF-8');
-					header('Content-Length: '.$length);
+					header('Content-Length: '.$result);
 				break;
 				default:
 					throw new Exception('HTTP method is not supported');
