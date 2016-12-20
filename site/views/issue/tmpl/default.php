@@ -198,8 +198,7 @@ if($this->item->moderation == 1 && !$canEdit) : ?>
 			<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 pull-left">
 				<div class="imc-info-wrapper" style="margin-bottom: 24px;">
 
-					<!-- TODO - create a new label called "Description" -->
-					<div class="imc-issue-subtitle"><?php echo JText::_('COM_IMC_FORM_LBL_ISSUE_DESCRIPTION'); ?></div>
+					<div class="imc-issue-subtitle"><?php echo JText::_('COM_IMC_FORM_LBL_ISSUE_DETAILS'); ?></div>
 
 					<p>
 						<strong><?php echo JText::_('COM_IMC_ISSUES_CATID'); ?>: </strong>

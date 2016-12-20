@@ -21,26 +21,11 @@ jimport('joomla.application.component.view');
 class ImcViewIssue extends JViewLegacy {
 
     protected $state;
-    protected $item;
-    protected $logs;
 
     /**
      * Display the view
      */
     public function display($tpl = null) {
-        
-        $this->state = $this->get('State');
-        print_r($this->state);
-        $this->item = $this->getModel('Issue')->getItem($this->state->printid);
-        if($this->item->id > 0)
-            $this->logs = $this->getModel('Logs')->getItemsByIssue($this->item->id);
-        else
-            $this->logs = array();
-
-        // Check for errors.
-        if (count($errors = $this->get('Errors'))) {
-            throw new Exception(implode("\n", $errors));
-        }
 
         $this->addToolbar();
         parent::display($tpl);

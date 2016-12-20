@@ -972,27 +972,31 @@ class ImcControllerApi extends ImcController
 				throw new Exception('Invalid timestamp');
 			}
 
-			//handle unexpected warnings
-			set_error_handler(array($this, 'exception_error_handler'));
-			$result = self::getModifications($args['ts'], $userid);
-			restore_error_handler();
-
-			//be consistent return as array (of size 1)
-			$result = array($result);
-
 			switch($app->input->getMethod())
 			{
 				case 'GET':
+					//handle unexpected warnings
+					set_error_handler(array($this, 'exception_error_handler'));
+					$result = self::getModifications($args['ts'], $userid);
+					restore_error_handler();
+
+					//be consistent return as array (of size 1)
+					$result = array($result);
+
 					$response = new JResponseJson($result, 'Modifications since timestamp fetched successfully');
-					//$length = mb_strlen($response, 'UTF-8');
-					//header('Content-Length: '.$length);
+					$length = mb_strlen($response, 'UTF-8');
+					header('Content-Length: '.$length);
 					echo $response;
 
 				break;
 				case 'HEAD':
-					$response = new JResponseJson($result, 'Modifications since timestamp fetched successfully');
-					$length = mb_strlen($response, 'UTF-8');
-					header('Content-Length: '.$length);
+					//handle unexpected warnings
+					set_error_handler(array($this, 'exception_error_handler'));
+					//$result = self::getModifications($args['ts'], $userid, false);
+					$count = ImcFrontendHelper::countModifiedIssues($args['ts'], 1000);
+					$result = ($count * 700) + 3000;
+					restore_error_handler();
+					header('Content-Length: '.$result);
 				break;
 				default:
 					throw new Exception('HTTP method is not supported');
@@ -1004,7 +1008,7 @@ class ImcControllerApi extends ImcController
 		}
 	}
 
-	private function getModifications($ts, $userid)
+	private function getModifications($ts, $userid, $sanitize = true)
 	{
 		$offsetDate = JDate::getInstance(date("Y-m-d H:i:s", $ts), JFactory::getConfig()->get('offset') );
         $offset = $offsetDate->format('Y-m-d H:i:s');
@@ -1015,22 +1019,37 @@ class ImcControllerApi extends ImcController
         $issuesModel->setState('filter.imcapi.limit', 1000);
         $issuesModel->setState('filter.imcapi.raw', true); //Do not unset anything in getItems()
 		$data = $issuesModel->getItems();
-		$issues = ImcFrontendHelper::sanitizeIssues($data, $userid, true);
+		$issues = $data;
+		if($sanitize)
+		{
+			$issues = ImcFrontendHelper::sanitizeIssues($data, $userid, true);
+		}
 
-        //2. get categories
+		//2. get categories
         $categories = ImcFrontendHelper::getModifiedCategories($offset);
-        $categories = ImcFrontendHelper::sanitizeCategories($categories);
+		if($sanitize)
+		{
+			$categories = ImcFrontendHelper::sanitizeCategories($categories);
+		}
 
         //3. get steps
         $stepsModel = JModelLegacy::getInstance( 'Steps', 'ImcModel', array('ignore_request' => true) );
         $stepsModel->setState('filter.imcapi.ts', $offset);
         $stepsModel->setState('filter.imcapi.raw', true);
         $data = $stepsModel->getItems();
-        $steps = ImcFrontendHelper::sanitizeSteps($data, true);
+		$steps = $data;
+		if($sanitize)
+		{
+			$steps = ImcFrontendHelper::sanitizeSteps($data, true);
+		}
 
         //4. get votes
         $data = ImcFrontendHelper::getModifiedVotes($offset);
-        $votes = ImcFrontendHelper::sanitizeModifiedVotes($data);
+		$votes = $data;
+		if($sanitize)
+		{
+			$votes = ImcFrontendHelper::sanitizeModifiedVotes($data);
+		}
 
 		//5. full categories structure if modified categories are found
 		$allCategories = array();

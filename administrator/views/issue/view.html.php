@@ -35,6 +35,21 @@ class ImcViewIssue extends JViewLegacy {
         else
             $this->logs = array();
 
+        //Comments
+        if($this->item->id > 0)
+        {
+            require_once JPATH_ROOT . '/components/com_imc/models/comments.php';
+            $commentsModel = JModelLegacy::getInstance( 'Comments', 'ImcModel', array('ignore_request' => true) );
+            $commentsModel->setState('imc.filter.issueid', $this->item->id);
+            $commentsModel->setState('imc.filter.state', 1);
+            $commentsModel->setState('filter.imcapi.userid', $this->item->created_by);
+            $this->comments = $commentsModel->getItems();
+        }
+        else
+        {
+            $this->comments = array();
+        }
+
         // Check for errors.
         if (count($errors = $this->get('Errors'))) {
             throw new Exception(implode("\n", $errors));
