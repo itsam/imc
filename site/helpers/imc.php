@@ -1264,7 +1264,7 @@ class ImcFrontendHelper
 					WHERE a.issueid IN (
 					  SELECT id
 					  FROM #__imc_issues AS p
-					  WHERE p.state = 1 AND p.stepid <> '. self::getPrimaryStepId() .
+					  WHERE p.state = 1 AND p.stepid >= '. self::getPrimaryStepId() .
 						(!is_null($ts) ? ' AND p.created >= "' . $ts .'"' : '').
 						(!is_null($prior_to) ? ' AND p.created <= "' . $prior_to .'"' : '').'
 					)
