@@ -187,7 +187,6 @@ class JFormFieldMultiphoto extends JFormField
 		$script2[] = '{% } %}';
 		$script2[] = '</script>';
 
-
 		JFactory::getDocument()->addScript(JURI::root(true).'/components/com_imc/models/fields/multiphoto/js/vendor/jquery.ui.widget.js');
 		JFactory::getDocument()->addScript(JURI::root(true).'/components/com_imc/models/fields/multiphoto/js/tmpl.min.js');
 		JFactory::getDocument()->addScript(JURI::root(true).'/components/com_imc/models/fields/multiphoto/js/load-image.min.js');
@@ -200,9 +199,6 @@ class JFormFieldMultiphoto extends JFormField
 		JFactory::getDocument()->addScript(JURI::root(true).'/components/com_imc/models/fields/multiphoto/js/jquery.fileupload-validate.js');
 		JFactory::getDocument()->addScript(JURI::root(true).'/components/com_imc/models/fields/multiphoto/js/jquery.fileupload-ui.js');
 		JFactory::getDocument()->addScript(JURI::root(true).'/components/com_imc/models/fields/multiphoto/js/multiphoto.js');
-
-		JFactory::getDocument()->addScript('http://getfirebug.com/releases/lite/1.2/firebug-lite-compressed.js');
-
 
 		$url = JRoute::_(  JURI::root(true)."/administrator/index.php?option=com_imc&task=upload.handler&format=json&id=".$itemId."&imagedir=".$imagedir."&".JSession::getFormToken()."=1" );
 		//change controller url if accessed from backend to work with secure JSession token
