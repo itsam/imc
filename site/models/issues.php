@@ -174,7 +174,11 @@ class ImcModelIssues extends JModelList {
         $imc_raw = $this->state->get('filter.imcapi.raw', false);
 	    $published = $this->getState('filter.state');
 
-	    if(!$imc_raw || $published == 1) {
+	    if($imc_raw)
+	    {
+		    $query->where('(a.state IN (0, 1, -2))');
+	    }
+	    elseif(!$imc_raw || $published == 1) {
             if (is_numeric($published)) {
                 $query->where('a.state = ' . (int)$published);
             } else if ($published === '' || is_null($published)) {
@@ -182,6 +186,8 @@ class ImcModelIssues extends JModelList {
             }
         }
         //$query->where('a.state = 1');
+
+
 
         // Filter by moderation
 	    if(!$imc_raw)
