@@ -131,7 +131,7 @@ $id = $jinput->get('id', null);
 	</div>
 
 	<!-- Modal -->
-	<div id="IMC_advancedSearchModal" class="modal modal-wide fade" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+	<div id="IMC_advancedSearchModal" class="modal modal-wide hide fade" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-sm">
 			<div class="modal-content">
 				<div class="modal-header">

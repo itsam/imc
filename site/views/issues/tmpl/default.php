@@ -8,7 +8,9 @@
  */
 // no direct access
 defined('_JEXEC') or die;
-
+//JHtml::_('jquery.framework');
+//JHtmlBootstrap::loadCSS();
+//JHtml::_('bootstrap.framework');
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
 $user = JFactory::getUser();
@@ -65,10 +67,34 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
         });
     </script>
 
+    <div id="imc-button-filters">
+        <?php
+        $module = &JModuleHelper::getModule('mod_imcfilters');
+        $html = JModuleHelper::renderModule($module);
+        echo $html;
+        ?>
+    </div>
+
+
+
     <div class="grid">
         <!-- width of .grid-sizer used for columnWidth -->
         <div class="grid-sizer"></div>
         <div class="gutter-sizer"></div>
+
+        <div class="grid-item">
+            <div id="imc-panel-0" class="panel panel-default">
+                <div class="panel-thumbnail">
+				    <?php
+				    $module = &JModuleHelper::getModule('mod_imcmap');
+				    $html = JModuleHelper::renderModule($module);
+				    echo $html;
+				    ?>
+                </div>
+                <div class="imc-panel-body">asdf</div>
+                <div class="imc-card-header">asdf</div>
+            </div>
+        </div>
         <?php foreach ($this->items as $i => $item) : ?>
             <?php
 
@@ -91,6 +117,7 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
             <?php if (!$canEdit && $user->authorise('core.edit.own', 'com_imc.issue.'.$item->id)): ?>
                 <?php $canEdit = JFactory::getUser()->id == $item->created_by; ?>
             <?php endif; ?>
+
 
             <div class="grid-item">
                 <div id="imc-panel-<?php echo $item->id;?>" class="panel panel-default">

@@ -596,6 +596,19 @@ class plgImcmail_notifier extends JPlugin
 		$mail->setSender(array($mailfrom, $fromname));
 		$mail->setSubject($sitename.': '.$subject);
 		$mail->setBody($body);
+
+		if(true)
+		{
+			$mail->SMTPOptions = array(
+				'ssl' => array(
+					'verify_peer' => false,
+					'verify_peer_name' => false,
+					'allow_self_signed' => true
+				)
+			);
+		}
+
+
 		if ($mail->Send()) {
 		  return true;
 		} else {
