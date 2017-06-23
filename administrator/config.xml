@@ -160,6 +160,19 @@
 
     </fieldset>
 
+    <fieldset
+            name="advanced"
+            class="form-horizontal"
+            label="COM_IMC_SETTINGS_ADVANCED_LABEL"
+            description="">
+
+        <field name="modular" type="radio" default="1" class="btn-group btn-group-yesno" label="COM_IMC_SETTINGS_ADVANCED_MODULAR_LABEL" description="COM_IMC_SETTINGS_ADVANCED_MODULAR_DESC">
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+
+        <field type="spacer" name="myspacer" hr="true" />
+    </fieldset>
 
     <fieldset name="permissions"
         description="JCONFIG_PERMISSIONS_DESC"
