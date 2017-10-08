@@ -35,6 +35,7 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
     });
 </script>
 
+<a id="issues-content" aria-hidden="true" tabindex="-1"></a>
 <div class="container-fluid">
     <div class="row">
         <?php foreach ($this->items as $i => $item) : ?>
@@ -148,7 +149,7 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
                         <?php //show photo if any
                         $i = 0;
                         $thumbnailFound = false;
-                        echo '<a class="imc-list-img" href="'. JRoute::_('index.php?option=com_imc&view=issue&id='.(int) $item->id).'">';
+                        echo '<a tabindex="-1" title="<?php echo $this->escape($item->title); ?>" class="imc-list-img" href="'. JRoute::_('index.php?option=com_imc&view=issue&id='.(int) $item->id).'">';
                         if(isset($attachments->files)){
                             foreach ($attachments->files as $file) {
                                 if (isset($file->thumbnailUrl)){
@@ -156,7 +157,7 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
                                     $thumbnailFound = true;
 
                                     echo '<div class="panel-thumbnail">'. "\n";
-                                    echo '<a class="imc-OverviewListImageStyle" href="'. JRoute::_('index.php?option=com_imc&view=issue&id='.(int) $item->id).'">';
+                                    echo '<a tabindex="-1" class="imc-OverviewListImageStyle" href="'. JRoute::_('index.php?option=com_imc&view=issue&id='.(int) $item->id).'">';
                                     echo '<img src="'.$attachments->imagedir .'/'. $attachments->id . '/medium/' . ($attachments->files[$i]->name) .'" alt="issue photo" class="img-responsive" sizes="(max-width: 200px) 85vw, 200px" width="200" height="85" />' . "\n";
                                     echo '</a>';
                                     echo '</div>'. "\n";

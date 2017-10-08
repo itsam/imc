@@ -80,7 +80,7 @@ if(!$canState && $this->item->id > 0) {
 
 
 </script>
-
+<a id="issues-content" aria-hidden="true" tabindex="-1"></a>
 <div class="container">
 	<div class="row">
 		<div class="issue-edit front-end-edit">

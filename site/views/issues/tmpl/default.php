@@ -64,7 +64,7 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
 
         });
     </script>
-
+    <a id="issues-content" aria-hidden="true" tabindex="-1"></a>
     <div class="grid">
         <!-- width of .grid-sizer used for columnWidth -->
         <div class="grid-sizer"></div>
@@ -109,7 +109,7 @@ $this->document->addStyleSheet(JURI::root(true) . '/components/com_imc/assets/cs
                     $i = 0;
                     $thumbnailFound = false;
                     echo '<div class="panel-thumbnail">'. "\n";
-                    echo '<a href="'. JRoute::_('index.php?option=com_imc&view=issue&id='.(int) $item->id).'">';
+                    echo '<a tabindex="-1" href="'. JRoute::_('index.php?option=com_imc&view=issue&id='.(int) $item->id).'">';
                     if(!empty($attachments->files)){
                         foreach ($attachments->files as $file) {
                             if (isset($file->thumbnailUrl)){

@@ -162,7 +162,7 @@ if($this->item->moderation == 1 && !$canEdit) : ?>
 	</div>
 
 	<?php return; endif; ?>
-
+<a id="issues-content" aria-hidden="true" tabindex="-1"></a>
 <?php if ($this->item && ($this->item->state == 1 || $canEditOwn ) ) : ?>
 	<div class="container">
 		<div class="row">
