@@ -3,7 +3,6 @@
 
 Build Status
 ---------------------
-Travis-CI: [![Build Status](https://travis-ci.org/itsam/imc.svg)](https://travis-ci.org/itsam/imc)
 
 *Important note: Currently use only on Twitter Bootstrap compatible themes*
 
