@@ -1025,6 +1025,8 @@ class ImcFrontendHelper
 		  (SELECT COUNT(*) FROM #__imc_votes WHERE state=1) as total_votes,
 		  (SELECT COUNT(*) FROM #__imc_comments WHERE state=1) as total_comments,
 		  (SELECT COUNT(*) FROM #__users WHERE 1) as total_users,
+		  (SELECT UNIX_TIMESTAMP(created) FROM #__imc_issues WHERE state=1 ORDER BY created ASC LIMIT 1) as oldest_issue_date_ts,
+		  (SELECT UNIX_TIMESTAMP(created) FROM #__imc_issues WHERE state=1 ORDER BY created DESC LIMIT 1) as newest_issue_date_ts,
 		  (SELECT created FROM #__imc_issues WHERE state=1 ORDER BY created ASC LIMIT 1) as oldest_issue_date,
 		  (SELECT created FROM #__imc_issues WHERE state=1 ORDER BY created DESC LIMIT 1) as newest_issue_date
 		');
@@ -1264,7 +1266,7 @@ class ImcFrontendHelper
 					WHERE a.issueid IN (
 					  SELECT id
 					  FROM #__imc_issues AS p
-					  WHERE p.state = 1 AND p.stepid >= '. self::getPrimaryStepId() .
+					  WHERE p.state = 1 '.
 						(!is_null($ts) ? ' AND p.created >= "' . $ts .'"' : '').
 						(!is_null($prior_to) ? ' AND p.created <= "' . $prior_to .'"' : '').'
 					)

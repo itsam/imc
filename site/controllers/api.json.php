@@ -1251,6 +1251,13 @@ class ImcControllerApi extends ImcController
             //handle unexpected warnings from model
             set_error_handler(array($this, 'exception_error_handler'));
 			$result = ImcFrontendHelper::getTotals();
+
+			// Calculate the difference between start and end date (in years, months & days).
+			$diff = date_diff(date_create($result[0]['newest_issue_date']), date_create($result[0]['oldest_issue_date']));
+            $result[0]['years'] = $diff->y;
+            $result[0]['months'] = $diff->m;
+            $result[0]['days'] = $diff->d;
+
 			restore_error_handler();
 
     	    $app->enqueueMessage('size: '.sizeof($result), 'info');
