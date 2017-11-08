@@ -84,6 +84,7 @@ CREATE TABLE IF NOT EXISTS `#__imc_log` (
 `created_by` INT(11)  NOT NULL ,
 `updated_by` INT(11)  NOT NULL ,
 `language` VARCHAR(255)  NOT NULL ,
+`step_days_diff` INT ,
 PRIMARY KEY (`id`)
 ) DEFAULT COLLATE=utf8_general_ci;
 

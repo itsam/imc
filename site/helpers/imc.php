@@ -1249,35 +1249,20 @@ class ImcFrontendHelper
 	{
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
-		$query->select('AVG(days_diff) AS avg_days, MIN(days_diff) AS min_days, MAX(days_diff) AS max_days, COUNT(issueid) AS count_issues');
+		$query->select('AVG(step_days_diff) AS avg_days, MIN(step_days_diff) AS min_days, MAX(step_days_diff) AS max_days, COUNT(issueid) AS count_issues');
 		$query->from('
 			(
-				SELECT DISTINCT * FROM (
-
-					SELECT a.issueid, a.stepid, b.catid, a.created,
-					  CASE WHEN (a.created - f.created) IS NULL THEN a.created + INTERVAL 1 SECOND ELSE f.created END AS vcreated,
-					  CASE WHEN (a.created - f.created) IS NULL THEN 0 ELSE ABS(DATEDIFF(a.created, f.created)) END AS days_diff
-
-					FROM #__imc_log AS a
-					  LEFT JOIN #__imc_log AS f ON a.created > f.created AND a.issueid = f.issueid
-					  LEFT JOIN #__imc_issues AS b ON b.id = a.issueid
-					WHERE a.issueid IN (
-					  SELECT id
-					  FROM #__imc_issues AS p
-					  WHERE p.state = 1 AND p.stepid >= '. self::getPrimaryStepId() .
-						(!is_null($ts) ? ' AND p.created >= "' . $ts .'"' : '').
-						(!is_null($prior_to) ? ' AND p.created <= "' . $prior_to .'"' : '').'
-					)
-					AND a.action = "step"
-					AND a.state = 1
-					GROUP BY vcreated
-
-				) AS dis
-				GROUP BY issueid
-
+				SELECT scsue_imc_log.issueid, scsue_imc_log.stepid, scsue_imc_issues.catid, scsue_imc_log.created, scsue_imc_log.step_days_diff
+				FROM scsue_imc_log INNER JOIN scsue_imc_issues ON scsue_imc_log.issueid = scsue_imc_issues.id
+				WHERE scsue_imc_log.state = 1 AND
+					  scsue_imc_log.action = "step" AND
+					  scsue_imc_log.step_days_diff != "NULL" '.
+					  (!is_null($ts) ? ' AND scsue_imc_issues.created >= "' . $ts .'"' : '').
+					  (!is_null($prior_to) ? ' AND scsue_imc_issues.created <= "' . $prior_to .'"' : '').'
+				ORDER BY scsue_imc_log.issueid
 			) AS intervals
 		');
-
+	
 		if($by_step && !$by_category)
 		{
 			$query->select('stepid, s.title AS steptitle, s.stepcolor');
@@ -1296,12 +1281,13 @@ class ImcFrontendHelper
 			$query->select('catid, c.title AS category');
 			$query->join('LEFT', '#__imc_steps AS s ON s.id = intervals.stepid');
 			$query->join('LEFT', '#__categories AS c ON c.id = intervals.catid');
+			$query->where('step_days_diff != "NULL"');
 			$query->group('catid, stepid');
-
+	
 			//nest steps by category
 			$db->setQuery($query);
 			$results =  $db->loadAssocList();
-
+	
 			$nested = array();
 			$categories = array();
 			$cat = 'any';
@@ -1317,14 +1303,14 @@ class ImcFrontendHelper
 			{
 				$nested[$ar['catid']][] = $ar;
 			}
-
+	
 			return $nested;
 		}
-
+	
 		$db->setQuery($query);
 		return $db->loadAssocList();
 	}
-
+	
 	public static function getIds($data)
 	{
 		$ids = array();

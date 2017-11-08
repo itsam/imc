@@ -178,6 +178,67 @@ class ImcControllerIssue extends JControllerForm
             }
 
         }
+        
+        
+        
+        
+
+        // Calculate "step_days_diff" column value in logs table
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+
+        $query->select(array('a.id AS issue_id', 'a.stepid AS issue_step_id', 'a.catid', 'a.title', 'b.id AS log_id', 'b.stepid AS log_step_id', 'b.description AS log_description', 'b.action', 'b.created AS log_created'));
+        $query->from($db->quoteName('#__imc_issues', 'a'));
+        $query->join('INNER', $db->quoteName('#__imc_log', 'b').' ON ('.$db->quoteName('a.id').' = '.$db->quoteName('b.issueid').')');
+        $query->where($db->quoteName('a.id')." = ".$db->quote($validData['id']));
+        $query->where($db->quoteName('a.state')." = ".$db->quote('1'));
+        $query->where($db->quoteName('b.action')." = ".$db->quote('step'));
+        $query->order($db->quoteName('b.id').' ASC');
+
+        $db->setQuery($query);
+        $results =  $db->loadAssocList();
+
+        //echo($query->__toString());
+
+
+        if(1 < count($results)) {
+            $stepDaysDiff = 0;
+
+            for($i=0; $i<count($results); $i++) {
+                if($results[$i]['issue_step_id'] == $results[$i]['log_step_id']) {
+                    $datePrev = new DateTime(date('Y-m-d H:i:s', strtotime($results[($i-1)]['log_created'])));
+                    $dateNext = new DateTime(date('Y-m-d H:i:s', strtotime($results[$i]['log_created'])));
+
+                    $stepDaysDiff =  $datePrev->diff($dateNext)->days;
+                    echo $results[$i]['log_id'].' - '.$stepDaysDiff;
+                    
+                    $query = $db->getQuery(true);
+                    
+                    // Fields to update.
+                    $fields = array(
+                        $db->quoteName('step_days_diff') . ' = ' . $db->quote($stepDaysDiff),
+                    );
+                    
+                    // Conditions for which records should be updated.
+                    $conditions = array(
+                        $db->quoteName('id') . ' = ' . $db->quote($results[$i]['log_id'])
+                    );
+                    
+                    $query->update($db->quoteName('#__imc_log'))->set($fields)->where($conditions);
+                    
+                    $db->setQuery($query);
+                    $result = $db->execute();
+
+                }
+            }
+        }
+
+        // echo '<br>';
+        // echo '<pre>';
+        // print_r($results);
+        // echo '</pre>';
+        // die;
+        
     }
 
     /*
