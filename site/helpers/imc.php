@@ -1026,7 +1026,10 @@ class ImcFrontendHelper
 		  (SELECT COUNT(*) FROM #__imc_comments WHERE state=1) as total_comments,
 		  (SELECT COUNT(*) FROM #__users WHERE 1) as total_users,
 		  (SELECT created FROM #__imc_issues WHERE state=1 ORDER BY created ASC LIMIT 1) as oldest_issue_date,
-		  (SELECT created FROM #__imc_issues WHERE state=1 ORDER BY created DESC LIMIT 1) as newest_issue_date
+		  (SELECT created FROM #__imc_issues WHERE state=1 ORDER BY created DESC LIMIT 1) as newest_issue_date,
+		  (SELECT UNIX_TIMESTAMP(created) FROM #__imc_issues WHERE state=1 ORDER BY created ASC LIMIT 1) as oldest_issue_date_ts,
+		  (SELECT UNIX_TIMESTAMP(created) FROM #__imc_issues WHERE state=1 ORDER BY created DESC LIMIT 1) as newest_issue_date_ts
+
 		');
 
 		$db->setQuery($query);
