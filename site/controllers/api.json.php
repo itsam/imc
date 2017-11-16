@@ -537,6 +537,7 @@ class ImcControllerApi extends ImcController
 	public function categories()
 	{
 		$result = null;
+		$categories = null;
 		$app = JFactory::getApplication();
 		try {
 		    self::validateRequest();
@@ -546,11 +547,13 @@ class ImcControllerApi extends ImcController
 			    throw new Exception('You cannot use other method than GET to fetch categories');
 			}
 
-            $ts = $app->input->getString('ts');
+			$ts = $app->input->getString('ts');
+			$toFlat = $app->input->getString('toFlat');
 
             //handle unexpected warnings from JCategories
             set_error_handler(array($this, 'exception_error_handler'));
-            $result = ImcFrontendHelper::getCategories(false);
+			$categories = ImcFrontendHelper::getCategories(false);
+			
             if(!is_null($ts))
             {
                 if(!ImcFrontendHelper::isValidTimeStamp($ts))
@@ -560,9 +563,27 @@ class ImcControllerApi extends ImcController
                 foreach ($result as $cat) {
                     //TODO: unset categories prior to ts (how to handle children?)
                 }
-            }
+			}
+			
+
+			$result = $categories;
+
+			if(!is_null($toFlat)) {
+				if($toFlat) {
+					$categoriesArray = json_decode(json_encode($categories), true);
+					$result = ImcFrontendHelper::searchByKey($categoriesArray, 'title');
+
+					if(!empty($result)) {
+						for($i=0; $i<count($result); $i++) {
+							unset($result[$i]['children']);
+						}
+					}
+				}
+			}
+
+
 			restore_error_handler();
-            $app->enqueueMessage('size: '.sizeof($result), 'info');
+			$app->enqueueMessage('size: '.sizeof($result), 'info');
 			echo new JResponseJson($result, 'Categories fetched successfully');
 		}
 		catch(Exception $e)	{
@@ -1347,38 +1368,59 @@ class ImcControllerApi extends ImcController
     }
 
     public function calendar()
-    {
+	{
 		$result = null;
 		$app = JFactory::getApplication();
 		try {
-		    self::validateRequest();
+			self::validateRequest();
 
 			if($app->input->getMethod() != 'GET')
 			{
-			    throw new Exception('You cannot use other method than GET to fetch calendar issues');
+				throw new Exception('You cannot use other method than GET to fetch calendar issues');
 			}
 
-            //get necessary arguments
-            $field = $app->input->getString('field', null);
-            $allowedFields = array('stepid', 'catid');
-            if(!in_array($field, $allowedFields))
-            {
-                $field = null;
-            }
+			//get necessary arguments
+			$field = $app->input->getString('field', null);
+			$allowedFields = array('stepid', 'catid');
+			if(!in_array($field, $allowedFields))
+			{
+				$field = null;
+			}
 
-            //handle unexpected warnings
-            set_error_handler(array($this, 'exception_error_handler'));
-			$calendar = ImcFrontendHelper::calendar($field);
-			$result = ImcFrontendHelper::sanitizeCalendar($calendar);
+			$ts = $app->input->getString('ts', null);
+			$prior_to = $app->input->getString('prior_to', null);
+
+			if(!is_null($ts) && !ImcFrontendHelper::isValidTimeStamp($ts))
+			{
+				throw new Exception('Invalid timestamp ts');
+			}
+			if(!is_null($prior_to) && !ImcFrontendHelper::isValidTimeStamp($prior_to))
+			{
+				throw new Exception('Invalid timestamp prior_to');
+			}
+
+			//get date from ts
+			if(!is_null($ts))
+			{
+				$ts = gmdate('Y-m-d H:i:s', $ts);
+			}
+			if(!is_null($prior_to))
+			{
+				$prior_to = gmdate('Y-m-d H:i:s', $prior_to);
+			}
+
+			//handle unexpected warnings
+			set_error_handler(array($this, 'exception_error_handler'));
+			$result = ImcFrontendHelper::calendar($field, $ts, $prior_to);
 			restore_error_handler();
 
 			echo new JResponseJson($result, 'Calendar Issues fetched successfully');
 		}
-		catch(Exception $e)	{
+		catch(Exception $e) {
 			header("HTTP/1.0 202 Accepted");
 			echo new JResponseJson($e);
 		}
-    }
+	}
 
     public function dailyCalendar()
     {
@@ -1424,8 +1466,64 @@ class ImcControllerApi extends ImcController
 			echo new JResponseJson($e);
 		}
     }
-
+    
     public function intervals()
+    {
+		$result = null;
+		$app = JFactory::getApplication();
+		try {
+		    self::validateRequest();
+
+			if($app->input->getMethod() != 'GET')
+			{
+			    throw new Exception('You cannot use other method than GET to fetch intervals');
+			}
+
+            //get necessary arguments
+            $by_step = $app->input->getString('by_step', null);
+            $by_category = $app->input->getString('by_category', null);
+			$for_perf = $app->input->getString('for_perf', null);
+
+			$by_step = ($by_step === 'true');
+            $by_category = ($by_category === 'true');
+			$for_perf = ($for_perf === 'true');
+
+			$ts = $app->input->getString('ts', null);
+            $prior_to = $app->input->getString('prior_to', null);
+
+		    if(!is_null($ts) && !ImcFrontendHelper::isValidTimeStamp($ts))
+            {
+                throw new Exception('Invalid timestamp ts');
+            }
+		    if(!is_null($prior_to) && !ImcFrontendHelper::isValidTimeStamp($prior_to))
+            {
+                throw new Exception('Invalid timestamp prior_to');
+            }
+
+			//get date from ts
+            if(!is_null($ts))
+            {
+                $ts = gmdate('Y-m-d H:i:s', $ts);
+            }
+			if(!is_null($prior_to))
+            {
+	            $prior_to = gmdate('Y-m-d H:i:s', $prior_to);
+            }
+
+            //handle unexpected warnings
+            set_error_handler(array($this, 'exception_error_handler'));
+			$result = ImcFrontendHelper::intervals($by_step, $by_category, $ts, $prior_to, $for_perf);
+			restore_error_handler();
+
+			echo new JResponseJson($result, 'Intervals fetched successfully');
+		}
+		catch(Exception $e)	{
+			header("HTTP/1.0 202 Accepted");
+			echo new JResponseJson($e);
+		}
+    }
+    
+    public function __intervals()
     {
 		$result = null;
 		$app = JFactory::getApplication();
