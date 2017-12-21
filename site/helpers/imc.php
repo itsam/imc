@@ -931,6 +931,7 @@ class ImcFrontendHelper
 		$query->join('LEFT', '#__imc_steps AS b ON b.id = a.stepid');
 		$query->where('a.state = 1');
 		$query->group('a.stepid');
+		$query->order('b.ordering ASC');
 		$query->order('count_issues DESC');
 		if(!is_null($limit) && $limit > 0)
 		{
