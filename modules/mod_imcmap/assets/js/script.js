@@ -75,10 +75,10 @@ function setMarkers(center, map, img_path) {
 
                     // Create image object, to set max size
                     var icon = {
-                        url: img,
-                        scaledSize: new google.maps.Size(32, 37),
-                        origin: new google.maps.Point(0, 0),
-                        anchor: new google.maps.Point(0, 0)
+                        url: img
+                        //scaledSize: new google.maps.Size(32, 37),
+                        //origin: new google.maps.Point(0, 0),
+                        //anchor: new google.maps.Point(0, 0)
                     };
 
                     // Create marker and putting it on the map
