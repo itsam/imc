@@ -854,7 +854,13 @@ class ImcFrontendHelper
 		$query->join('LEFT', '#__users AS b ON b.id = a.created_by');
 		$query->join('LEFT', '#__user_usergroup_map AS c ON b.id = c.user_id');
 		$query->join('LEFT', '#__usergroups AS d ON d.id = c.group_id');
-		$query->where('a.state = 1 AND c.group_id = 2');
+		$query->where('a.state = 1 AND c.group_id = 2 AND c.user_id NOT IN (
+            SELECT #__users.id
+            FROM #__users
+                 LEFT JOIN #__user_usergroup_map ON #__users.id = #__user_usergroup_map.user_id
+                 LEFT JOIN #__usergroups ON #__usergroups.id = #__user_usergroup_map.group_id
+            WHERE #__usergroups.id != 2
+        )');
 		$query->group('a.created_by');
 		$query->order('count_issues DESC');
 		if(!is_null($limit) && $limit > 0)
@@ -1284,20 +1290,20 @@ class ImcFrontendHelper
 		$days_diff_string = " ";
 		$query->select('COUNT(issueid) AS count_issues');
 		if ($for_perf == true) {
-			$days_diff_string = ' AND scsue_imc_log.step_days_diff != "NULL" ';
+			$days_diff_string = ' AND #__imc_log.step_days_diff != "NULL" ';
 			$query->select('AVG(step_days_diff) AS avg_days, MIN(step_days_diff) AS min_days, MAX(step_days_diff) AS max_days, COUNT(issueid) AS count_issues');
 		}
 
 		$query->from('
 		(
-			SELECT scsue_imc_log.issueid, scsue_imc_log.stepid, scsue_imc_issues.catid, scsue_imc_log.created, scsue_imc_log.step_days_diff
-            FROM scsue_imc_log INNER JOIN scsue_imc_issues ON scsue_imc_log.issueid = scsue_imc_issues.id
-            WHERE scsue_imc_log.state = 1 AND
-                  scsue_imc_log.action = "step" '.
+			SELECT #__imc_log.issueid, #__imc_log.stepid, #__imc_issues.catid, #__imc_log.created, #__imc_log.step_days_diff
+            FROM #__imc_log INNER JOIN #__imc_issues ON #__imc_log.issueid = #__imc_issues.id
+            WHERE #__imc_log.state = 1 AND
+                  #__imc_log.action = "step" '.
 		             $days_diff_string .
-		             (!is_null($ts) ? ' AND scsue_imc_issues.created >= "' . $ts .'"' : '').
-		             (!is_null($prior_to) ? ' AND scsue_imc_issues.created <= "' . $prior_to .'"' : '').'
-            ORDER BY scsue_imc_log.issueid
+		             (!is_null($ts) ? ' AND #__imc_issues.created >= "' . $ts .'"' : '').
+		             (!is_null($prior_to) ? ' AND #__imc_issues.created <= "' . $prior_to .'"' : '').'
+            ORDER BY #__imc_log.issueid
 		) AS intervals
 	');
 
@@ -1360,14 +1366,14 @@ class ImcFrontendHelper
 		$query->select('AVG(step_days_diff) AS avg_days, MIN(step_days_diff) AS min_days, MAX(step_days_diff) AS max_days, COUNT(issueid) AS count_issues');
 		$query->from('
 			(
-				SELECT scsue_imc_log.issueid, scsue_imc_log.stepid, scsue_imc_issues.catid, scsue_imc_log.created, scsue_imc_log.step_days_diff
-				FROM scsue_imc_log INNER JOIN scsue_imc_issues ON scsue_imc_log.issueid = scsue_imc_issues.id
-				WHERE scsue_imc_log.state = 1 AND
-					  scsue_imc_log.action = "step" AND
-					  scsue_imc_log.step_days_diff != "NULL" '.
-					  (!is_null($ts) ? ' AND scsue_imc_issues.created >= "' . $ts .'"' : '').
-					  (!is_null($prior_to) ? ' AND scsue_imc_issues.created <= "' . $prior_to .'"' : '').'
-				ORDER BY scsue_imc_log.issueid
+				SELECT #__imc_log.issueid, #__imc_log.stepid, #__imc_issues.catid, #__imc_log.created, #__imc_log.step_days_diff
+				FROM #__imc_log INNER JOIN #__imc_issues ON #__imc_log.issueid = #__imc_issues.id
+				WHERE #__imc_log.state = 1 AND
+					  #__imc_log.action = "step" AND
+					  #__imc_log.step_days_diff != "NULL" '.
+					  (!is_null($ts) ? ' AND #__imc_issues.created >= "' . $ts .'"' : '').
+					  (!is_null($prior_to) ? ' AND #__imc_issues.created <= "' . $prior_to .'"' : '').'
+				ORDER BY #__imc_log.issueid
 			) AS intervals
 		');
 	
