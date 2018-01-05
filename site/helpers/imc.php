@@ -1162,9 +1162,11 @@ class ImcFrontendHelper
 		// It is necessary for date difference
 		date_default_timezone_set('UTC');
 
-		// Calculate dates diferrence in months
-		$start = (new DateTime($ts))->modify('first day of this month');
-		$end = (new DateTime($prior_to))->modify('first day of this month');
+		// Calculate dates difference in months
+		$dt_ts = new DateTime($ts);
+		$dt_prior_to = new DateTime($prior_to);
+		$start = $dt_ts->modify('first day of this month');
+		$end = $dt_prior_to->modify('first day of this month');
 		$interval = new DateInterval('P1M');
 		$period = new DatePeriod($start, $interval, $end);
 

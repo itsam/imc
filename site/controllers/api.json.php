@@ -971,6 +971,116 @@ class ImcControllerApi extends ImcController
 	}
 
 
+	public function step()
+	{
+		$result = null;
+		$app = JFactory::getApplication();
+		try {
+			$userid = self::validateRequest();
+
+			//get necessary arguments
+			$id = $app->input->getInt('id', null); //issue id
+			$stepid = $app->input->getInt('stepId', null); //step id
+			$descr = $app->input->getString('description', null); //reason to change step
+
+			switch($app->input->getMethod())
+			{
+
+				case 'PUT':
+				case 'PATCH':
+					if ($id == null){
+						throw new Exception('Id is not set');
+					}
+					if ($stepid == null){
+						throw new Exception('Stepid is not set');
+					}
+					if ($descr == null){
+						throw new Exception('Description is not set');
+					}
+
+					//guests are not allowed to post issues
+					if($userid == 0)
+					{
+						throw new Exception(JText::_('COM_IMC_API_NO_GUESTS_NO_POST'));
+					}
+
+					//get logs model
+					$issueModel = JModelLegacy::getInstance( 'Issue', 'ImcModel', array('ignore_request' => true) );
+					$logModel = JModelLegacy::getInstance( 'Log', 'ImcModel', array('ignore_request' => true) );
+
+					$stepsModel = JModelLegacy::getInstance( 'Steps', 'ImcModel', array('ignore_request' => true) );
+					$stepsModel->setState('filter.state', 1);
+
+					//handle unexpected warnings from model
+					set_error_handler(array($this, 'exception_error_handler'));
+					$data = $issueModel->getData($id);
+
+					if(!is_object($data)){
+						throw new Exception('Issue does not exist');
+					}
+
+					$steps = $stepsModel->getItems();
+					$found = false;
+					foreach ($steps as $step)
+					{
+						if($step->id == $stepid){
+							$found = true;
+							break;
+						}
+					}
+					if(!$found){
+						throw new Exception('Requested stepId does not exist');
+					}
+
+					$issue = ImcFrontendHelper::sanitizeIssue($data, $userid);
+					if($issue->state != 1){
+						throw new Exception('Issue is not published');
+					}
+					if(!$issue->myIssue && $issue->moderation){
+						$app->enqueueMessage('Issue is under moderation', 'info');
+					}
+
+
+					//1. update stepid of the issue
+					$args['updated_by'] = $userid;
+					$args['stepid'] = $stepid;
+					$args['id'] = $id;
+					//$issueFormModel = JModelLegacy::getInstance( 'IssueForm', 'ImcModel', array('ignore_request' => true) );
+					$issueModel->getTable()->save($args);
+
+					//2. create log
+					$log['id'] = null;
+					$log['issueid'] = $id;
+					$log['stepid'] = $stepid;
+					$log['description'] = $descr;
+					$log['action'] = 'step';
+					$log['state'] = 1;
+					$log['created_by'] = $userid;
+					$log['created'] = ImcFrontendHelper::convert2UTC(date('Y-m-d H:i:s'));
+					$log['updated'] = $log['created'];
+					$log['language'] = '*';
+
+					$logModel->getTable()->save($log);
+
+					$logsModel = JModelLegacy::getInstance( 'Logs', 'ImcModel', array('ignore_request' => true) );
+					$logs = $logsModel->getItemsByIssue($id);
+					$result = array('issueid' => $id, 'stepid' => $stepid, 'logs' => $logs);
+
+					restore_error_handler();
+					break;
+				default:
+					throw new Exception('HTTP method is not supported');
+			}
+
+			echo new JResponseJson($result, 'Updating step action is completed successfully');
+		}
+		catch(Exception $e)	{
+			header("HTTP/1.0 202 Accepted");
+			echo new JResponseJson($e);
+		}
+	}
+
+
 	public function modifications()
 	{
 		$result = null;
