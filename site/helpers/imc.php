@@ -550,7 +550,6 @@ class ImcFrontendHelper
 			self::$_items = false;
 		}
 
-
 		return self::loadCats(self::$_items);
 	}
 
@@ -852,15 +851,7 @@ class ImcFrontendHelper
 		$query->select('COUNT(*) AS `count_issues`, a.created_by, b.name');
 		$query->from('`#__imc_issues` AS a');
 		$query->join('LEFT', '#__users AS b ON b.id = a.created_by');
-		$query->join('LEFT', '#__user_usergroup_map AS c ON b.id = c.user_id');
-		$query->join('LEFT', '#__usergroups AS d ON d.id = c.group_id');
-		$query->where('a.state = 1 AND c.group_id = 2 AND c.user_id NOT IN (
-            SELECT #__users.id
-            FROM #__users
-                 LEFT JOIN #__user_usergroup_map ON #__users.id = #__user_usergroup_map.user_id
-                 LEFT JOIN #__usergroups ON #__usergroups.id = #__user_usergroup_map.group_id
-            WHERE #__usergroups.id != 2
-        )');
+		$query->where('a.state = 1');
 		$query->group('a.created_by');
 		$query->order('count_issues DESC');
 		if(!is_null($limit) && $limit > 0)
@@ -917,7 +908,6 @@ class ImcFrontendHelper
 		}
 
 		$db->setQuery($query);
-		
 		return $db->loadAssocList();
 	}
 
@@ -931,7 +921,6 @@ class ImcFrontendHelper
 		$query->join('LEFT', '#__imc_steps AS b ON b.id = a.stepid');
 		$query->where('a.state = 1');
 		$query->group('a.stepid');
-		$query->order('b.ordering ASC');
 		$query->order('count_issues DESC');
 		if(!is_null($limit) && $limit > 0)
 		{
@@ -1037,10 +1026,7 @@ class ImcFrontendHelper
 		  (SELECT COUNT(*) FROM #__imc_comments WHERE state=1) as total_comments,
 		  (SELECT COUNT(*) FROM #__users WHERE 1) as total_users,
 		  (SELECT created FROM #__imc_issues WHERE state=1 ORDER BY created ASC LIMIT 1) as oldest_issue_date,
-		  (SELECT created FROM #__imc_issues WHERE state=1 ORDER BY created DESC LIMIT 1) as newest_issue_date,
-		  (SELECT UNIX_TIMESTAMP(created) FROM #__imc_issues WHERE state=1 ORDER BY created ASC LIMIT 1) as oldest_issue_date_ts,
-		  (SELECT UNIX_TIMESTAMP(created) FROM #__imc_issues WHERE state=1 ORDER BY created DESC LIMIT 1) as newest_issue_date_ts
-
+		  (SELECT created FROM #__imc_issues WHERE state=1 ORDER BY created DESC LIMIT 1) as newest_issue_date
 		');
 
 		$db->setQuery($query);
@@ -1154,55 +1140,29 @@ class ImcFrontendHelper
 		return $in;
 	}
 
-	public static function calendar($field = null, $ts = null, $prior_to = null)
+	public static function calendar($field = null)
 	{
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
 
-		// It is necessary for date difference
-		date_default_timezone_set('UTC');
-
-		// Calculate dates difference in months
-		$dt_ts = new DateTime($ts);
-		$dt_prior_to = new DateTime($prior_to);
-		$start = $dt_ts->modify('first day of this month');
-		$end = $dt_prior_to->modify('first day of this month');
-		$interval = new DateInterval('P1M');
-		$period = new DatePeriod($start, $interval, $end);
-
-
-		$interval = $end->diff($start);
-		$monthsDiff = $interval->m + (12 * $interval->y);
-
-
-		// Create the query SELECT based on total months
-		$countStr = '';
-		$counter = 0;
-		$total = $monthsDiff;
-
-		foreach($period as $dt) {
-			if($counter < $total) {
-				$startDate = $dt->format("Y-m-01 00:00:00");
-				$newDate = $startDate;
-				$newDatetime = new DateTime($newDate);
-				$newDatetime->add(new DateInterval("P1M"));
-				$endDate = $newDatetime->format('Y-m-d 00:00:00');
-
-				$alias = $dt->format("M-y");
-
-				$countStr .= 'COUNT(CASE WHEN a.created >= "'.$startDate.'" AND a.created < "'.$endDate.'" THEN a.id END) AS `'.$alias.'`,';
-				$counter++;
-			}
-		}
-
-		if(!empty($countStr)) {
-			$countStr = ' '.rtrim($countStr, ",").' ';
-		}
-
-		$query->select($countStr);
+		$query->select('
+		  YEAR(a.created) AS `Year`,
+		  COUNT(CASE WHEN MONTH(a.created) = 1 THEN a.id END) AS `Jan`,
+		  COUNT(CASE WHEN MONTH(a.created) = 2 THEN a.id END) AS `Feb`,
+		  COUNT(CASE WHEN MONTH(a.created) = 3 THEN a.id END) AS `Mar`,
+		  COUNT(CASE WHEN MONTH(a.created) = 4 THEN a.id END) AS `Apr`,
+		  COUNT(CASE WHEN MONTH(a.created) = 5 THEN a.id END) AS `May`,
+		  COUNT(CASE WHEN MONTH(a.created) = 6 THEN a.id END) AS `Jun`,
+		  COUNT(CASE WHEN MONTH(a.created) = 7 THEN a.id END) AS `Jul`,
+		  COUNT(CASE WHEN MONTH(a.created) = 8 THEN a.id END) AS `Aug`,
+		  COUNT(CASE WHEN MONTH(a.created) = 9 THEN a.id END) AS `Sep`,
+		  COUNT(CASE WHEN MONTH(a.created) = 10 THEN a.id END) AS `Oct`,
+		  COUNT(CASE WHEN MONTH(a.created) = 11 THEN a.id END) AS `Nov`,
+		  COUNT(CASE WHEN MONTH(a.created) = 12 THEN a.id END) AS `Dec`
+		');
 		$query->from('#__imc_issues AS a');
-		$query->where('a.state=1 AND (a.created BETWEEN "' . $ts .'" AND "' . $endDate .'")');
-		$query->order('a.catid');
+		$query->where('a.state=1');
+		$query->group('YEAR(a.created)');
 
 		switch($field)
 		{
@@ -1284,102 +1244,40 @@ class ImcFrontendHelper
 		$db->setQuery($query);
 		return $db->loadAssocList();
 	}
-    
-    public static function intervals($by_step = false, $by_category = false, $ts = null, $prior_to = null, $for_perf = null)
+
+	public static function intervals($by_step = false, $by_category = false, $ts = null, $prior_to = null)
 	{
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
-
-		$days_diff_string = " ";
-		$query->select('COUNT(issueid) AS count_issues');
-		if ($for_perf == true) {
-			$days_diff_string = ' AND #__imc_log.step_days_diff != "NULL" ';
-			$query->select('AVG(step_days_diff) AS avg_days, MIN(step_days_diff) AS min_days, MAX(step_days_diff) AS max_days, COUNT(issueid) AS count_issues');
-		}
-
-		$query->from('
-		(
-			SELECT #__imc_log.issueid, #__imc_log.stepid, #__imc_issues.catid, #__imc_log.created, #__imc_log.step_days_diff
-            FROM #__imc_log INNER JOIN #__imc_issues ON #__imc_log.issueid = #__imc_issues.id
-            WHERE #__imc_log.state = 1 AND
-                  #__imc_log.action = "step" '.
-		             $days_diff_string .
-		             (!is_null($ts) ? ' AND #__imc_issues.created >= "' . $ts .'"' : '').
-		             (!is_null($prior_to) ? ' AND #__imc_issues.created <= "' . $prior_to .'"' : '').'
-            ORDER BY #__imc_log.issueid
-		) AS intervals
-	');
-
-		if($by_step && !$by_category)
-		{
-			$query->select('stepid, s.title AS steptitle, s.stepcolor');
-			$query->join('LEFT', '#__imc_steps AS s ON s.id = intervals.stepid');
-			$query->group('stepid');
-		}
-		if($by_category && !$by_step)
-		{
-			$query->select('catid, c.title AS category');
-			$query->join('LEFT', '#__categories AS c ON c.id = intervals.catid');
-			$query->group('catid');
-		}
-		if($by_category && $by_step)
-		{
-			$query->select('stepid, s.title AS steptitle, s.stepcolor');
-			$query->select('catid, c.title AS category');
-			$query->join('LEFT', '#__imc_steps AS s ON s.id = intervals.stepid');
-			$query->join('LEFT', '#__categories AS c ON c.id = intervals.catid');
-
-			if ($for_perf == true) {
-				$query->where('step_days_diff != "NULL"');
-			}
-
-			$query->group('catid, stepid');
-
-			//nest steps by category
-			$db->setQuery($query);
-			$results =  $db->loadAssocList();
-
-			$nested = array();
-			$categories = array();
-			$cat = 'any';
-			foreach ($results as $ar)
-			{
-				if($ar['catid'] != $cat)
-				{
-					array_push($categories, $ar['catid']);
-				}
-				$cat = $ar['catid'];
-			}
-			foreach ($results as $ar)
-			{
-				$nested[$ar['catid']][] = $ar;
-			}
-
-			return $nested;
-		}
-
-		$db->setQuery($query);
-		return $db->loadAssocList();
-	}
-	
-	public static function __intervals($by_step = false, $by_category = false, $ts = null, $prior_to = null)
-	{
-		$db = JFactory::getDbo();
-		$query = $db->getQuery(true);
-		$query->select('AVG(step_days_diff) AS avg_days, MIN(step_days_diff) AS min_days, MAX(step_days_diff) AS max_days, COUNT(issueid) AS count_issues');
+		$query->select('AVG(days_diff) AS avg_days, MIN(days_diff) AS min_days, MAX(days_diff) AS max_days, COUNT(issueid) AS count_issues');
 		$query->from('
 			(
-				SELECT #__imc_log.issueid, #__imc_log.stepid, #__imc_issues.catid, #__imc_log.created, #__imc_log.step_days_diff
-				FROM #__imc_log INNER JOIN #__imc_issues ON #__imc_log.issueid = #__imc_issues.id
-				WHERE #__imc_log.state = 1 AND
-					  #__imc_log.action = "step" AND
-					  #__imc_log.step_days_diff != "NULL" '.
-					  (!is_null($ts) ? ' AND #__imc_issues.created >= "' . $ts .'"' : '').
-					  (!is_null($prior_to) ? ' AND #__imc_issues.created <= "' . $prior_to .'"' : '').'
-				ORDER BY #__imc_log.issueid
+				SELECT DISTINCT * FROM (
+
+					SELECT a.issueid, a.stepid, b.catid, a.created,
+					  CASE WHEN (a.created - f.created) IS NULL THEN a.created + INTERVAL 1 SECOND ELSE f.created END AS vcreated,
+					  CASE WHEN (a.created - f.created) IS NULL THEN 0 ELSE ABS(DATEDIFF(a.created, f.created)) END AS days_diff
+
+					FROM #__imc_log AS a
+					  LEFT JOIN #__imc_log AS f ON a.created > f.created AND a.issueid = f.issueid
+					  LEFT JOIN #__imc_issues AS b ON b.id = a.issueid
+					WHERE a.issueid IN (
+					  SELECT id
+					  FROM #__imc_issues AS p
+					  WHERE p.state = 1 AND p.stepid <> '. self::getPrimaryStepId() .
+						(!is_null($ts) ? ' AND p.created >= "' . $ts .'"' : '').
+						(!is_null($prior_to) ? ' AND p.created <= "' . $prior_to .'"' : '').'
+					)
+					AND a.action = "step"
+					AND a.state = 1
+					GROUP BY vcreated
+
+				) AS dis
+				GROUP BY issueid
+
 			) AS intervals
 		');
-	
+
 		if($by_step && !$by_category)
 		{
 			$query->select('stepid, s.title AS steptitle, s.stepcolor');
@@ -1398,13 +1296,12 @@ class ImcFrontendHelper
 			$query->select('catid, c.title AS category');
 			$query->join('LEFT', '#__imc_steps AS s ON s.id = intervals.stepid');
 			$query->join('LEFT', '#__categories AS c ON c.id = intervals.catid');
-			$query->where('step_days_diff != "NULL"');
 			$query->group('catid, stepid');
-	
+
 			//nest steps by category
 			$db->setQuery($query);
 			$results =  $db->loadAssocList();
-	
+
 			$nested = array();
 			$categories = array();
 			$cat = 'any';
@@ -1420,14 +1317,14 @@ class ImcFrontendHelper
 			{
 				$nested[$ar['catid']][] = $ar;
 			}
-	
+
 			return $nested;
 		}
-	
+
 		$db->setQuery($query);
 		return $db->loadAssocList();
 	}
-	
+
 	public static function getIds($data)
 	{
 		$ids = array();
@@ -1481,6 +1378,18 @@ class ImcFrontendHelper
 			$i++;
 		}
 		return $mail;
+	}
+
+	public static function getSocialUserByUserId($user_id)
+	{
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+		$query->select('*');
+		$query->from($db->quoteName('#__slogin_users'));
+		$query->where($db->quoteName('user_id') . ' = ' . $db->quote($user_id));
+		$db->setQuery($query);
+
+		return $db->loadAssoc();
 	}
 
 	public static function getSocialUser($slogin_id)
@@ -1710,19 +1619,4 @@ class ImcFrontendHelper
 	    return $result;
 	}
 	
-	public static function searchByKey($array, $key) {
-		$results = array();
-
-		if(is_array($array)) {
-			if(isset($array[$key])) {
-				$results[] = $array;
-			}
-
-			foreach($array as $subarray) {
-				$results = array_merge($results, self::searchByKey($subarray, $key));
-			}
-		}
-
-		return $results;
-	}
 }
