@@ -280,6 +280,48 @@ class ImcControllerIssueForm extends ImcController {
                 JFactory::getApplication()->enqueueMessage('Cannot save data to log table', 'error'); 
             }
 
+            //B: move any images only if record is new
+            //check if any files uploaded
+            $obj = json_decode( $validData['photo'] );
+            if(!empty($obj->files)){
+
+
+                $srcDir = JPATH_ROOT . '/' . $obj->imagedir . '/' . $obj->id;
+                $dstDir = JPATH_ROOT . '/' . $obj->imagedir . '/' . $insertid;
+                $success = rename ( $srcDir , $dstDir );
+
+                if($success){
+                    //update photo json isnew, id
+                    unset($obj->isnew);
+
+                    //update files url
+                    foreach ($obj->files as &$file)
+                    {
+                        $file->url = str_replace($obj->id, $insertid, $file->url);
+                        $file->mediumUrl = str_replace($obj->id, $insertid, $file->mediumUrl);
+                        $file->thumbnailUrl = str_replace($obj->id, $insertid, $file->thumbnailUrl);
+                    }
+                    //update id
+                    $obj->id = $insertid;
+
+                    $photo = json_encode($obj);
+
+                    // Create an object for the record we are going to update.
+                    $object = new stdClass();
+                    $object->id = $insertid;
+                    $object->photo = $photo;
+
+                    $validData['photos_files'] = $obj;
+                    // Update photo
+                    $result = JFactory::getDbo()->updateObject('#__imc_issues', $object, 'id');
+
+                }
+                else {
+                    JFactory::getApplication()->enqueueMessage('Cannot move '.$srcDir.' to '.$dstDir.'. Check folder rights', 'error'); 
+                }
+
+            }    
+
             $dispatcher = JEventDispatcher::getInstance();
             $results = $dispatcher->trigger( 'onAfterNewIssueAdded', array( $model, $validData, $insertid ) );            
         }
@@ -350,51 +392,10 @@ class ImcControllerIssueForm extends ImcController {
                 $dispatcher->trigger( 'onAfterCategoryModified', array( $model, $validData, $insertid ) ); 
             }
 
+            $dispatcher = JEventDispatcher::getInstance();
+            $results = $dispatcher->trigger( 'onAfterIssueUpdated', array( $model, $validData, $validData['id'] ) );            
 
         }    
-
-
-        //B: move any images only if record is new
-        if($validData['id'] == 0){
-            //check if any files uploaded
-            $obj = json_decode( $validData['photo'] );
-            if(empty($obj->files))
-                return;
-
-            $srcDir = JPATH_ROOT . '/' . $obj->imagedir . '/' . $obj->id;
-            $dstDir = JPATH_ROOT . '/' . $obj->imagedir . '/' . $insertid;
-            $success = rename ( $srcDir , $dstDir );
-
-            if($success){
-                //update photo json isnew, id
-                unset($obj->isnew);
-
-                //update files url
-                foreach ($obj->files as &$file)
-                {
-                    $file->url = str_replace($obj->id, $insertid, $file->url);
-                    $file->mediumUrl = str_replace($obj->id, $insertid, $file->mediumUrl);
-                    $file->thumbnailUrl = str_replace($obj->id, $insertid, $file->thumbnailUrl);
-                }
-                //update id
-                $obj->id = $insertid;
-
-                $photo = json_encode($obj);
-
-                // Create an object for the record we are going to update.
-                $object = new stdClass();
-                $object->id = $insertid;
-                $object->photo = $photo;
-                // Update photo
-                $result = JFactory::getDbo()->updateObject('#__imc_issues', $object, 'id');
-
-            }
-            else {
-                JFactory::getApplication()->enqueueMessage('Cannot move '.$srcDir.' to '.$dstDir.'. Check folder rights', 'error'); 
-            }
-
-        }
-
 
     }
 }
