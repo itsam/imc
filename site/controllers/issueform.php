@@ -327,6 +327,13 @@ class ImcControllerIssueForm extends ImcController {
         }
         else {
 
+            //get photos as well
+            $obj = json_decode( $validData['photo'] );
+            if(!empty($obj->files)){
+                $photo = json_encode($obj);
+                $validData['photos_files'] = $obj;
+            }    
+
             //a. check for step modification
             if(isset($validData['is_step_modified']) && $validData['is_step_modified'] === 'true'){
                 $user = JFactory::getUser();
