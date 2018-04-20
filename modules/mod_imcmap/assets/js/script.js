@@ -37,11 +37,11 @@ function imc_mod_map_initialize(img_path) {
         panelFocusReset();
     });
 
-    js("div[id^='imc-panel-']").mouseenter(function(e){
+    jQuery("div[id^='imc-panel-']").mouseenter(function(e){
         markerBounce( this.id.substring(10) );
     });
 
-    js("div[id^='imc-panel-']").mouseleave(function(e){
+    jQuery("div[id^='imc-panel-']").mouseleave(function(e){
         markerIdle( this.id.substring(10) );
     });
 }
