@@ -113,7 +113,7 @@ class JFormFieldMultiphoto extends JFormField
 		$script[] = '<!-- The template to display files available for upload -->';
 		$script[] = '<script id="template-upload" type="text/x-tmpl">';
 		$script[] = '{% for (var i=0, file; file=o.files[i]; i++) { %}';
-		$script[] = '    <tr class="template-upload fade">';
+		$script[] = '    <tr class="template-upload">';
 		$script[] = '        <td>';
 		$script[] = '            <span class="preview"></span>';
 		$script[] = '        </td>';
@@ -146,7 +146,7 @@ class JFormFieldMultiphoto extends JFormField
 		$script2 = array();
 		$script2[] = '<script id="template-download" type="text/x-tmpl">';
 		$script2[] = '{% for (var i=0, file; file=o.files[i]; i++) { %}';
-		$script2[] = '    <tr class="template-download fade">';
+		$script2[] = '    <tr class="template-download">';
 		$script2[] = '        <td>';
 		$script2[] = '            <span class="preview">';
 		$script2[] = '                {% if (file.thumbnailUrl) { %}';
@@ -175,7 +175,7 @@ class JFormFieldMultiphoto extends JFormField
 		$script2[] = '                    <i class="icon-trash"></i>';
 		$script2[] = '                    <span>Delete</span>';
 		$script2[] = '                </button>';
-		$script2[] = '                <input type="checkbox" name="delete" value="1" class="toggle">';
+		//$script2[] = '                <input type="checkbox" name="delete" value="1" class="toggle">';
 		$script2[] = '            {% } else { %}';
 		$script2[] = '                <button class="btn btn-warning cancel">';
 		$script2[] = '                    <i class="icon-remove"></i>';
@@ -214,13 +214,14 @@ class JFormFieldMultiphoto extends JFormField
 		$init[] = "    'use strict';";
 		$init[] = "    // Initialize the jQuery File Upload widget:";
 		$init[] = "    jQuery('#'+form_id).fileupload({";
+		$init[] = "        autoUpload: true,";
 		$init[] = "        // Uncomment the following to send cross-domain cookies:";
 		$init[] = "        xhrFields: {withCredentials: true},";
 		$init[] = "        url: '".$url."' ";
 		//$init[] = "    }).bind('fileuploaddone',    function(e,data){onDone(data.result.files,".$this->id." )}).";
 		$init[] = "    }).bind('fileuploaddone',    function(e,data){onDone(data.result.files,jQuery('#".$this->id."').attr('id') )}).";
 		//$init[] = "       bind('fileuploaddestroy', function(e,data){onDestroy(data.url.substring(data.url.indexOf('file=') + 5),".$this->id."  )}).";
-		$init[] = "       bind('fileuploaddestroy', function(e,data){onDestroy(data.url.substring(data.url.indexOf('file=') + 5),jQuery('#".$this->id."').attr('id')  )}).";
+		$init[] = "       bind('fileuploaddestroy', function(e,data){if (!window.confirm('".JText::_('COM_IMC_JFIELD_MULTIPHOTO_CONFIRM_DELETE')."')) {return false;}onDestroy(data.url.substring(data.url.indexOf('file=') + 5),jQuery('#".$this->id."').attr('id')  )}).";
 		$init[] = "       bind('fileuploadadd',     function(e,data){jQuery('input[name=\"task\"]').val('upload.handler');});";
 		$init[] = "    // Enable iframe cross-domain access via redirect option:";
 		$init[] = "    jQuery('#'+form_id).fileupload(";
@@ -263,7 +264,8 @@ class JFormFieldMultiphoto extends JFormField
 		$html[] = '            <span>'.JText::_('COM_IMC_JFIELD_MULTIPHOTO_ADD_FILES').'</span>';
 		$html[] = '            <input type="file" name="files[]" multiple>';
 		$html[] = '        </span>';
-		$html[] = '        <button type="submit" class="btn btn-primary start">';
+
+/* 		$html[] = '        <button type="submit" class="btn btn-primary start">';
 		$html[] = '            <i class="icon-upload"></i>';
 		$html[] = '            <span>'.JText::_('COM_IMC_JFIELD_MULTIPHOTO_START_UPLOAD').'</span>';
 		$html[] = '        </button>';
@@ -278,6 +280,7 @@ class JFormFieldMultiphoto extends JFormField
 		$html[] = '        <input type="checkbox" class="toggle">';
 		$html[] = '        <!-- The global file processing state -->';
 		$html[] = '        <span class="fileupload-process"></span>';
+ */		
 		$html[] = '    </div>';
 		$html[] = '    <!-- The global progress state -->';
 		$html[] = '    <div class="span5 fileupload-progress fade">';
