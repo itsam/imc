@@ -19,38 +19,6 @@ JPluginHelper::importPlugin('imc');
 class ImcControllerIssueForm extends ImcController {
 
     /**
-     * Method to check out an item for editing and redirect to the edit form.
-     *
-     * @since	1.6
-     */
-    public function edit() {
-        $app = JFactory::getApplication();
-
-        // Get the previous edit id (if any) and the current edit id.
-        $previousId = (int) $app->getUserState('com_imc.edit.issue.id');
-        $editId = JFactory::getApplication()->input->getInt('id', null, 'array');
-
-        // Set the user id for the user to edit in the session.
-        $app->setUserState('com_imc.edit.issue.id', $editId);
-
-        // Get the model.
-        $model = $this->getModel('IssueForm', 'ImcModel');
-
-        // Check out the item
-        if ($editId) {
-            $model->checkout($editId);
-        }
-
-        // Check in the previous user.
-        if ($previousId) {
-            $model->checkin($previousId);
-        }
-
-        // Redirect to the edit screen.
-        $this->setRedirect(JRoute::_('index.php?option=com_imc&id=&view=issue&layout=edit', false));
-    }
-
-    /**
      * Method to save a user's profile data.
      *
      * @return	void
