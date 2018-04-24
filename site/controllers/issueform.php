@@ -67,7 +67,7 @@ class ImcControllerIssueForm extends ImcController {
 
             // Redirect back to the edit screen.
             $id = (int) $app->getUserState('com_imc.edit.issue.id');
-            $this->setRedirect(JRoute::_('index.php?option=com_imc&view=issueform&layout=edit&id=' . $id, false));
+            $this->setRedirect(JRoute::_('index.php?option=com_imc&view=issueform&id=' . $id, false));
             return false;
         }
 
@@ -82,7 +82,7 @@ class ImcControllerIssueForm extends ImcController {
             // Redirect back to the edit screen.
             $id = (int) $app->getUserState('com_imc.edit.issue.id');
             $this->setMessage(JText::sprintf('Save failed', $model->getError()), 'warning');
-            $this->setRedirect(JRoute::_('index.php?option=com_imc&view=issueform&layout=edit&id=' . $id, false));
+            $this->setRedirect(JRoute::_('index.php?option=com_imc&view=issueform&id=' . $id, false));
             return false;
         }
 
@@ -170,7 +170,7 @@ class ImcControllerIssueForm extends ImcController {
 
             // Redirect back to the edit screen.
             $id = (int) $app->getUserState('com_imc.edit.issue.id');
-            $this->setRedirect(JRoute::_('index.php?option=com_imc&view=issue&layout=edit&id=' . $id, false));
+            $this->setRedirect(JRoute::_('index.php?option=com_imc&view=issue&id=' . $id, false));
             return false;
         }
 
@@ -185,7 +185,7 @@ class ImcControllerIssueForm extends ImcController {
             // Redirect back to the edit screen.
             $id = (int) $app->getUserState('com_imc.edit.issue.id');
             $this->setMessage(JText::sprintf('Delete failed', $model->getError()), 'warning');
-            $this->setRedirect(JRoute::_('index.php?option=com_imc&view=issue&layout=edit&id=' . $id, false));
+            $this->setRedirect(JRoute::_('index.php?option=com_imc&view=issue&id=' . $id, false));
             return false;
         }
 
