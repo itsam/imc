@@ -94,6 +94,8 @@ class JFormFieldMultiphoto extends JFormField
 	 */
 	protected function getInput()
 	{
+		$isSite = false;
+		$isSite = JFactory::getApplication()->isSite();
 
 		$imagedir = (isset($this->element['imagedir']) ? $this->element['imagedir'] : 'images/imc');
 		$itemId   = (isset($this->element['userstate']) ? JFactory::getApplication()->getUserState($this->element['userstate']) : JRequest::getVar('id', 0));
@@ -113,19 +115,19 @@ class JFormFieldMultiphoto extends JFormField
 		$script[] = '<!-- The template to display files available for upload -->';
 		$script[] = '<script id="template-upload" type="text/x-tmpl">';
 		$script[] = '{% for (var i=0, file; file=o.files[i]; i++) { %}';
-		$script[] = '    <tr class="template-upload">';
-		$script[] = '        <td>';
+		$script[] = '    <div class="row align-items-center mb-1">';
+		$script[] = '        <div class="col-sm-4 span4">';
 		$script[] = '            <span class="preview"></span>';
-		$script[] = '        </td>';
-		$script[] = '        <td>';
+		$script[] = '        </div>';
+		$script[] = '        <div class="col-sm-4 span4">';
 		$script[] = '            <p class="name">{%=file.name%}</p>';
 		$script[] = '            <strong class="error text-danger"></strong>';
-		$script[] = '        </td>';
-		$script[] = '        <td>';
+		$script[] = '        </div>';
+		$script[] = '        <div class="col-sm-4 span4">';
 		$script[] = '            <p class="size">Processing...</p>';
 		$script[] = '            <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar progress-bar-success" style="width:0%;"></div></div>';
-		$script[] = '        </td>';
-		$script[] = '        <td>';
+		$script[] = '        </div>';
+		$script[] = '        <div class="col-sm-4 span4">';
 		$script[] = '            {% if (!i && !o.options.autoUpload) { %}';
 		$script[] = '                <button class="btn btn-primary start" disabled>';
 		$script[] = '                    <i class="icon-upload"></i>';
@@ -133,57 +135,52 @@ class JFormFieldMultiphoto extends JFormField
 		$script[] = '                </button>';
 		$script[] = '            {% } %}';
 		$script[] = '            {% if (!i) { %}';
-		$script[] = '                <button class="btn btn-warning cancel">';
+		$script[] = '                <button class="btn btn-warning btn-sm cancel">';
 		$script[] = '                    <i class="icon-remove"></i>';
-		$script[] = '                    <span>'.JText::_('COM_IMC_JFIELD_MULTIPHOTO_CANCEL').'</span>';
+		$script[] = '                    <span>'.JText::_('JCANCEL').'</span>';
 		$script[] = '                </button>';
 		$script[] = '            {% } %}';
-		$script[] = '        </td>';
-		$script[] = '    </tr>';
+		$script[] = '        </div>';
+		$script[] = '    </div>';
 		$script[] = '{% } %}';
 		$script[] = '</script>';
 
 		$script2 = array();
 		$script2[] = '<script id="template-download" type="text/x-tmpl">';
 		$script2[] = '{% for (var i=0, file; file=o.files[i]; i++) { %}';
-		$script2[] = '    <tr class="template-download">';
-		$script2[] = '        <td>';
+		$script2[] = '    <div class="row align-items-center mb-1">';
+		$script2[] = '        <div class="col-sm-4 span4">';
 		$script2[] = '            <span class="preview">';
 		$script2[] = '                {% if (file.thumbnailUrl) { %}';
 		$script2[] = '                    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" data-gallery><img src="{%=file.thumbnailUrl%}"></a>';
 		$script2[] = '                {% } %}';
 		$script2[] = '            </span>';
-		$script2[] = '        </td>';
-		$script2[] = '        <td>';
-		$script2[] = '            <p class="name">';
+		$script2[] = '        </div>';
+		$script2[] = '        <div class="col-sm-4 span4">';
+		$script2[] = '            <span class="name">';
 		$script2[] = '                {% if (file.url) { %}';
 		$script2[] = '                    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.thumbnailUrl?\'data-gallery\':\'\'%}>{%=file.name%}</a>';
+		$script2[] = '            			(<span class="size">{%=o.formatFileSize(file.size)%}</span>)';
 		$script2[] = '                {% } else { %}';
 		$script2[] = '                    <span>{%=file.name%}</span>';
 		$script2[] = '                {% } %}';
-		$script2[] = '            </p>';
+		$script2[] = '            </span>';
 		$script2[] = '            {% if (file.error) { %}';
 		$script2[] = '                <div><span class="label label-danger">Error</span> {%=file.error%}</div>';
 		$script2[] = '            {% } %}';
-		$script2[] = '        </td>';
-		$script2[] = '        <td>';
-		$script2[] = '            <span class="size">{%=o.formatFileSize(file.size)%}</span>';
-		$script2[] = '        </td>';
-		$script2[] = '        <td>';
+		$script2[] = '        </div>';
+		$script2[] = '        <div class="col-sm-4 span4">';
 		$script2[] = '            {% if (file.deleteUrl) { %}';
-		$script2[] = '                <button class="btn btn-danger delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields=\'{"withCredentials":true}\'{% } %}>';
-		$script2[] = '                    <i class="icon-trash"></i>';
-		$script2[] = '                    <span>Delete</span>';
+		$script2[] = '                <button class="btn btn-danger btn-sm delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields=\'{"withCredentials":true}\'{% } %}>';
+		$script2[] =                     JText::_('JACTION_DELETE');
 		$script2[] = '                </button>';
-		//$script2[] = '                <input type="checkbox" name="delete" value="1" class="toggle">';
 		$script2[] = '            {% } else { %}';
-		$script2[] = '                <button class="btn btn-warning cancel">';
-		$script2[] = '                    <i class="icon-remove"></i>';
-		$script2[] = '                    <span>Cancel</span>';
+		$script2[] = '                <button class="btn btn-warning btn-sm cancel">';
+		$script2[] = 					  JText::_('JCANCEL');
 		$script2[] = '                </button>';
 		$script2[] = '            {% } %}';
-		$script2[] = '        </td>';
-		$script2[] = '    </tr>';
+		$script2[] = '        </div>';
+		$script2[] = '    </div>';
 		$script2[] = '{% } %}';
 		$script2[] = '</script>';
 
@@ -220,7 +217,6 @@ class JFormFieldMultiphoto extends JFormField
 		$init[] = "        url: '".$url."' ";
 		//$init[] = "    }).bind('fileuploaddone',    function(e,data){onDone(data.result.files,".$this->id." )}).";
 		$init[] = "    }).bind('fileuploaddone',    function(e,data){onDone(data.result.files,jQuery('#".$this->id."').attr('id') )}).";
-		//$init[] = "       bind('fileuploaddestroy', function(e,data){onDestroy(data.url.substring(data.url.indexOf('file=') + 5),".$this->id."  )}).";
 		$init[] = "       bind('fileuploaddestroy', function(e,data){if (!window.confirm('".JText::_('COM_IMC_JFIELD_MULTIPHOTO_CONFIRM_DELETE')."')) {return false;}onDestroy(data.url.substring(data.url.indexOf('file=') + 5),jQuery('#".$this->id."').attr('id')  )}).";
 		$init[] = "       bind('fileuploadadd',     function(e,data){jQuery('input[name=\"task\"]').val('upload.handler');});";
 		$init[] = "    // Enable iframe cross-domain access via redirect option:";
@@ -250,40 +246,23 @@ class JFormFieldMultiphoto extends JFormField
 		$init[] = "};";
 
 		$init[] = 'jQuery(document).ready(function() {';
-		$init[] = '	init();';	//init() was initially set at main.js
+		$init[] = '	init();';
 		$init[] = '});';
 
 		JFactory::getDocument()->addScriptDeclaration( implode("\n", $init));
 
 		$html = array();
-		$html[] = '<div class="row fileupload-buttonbar" style="margin-left: 0;">';
-		$html[] = '    <div class="span7">';
+		$html[] = '<div class="row'.($isSite ? '' : '-fluid').' fileupload-buttonbar">';
+		$html[] = '    <div class="col-7 span7">';
 		$html[] = '        <!-- The fileinput-button span is used to style the file input field as button -->';
 		$html[] = '        <span class="btn btn-success fileinput-button">';
 		$html[] = '            <i class="icon-plus"></i>';
 		$html[] = '            <span>'.JText::_('COM_IMC_JFIELD_MULTIPHOTO_ADD_FILES').'</span>';
 		$html[] = '            <input type="file" name="files[]" multiple>';
 		$html[] = '        </span>';
-
-/* 		$html[] = '        <button type="submit" class="btn btn-primary start">';
-		$html[] = '            <i class="icon-upload"></i>';
-		$html[] = '            <span>'.JText::_('COM_IMC_JFIELD_MULTIPHOTO_START_UPLOAD').'</span>';
-		$html[] = '        </button>';
-		$html[] = '        <button type="reset" class="btn btn-warning cancel">';
-		$html[] = '            <i class="icon-remove"></i>';
-		$html[] = '            <span>'.JText::_('COM_IMC_JFIELD_MULTIPHOTO_CANCEL_UPLOAD').'</span>';
-		$html[] = '        </button>';
-		$html[] = '        <button type="button" class="btn btn-danger delete">';
-		$html[] = '            <i class="icon-trash"></i>';
-		$html[] = '            <span>'.JText::_('COM_IMC_JFIELD_MULTIPHOTO_DELETE_FILES').'</span>';
-		$html[] = '        </button>';
-		$html[] = '        <input type="checkbox" class="toggle">';
-		$html[] = '        <!-- The global file processing state -->';
-		$html[] = '        <span class="fileupload-process"></span>';
- */		
 		$html[] = '    </div>';
 		$html[] = '    <!-- The global progress state -->';
-		$html[] = '    <div class="span5 fileupload-progress fade">';
+		$html[] = '    <div class="col-5 span5 fileupload-progress fade">';
 		$html[] = '        <!-- The global progress bar -->';
 		$html[] = '        <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">';
 		$html[] = '            <div class="progress-bar progress-bar-success" style="width:0%;"></div>';
@@ -292,9 +271,14 @@ class JFormFieldMultiphoto extends JFormField
 		$html[] = '        <div class="progress-extended">&nbsp;</div>';
 		$html[] = '    </div>';
 		$html[] = '</div>';
-		$html[] = '<!-- The table listing the files available for upload/download -->';
-		$html[] = '<div class="drop-photos"><span class="dptitle">'.JText::_('COM_IMC_JFIELD_MULTIPHOTO_DROP_FILES').'</span>';
-		$html[] = '<table role="presentation" class="table table-striped"><tbody class="files"></tbody></table></div>';
+		$html[] = '<!-- Listing the files available for upload/download -->';
+		$html[] = '<div class="row'.($isSite ? '' : '-fluid').'">';
+		$html[] = '	<div class="col-sm-12 span12">';		
+		$html[] = '		<div class="drop-photos"><span class="dptitle">'.JText::_('COM_IMC_JFIELD_MULTIPHOTO_DROP_FILES').'</span>';
+		$html[] = '			<div class="files"></div>';
+		$html[] = '		</div>';
+		$html[] = '	</div>';
+		$html[] = '</div>';
 
 		$html[] = implode("\n", $script);
 		$html[] = implode("\n", $script2);
@@ -312,16 +296,6 @@ class JFormFieldMultiphoto extends JFormField
 
 		$attr = '';
 		$html[] = '	<input type=hidden name="' . $this->name . '" id="' . $this->id . '" value="'. htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '" readonly="readonly"' . $attr . ' />';
-
-
-		//JHtml::_('jquery.framework');
-		//JHtml::_('script', 'system/html5fallback.js', false, true);
-		//echo $this->getId('id', 'id');
-		//echo JPATH_COMPONENT;
-
-		//echo JRequest::getVar('option');
-		//echo JRequest::getVar('id', 0);
-
 
 		return implode("\n", $html);
 	}
