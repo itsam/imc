@@ -96,6 +96,7 @@ class JFormFieldMultiphoto extends JFormField
 	{
 		$isSite = false;
 		$isSite = JFactory::getApplication()->isSite();
+		$pdfIcon = JURI::root(true).'/components/com_imc/models/fields/multiphoto/img/pdf.png';
 
 		$imagedir = (isset($this->element['imagedir']) ? $this->element['imagedir'] : 'images/imc');
 		$itemId   = (isset($this->element['userstate']) ? JFactory::getApplication()->getUserState($this->element['userstate']) : JRequest::getVar('id', 0));
@@ -153,6 +154,8 @@ class JFormFieldMultiphoto extends JFormField
 		$script2[] = '            <span class="preview">';
 		$script2[] = '                {% if (file.thumbnailUrl) { %}';
 		$script2[] = '                    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" data-gallery><img src="{%=file.thumbnailUrl%}"></a>';
+		$script2[] = '                {% } else { %}';
+		$script2[] = '                	<img src="'.$pdfIcon.'" alt="" />';
 		$script2[] = '                {% } %}';
 		$script2[] = '            </span>';
 		$script2[] = '        </div>';
