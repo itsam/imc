@@ -115,7 +115,7 @@ class JFormFieldMultiphoto extends JFormField
 		$script[] = '<!-- The template to display files available for upload -->';
 		$script[] = '<script id="template-upload" type="text/x-tmpl">';
 		$script[] = '{% for (var i=0, file; file=o.files[i]; i++) { %}';
-		$script[] = '    <div class="row align-items-center mb-1">';
+		$script[] = '    <div class="row template-upload align-items-center mb-1">';
 		$script[] = '        <div class="col-sm-4 span4">';
 		$script[] = '            <span class="preview"></span>';
 		$script[] = '        </div>';
@@ -148,7 +148,7 @@ class JFormFieldMultiphoto extends JFormField
 		$script2 = array();
 		$script2[] = '<script id="template-download" type="text/x-tmpl">';
 		$script2[] = '{% for (var i=0, file; file=o.files[i]; i++) { %}';
-		$script2[] = '    <div class="row align-items-center mb-1">';
+		$script2[] = '    <div class="row template-download align-items-center mb-1">';
 		$script2[] = '        <div class="col-sm-4 span4">';
 		$script2[] = '            <span class="preview">';
 		$script2[] = '                {% if (file.thumbnailUrl) { %}';
