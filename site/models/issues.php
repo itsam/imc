@@ -327,9 +327,10 @@ class ImcModelIssues extends JModelList {
             $query->order($db->escape('a.updated' . ' ' . 'DESC'));       
         }
 
+        $imc_offset = $this->state->get('filter.imcapi.offset', 0);
         $imc_limit = $this->state->get('filter.imcapi.limit', null);
         if(!is_null($imc_limit)) {
-            $query->setlimit($imc_limit);
+            $query->setlimit($imc_limit, $imc_offset);
         }
 
         return $query;
