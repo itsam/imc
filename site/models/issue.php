@@ -108,7 +108,12 @@ class ImcModelIssue extends JModelItem {
                 else
                     $this->_item->category_image = '';
 
-                $this->_item->catid_title = $category->title;
+                if(isset($prms->imc_category_usergroup))
+                    $this->_item->imc_category_usergroup = $prms->imc_category_usergroup;
+                else
+                    $this->_item->imc_category_usergroup = array();
+
+                $this->_item->catid_title = $category->title;               
             } else {
                 $this->_item->category_image = '';
                 $this->_item->catid_title = 'CATEGORY IS NO LONGER PUBLISHED';
