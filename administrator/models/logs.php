@@ -242,7 +242,7 @@ class ImcModelLogs extends JModelList {
         $query->join('LEFT', '#__users AS u ON u.id = a.created_by');
 
         // Join over the imc steps.
-        $query->select('st.id AS step_id, st.title AS stepid_title, st.stepcolor AS stepid_color')
+        $query->select('st.id AS step_id, st.title AS stepid_title, st.stepcolor AS stepid_color, st.created_by AS userid')
               ->join('LEFT', '#__imc_steps AS st ON st.id = a.stepid');
         
         $query->order('a.created', 'desc');
