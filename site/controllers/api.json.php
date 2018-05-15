@@ -1986,7 +1986,151 @@ class ImcControllerApi extends ImcController
             header("HTTP/1.0 202 Accepted");
             echo new JResponseJson($e);
         }
+	}
+	
+	public function exportES()
+    {
+		$result = null;
+		$app = JFactory::getApplication();
+		try {
+			//get necessary arguments
+			$minLat = $app->input->getString('minLat');
+			$maxLat = $app->input->getString('maxLat');
+			$minLng = $app->input->getString('minLng');
+			$maxLng = $app->input->getString('maxLng');
+			$owned = $app->input->get('owned', false);
+			$lim = $app->input->getInt('lim', 0);
+			$offset = $app->input->getInt('offset', 0);
+			$ts = $app->input->getString('ts');
+			$prior_to = $app->input->getString('prior_to');
+
+			//get issues model
+			$issuesModel = JModelLegacy::getInstance( 'Issues', 'ImcModel', array('ignore_request' => true) );
+			//set states
+			$issuesModel->setState('filter.owned', ($owned === 'true' ? 'yes' : 'no'));
+
+			/*
+				$issuesModel->setState('filter.imcapi.userid', $userid);
+			if($userid == 0)
+			{
+					$issuesModel->setState('filter.imcapi.guest', true);
+			}*/
+
+			$issuesModel->setState('filter.imcapi.ordering', 'id');
+			$issuesModel->setState('filter.imcapi.direction', 'ASC');
+
+			$issuesModel->setState('filter.imcapi.limit', $lim);
+			$issuesModel->setState('filter.imcapi.offset', $offset);
+
+
+			if(!is_null($minLat) && !is_null($maxLat) && !is_null($minLng) && !is_null($maxLng))
+			{
+					$issuesModel->setState('filter.imcapi.minLat', $minLat);
+					$issuesModel->setState('filter.imcapi.maxLat', $maxLat);
+					$issuesModel->setState('filter.imcapi.minLng', $minLng);
+					$issuesModel->setState('filter.imcapi.maxLng', $maxLng);
+			}
+
+			if(!is_null($ts))
+			{
+					if(!ImcFrontendHelper::isValidTimeStamp($ts))
+					{
+							throw new Exception('Invalid timestamp');
+					}
+
+					//get date from ts
+					$ts = gmdate('Y-m-d H:i:s', $ts);
+					$issuesModel->setState('filter.imcapi.ts', $ts);
+			}
+			if(!is_null($prior_to))
+			{
+					if(!ImcFrontendHelper::isValidTimeStamp($prior_to))
+					{
+							throw new Exception('Invalid prior_to timestamp');
+					}
+					//get date from ts
+					$prior_to = gmdate('Y-m-d H:i:s', $prior_to);
+					$issuesModel->setState('filter.imcapi.priorto', $prior_to);
+			}
+
+			//handle unexpected warnings from model
+			set_error_handler(array($this, 'exception_error_handler'));
+			//get items and sanitize them
+			$data = $issuesModel->getItems();
+			//$result = ImcFrontendHelper::sanitizeIssues($data, $userid);
+
+			restore_error_handler();
+				unlink("logs.json");
+			foreach ($data as $item)
+			{
+				unset($item->asset_id);
+				//unset($item->title);
+				//unset($item->description);
+				unset($item->photo);
+				unset($item->language);
+				unset($item->note);
+				unset($item->alias);
+				unset($item->editor);
+				unset($item->regnum);
+				unset($item->regdate);
+				unset($item->responsible);
+				unset($item->extra);
+				unset($item->subgroup);
+				unset($item->ordering);
+				unset($item->access);
+				unset($item->hits);
+				unset($item->category_image);
+				unset($item->checked_out);
+				unset($item->checked_out_time);
+				unset($item->created_by_name);
+				unset($item->stepid_color);
+				unset($item->access_level);
+
+				$item->id = (int)$item->id;
+				$item->stepid = (int)$item->stepid;
+				$item->catid = (int)$item->catid;
+				$item->latitude = (float)$item->latitude;
+				$item->longitude = (float)$item->longitude;
+				$item->location = $item->latitude . ", " . $item->longitude;
+				$item->state = (int)$item->state;
+				$item->created_by = (int)$item->created_by;
+				$item->votes = (int)$item->votes;
+				$item->updated_by = (int)$item->updated_by;
+				$item->modality = (int)$item->modality;
+				$item->moderation = (int)$item->moderation;
+				$item->comments = (int)$item->comments;
+
+				$txt  = json_encode( array("index" => array("_id" => $item->id) ) ) . "\n";
+				$txt .= json_encode( $item, JSON_UNESCAPED_UNICODE ) . "\n";
+				//$txt .= $this->raw_json_encode( $item ) . "\n";
+				$myfile = file_put_contents('logs.json', $txt.PHP_EOL , FILE_APPEND | LOCK_EX);
+			}
+			
+			echo 'done';
+			//echo new JResponseJson($data, 'Issues fetched successfully');
+		}
+		catch(Exception $e) {
+			header("HTTP/1.0 202 Accepted");
+			echo new JResponseJson($e);
+		}
+
     }
+
+	private function raw_json_encode($input, $flags = 0) 
+	{
+		$fails = implode('|', array_filter(array(
+				'\\\\',
+				$flags & JSON_HEX_TAG ? 'u003[CE]' : '',
+				$flags & JSON_HEX_AMP ? 'u0026' : '',
+				$flags & JSON_HEX_APOS ? 'u0027' : '',
+				$flags & JSON_HEX_QUOT ? 'u0022' : '',
+		)));
+		$pattern = "/\\\\(?:(?:$fails)(*SKIP)(*FAIL)|u([0-9a-fA-F]{4}))/";
+		$callback = function ($m) {
+				return html_entity_decode("&#x$m[1];", ENT_QUOTES, 'UTF-8');
+		};
+		return preg_replace_callback($pattern, $callback, json_encode($input, $flags));
+	}
 
 
 }

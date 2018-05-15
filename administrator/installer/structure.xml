@@ -81,6 +81,7 @@
     <field field_name="updated_by" field_type="INT" field_length="11" index="index" description=""/>
     <field field_name="language" field_type="VARCHAR" field_length="255" description=""/>
     <field action="add" field_name="step_days_diff" field_type="INT" field_length="11" description=""/>
+    <field action="add" field_name="catid" field_type="INT" field_length="11" description=""/>
   </table>
   <table table_name="#__imc_votes" storage_engine="" collation="utf8_general_ci">
     <field field_name="id" field_type="INT" field_length="11" is_autoincrement="1" index="primary" description=""/>
