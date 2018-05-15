@@ -94,6 +94,7 @@ class ImcControllerIssue extends JControllerForm
                 $data2['updated'] = $validData['updated'];
                 $data2['language'] = $validData['language'];
                 $data2['rules'] = $validData['rules'];
+                $data2['catid'] = $validData['catid'];
 
                 if (!$log->bind($data2))
                 {
@@ -125,6 +126,7 @@ class ImcControllerIssue extends JControllerForm
                 $data2['updated'] = $validData['updated'];
                 $data2['language'] = $validData['language'];
                 $data2['rules'] = $validData['rules'];
+                $data2['catid'] = $validData['catid'];
 
                 if (!$log->bind($data2))
                 {
