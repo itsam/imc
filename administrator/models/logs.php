@@ -238,11 +238,11 @@ class ImcModelLogs extends JModelList {
         //$query->join('LEFT', '#__imc_issues ON #__imc_issues.id = a.issueid');
 
         // Join over the user field 'created_by'
-        $query->select('u.name AS created_by');
+        $query->select('u.name AS created_by, u.id AS userid');
         $query->join('LEFT', '#__users AS u ON u.id = a.created_by');
 
         // Join over the imc steps.
-        $query->select('st.id AS step_id, st.title AS stepid_title, st.stepcolor AS stepid_color, st.created_by AS userid')
+        $query->select('st.id AS step_id, st.title AS stepid_title, st.stepcolor AS stepid_color')
               ->join('LEFT', '#__imc_steps AS st ON st.id = a.stepid');
         
         $query->order('a.created', 'desc');
@@ -254,5 +254,4 @@ class ImcModelLogs extends JModelList {
         $results = $db->loadAssocList();        
         return $results;
     }
-
 }
