@@ -187,6 +187,23 @@ class ImcModelIssue extends JModelItem {
         return true;
     }
 
+	public function hit($pk = 0)
+	{
+		$pk = (!empty($pk)) ? $pk : (int) $id = $this->getState('issue.id');
+		$db = $this->getDbo();
+		$db->setQuery(
+				'UPDATE #__imc_issues' .
+				' SET hits = hits + 1' .
+				' WHERE id = '.(int) $pk
+		);
+		if (!$db->query()) {
+				$this->setError($db->getErrorMsg());
+				return false;
+		}
+        
+		return true;
+    }
+        
     public function publish($id, $state) {
         $table = $this->getTable();
         $table->load($id);

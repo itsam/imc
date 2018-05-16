@@ -65,6 +65,10 @@ class ImcViewIssue extends JViewLegacy {
         }
 
         $this->_prepareDocument();
+        
+        //update hits
+		$model = $this->getModel();
+        $model->hit();
 
         parent::display($tpl);
     }
