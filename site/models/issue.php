@@ -79,8 +79,8 @@ class ImcModelIssue extends JModelItem {
                 // Convert the JTable to a clean JObject.
                 $properties = $table->getProperties(1);
                 $this->_item = JArrayHelper::toObject($properties, 'JObject');
-            } elseif ($error = $table->getError()) {
-                $this->setError($error);
+            } else {
+                JError::raiseError(404, "Not found");
             }
         }
 
