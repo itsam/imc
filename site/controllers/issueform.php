@@ -233,6 +233,7 @@ class ImcControllerIssueForm extends ImcController {
             $data2['created_by'] = $validData['created_by'];
             $data2['updated'] = $validData['created'];
             $data2['language'] = $validData['language'];
+            $data2['catid'] = $validData['catid'];
             if(isset($data2['rules']))
             {
                 $data2['rules'] = $validData['rules'];
@@ -317,6 +318,7 @@ class ImcControllerIssueForm extends ImcController {
                 $data2['created_by'] = $user->id;
                 $data2['updated'] = $validData['updated'];
                 $data2['language'] = $validData['language'];
+                $data2['catid'] = $validData['catid'];
                 if(isset($data2['rules']))
                 {
                     $data2['rules'] = $validData['rules'];
@@ -352,6 +354,7 @@ class ImcControllerIssueForm extends ImcController {
                 $data2['updated'] = $validData['updated'];
                 $data2['language'] = $validData['language'];
                 $data2['rules'] = $validData['rules'];
+                $data2['catid'] = $validData['catid'];
 
                 if (!$log->bind($data2))
                 {

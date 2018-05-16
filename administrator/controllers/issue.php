@@ -44,6 +44,8 @@ class ImcControllerIssue extends JControllerForm
             $data2['updated'] = $validData['created'];
             $data2['language'] = $validData['language'];
             $data2['rules'] = $validData['rules'];
+            $data2['catid'] = $validData['catid'];
+            
             
 
             if (!$log->bind($data2))
@@ -77,8 +79,39 @@ class ImcControllerIssue extends JControllerForm
 
         }
         else {
+            //a. check for category modification
+            if(isset($validData['is_category_modified']) && $validData['is_category_modified'] === 'true'){
+                $user = JFactory::getUser();
+                $log = JTable::getInstance('Log', 'ImcTable', array());
 
-            //a. check for step modification
+                $data2['id'] = 0;
+                $data2['state'] = 1;
+                $data2['action'] = 'category'; //enum(step|category)
+                $data2['issueid'] = $validData['id'];
+                $data2['stepid'] = $validData['stepid'];
+                $data2['description'] = $validData['category_modified_description'];
+                $data2['created'] = $validData['updated'];
+                $data2['created_by'] = $user->id;
+                $data2['updated'] = $validData['updated'];
+                $data2['language'] = $validData['language'];
+                $data2['rules'] = $validData['rules'];
+                $data2['catid'] = $validData['catid'];
+
+                if (!$log->bind($data2))
+                {
+                    JFactory::getApplication()->enqueueMessage('Cannot bind data to log table', 'error'); 
+                }
+
+                if (!$log->save($data2))
+                {
+                    JFactory::getApplication()->enqueueMessage('Cannot save data to log table', 'error'); 
+                }
+
+                $dispatcher = JEventDispatcher::getInstance();
+                $dispatcher->trigger( 'onAfterCategoryModified', array( $model, $validData ) );                
+            }
+
+            //b. check for step modification
             if(isset($validData['is_step_modified']) && $validData['is_step_modified'] === 'true'){
                 $user = JFactory::getUser();
                 $log = JTable::getInstance('Log', 'ImcTable', array());
@@ -110,37 +143,7 @@ class ImcControllerIssue extends JControllerForm
                 $dispatcher->trigger( 'onAfterStepModified', array( $model, $validData ) );
             }
 
-            //b. check for category modification
-            if(isset($validData['is_category_modified']) && $validData['is_category_modified'] === 'true'){
-                $user = JFactory::getUser();
-                $log = JTable::getInstance('Log', 'ImcTable', array());
 
-                $data2['id'] = 0;
-                $data2['state'] = 1;
-                $data2['action'] = 'category'; //enum(step|category)
-                $data2['issueid'] = $validData['id'];
-                $data2['stepid'] = $validData['stepid'];
-                $data2['description'] = $validData['category_modified_description'];
-                $data2['created'] = $validData['updated'];
-                $data2['created_by'] = $user->id;
-                $data2['updated'] = $validData['updated'];
-                $data2['language'] = $validData['language'];
-                $data2['rules'] = $validData['rules'];
-                $data2['catid'] = $validData['catid'];
-
-                if (!$log->bind($data2))
-                {
-                    JFactory::getApplication()->enqueueMessage('Cannot bind data to log table', 'error'); 
-                }
-
-                if (!$log->save($data2))
-                {
-                    JFactory::getApplication()->enqueueMessage('Cannot save data to log table', 'error'); 
-                }
-
-                $dispatcher = JEventDispatcher::getInstance();
-                $dispatcher->trigger( 'onAfterCategoryModified', array( $model, $validData ) );                
-            }
 
 	        //c. check for moderation modification
 	        if(isset($validData['is_moderation_modified']) && $validData['is_moderation_modified'] === 'true'){
