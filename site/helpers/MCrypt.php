@@ -8,9 +8,6 @@
  * @author      Ioannis Tsampoulatidis <tsampoulatidis@gmail.com> - https://github.com/itsam
  */
 
-// No direct access.
-defined('_JEXEC') or die;
-
 class MCrypt
 {
     private $key; // #Same as in your IMC Options
@@ -29,23 +26,19 @@ class MCrypt
         $this->iv = $key;
     }
 
-    public function encrypt($str) {
-        $td = mcrypt_module_open('rijndael-128', '', 'cbc', $this->iv);
-        mcrypt_generic_init($td, $this->key, $this->iv);
-        $encrypted = mcrypt_generic($td, $str);
-        mcrypt_generic_deinit($td);
-        mcrypt_module_close($td);
-        return bin2hex($encrypted);
+    public function encrypt($str) 
+    {	
+        if ($m = strlen($str)%8){
+            $str .= str_repeat("\x00",  8 - $m);	
+        }
+        $openssl = openssl_encrypt($str, 'AES-128-CBC', $this->key, OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING, $this->iv);
+        return bin2hex($openssl);
     }
-
+  
     public function decrypt($code)
     {
         $code = $this->hex2bin($code);
-        $td   = mcrypt_module_open('rijndael-128', '', 'cbc', $this->iv);
-        mcrypt_generic_init($td, $this->key, $this->iv);
-        $decrypted = mdecrypt_generic($td, $code);
-        mcrypt_generic_deinit($td);
-        mcrypt_module_close($td);
+        $decrypted = openssl_decrypt($code, 'AES-128-CBC', $this->key, OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING, $this->iv);
         return utf8_encode(trim($decrypted));
     }
 
