@@ -226,9 +226,7 @@ class JFormFieldGmap extends JFormField
 		$html = array();
 
 		if($this->mapOnly){
-			$html[] = '<div style="'.implode("", $style).'display:block;clear:both;">';
 			$html[] = '	<div id="imc-map-canvas"></div>';
-			$html[] = '</div>';
 			return implode("\n", $html);
 		}
 
