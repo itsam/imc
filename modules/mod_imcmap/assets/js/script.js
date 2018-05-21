@@ -20,11 +20,11 @@ function imc_mod_map_initialize(img_path) {
         for (var i = 0; i < boundaries.length; i++) {
             var bounds = new google.maps.Polygon({
                 paths: boundaries,
-                strokeColor: '#FF0000',
+                strokeColor: '#000000',
                 strokeOpacity: 0.8,
                 strokeWeight: 2,
                 fillColor: '#FF0000',
-                fillOpacity: 0.05
+                fillOpacity: 0
             });
             bounds.setMap(imc_mod_map);
         }

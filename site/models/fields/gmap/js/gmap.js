@@ -193,11 +193,11 @@ function initialize() {
 		for (var i = 0; i < boundaries.length; i++) {
 			var bounds = new google.maps.Polygon({
 				paths: boundaries[i],
-				strokeColor: '#FF0000',
-				strokeOpacity: 0.8,
+				strokeColor: '#000000',
+				strokeOpacity: 0.7,
 				strokeWeight: 2,
 				fillColor: '#FF0000',
-				fillOpacity: 0.05
+				fillOpacity: 0				
 			});
 			bounds.setMap(map);
 		}
