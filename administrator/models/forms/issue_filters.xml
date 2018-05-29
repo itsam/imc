@@ -6,6 +6,14 @@
               <option value="0">JNO</option>
               <option value="1">JYES</option>
             </field>
+            
+        <field name="title" type="text"
+            label="COM_IMC_FORM_LBL_ISSUE_TITLE"
+            description="COM_IMC_FORM_DESC_ISSUE_TITLE" 
+            required="true" 
+            menu_published="0"
+            class="inputbox input-xxlarge input-large-text"
+            filter="string" /> 
 
         <field name="regnum" type="text"
                 label="COM_IMC_FORM_LBL_ISSUE_REGNUM"
