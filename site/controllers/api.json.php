@@ -174,11 +174,15 @@ class ImcControllerApi extends ImcController
 
             $result = $languages;
             $app->enqueueMessage('size: '.sizeof($result), 'info');
+			header('Content-type: application/json');
 			echo new JResponseJson($result, 'Languages fetched successfully');
+			exit();
 		}
 		catch(Exception $e)	{
 			header("HTTP/1.0 202 Accepted");
-			echo new JResponseJson($e);
+            header('Content-type: application/json');
+            echo new JResponseJson($e);
+            exit(); 			
 		}
     }
 
@@ -226,12 +230,15 @@ class ImcControllerApi extends ImcController
 			$data = ImcFrontendHelper::getRawIssues($ts, $prior_to, $minLat, $maxLat, $minLng, $maxLng);
 			$app->enqueueMessage('size: '.sizeof($data), 'info');
 			restore_error_handler();
-
+			header('Content-type: application/json');
 			echo new JResponseJson($data, 'Issues fetched successfully');
+			exit();
 		}
 		catch(Exception $e)	{
 			header("HTTP/1.0 202 Accepted");
-			echo new JResponseJson($e);
+            header('Content-type: application/json');
+            echo new JResponseJson($e);
+            exit(); 			
 		}
 	}
 
@@ -310,12 +317,15 @@ class ImcControllerApi extends ImcController
 			$result = ImcFrontendHelper::sanitizeIssues($data, $userid);
 			$app->enqueueMessage('size: '.sizeof($result), 'info');
 			restore_error_handler();
-
+			header('Content-type: application/json');
 			echo new JResponseJson($result, 'Issues fetched successfully');
+			exit();
 		}
 		catch(Exception $e)	{
 			header("HTTP/1.0 202 Accepted");
-			echo new JResponseJson($e);
+            header('Content-type: application/json');
+            echo new JResponseJson($e);
+            exit();
 		}
 	}	
 
@@ -480,12 +490,15 @@ class ImcControllerApi extends ImcController
                 default:
                     throw new Exception('HTTP method is not supported');
             }
-
+			header('Content-type: application/json');
             echo new JResponseJson($result, 'Issue action completed successfully');
+			exit();
 		}
 		catch(Exception $e)	{
 			header("HTTP/1.0 202 Accepted");
-			echo new JResponseJson($e);
+            header('Content-type: application/json');
+            echo new JResponseJson($e);
+            exit(); 			
 		}
 	}
 
@@ -526,11 +539,15 @@ class ImcControllerApi extends ImcController
 			$result = ImcFrontendHelper::sanitizeSteps($data);
 
     	    $app->enqueueMessage('size: '.sizeof($result), 'info');
+			header('Content-type: application/json');
 			echo new JResponseJson($result, 'Steps fetched successfully');
+			exit();
 		}
 		catch(Exception $e)	{
 			header("HTTP/1.0 202 Accepted");
-			echo new JResponseJson($e);
+            header('Content-type: application/json');
+            echo new JResponseJson($e);
+            exit(); 			
 		}
 	}
 
@@ -584,11 +601,15 @@ class ImcControllerApi extends ImcController
 
 			restore_error_handler();
 			$app->enqueueMessage('size: '.sizeof($result), 'info');
+			header('Content-type: application/json');
 			echo new JResponseJson($result, 'Categories fetched successfully');
+			exit();
 		}
 		catch(Exception $e)	{
 			header("HTTP/1.0 202 Accepted");
-			echo new JResponseJson($e);
+            header('Content-type: application/json');
+            echo new JResponseJson($e);
+            exit(); 			
 		}
 	}
 
@@ -628,11 +649,15 @@ class ImcControllerApi extends ImcController
 
 			$result = array($usernameExists || $emailExists);
 
+			header('Content-type: application/json');
             echo new JResponseJson($result, 'Check user action completed successfully');
+			exit();
 		}
 		catch(Exception $e)	{
 			header("HTTP/1.0 202 Accepted");
-			echo new JResponseJson($e);
+            header('Content-type: application/json');
+            echo new JResponseJson($e);
+            exit(); 			
 		}
 
 	}
@@ -737,11 +762,15 @@ class ImcControllerApi extends ImcController
                     throw new Exception('HTTP method is not supported');
             }
 
-            echo new JResponseJson($result, $msg = 'User action completed successfully');
+			header('Content-type: application/json');
+			echo new JResponseJson($result, $msg = 'User action completed successfully');
+			exit();
 		}
 		catch(Exception $e)	{
 			header("HTTP/1.0 202 Accepted");
-			echo new JResponseJson($e);
+            header('Content-type: application/json');
+            echo new JResponseJson($e);
+            exit(); 			
 		}
 	}
 
@@ -805,12 +834,15 @@ class ImcControllerApi extends ImcController
 
             //be consistent return as array (of size 1)
             $result = array($result);
-
+			header('Content-type: application/json');
             echo new JResponseJson($result, 'Vote action completed successfully');
+			exit();
 		}
 		catch(Exception $e)	{
 			header("HTTP/1.0 202 Accepted");
-			echo new JResponseJson($e);
+            header('Content-type: application/json');
+            echo new JResponseJson($e);
+            exit(); 			
 		}
 	}
 
@@ -856,11 +888,15 @@ class ImcControllerApi extends ImcController
 			restore_error_handler();
 
     	    $app->enqueueMessage('size: '.sizeof($result), 'info');
+			header('Content-type: application/json');
 			echo new JResponseJson($result, 'Votes fetched successfully');
+			exit();
 		}
 		catch(Exception $e)	{
 			header("HTTP/1.0 202 Accepted");
-			echo new JResponseJson($e);
+            header('Content-type: application/json');
+            echo new JResponseJson($e);
+            exit(); 			
 		}
 	}
 
@@ -896,11 +932,15 @@ class ImcControllerApi extends ImcController
 			restore_error_handler();
 
     	    $app->enqueueMessage('size: '.sizeof($result), 'info');
+			header('Content-type: application/json');
 			echo new JResponseJson($result, 'Voters fetched successfully');
+			exit();
 		}
 		catch(Exception $e)	{
 			header("HTTP/1.0 202 Accepted");
-			echo new JResponseJson($e);
+            header('Content-type: application/json');
+            echo new JResponseJson($e);
+            exit(); 			
 		}
 	}
 
@@ -962,11 +1002,15 @@ class ImcControllerApi extends ImcController
                     throw new Exception('HTTP method is not supported');
             }
 
-            echo new JResponseJson($result, 'Timeline action completed successfully');
+			header('Content-type: application/json');
+			echo new JResponseJson($result, 'Timeline action completed successfully');
+			exit();
 		}
 		catch(Exception $e)	{
 			header("HTTP/1.0 202 Accepted");
-			echo new JResponseJson($e);
+            header('Content-type: application/json');
+            echo new JResponseJson($e);
+            exit(); 			
 		}
 	}
 
@@ -1072,11 +1116,15 @@ class ImcControllerApi extends ImcController
 					throw new Exception('HTTP method is not supported');
 			}
 
+			header('Content-type: application/json');
 			echo new JResponseJson($result, 'Updating step action is completed successfully');
+			exit();
 		}
 		catch(Exception $e)	{
 			header("HTTP/1.0 202 Accepted");
-			echo new JResponseJson($e);
+            header('Content-type: application/json');
+            echo new JResponseJson($e);
+            exit(); 			
 		}
 	}
 
@@ -1117,7 +1165,9 @@ class ImcControllerApi extends ImcController
 					$response = new JResponseJson($result, 'Modifications since timestamp fetched successfully');
 					$length = mb_strlen($response, 'UTF-8');
 					header('Content-Length: '.$length);
+					header('Content-type: application/json');
 					echo $response;
+					exit();
 
 				break;
 				case 'HEAD':
@@ -1127,6 +1177,7 @@ class ImcControllerApi extends ImcController
 					$count = ImcFrontendHelper::countModifiedIssues($args['ts'], 1000);
 					$result = ($count * 700) + 3000;
 					restore_error_handler();
+					header('Content-type: application/json');
 					header('Content-Length: '.$result);
 				break;
 				default:
@@ -1135,7 +1186,9 @@ class ImcControllerApi extends ImcController
 		}
 		catch(Exception $e)	{
 			header("HTTP/1.0 202 Accepted");
-			echo new JResponseJson($e);
+            header('Content-type: application/json');
+            echo new JResponseJson($e);
+            exit(); 			
 		}
 	}
 
@@ -1295,12 +1348,16 @@ class ImcControllerApi extends ImcController
             }
 			restore_error_handler();
 
-    	    $app->enqueueMessage('size: '.sizeof($result), 'info');
+			$app->enqueueMessage('size: '.sizeof($result), 'info');
+			header('Content-type: application/json');
 			echo new JResponseJson($result, 'Top fetched successfully');
+			exit();
 		}
 		catch(Exception $e)	{
 			header("HTTP/1.0 202 Accepted");
-			echo new JResponseJson($e);
+            header('Content-type: application/json');
+            echo new JResponseJson($e);
+            exit(); 			
 		}
     }
 
@@ -1359,11 +1416,15 @@ class ImcControllerApi extends ImcController
             }
 
             $app->enqueueMessage('size: '.sizeof($result), 'info');
+			header('Content-type: application/json');
 			echo new JResponseJson($result, 'Boundaries fetched successfully');
+			exit();
 		}
 		catch(Exception $e)	{
 			header("HTTP/1.0 202 Accepted");
-			echo new JResponseJson($e);
+            header('Content-type: application/json');
+            echo new JResponseJson($e);
+            exit(); 			
 		}
     }
 
@@ -1392,11 +1453,15 @@ class ImcControllerApi extends ImcController
 			restore_error_handler();
 
     	    $app->enqueueMessage('size: '.sizeof($result), 'info');
+			header('Content-type: application/json');
 			echo new JResponseJson($result, 'Totals fetched successfully');
+			exit();
 		}
 		catch(Exception $e)	{
 			header("HTTP/1.0 202 Accepted");
-			echo new JResponseJson($e);
+            header('Content-type: application/json');
+            echo new JResponseJson($e);
+            exit(); 			
 		}
 	}
 
@@ -1469,11 +1534,15 @@ class ImcControllerApi extends ImcController
 			);
 
 			$result = array('info' => $info, 'found' => $found);
+			header('Content-type: application/json');
 			echo new JResponseJson($result, 'Issues by keywords fetched successfully');
+			exit();
 		}
 		catch(Exception $e)	{
 			header("HTTP/1.0 202 Accepted");
-			echo new JResponseJson($e);
+            header('Content-type: application/json');
+            echo new JResponseJson($e);
+            exit(); 			
 		}
     }
 
@@ -1524,11 +1593,15 @@ class ImcControllerApi extends ImcController
 			$result = ImcFrontendHelper::calendar($field, $ts, $prior_to);
 			restore_error_handler();
 
+			header('Content-type: application/json');
 			echo new JResponseJson($result, 'Calendar Issues fetched successfully');
+			exit();
 		}
 		catch(Exception $e) {
 			header("HTTP/1.0 202 Accepted");
-			echo new JResponseJson($e);
+            header('Content-type: application/json');
+            echo new JResponseJson($e);
+            exit(); 			
 		}
 	}
 
@@ -1569,11 +1642,15 @@ class ImcControllerApi extends ImcController
 			$result = ImcFrontendHelper::sanitizeDailyCalendar($calendar, $year, $month);
 			restore_error_handler();
 
+			header('Content-type: application/json');
 			echo new JResponseJson($result, 'Daily Calendar Issues fetched successfully');
+			exit();
 		}
 		catch(Exception $e)	{
 			header("HTTP/1.0 202 Accepted");
-			echo new JResponseJson($e);
+            header('Content-type: application/json');
+            echo new JResponseJson($e);
+            exit(); 			
 		}
     }
     
@@ -1625,11 +1702,15 @@ class ImcControllerApi extends ImcController
 			$result = ImcFrontendHelper::intervals($by_step, $by_category, $ts, $prior_to, $for_perf);
 			restore_error_handler();
 
+			header('Content-type: application/json');
 			echo new JResponseJson($result, 'Intervals fetched successfully');
+			exit();
 		}
 		catch(Exception $e)	{
 			header("HTTP/1.0 202 Accepted");
-			echo new JResponseJson($e);
+            header('Content-type: application/json');
+            echo new JResponseJson($e);
+            exit(); 			
 		}
     }
     
@@ -1677,11 +1758,15 @@ class ImcControllerApi extends ImcController
 			$result = ImcFrontendHelper::intervals($by_step, $by_category, $ts, $prior_to);
 			restore_error_handler();
 
+			header('Content-type: application/json');
 			echo new JResponseJson($result, 'Intervals fetched successfully');
+			exit();
 		}
 		catch(Exception $e)	{
 			header("HTTP/1.0 202 Accepted");
-			echo new JResponseJson($e);
+            header('Content-type: application/json');
+            echo new JResponseJson($e);
+            exit(); 			
 		}
     }
 
@@ -1834,11 +1919,15 @@ class ImcControllerApi extends ImcController
 					throw new Exception('HTTP method is not supported');
 			}
 
+			header('Content-type: application/json');
 			echo new JResponseJson($result, $msg = 'User action completed successfully');
+			exit();
 		}
 		catch(Exception $e)	{
 			header("HTTP/1.0 202 Accepted");
-			echo new JResponseJson($e);
+            header('Content-type: application/json');
+            echo new JResponseJson($e);
+            exit(); 			
 		}
 	}
 
@@ -1916,11 +2005,15 @@ class ImcControllerApi extends ImcController
 			$app->enqueueMessage('size: '.sizeof($results), 'info');
 			restore_error_handler();
 
+			header('Content-type: application/json');
 			echo new JResponseJson($results, 'Comments fetched successfully');
+			exit();
 		}
 		catch(Exception $e)	{
 			header("HTTP/1.0 202 Accepted");
-			echo new JResponseJson($e);
+            header('Content-type: application/json');
+            echo new JResponseJson($e);
+            exit(); 			
 		}
 	}
 
@@ -1941,7 +2034,9 @@ class ImcControllerApi extends ImcController
 		}
 		catch(Exception $e)	{
 			header("HTTP/1.0 202 Accepted");
-			echo new JResponseJson($e);
+            header('Content-type: application/json');
+            echo new JResponseJson($e);
+            exit(); 			
 		}
 	}
 
@@ -1980,11 +2075,15 @@ class ImcControllerApi extends ImcController
             restore_error_handler();
 
             $app->enqueueMessage('size: '.sizeof($result), 'info');
-            echo new JResponseJson($result, 'Issues fetched successfully');
+			header('Content-type: application/json');
+			echo new JResponseJson($result, 'Issues fetched successfully');
+			exit();
         }
         catch(Exception $e)	{
-            header("HTTP/1.0 202 Accepted");
+			header("HTTP/1.0 202 Accepted");
+            header('Content-type: application/json');
             echo new JResponseJson($e);
+            exit(); 			
         }
 	}
 	
@@ -2106,12 +2205,17 @@ class ImcControllerApi extends ImcController
 				$myfile = file_put_contents('logs.json', $txt.PHP_EOL , FILE_APPEND | LOCK_EX);
 			}
 			
+			header('Content-type: application/json');
 			echo 'done';
+			exit();
+
 			//echo new JResponseJson($data, 'Issues fetched successfully');
 		}
 		catch(Exception $e) {
 			header("HTTP/1.0 202 Accepted");
-			echo new JResponseJson($e);
+            header('Content-type: application/json');
+            echo new JResponseJson($e);
+            exit(); 			
 		}
 
     }
