@@ -153,6 +153,7 @@ class ImcViewIssues extends JViewLegacy {
         'a.ordering' => JText::_('JGRID_HEADING_ORDERING'),
         'a.state' => JText::_('JSTATUS'),
         'a.access' => JText::_('JGRID_HEADING_ACCESS'),
+        'a.updated' => JText::_('COM_IMC_ISSUES_UPDATED'),
         'a.created' => JText::_('COM_IMC_ISSUES_CREATED'),
         'a.created_by' => JText::_('COM_IMC_ISSUES_CREATED_BY'),
         'a.language' => JText::_('JGRID_HEADING_LANGUAGE'),

@@ -119,16 +119,13 @@ if (!empty($this->extra_sidebar)) {
 				<?php echo JHtml::_('grid.sort',  'COM_IMC_ISSUES_CATID', 'a.catid', $listDirn, $listOrder); ?>
 				</th>
 				<th class='left'>
+				<?php echo JHtml::_('grid.sort',  'COM_IMC_ISSUES_UPDATED', 'a.updated', $listDirn, $listOrder); ?>
+				</th>
+				<th class='left'>
 				<?php echo JHtml::_('grid.sort',  'COM_IMC_ISSUES_CREATED', 'a.created', $listDirn, $listOrder); ?>
 				</th>
 				<th class='left'>
 				<?php echo JHtml::_('grid.sort',  'COM_IMC_ISSUES_CREATED_BY', 'a.created_by', $listDirn, $listOrder); ?>
-				</th>
-				<th class='left'>
-				<?php echo JHtml::_('grid.sort',  'JFIELD_ACCESS_LABEL', 'a.access', $listDirn, $listOrder); ?>
-				</th>
-				<th class='left'>
-				<?php echo JHtml::_('grid.sort',  'COM_IMC_ISSUES_LANGUAGE', 'a.language', $listDirn, $listOrder); ?>
 				</th>
                 <?php if (isset($this->items[0]->id)): ?>
 					<th width="1%" class="nowrap center hidden-phone">
@@ -221,24 +218,15 @@ if (!empty($this->extra_sidebar)) {
 					<?php echo $item->catid_title; ?>
 				</td>
 				<td>
+					<?php echo JHtml::_('date', $item->updated, JText::_('DATE_FORMAT_LC2')); ?>
+				</td>
+				<td>
 					<?php echo JHtml::_('date', $item->created, JText::_('DATE_FORMAT_LC2')); ?>
 				</td>
 				<td>
 
 					<?php echo $item->created_by_name; ?>
 				</td>
-				<td>
-
-					<?php echo $item->access_level; ?>
-				</td>
-				<td>
-					<?php if ($item->language == '*'):?>
-						<?php echo JText::alt('JALL', 'language'); ?>
-					<?php else:?>
-						<?php echo $item->language; ?>
-					<?php endif;?>
-				</td>
-
 
                 <?php if (isset($this->items[0]->id)): ?>
 					<td class="center hidden-phone">
