@@ -93,6 +93,8 @@ class ImcControllerIssue extends ImcController {
         }
     }
 
+    /* depracated */
+    /*
     public function remove() {
 
         // Initialise variables.
@@ -136,5 +138,6 @@ class ImcControllerIssue extends ImcController {
             throw new Exception(500);
         }
     }
+    */
 
 }
