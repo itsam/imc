@@ -93,7 +93,7 @@ class ImcControllerIssue extends ImcController {
         }
     }
 
-    /* deprecated (never triggered in frontend) */
+    /* depracated */
     /*
     public function remove() {
 
