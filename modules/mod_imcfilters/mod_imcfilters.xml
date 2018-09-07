@@ -24,6 +24,9 @@
 			<language tag="el-GR">el-GR/el-GR.mod_imcfilters.sys.ini</language>
 			<language tag="it-IT">it-IT/it-IT.mod_imcfilters.ini</language>
 			<language tag="it-IT">it-IT/it-IT.mod_imcfilters.sys.ini</language>            
+			<language tag="fr-FR">fr-FR/fr-FR.mod_imcfilters.ini</language>
+			<language tag="fr-FR">fr-FR/fr-FR.mod_imcfilters.sys.ini</language>            
+
     </languages>
     <config>
         <fields name="params">
