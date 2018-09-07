@@ -30,7 +30,7 @@ class PlgSearchImc extends JPlugin
      * @since   1.6
      */
     public function onContentSearchAreas() {
-        static $areas = array('imc' => 'Improve My City');
+        static $areas = array('imc' => 'COM_IMC');
         return $areas;
     }
     
