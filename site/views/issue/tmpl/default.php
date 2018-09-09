@@ -68,20 +68,20 @@ $statuses = $step->getOptions();
 				upvoteIconURL: '<?php echo JURI::base().'components/com_imc/assets/images/upvote-icon.png';?>',
 				replyIconURL: '<?php echo JURI::base().'components/com_imc/assets/images/reply-icon.png';?>',
 				noCommentsIconURL: '<?php echo JURI::base().'components/com_imc/assets/images/no-comments-icon.png';?>',
-				textareaPlaceholderText: '<?php echo JText::_('COM_IMC_COMMENTS_LEAVE_COMMENT');?>',
-				popularText: '<?php echo JText::_('COM_IMC_COMMENTS_MOST_POPULAR');?>',
-				newestText: '<?php echo JText::_('COM_IMC_COMMENTS_NEWEST');?>',
-				oldestText: '<?php echo JText::_('COM_IMC_COMMENTS_OLDEST');?>',
-				sendText: '<?php echo JText::_('COM_IMC_COMMENTS_SEND');?>',
-				replyText: '<?php echo JText::_('COM_IMC_COMMENTS_REPLY');?>',
-				editText: '<?php echo JText::_('COM_IMC_COMMENTS_EDIT');?>',
-				saveText: '<?php echo JText::_('COM_IMC_COMMENTS_SAVE');?>',
-				deleteText: '<?php echo JText::_('COM_IMC_COMMENTS_DELETE');?>',
-				editedText: '<?php echo JText::_('COM_IMC_COMMENTS_EDITED');?>',
-				youText: '<?php echo JText::_('COM_IMC_COMMENTS_YOU');?>',
-				viewAllRepliesText: '<?php echo JText::_('COM_IMC_COMMENTS_VIEW_ALL_REPLIES');?> (__replyCount__)',
-				hideRepliesText: '<?php echo JText::_('COM_IMC_COMMENTS_HIDE');?>',
-				noCommentsText: '<?php echo JText::_('COM_IMC_COMMENTS_NO_COMMENTS');?>',
+				textareaPlaceholderText: '<?php echo addslashes(JText::_('COM_IMC_COMMENTS_LEAVE_COMMENT'));?>',
+				popularText: '<?php echo addslashes(JText::_('COM_IMC_COMMENTS_MOST_POPULAR'));?>',
+				newestText: '<?php echo addslashes(JText::_('COM_IMC_COMMENTS_NEWEST'));?>',
+				oldestText: '<?php echo addslashes(JText::_('COM_IMC_COMMENTS_OLDEST'));?>',
+				sendText: '<?php echo addslashes(JText::_('COM_IMC_COMMENTS_SEND'));?>',
+				replyText: '<?php echo addslashes(JText::_('COM_IMC_COMMENTS_REPLY'));?>',
+				editText: '<?php echo addslashes(JText::_('COM_IMC_COMMENTS_EDIT'));?>',
+				saveText: '<?php echo addslashes(JText::_('COM_IMC_COMMENTS_SAVE'));?>',
+				deleteText: '<?php echo addslashes(JText::_('COM_IMC_COMMENTS_DELETE'));?>',
+				editedText: '<?php echo addslashes(JText::_('COM_IMC_COMMENTS_EDITED'));?>',
+				youText: '<?php echo addslashes(JText::_('COM_IMC_COMMENTS_YOU'));?>',
+				viewAllRepliesText: '<?php echo addslashes(JText::_('COM_IMC_COMMENTS_VIEW_ALL_REPLIES'));?> (__replyCount__)',
+				hideRepliesText: '<?php echo addslashes(JText::_('COM_IMC_COMMENTS_HIDE'));?>',
+				noCommentsText: Joomla.JText._('COM_IMC_COMMENTS_NO_COMMENTS', true),
 				defaultNavigationSortKey: 'newest',
 				enableReplying: true,
 				enableEditing: false,
@@ -158,7 +158,8 @@ $statuses = $step->getOptions();
 if($this->item->moderation == 1 && !$canEdit) : ?>
 
 	<div class="alert alert-danger">
-		<?php echo JText::_('COM_IMC_ITEM_NOT_LOADED'); ?>
+		<?php echo addslashes(JText::_('COM_IMC_ITEM_NOT_LOADED')); ?><br />
+		<?php echo addslashes(JText::_('COM_IMC_ITEM_NOT_ALLOWED')); ?>
 	</div>
 
 	<?php return; endif; ?>

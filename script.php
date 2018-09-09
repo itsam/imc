@@ -658,8 +658,8 @@ class com_imcInstallerScript {
         $db->execute();
 
         //clear tokens
-        $db->setQuery('TRUNCATE TABLE #__imc_tokens');
-        $db->execute();
+        //$db->setQuery('TRUNCATE TABLE #__imc_tokens');
+        //$db->execute();
         return true;        
     }
 
