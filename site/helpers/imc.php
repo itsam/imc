@@ -1280,10 +1280,6 @@ class ImcFrontendHelper
 	{
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
-		//$query->select('AVG(days_diff) AS avg_days, MIN(days_diff) AS min_days, MAX(days_diff) AS max_days, COUNT(issueid) AS count_issues');
-		//$query->from('
-		//	(
-		//		SELECT DISTINCT * FROM (
 
 		$days_diff_string = " ";
 		$query->select('COUNT(issueid) AS count_issues');
@@ -1292,18 +1288,41 @@ class ImcFrontendHelper
 			$query->select('AVG(step_days_diff) AS avg_days, MIN(step_days_diff) AS min_days, MAX(step_days_diff) AS max_days, COUNT(issueid) AS count_issues');
 		}
 
-		$query->from('
-		(
-			SELECT #__imc_log.issueid, #__imc_log.stepid, #__imc_issues.catid, #__imc_log.created, #__imc_log.step_days_diff
-            FROM #__imc_log INNER JOIN #__imc_issues ON #__imc_log.issueid = #__imc_issues.id
-            WHERE #__imc_log.state = 1 AND
-                  #__imc_log.action = "step" '.
-		             $days_diff_string .
-		             (!is_null($ts) ? ' AND #__imc_issues.created >= "' . $ts .'"' : '').
-		             (!is_null($prior_to) ? ' AND #__imc_issues.created <= "' . $prior_to .'"' : '').'
-            ORDER BY #__imc_log.issueid
-		) AS intervals
-	');
+		if($for_perf == true)
+		{
+			$query->from('
+			(
+				SELECT #__imc_log.issueid, #__imc_log.stepid, #__imc_issues.catid, #__imc_log.created, #__imc_log.step_days_diff
+				FROM #__imc_log INNER JOIN #__imc_issues ON #__imc_log.issueid = #__imc_issues.id
+				WHERE #__imc_log.state = 1 AND
+					#__imc_log.action = "step" '.
+						$days_diff_string .
+						(!is_null($ts) ? ' AND #__imc_issues.created >= "' . $ts .'"' : '').
+						(!is_null($prior_to) ? ' AND #__imc_issues.created <= "' . $prior_to .'"' : '').'
+				ORDER BY #__imc_log.issueid
+			) AS intervals
+			');
+		}
+		else 
+		{
+			$query->from('
+			(
+				SELECT MAX(stepid) AS stepid, issueid, catid
+				FROM (
+						SELECT #__imc_log.issueid as issueid, #__imc_log.stepid as stepid, #__imc_issues.catid AS catid, #__imc_log.created as created
+						FROM #__imc_log INNER JOIN #__imc_issues ON #__imc_log.issueid = #__imc_issues.id
+						WHERE #__imc_log.state = 1 AND #__imc_issues.state = 1 AND
+							#__imc_log.action = "step" '.
+							$days_diff_string .
+							(!is_null($ts) ? ' AND #__imc_issues.created >= "' . $ts .'"' : '').
+							(!is_null($prior_to) ? ' AND #__imc_issues.created <= "' . $prior_to .'"' : '').'
+						ORDER BY #__imc_log.issueid
+					) as foo
+
+				GROUP BY issueid  
+			) AS intervals
+			');			
+		}
 
 		if($by_step && !$by_category)
 		{
