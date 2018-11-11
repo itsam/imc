@@ -189,6 +189,13 @@ class ImcModelIssues extends JModelList {
 
 
 
+        //JFactory::getUser()->id == $item->created_by
+        $showOnlyMyIssues = false;
+        if ($showOnlyMyIssues)
+        {
+            $query->where('a.created_by = '.$userid);
+        }
+
         // Filter by moderation
 	    if(!$imc_raw)
 	    {
