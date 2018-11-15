@@ -193,7 +193,7 @@ class ImcModelIssues extends JModelList {
         $showOnlyMyIssues = false;
         if ($showOnlyMyIssues)
         {
-            $query->where('a.created_by = '.$userid);
+            $query->where('a.created_by = '.$user->id);
         }
 
         // Filter by moderation
