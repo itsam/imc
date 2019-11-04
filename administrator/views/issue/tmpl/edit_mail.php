@@ -40,7 +40,8 @@ require_once JPATH_COMPONENT_SITE . '/helpers/imc.php';
 
 	@media screen {
 		#modal-imc-mail .modal-body {
-			overflow-y: auto;
+			overflow-y: scroll;
+			max-height: 430px;
 		}
 	}
 </style>
