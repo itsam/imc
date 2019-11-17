@@ -261,6 +261,7 @@ class ImcControllerApi extends ImcController
 			$maxLng = $app->input->getString('maxLng');
 			$owned = $app->input->get('owned', false);
 			$lim = $app->input->getInt('lim', 0);
+			$offset = $app->input->getInt('offset', 0);
 			$ts = $app->input->getString('ts');
 			$prior_to = $app->input->getString('prior_to');
 
@@ -278,6 +279,7 @@ class ImcControllerApi extends ImcController
 
             //$issuesModel->setState('list.limit', $lim);
             $issuesModel->setState('filter.imcapi.limit', $lim);
+	    $issuesModel->setState('filter.imcapi.offset', $offset);
 
 
 			if(!is_null($minLat) && !is_null($maxLat) && !is_null($minLng) && !is_null($maxLng))
