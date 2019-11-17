@@ -25,7 +25,7 @@ class ImcRouter extends JComponentRouterBase
      * @return  array  The URL arguments to use to assemble the subsequent URL.
      *
      * @since   3.3
-     */    
+     */
     public function build(&$query)
     {
         $segments = array();
@@ -44,7 +44,6 @@ class ImcRouter extends JComponentRouterBase
         }
 
         return $segments;
-
     }
 
     /**
@@ -62,8 +61,12 @@ class ImcRouter extends JComponentRouterBase
 
         // view is always the first element of the array
         $vars['view'] = array_shift($segments);
-        
-        if($vars['view'] == 'api'){
+
+        if ($vars['view'] == 'api') {
+            $vars['format'] = 'json';
+        }
+
+        if ($vars['view'] == 'api2') {
             $vars['format'] = 'json';
         }
 
@@ -78,7 +81,6 @@ class ImcRouter extends JComponentRouterBase
 
         return $vars;
     }
-
 }
 
 /**
