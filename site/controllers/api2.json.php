@@ -36,7 +36,7 @@ require_once JPATH_COMPONENT_SITE . '/controllers/comments.json.php';
  * Please note that for better security it is highly recommended to protect your site with SSL (https)
  */
 
-class ImcControllerApi extends ImcController
+class ImcControllerApi2 extends ImcController
 {
 	private $mcrypt;
 	private $keyModel;
