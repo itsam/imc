@@ -672,6 +672,7 @@ class ImcControllerApi2 extends ImcController
 					$query->select('COUNT(id) as c');
 					$query->from('`#__imc_issues` AS a');
 					$query->where("a.created_by = '" . $userid . "'");
+					$query->where("a.state >= 0");
 					$db->setQuery($query);
 					$result = $db->loadObject();
 					$countIssues = $result->c;
