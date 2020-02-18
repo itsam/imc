@@ -666,7 +666,17 @@ class ImcControllerApi2 extends ImcController
 						$isAdmin = false;
 					}
 
-					$result = array('userid' => $userid, 'fullname' => $fullname, 'isAdmin' => $isAdmin, 'votedIssues' => $votedIssues);
+					//count submitted issues 
+					$db = JFactory::getDbo();
+					$query = $db->getQuery(true);
+					$query->select('COUNT(id) as c');
+					$query->from('`#__imc_issues` AS a');
+					$query->where("a.created_by = '" . $userid . "'");
+					$db->setQuery($query);
+					$result = $db->loadObject();
+					$countIssues = $result->c;
+
+					$result = array('userid' => $userid, 'fullname' => $fullname, 'isAdmin' => $isAdmin, 'votedIssues' => $votedIssues, 'countVotes' => count($votedIssues), 'countIssues' => $countIssues);
 
 					//be consistent return as array (of size 1)
 					$result = array($result);
