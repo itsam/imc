@@ -58,6 +58,11 @@ class ImcControllerApi2 extends ImcController
 		throw $ee;
 	}
 
+	private function valid_email($email)
+	{
+		return !!filter_var($email, FILTER_VALIDATE_EMAIL);
+	}
+
 	private function validateRequest($isNew = false)
 	{
 		$app = JFactory::getApplication();
@@ -110,7 +115,22 @@ class ImcControllerApi2 extends ImcController
 		}
 
 		//4. authenticate user
-		$userid = JUserHelper::getUserId($objToken->u);
+		$userid = 0;
+		if (self::valid_email($objToken->u)) {
+			//b. get userid given email
+			$db = JFactory::getDbo();
+			$query = $db->getQuery(true);
+			$query->select('id');
+			$query->from('#__users');
+			$query->where('UPPER(email) = UPPER(' . $db->Quote($objToken->u) . ')');
+			$db->setQuery($query);
+			$result = $db->loadObject();
+			$userid = $result->id;
+		} else {
+			//a. get userid given username
+			$userid = JUserHelper::getUserId($objToken->u);
+		}
+
 		$user = JFactory::getUser($userid);
 		$userInfo = array();
 		if ($isNew) {
@@ -125,7 +145,6 @@ class ImcControllerApi2 extends ImcController
 					$app->enqueueMessage(JText::_('COM_IMC_API_USERNAME_PASSWORD_NO_MATCH'), 'error');
 					throw new Exception('Token does not match');
 				}
-
 				if ($user->block) {
 					$app->enqueueMessage(JText::_('COM_IMC_API_USER_NOT_ACTIVATED'), 'error');
 					throw new Exception(JText::_('COM_IMC_API_USER_BLOCKED'));
