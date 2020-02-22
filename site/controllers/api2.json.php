@@ -315,6 +315,34 @@ class ImcControllerApi2 extends ImcController
 			//get items and sanitize them
 			$data = $issuesModel->getItems();
 			$result = ImcFrontendHelper::sanitizeIssues($data, $userid);
+
+
+			//API2 sanitize further and include timeline
+			$logsModel = JModelLegacy::getInstance('Logs', 'ImcModel', array('ignore_request' => true));
+			foreach ($result as &$issue) {
+				unset($issue->created);
+				unset($issue->updated);
+				unset($issue->created_by);
+				unset($issue->hits);
+				unset($issue->regnum);
+				unset($issue->regdate);
+				unset($issue->responsible);
+				unset($issue->extra);
+				unset($issue->subgroup);
+				unset($issue->alias);
+				unset($issue->created_by_name);
+				unset($issue->attachments);
+				unset($issue->created_TZ);
+				unset($issue->updated_TZ);
+				unset($issue->regdate_TZ);
+				unset($issue->created_ts);
+				unset($issue->updated_ts);
+
+				$logs = $logsModel->getItemsByIssue($issue->id);
+				$timeline = ImcFrontendHelper::sanitizeLogs($logs);
+				$issue->timeline = $timeline;
+			}
+
 			$app->enqueueMessage('size: ' . sizeof($result), 'info');
 			restore_error_handler();
 			header('Content-type: application/json');
@@ -657,6 +685,13 @@ class ImcControllerApi2 extends ImcController
 					$data = $votesModel->getItems();
 					$votedIssues = ImcFrontendHelper::sanitizeVotes($data);
 					restore_error_handler();
+
+					//simplify votedIssues
+					// $voted = array();
+					// foreach ($votedIssues as $votedIssue) {
+					// 	$voted[] = $votedIssue->issueid;
+					// }
+
 					$fullname = JFactory::getUser($userid)->name;
 
 					//check is user is admin
@@ -677,7 +712,14 @@ class ImcControllerApi2 extends ImcController
 					$result = $db->loadObject();
 					$countIssues = $result->c;
 
-					$result = array('userid' => $userid, 'fullname' => $fullname, 'isAdmin' => $isAdmin, 'votedIssues' => $votedIssues, 'countVotes' => count($votedIssues), 'countIssues' => $countIssues);
+					$result = array(
+						'userid' => $userid,
+						'fullname' => $fullname,
+						'isAdmin' => $isAdmin,
+						//'votedIssues' => $voted,
+						'countVotes' => count($votedIssues),
+						'countIssues' => $countIssues
+					);
 
 					//be consistent return as array (of size 1)
 					$result = array($result);
