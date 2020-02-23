@@ -14,7 +14,8 @@ jimport('joomla.application.component.modellist');
 /**
  * Methods supporting a list of Imc records.
  */
-class ImcModelIssues extends JModelList {
+class ImcModelIssues extends JModelList
+{
 
     /**
      * Constructor.
@@ -23,7 +24,8 @@ class ImcModelIssues extends JModelList {
      * @see        JController
      * @since    1.6
      */
-    public function __construct($config = array()) {
+    public function __construct($config = array())
+    {
         if (empty($config['filter_fields'])) {
             $config['filter_fields'] = array(
                 'id', 'a.id',
@@ -65,8 +67,7 @@ class ImcModelIssues extends JModelList {
         $app = JFactory::getApplication();
         $orderCol = $app->input->get('filter_order', 'a.updated');
 
-        if (!in_array($orderCol, $this->filter_fields))
-        {
+        if (!in_array($orderCol, $this->filter_fields)) {
             $orderCol = 'a.ordering';
         }
 
@@ -74,8 +75,7 @@ class ImcModelIssues extends JModelList {
 
         $listOrder = $app->input->get('filter_order_Dir', 'DESC');
 
-        if (!in_array(strtoupper($listOrder), array('ASC', 'DESC', '')))
-        {
+        if (!in_array(strtoupper($listOrder), array('ASC', 'DESC', ''))) {
             $listOrder = 'DESC';
         }
 
@@ -110,7 +110,14 @@ class ImcModelIssues extends JModelList {
         //$this->setState('filter.stepid', $app->getUserStateFromRequest($this->context.'.filter.stepid', 'filter_stepid', '', 'string'));
 
         //Filtering owned
-        $this->setState('filter.owned', $app->getUserStateFromRequest($this->context.'.filter.owned', 'filter_owned', 'no', 'string'));
+        $this->setState('filter.owned', $app->getUserStateFromRequest($this->context . '.filter.owned', 'filter_owned', 'no', 'string'));
+
+        //Filtering moderated
+        $this->setState('filter.moderated', $app->getUserStateFromRequest($this->context . '.filter.moderated', 'filter_moderated', 'no', 'string'));
+
+        //Filtering starred
+        $starred = $app->getUserStateFromRequest($this->context . '.filter.starred', 'cat', array());
+        $this->setState('filter.starred', $starred);
 
         $this->setState('filter.language', JLanguageMultilang::isEnabled());
 
@@ -124,20 +131,16 @@ class ImcModelIssues extends JModelList {
      * @return	JDatabaseQuery
      * @since	1.6
      */
-    protected function getListQuery() {
+    protected function getListQuery()
+    {
         //check API request
         $userid = $this->state->get('filter.imcapi.userid', 0);
         $guest = $this->state->get('filter.imcapi.guest', false);
-        if($userid > 0)
-        {
+        if ($userid > 0) {
             $user = JFactory::getUser($userid);
-        }
-        elseif ($guest)
-        {
+        } elseif ($guest) {
             $user = JFactory::getUser(0);
-        }
-        else
-        {
+        } else {
             $user = JFactory::getUser();
         }
 
@@ -147,9 +150,10 @@ class ImcModelIssues extends JModelList {
 
         // Select the required fields from the table.
         $query->select(
-                $this->getState(
-                        'list.select', 'DISTINCT a.*'
-                )
+            $this->getState(
+                'list.select',
+                'DISTINCT a.*'
+            )
         );
 
         $query->from('`#__imc_issues` AS a');
@@ -157,11 +161,11 @@ class ImcModelIssues extends JModelList {
         // Join over the users for the checked out user.
         $query->select('uc.name AS editor');
         $query->join('LEFT', '#__users AS uc ON uc.id=a.checked_out');
-		// Join over the category 'catid'
-		$query->select('catid.params AS catid_params, catid.title AS catid_title');
-		$query->join('LEFT', '#__categories AS catid ON catid.id = a.catid');
-		// Join over the created by field 'created_by'
-		$query->join('LEFT', '#__users AS created_by ON created_by.id = a.created_by');
+        // Join over the category 'catid'
+        $query->select('catid.params AS catid_params, catid.title AS catid_title');
+        $query->join('LEFT', '#__categories AS catid ON catid.id = a.catid');
+        // Join over the created by field 'created_by'
+        $query->join('LEFT', '#__users AS created_by ON created_by.id = a.created_by');
         // Join over the asset groups.
         $query->select('ag.title AS access_level')
             ->join('LEFT', '#__viewlevels AS ag ON ag.id = a.access');
@@ -170,17 +174,15 @@ class ImcModelIssues extends JModelList {
             ->join('LEFT', '#__imc_steps AS st ON st.id = a.stepid');
 
 
-	    // Filter by published state
+        // Filter by published state
         $imc_raw = $this->state->get('filter.imcapi.raw', false);
-	    $published = $this->getState('filter.state');
+        $published = $this->getState('filter.state');
 
-	    if($imc_raw)
-	    {
-		    $query->where('(a.state IN (0, 1, -2))');
-	    }
-	    elseif(!$imc_raw || $published == 1) {
+        if ($imc_raw) {
+            $query->where('(a.state IN (0, 1, -2))');
+        } elseif (!$imc_raw || $published == 1) {
             if (is_numeric($published)) {
-                $query->where('a.state = ' . (int)$published);
+                $query->where('a.state = ' . (int) $published);
             } else if ($published === '' || is_null($published)) {
                 $query->where('(a.state IN (0, 1))');
             }
@@ -191,21 +193,19 @@ class ImcModelIssues extends JModelList {
 
         //JFactory::getUser()->id == $item->created_by
         $showOnlyMyIssues = false;
-        if ($showOnlyMyIssues)
-        {
-            $query->where('a.created_by = '.$user->id);
+        if ($showOnlyMyIssues) {
+            $query->where('a.created_by = ' . $user->id);
         }
 
         // Filter by moderation
-	    if(!$imc_raw)
-	    {
-		    $query->where('
+        if (!$imc_raw) {
+            $query->where('
             (
             (a.created_by > 0 AND a.created_by  =' . $user->id . ' AND a.moderation IN (0,1)) OR
             (a.created_by > 0 AND a.created_by !=' . $user->id . ' AND a.moderation = 0)
             )
 	        ');
-	    }
+        }
 
         // Filter by search in title
         $search = $this->getState('filter.search');
@@ -214,23 +214,21 @@ class ImcModelIssues extends JModelList {
                 $query->where('a.id = ' . (int) substr($search, 3));
             } else {
                 $search = $db->Quote('%' . $db->escape($search, true) . '%');
-                $query->where('( a.title LIKE '.$search.' )');
+                $query->where('( a.title LIKE ' . $search . ' )');
             }
         }
 
 
         // Filter by access level.
-        if ($access = $this->getState('filter.access'))
-        {
+        if ($access = $this->getState('filter.access')) {
             $query->where('a.access = ' . (int) $access);
         }
 
         // Implement View Level Access
-        if (!$user->authorise('core.admin'))
-        {
+        if (!$user->authorise('core.admin')) {
             $groups = implode(',', $user->getAuthorisedViewLevels());
             $query->where('a.access IN (' . $groups . ')');
-        }        
+        }
 
         //Filtering stepid
         // if ($stepid = $this->getState('filter.stepid'))
@@ -239,111 +237,116 @@ class ImcModelIssues extends JModelList {
         // }
 
         $filter_steps = $this->state->get('filter.steps');
-        if(!empty($filter_steps)){
-            if(!in_array(0, $filter_steps)){
+        if (!empty($filter_steps)) {
+            if (!in_array(0, $filter_steps)) {
                 $filter_steps = implode(',', $filter_steps);
-                $query->where('a.stepid IN ('.$filter_steps.')');
+                $query->where('a.stepid IN (' . $filter_steps . ')');
             }
-        }        
+        }
 
         // Filter by category
         $filter_category = $this->state->get('filter.category');
-        if(!empty($filter_category)){
-            if(!in_array(0, $filter_category)){
+        if (!empty($filter_category)) {
+            if (!in_array(0, $filter_category)) {
                 $filter_category = implode(',', $filter_category);
-                $query->where('a.catid IN ('.$filter_category.')');
+                $query->where('a.catid IN (' . $filter_category . ')');
             }
-        } 
+        }
 
         //Filtering owned
-	    $filter_owned = $this->state->get("filter.owned");
-	    if ($filter_owned == 'yes' && $user->id > 0) {
-		    $query->where("a.created_by = '".$user->id."'");
-	    }
+        $filter_owned = $this->state->get("filter.owned");
+        if ($filter_owned == 'yes' && $user->id > 0) {
+            $query->where("a.created_by = '" . $user->id . "'");
+        }
 
-	    // Filter by language
-	    if ($this->getState('filter.language'))
-	    {
-		    $query->where('a.language IN (' . $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*') . ')');
-	    }
+        // Filter by language
+        if ($this->getState('filter.language')) {
+            $query->where('a.language IN (' . $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*') . ')');
+        }
 
-	    // Filter by geo-boundaries (Currently used only by API requests)
-	    $minLat = $this->state->get('filter.imcapi.minLat');
-	    $maxLat = $this->state->get('filter.imcapi.maxLat');
-	    $minLng = $this->state->get('filter.imcapi.minLng');
-	    $maxLng = $this->state->get('filter.imcapi.maxLng');
+        // Filter by moderation
+        $filter_moderated = $this->state->get("filter.moderated");
+        if ($filter_moderated == 'yes' && $user->id > 0) {
+            $query->where("a.moderation = true");
+        }
 
-	    if(!is_null($minLat) && !is_null($maxLat) && !is_null($minLng) && !is_null($maxLng))
-	    {
-		    $query->where('a.latitude BETWEEN ' . $minLat . ' AND ' . $maxLat );
-		    $query->where('a.longitude BETWEEN ' . $minLng . ' AND ' . $maxLng );
-	    }
+        // Filter by stars (votes)
+        $filter_starred = $this->state->get('filter.starred');
+        if (!empty($filter_starred)) {
+            if (!in_array(0, $filter_starred)) {
+                $filter_starred = implode(',', $filter_starred);
+                $query->where('a.id IN (' . $filter_starred . ')');
+            }
+        }
+
+        // Filter by geo-boundaries (Currently used only by API requests)
+        $minLat = $this->state->get('filter.imcapi.minLat');
+        $maxLat = $this->state->get('filter.imcapi.maxLat');
+        $minLng = $this->state->get('filter.imcapi.minLng');
+        $maxLng = $this->state->get('filter.imcapi.maxLng');
+
+        if (!is_null($minLat) && !is_null($maxLat) && !is_null($minLng) && !is_null($maxLng)) {
+            $query->where('a.latitude BETWEEN ' . $minLat . ' AND ' . $maxLat);
+            $query->where('a.longitude BETWEEN ' . $minLng . ' AND ' . $maxLng);
+        }
 
         // Filter by timestamp/prior to (Currently used only by API requests)
         $ts = $this->state->get('filter.imcapi.ts');
         $prior_to = $this->state->get('filter.imcapi.priorto');
-        if(!is_null($ts))
-        {
-	        //$query->where('UNIX_TIMESTAMP(a.updated) >=' . $ts);
-	        $query->where('a.updated >= "' . $ts .'"');
-
+        if (!is_null($ts)) {
+            //$query->where('UNIX_TIMESTAMP(a.updated) >=' . $ts);
+            $query->where('a.updated >= "' . $ts . '"');
         }
-	    if(!is_null($prior_to))
-	    {
-		    //$query->where('UNIX_TIMESTAMP(a.updated) <=' . $prior_to);
-		    $query->where('a.updated <= "' . $prior_to .'"');
-	    }
+        if (!is_null($prior_to)) {
+            //$query->where('UNIX_TIMESTAMP(a.updated) <=' . $prior_to);
+            $query->where('a.updated <= "' . $prior_to . '"');
+        }
 
-	    //check also for raw issues (API)
-	    $ts = $this->state->get('filter.imcapi.created.ts');
-	    $prior_to = $this->state->get('filter.imcapi.created.priorto');
-	    if(!is_null($ts))
-	    {
-		    $query->where('a.created >= "' . $ts .'"');
-	    }
-	    if(!is_null($prior_to))
-	    {
-		    $query->where('a.created <= "' . $prior_to .'"');
-	    }
+        //check also for raw issues (API)
+        $ts = $this->state->get('filter.imcapi.created.ts');
+        $prior_to = $this->state->get('filter.imcapi.created.priorto');
+        if (!is_null($ts)) {
+            $query->where('a.created >= "' . $ts . '"');
+        }
+        if (!is_null($prior_to)) {
+            $query->where('a.created <= "' . $prior_to . '"');
+        }
 
-	    // Add the list ordering clause.
-	    $orderCol = $this->state->get('list.ordering');
-	    $orderDirn = $this->state->get('list.direction');
+        // Add the list ordering clause.
+        $orderCol = $this->state->get('list.ordering');
+        $orderDirn = $this->state->get('list.direction');
 
-        if($orderCol == 'a.votes')
-        {
+        if ($orderCol == 'a.votes') {
             $orderDirn = 'desc';
         }
 
-	    if(!$orderCol && !$orderDirn)
-	    {
-		    $orderCol = $this->state->get('filter.imcapi.ordering', '');
-		    $orderDirn = $this->state->get('filter.imcapi.direction', '');
-	    }
+        if (!$orderCol && !$orderDirn) {
+            $orderCol = $this->state->get('filter.imcapi.ordering', '');
+            $orderDirn = $this->state->get('filter.imcapi.direction', '');
+        }
 
-	    if ($orderCol == 'access_level')
-        {
+        if ($orderCol == 'access_level') {
             $orderCol = 'ag.title';
         }
 
         if ($orderCol && $orderDirn) {
             $query->order($db->escape($orderCol . ' ' . $orderDirn));
-        }
-        else {
+        } else {
             //set default ordering
-            $query->order($db->escape('a.updated' . ' ' . 'DESC'));       
+            $query->order($db->escape('a.updated' . ' ' . 'DESC'));
         }
 
         $imc_offset = $this->state->get('filter.imcapi.offset', 0);
         $imc_limit = $this->state->get('filter.imcapi.limit', null);
-        if(!is_null($imc_limit)) {
+        if (!is_null($imc_limit)) {
             $query->setlimit($imc_limit, $imc_offset);
         }
 
         return $query;
     }
 
-    public function getItems() {
+    public function getItems()
+    {
         $items = parent::getItems();
 
         if (JFactory::getApplication()->isSite()) {
@@ -352,11 +355,10 @@ class ImcModelIssues extends JModelList {
             $canChange = $user->authorise('core.edit.state', 'com_imc');
             $groups = $user->getAuthorisedViewLevels();
             $categories = JCategories::getInstance('imc');
-	        $commentsModel = JModelLegacy::getInstance( 'Comments', 'ImcModel', array('ignore_request' => true) );
+            $commentsModel = JModelLegacy::getInstance('Comments', 'ImcModel', array('ignore_request' => true));
 
             $imc_raw = $this->state->get('filter.imcapi.raw', false);
-            for ($x = 0, $count = count($items); $x < $count; $x++)
-            {
+            for ($x = 0, $count = count($items); $x < $count; $x++) {
                 $items[$x]->created_by_name = JFactory::getUser($items[$x]->created_by)->name;
 
                 // Set category image (for marker icon)...avoid using JCategories, just get category params in the main query
@@ -400,8 +402,8 @@ class ImcModelIssues extends JModelList {
                     }
                 }
 
-	            //TODO: that's maybe not so efficient
-	            $items[$x]->comments = $commentsModel->count($items[$x]->id, $items[$x]->created_by);
+                //TODO: that's maybe not so efficient
+                $items[$x]->comments = $commentsModel->count($items[$x]->id, $items[$x]->created_by);
             }
 
             //avoid using model limit ($query->setlimit(x)) at getListQuery() when called from API
@@ -412,9 +414,7 @@ class ImcModelIssues extends JModelList {
                 $items = array_slice($items, 0, $imc_limit);
             }
             */
-
         }
         return $items;
     }
-
 }

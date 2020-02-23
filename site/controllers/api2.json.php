@@ -268,10 +268,52 @@ class ImcControllerApi2 extends ImcController
 			$offset = $app->input->getInt('offset', 0);
 			$ts = $app->input->getString('ts');
 			$prior_to = $app->input->getString('prior_to');
+			$filterSteps = $app->input->getString('filterSteps');
+			$filterCategories = $app->input->getString('filterCategories');
+			$filterPersonal = $app->input->getString('filterPersonal');
 
 			//get issues model
 			$issuesModel = JModelLegacy::getInstance('Issues', 'ImcModel', array('ignore_request' => true));
 			//set states
+			if (!is_null($filterSteps)) {
+				$issuesModel->setState('filter.steps', $filterSteps);
+			}
+
+			if (!is_null($filterCategories)) {
+				$issuesModel->setState('filter.category', $filterCategories);
+			}
+
+			if ($filterPersonal == 'mine') {
+				$owned = 'true';
+			} else {
+				$owned = 'false';
+			}
+			if ($filterPersonal == 'moderated') {
+				$issuesModel->setState('filter.moderated', 'yes');
+				$owned = 'true';
+			}
+			if ($filterPersonal == 'starred') {
+
+
+				$votesModel = JModelLegacy::getInstance('Votes', 'ImcModel', array('ignore_request' => true));
+				$votesModel->setState('filter.imcapi.userid', $userid);
+				$votesModel->setState('filter.state', 1);
+				//handle unexpected warnings from model
+				set_error_handler(array($this, 'exception_error_handler'));
+				//get items and sanitize them
+				$data = $votesModel->getItems();
+				//simplify votedIssues
+				$voted = array();
+				foreach ($data as $votedIssue) {
+					$voted[] = $votedIssue->issueid;
+				}
+
+				restore_error_handler();
+
+				$owned = 'false';
+				$issuesModel->setState('filter.starred', $voted);
+			}
+
 			$issuesModel->setState('filter.owned', ($owned === 'true' ? 'yes' : 'no'));
 			$issuesModel->setState('filter.imcapi.userid', $userid);
 			if ($userid == 0) {
