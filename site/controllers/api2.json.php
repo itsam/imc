@@ -385,7 +385,7 @@ class ImcControllerApi2 extends ImcController
 				$issue->timeline = $timeline;
 			}
 
-			$app->enqueueMessage('size: ' . sizeof($result), 'info');
+			//$app->enqueueMessage('size: ' . sizeof($result), 'info');
 			restore_error_handler();
 			header('Content-type: application/json');
 			echo new JResponseJson($result, 'Issues fetched successfully');
