@@ -362,8 +362,6 @@ class ImcControllerApi2 extends ImcController
 			//API2 sanitize further and include timeline
 			$logsModel = JModelLegacy::getInstance('Logs', 'ImcModel', array('ignore_request' => true));
 			foreach ($result as &$issue) {
-				unset($issue->created);
-				unset($issue->updated);
 				unset($issue->created_by);
 				unset($issue->hits);
 				unset($issue->regnum);
