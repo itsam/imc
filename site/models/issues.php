@@ -116,7 +116,7 @@ class ImcModelIssues extends JModelList
         $this->setState('filter.moderated', $app->getUserStateFromRequest($this->context . '.filter.moderated', 'filter_moderated', 'no', 'string'));
 
         //Filtering starred
-        $starred = $app->getUserStateFromRequest($this->context . '.filter.starred', 'cat', array());
+        $starred = $app->getUserStateFromRequest($this->context . '.filter.starred', 'filter.starred', array());
         $this->setState('filter.starred', $starred);
 
         $this->setState('filter.language', JLanguageMultilang::isEnabled());
