@@ -2003,7 +2003,8 @@ class ImcControllerApi extends ImcController
 			//$result = ImcFrontendHelper::sanitizeIssues($data, $userid);
 
 			restore_error_handler();
-			unlink("logs.json");
+			//unlink("logs.json");
+			unlink('logs_' . $lim . '_' . $offset . '.ndjson');
 			foreach ($data as $item) {
 				unset($item->asset_id);
 				//unset($item->title);
@@ -2043,13 +2044,14 @@ class ImcControllerApi extends ImcController
 				$item->comments = (int) $item->comments;
 
 				$txt  = json_encode(array("index" => array("_id" => $item->id))) . "\n";
-				$txt .= json_encode($item, JSON_UNESCAPED_UNICODE) . "\n";
+				$txt .= json_encode($item, JSON_UNESCAPED_UNICODE);
 				//$txt .= $this->raw_json_encode( $item ) . "\n";
-				$myfile = file_put_contents('logs.json', $txt . PHP_EOL, FILE_APPEND | LOCK_EX);
+				$myfile = file_put_contents('logs_' . $lim . '_' . $offset . '.ndjson', $txt . PHP_EOL, FILE_APPEND | LOCK_EX);
 			}
 
-			header('Content-type: application/json');
-			echo 'done';
+			//header('Content-type: application/json');
+			echo '<a href="' . JUri::root() .  'logs_' . $lim . '_' . $offset . '.ndjson">' .  'logs_' . $lim . '_' . $offset . '.ndjson'   . '</a>';
+			echo "<br />" . 'done';
 			exit();
 
 			//echo new JResponseJson($data, 'Issues fetched successfully');
