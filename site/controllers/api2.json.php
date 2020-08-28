@@ -776,8 +776,7 @@ class ImcControllerApi2 extends ImcController
 					//get necessary arguments
 					$args = array(
 						'name' => $app->input->getString('name'),
-						'email' => $app->input->getString('email'),
-						'phone' => $app->input->getString('phone')
+						'email' => $app->input->getString('email')
 					);
 					ImcFrontendHelper::checkNullArguments($args);
 
@@ -785,8 +784,8 @@ class ImcControllerApi2 extends ImcController
 					$args['username'] = $userInfo['username'];
 					$args['password1'] = $userInfo['password'];
 					$args['email1'] = $args['email'];
-					$args['phone'] = $args['phone'];
-					$args['address'] = $app->input->getString('address', '');
+					$args['phone'] = $app->input->getString('phone', null);
+					$args['address'] = $app->input->getString('address', null);
 
 					//handle unexpected warnings from model
 					set_error_handler(array($this, 'exception_error_handler'));
@@ -805,6 +804,22 @@ class ImcControllerApi2 extends ImcController
 						$app->enqueueMessage(JText::_('COM_USERS_REGISTRATION_COMPLETE_ACTIVATE'), 'info');
 					} else {
 						$app->enqueueMessage(JText::_('COM_USERS_REGISTRATION_SAVE_SUCCESS'), 'info');
+					}
+
+					//populate user profile
+					if (!is_null($args['phone'])) {
+						$userid = JUserHelper::getUserId($args['email']);
+						$db = JFactory::getDbo();
+						$tuples = array();
+						$order = 1;
+						$data = [
+							'phone' => $args['phone'],
+						];
+						foreach ($data as $k => $v) {
+							$tuples[] = '(' . $userid . ', ' . $db->quote('profile.' . $k) . ', ' . $db->quote(json_encode($v)) . ', ' . $order++ . ')';
+						}
+						$db->setQuery('INSERT INTO ' . $db->quoteName('#__user_profiles') . ' VALUES ' . implode(', ', $tuples));
+						$db->execute();
 					}
 
 					//be consistent return as array (of size 1)
