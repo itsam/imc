@@ -776,7 +776,8 @@ class ImcControllerApi2 extends ImcController
 					//get necessary arguments
 					$args = array(
 						'name' => $app->input->getString('name'),
-						'email' => $app->input->getString('email')
+						'email' => $app->input->getString('email'),
+						'phone' => $app->input->getString('phone')
 					);
 					ImcFrontendHelper::checkNullArguments($args);
 
@@ -784,7 +785,7 @@ class ImcControllerApi2 extends ImcController
 					$args['username'] = $userInfo['username'];
 					$args['password1'] = $userInfo['password'];
 					$args['email1'] = $args['email'];
-					$args['phone'] = $app->input->getString('phone', '');
+					$args['phone'] = $args['phone'];
 					$args['address'] = $app->input->getString('address', '');
 
 					//handle unexpected warnings from model
