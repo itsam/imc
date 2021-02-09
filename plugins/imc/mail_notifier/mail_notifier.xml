@@ -106,7 +106,8 @@
                 <field name="messagesbackend" type="radio" default="0" class="btn-group btn-group-yesno" label="PLG_IMC_MAIL_NOTIFIER_SETTINGS_SHOW_INFO_MSGS_BACKEND" description="">
                   <option value="0">JNO</option>
                   <option value="1">JYES</option>
-                </field>                    
+                </field>           
+                <field type="text" name="mail_language" label="Language" default="en-GB" />         
 
             </fieldset>
 
