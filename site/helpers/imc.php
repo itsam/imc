@@ -15,15 +15,15 @@ class ImcFrontendHelper
 	private static $_items = array(); //used by getCategories
 	private static $_parent; //used by getCategories
 
-    public static function convert2UTC($date)
-    {
-        //get timezone from settings
-        $offset = JFactory::getConfig()->get('offset');
+	public static function convert2UTC($date)
+	{
+		//get timezone from settings
+		$offset = JFactory::getConfig()->get('offset');
 
-        $utc = new DateTime($date, new DateTimeZone($offset));
-        $utc->setTimezone(new DateTimeZone('UTC'));
-        return $utc->format('Y-m-d H:i:s');
-    }
+		$utc = new DateTime($date, new DateTimeZone($offset));
+		$utc->setTimezone(new DateTimeZone('UTC'));
+		return $utc->format('Y-m-d H:i:s');
+	}
 
 	public static function convertFromUTC($date)
 	{
@@ -39,43 +39,37 @@ class ImcFrontendHelper
 	{
 		$nullArguments = array();
 
-		if(!is_array($args))
-		{
+		if (!is_array($args)) {
 			throw new Exception('Checking arguments bad input');
 		}
 
-		foreach($args as $name => $value)
-		{
-			if (is_null($value))
-			{
+		foreach ($args as $name => $value) {
+			if (is_null($value)) {
 				array_push($nullArguments, $name);
 			}
 		}
 
-		if(!empty($nullArguments))
-		{
-			$errMsg = 'The following arguments are missing or bad input: ' . implode(', ',$nullArguments);
+		if (!empty($nullArguments)) {
+			$errMsg = 'The following arguments are missing or bad input: ' . implode(', ', $nullArguments);
 			throw new Exception($errMsg);
 		}
 	}
 
 	public static function sanitizeIssues($data, $userid, $extensive = false)
 	{
-		if(!is_array($data)){
+		if (!is_array($data)) {
 			throw new Exception('Issues sanitization bad input');
 		}
 
 		$issues = array();
 
 		//get vote model
-		$votesModel = JModelLegacy::getInstance( 'Votes', 'ImcModel', array('ignore_request' => true) );
+		$votesModel = JModelLegacy::getInstance('Votes', 'ImcModel', array('ignore_request' => true));
 
-		foreach ($data as $issue)
-		{
+		foreach ($data as $issue) {
 			$issue = self::sanitizeIssue($issue, $userid);
 			$issue->hasVoted = $votesModel->hasVoted($issue->id, $userid);
-			if($extensive)
-			{
+			if ($extensive) {
 				unset($issue->created_TZ);
 				unset($issue->updated_TZ);
 				unset($issue->regdate_TZ);
@@ -99,7 +93,6 @@ class ImcFrontendHelper
 					unset($attachment->name);
 					unset($attachment->size);
 				}
-
 			}
 			array_push($issues, $issue);
 		}
@@ -108,7 +101,7 @@ class ImcFrontendHelper
 
 	public static function sanitizeComment($data, $userid)
 	{
-		if(!is_object($data)){
+		if (!is_object($data)) {
 			throw new Exception('Comment sanitization bad input');
 		}
 		//unset overhead
@@ -123,16 +116,13 @@ class ImcFrontendHelper
 		unset($data->updated);
 		unset($data->updated_by);
 		unset($data->issue_title);
-		if(isset($data->profile_picture_url))
-		{
+		if (isset($data->profile_picture_url)) {
 			unset($data->profile_picture_url);
 		}
-		if(isset($data->created_by_admin))
-		{
+		if (isset($data->created_by_admin)) {
 			unset($data->creted_by_admin);
 		}
-		if(isset($data->created_by_current_user))
-		{
+		if (isset($data->created_by_current_user)) {
 			unset($data->created_by_currentJ_user);
 		}
 
@@ -143,12 +133,11 @@ class ImcFrontendHelper
 		$data->myComment = ($data->created_by == $userid);
 
 		//do the casting
-		$data->moderation = (boolean)$data->moderation;
-		$data->isAdmin = (boolean)$data->isAdmin;
+		$data->moderation = (bool)$data->moderation;
+		$data->isAdmin = (bool)$data->isAdmin;
 		$data->id = (int)$data->id;
 		$data->issueid = (int)$data->issueid;
-		if(isset($data->parentid))
-		{
+		if (isset($data->parentid)) {
 			$data->parentid = (int)$data->parentid;
 		}
 		$data->state = (int)$data->state;
@@ -159,12 +148,11 @@ class ImcFrontendHelper
 
 	public static function sanitizeComments($data, $userid)
 	{
-		if(!is_array($data)){
+		if (!is_array($data)) {
 			throw new Exception('Comments sanitization bad input');
 		}
 
-		foreach ($data as &$comment)
-		{
+		foreach ($data as &$comment) {
 			self::sanitizeComment($comment, $userid);
 		}
 
@@ -173,48 +161,44 @@ class ImcFrontendHelper
 
 	public static function sanitizeIssue($data, $userid)
 	{
-		if(!is_object($data)){
-            throw new Exception('Issue sanitization bad input');
-        }
-        //unset overhead
-        unset($data->asset_id);
-        unset($data->ordering);
-        unset($data->checked_out);
-        unset($data->checked_out_time);
-        unset($data->access);
-        unset($data->language);
-        unset($data->note);
-        unset($data->modality);
-        unset($data->updated_by);
+		if (!is_object($data)) {
+			throw new Exception('Issue sanitization bad input');
+		}
+		//unset overhead
+		unset($data->asset_id);
+		unset($data->ordering);
+		unset($data->checked_out);
+		unset($data->checked_out_time);
+		unset($data->access);
+		unset($data->language);
+		unset($data->note);
+		unset($data->modality);
+		unset($data->updated_by);
 		unset($data->access_level);
 		unset($data->editor);
 
-		if($data->category_image != '')
-		{
+		if ($data->category_image != '') {
 			$data->category_image = JUri::base() . str_replace('%2F', '/', rawurlencode($data->category_image));
 		}
 
-        //separate photos and file attachments
-        $obj = json_decode($data->photo);
+		//separate photos and file attachments
+		$obj = json_decode($data->photo);
 		unset($data->photo);
 
 		$data->photos = array();
 		$data->attachments = array();
 
-		if(is_object($obj)) {
+		if (is_object($obj)) {
 			foreach ($obj->files as $file) {
 				unset($file->deleteType);
 				unset($file->deleteUrl);
 
-				if (isset($file->thumbnailUrl))
-				{
+				if (isset($file->thumbnailUrl)) {
 					$file->url = JUri::base() . 'images/imc/' . $data->id . '/' . rawurlencode($file->name);
 					$file->mediumUrl = JUri::base() . 'images/imc/' . $data->id . '/medium/' . rawurlencode($file->name);
 					$file->thumbnailUrl = JUri::base() . 'images/imc/' . $data->id . '/thumbnail/' . rawurlencode($file->name);
 					array_push($data->photos, $file);
-				}
-				elseif(isset($file->url))
-				{
+				} elseif (isset($file->url)) {
 					$file->url = JUri::base() . 'images/imc/' . $data->id . '/' . rawurlencode($file->name);
 					array_push($data->attachments, $file);
 				}
@@ -223,10 +207,10 @@ class ImcFrontendHelper
 			unset($obj->imagedir);
 		}
 
-        //set dates to server timezone
-        $data->created_TZ = $data->created == '0000-00-00 00:00:00' ? $data->created : self::convertFromUTC($data->created);
-        $data->updated_TZ = $data->updated == '0000-00-00 00:00:00' ? $data->updated : self::convertFromUTC($data->updated);
-        $data->regdate_TZ = $data->regdate == '0000-00-00 00:00:00' ? $data->regdate : self::convertFromUTC($data->regdate);
+		//set dates to server timezone
+		$data->created_TZ = $data->created == '0000-00-00 00:00:00' ? $data->created : self::convertFromUTC($data->created);
+		$data->updated_TZ = $data->updated == '0000-00-00 00:00:00' ? $data->updated : self::convertFromUTC($data->updated);
+		$data->regdate_TZ = $data->regdate == '0000-00-00 00:00:00' ? $data->regdate : self::convertFromUTC($data->regdate);
 		$data->created_ts = $data->created == '0000-00-00 00:00:00' ? 1 :  strtotime($data->created_TZ);
 		$data->updated_ts = $data->updated == '0000-00-00 00:00:00' ? 1 :  strtotime($data->updated_TZ);
 
@@ -235,7 +219,7 @@ class ImcFrontendHelper
 		$params = JFactory::getApplication()->getParams('com_imc');
 
 		//do the casting
-		$data->moderation = (boolean)$data->moderation;
+		$data->moderation = (bool)$data->moderation;
 		$data->id = (int)$data->id;
 		$data->stepid = (int)$data->stepid;
 		$data->catid = (int)$data->catid;
@@ -244,16 +228,13 @@ class ImcFrontendHelper
 		$data->hits = (int)$data->hits;
 		$data->votes = (int)$data->votes;
 		$data->subgroup = (int)$data->subgroup;
-		if(isset($data->children_count))
-		{
+		if (isset($data->children_count)) {
 			$data->children_count = (int)$data->children_count;
 		}
-		if(isset($data->comments))
-		{
+		if (isset($data->comments)) {
 			//check if comments are allowed
 			$showComments = self::showComments(JFactory::getUser($userid), $data);
-			if (!$showComments)
-			{
+			if (!$showComments) {
 				$data->comments = -1;
 			}
 			$data->comments = (int)$data->comments;
@@ -262,13 +243,11 @@ class ImcFrontendHelper
 		//check confidentiality and sanitize logs
 
 
-		if(isset($data->timeline))
-		{
+		if (isset($data->timeline)) {
 			$data->timeline = self::sanitizeLogs($data->timeline);
 		}
 
-		if ($params->get('showuserdetailstimeline') == 0)
-		{
+		if ($params->get('showuserdetailstimeline') == 0) {
 			$data->created_by_name = null;
 		}
 
@@ -277,17 +256,16 @@ class ImcFrontendHelper
 
 	public static function sanitizeLogs($data)
 	{
-		if(!is_array($data)){
+		if (!is_array($data)) {
 			throw new Exception('Logs sanitization bad input');
 		}
 		$params = JFactory::getApplication()->getParams('com_imc');
-		$showName = (boolean) $params->get('showadmindetailstimeline');
+		$showName = (bool) $params->get('showadmindetailstimeline');
 
-		foreach ($data as &$tl)
-		{
+		foreach ($data as &$tl) {
 			$tl['created_TZ'] = $tl['created'] == '0000-00-00 00:00:00' ? $tl['created'] : self::convertFromUTC($tl['created']);
 			$tl['created_ts'] = $tl['created'] == '0000-00-00 00:00:00' ? 1 :  strtotime($tl['created']);
-			if(!$showName){
+			if (!$showName) {
 				$tl['created_by'] = null;
 			}
 		}
@@ -297,12 +275,11 @@ class ImcFrontendHelper
 
 	public static function sanitizeVotes($data)
 	{
-		if(!is_array($data)){
+		if (!is_array($data)) {
 			throw new Exception('Votes sanitization bad input');
 		}
 
-		foreach ($data as &$vote)
-		{
+		foreach ($data as &$vote) {
 			$vote->created_ts = $vote->created == '0000-00-00 00:00:00' ? 1 :  strtotime($vote->created);
 
 			unset($vote->id);
@@ -321,7 +298,6 @@ class ImcFrontendHelper
 			//do the casting
 			$vote->issueid = (int) $vote->issueid;
 			$vote->created_by = (int) $vote->created_by;
-
 		}
 
 		return $data;
@@ -329,12 +305,11 @@ class ImcFrontendHelper
 
 	public static function sanitizeModifiedVotes($data)
 	{
-		if(!is_array($data)){
+		if (!is_array($data)) {
 			throw new Exception('Modified votes sanitization bad input');
 		}
 
-		foreach ($data as &$vote)
-		{
+		foreach ($data as &$vote) {
 			//do the casting
 			$vote['issueid'] = (int) $vote['issueid'];
 			$vote['votes'] = (int) $vote['votes'];
@@ -345,17 +320,15 @@ class ImcFrontendHelper
 
 	public static function sanitizeSteps($data, $extensive = false)
 	{
-		if(!is_array($data)){
+		if (!is_array($data)) {
 			throw new Exception('Steps sanitization bad input');
 		}
 
 		$steps = array();
 
-		foreach ($data as $step)
-		{
+		foreach ($data as $step) {
 			$step = self::sanitizeStep($step);
-			if($extensive)
-			{
+			if ($extensive) {
 				unset($step->updated_ts);
 				unset($step->description);
 			}
@@ -366,12 +339,11 @@ class ImcFrontendHelper
 
 	public static function sanitizeCategories($data)
 	{
-		if(!is_array($data)){
+		if (!is_array($data)) {
 			throw new Exception('Categories sanitization bad input');
 		}
 
-		foreach ($data as &$category)
-		{
+		foreach ($data as &$category) {
 			$category['id'] = (int) $category['id'];
 			$category['state'] = (int) $category['state'];
 		}
@@ -380,7 +352,7 @@ class ImcFrontendHelper
 
 	public static function sanitizeStep($data)
 	{
-		if(!is_object($data)){
+		if (!is_object($data)) {
 			throw new Exception('Step sanitization bad input');
 		}
 		//unset overhead
@@ -406,7 +378,7 @@ class ImcFrontendHelper
 
 	public static function sanitizeCalendar($data)
 	{
-		if(!is_array($data)){
+		if (!is_array($data)) {
 			throw new Exception('Calendar sanitization bad input');
 		}
 
@@ -425,12 +397,10 @@ class ImcFrontendHelper
 			$d['Oct'] = (int)$d['Oct'];
 			$d['Nov'] = (int)$d['Nov'];
 			$d['Dec'] = (int)$d['Dec'];
-			if(isset($d['stepid']))
-			{
+			if (isset($d['stepid'])) {
 				$d['stepid'] = (int)$d['stepid'];
 			}
-			if(isset($d['catid']))
-			{
+			if (isset($d['catid'])) {
 				$d['catid'] = (int)$d['catid'];
 			}
 		}
@@ -440,7 +410,7 @@ class ImcFrontendHelper
 
 	public static function sanitizeDailyCalendar($data, $year, $month)
 	{
-		if(!is_array($data)){
+		if (!is_array($data)) {
 			throw new Exception('Daily Calendar sanitization bad input');
 		}
 
@@ -479,29 +449,24 @@ class ImcFrontendHelper
 			$d['30'] = (int)$d['30'];
 			$d['31'] = (int)$d['31'];
 
-			if(isset($d['stepid']))
-			{
+			if (isset($d['stepid'])) {
 				$d['stepid'] = (int)$d['stepid'];
 			}
-			if(isset($d['catid']))
-			{
+			if (isset($d['catid'])) {
 				$d['catid'] = (int)$d['catid'];
 			}
 
 			$has30 = array(4, 6, 9, 11);
-			$leap = array(2000, 2004, 2008,2012, 2016, 2020, 2024, 2028, 2032, 2036, 2040);
+			$leap = array(2000, 2004, 2008, 2012, 2016, 2020, 2024, 2028, 2032, 2036, 2040);
 			//I'll be retired by then... let someone else add the next leap year or implement a decent algorithm :)
 
-			if(in_array($month, $has30))
-			{
+			if (in_array($month, $has30)) {
 				unset($d['31']);
 			}
-			if($month == 2)
-			{
+			if ($month == 2) {
 				unset($d['31']);
 				unset($d['30']);
-				if(!in_array($year, $leap))
-				{
+				if (!in_array($year, $leap)) {
 					unset($d['29']);
 				}
 			}
@@ -520,15 +485,14 @@ class ImcFrontendHelper
 			->from('#__categories AS a')
 			->where('extension = ' . $db->quote('com_imc'))
 			->order('lft asc')
-            ->where('a.modified_time >= "' . $ts . '"');
+			->where('a.modified_time >= "' . $ts . '"');
 
 		$db->setQuery($query);
 		$result = $db->loadAssocList();
 		foreach ($result as &$category) {
 			$params = json_decode($category['params']);
 			$category['image'] = $params->image;
-			if($category['image'])
-			{
+			if ($category['image']) {
 				$category['image'] = JUri::base() . $category['image'];
 			}
 			$category['parentid'] = $category['parent_id'] == "root" ? 1 : (int) $category['parent_id'];
@@ -545,8 +509,7 @@ class ImcFrontendHelper
 		self::$_parent = $categories->get();
 		if (is_object(self::$_parent)) {
 			self::$_items = self::$_parent->getChildren($recursive);
-		}
-		else {
+		} else {
 			self::$_items = false;
 		}
 
@@ -555,12 +518,10 @@ class ImcFrontendHelper
 
 	protected static function loadCats($cats = array())
 	{
-		if(is_array($cats))
-		{
+		if (is_array($cats)) {
 			$i = 0;
 			$return = array();
-			foreach($cats as $JCatNode)
-			{
+			foreach ($cats as $JCatNode) {
 				$return[$i] = new stdClass();
 				$return[$i]->title = $JCatNode->title;
 				$return[$i]->parentid = $JCatNode->parent_id == "root" ? 1 : (int) $JCatNode->parent_id;
@@ -571,12 +532,11 @@ class ImcFrontendHelper
 				$params = json_decode($JCatNode->params);
 
 				$return[$i]->image = $params->image;
-				if($return[$i]->image)
-				{
+				if ($return[$i]->image) {
 					$return[$i]->image = JUri::base() . $return[$i]->image;
 				}
 
-				if($JCatNode->hasChildren())
+				if ($JCatNode->hasChildren())
 					$return[$i]->children = self::loadCats($JCatNode->getChildren());
 				else
 					$return[$i]->children = array();
@@ -591,17 +551,18 @@ class ImcFrontendHelper
 	public static function isValidTimeStamp($timestamp)
 	{
 		return ((string) (int) $timestamp === $timestamp)
-		&& ($timestamp <= PHP_INT_MAX)
-		&& ($timestamp >= ~PHP_INT_MAX);
+			&& ($timestamp <= PHP_INT_MAX)
+			&& ($timestamp >= ~PHP_INT_MAX);
 	}
 
 	/**
-	* Get category name using category ID
-	* @param integer $category_id Category ID
-	* @param boolean $publishedOnly Take into account category state
-	* @return mixed category name if category is found, null otherwise
-	*/
-	public static function getCategoryNameByCategoryId($category_id, $publishedOnly = false) {
+	 * Get category name using category ID
+	 * @param integer $category_id Category ID
+	 * @param boolean $publishedOnly Take into account category state
+	 * @return mixed category name if category is found, null otherwise
+	 */
+	public static function getCategoryNameByCategoryId($category_id, $publishedOnly = false)
+	{
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
 
@@ -611,8 +572,7 @@ class ImcFrontendHelper
 			->where('extension = ' . $db->quote('com_imc'))
 			->where('id = ' . intval($category_id));
 
-		if($publishedOnly)
-		{
+		if ($publishedOnly) {
 			$query->where('published = 1');
 		}
 
@@ -621,11 +581,12 @@ class ImcFrontendHelper
 	}
 
 	/**
-	* Get step name using step ID
-	* @param integer $stepid Step ID
-	* @return step name and color if step is found, null otherwise
-	*/
-	public static function getStepByStepId($stepid) {
+	 * Get step name using step ID
+	 * @param integer $stepid Step ID
+	 * @return step name and color if step is found, null otherwise
+	 */
+	public static function getStepByStepId($stepid)
+	{
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
 
@@ -663,7 +624,7 @@ class ImcFrontendHelper
 			->where('id = ' . intval($group_id));
 
 		$db->setQuery($query);
-		return $db->loadResult();	
+		return $db->loadResult();
 	}
 
 	public static function emailExists($email)
@@ -672,7 +633,7 @@ class ImcFrontendHelper
 		$query = $db->getQuery(true);
 		$query->select('COUNT(*)');
 		$query->from($db->quoteName('#__users'));
-		$query->where($db->quoteName('email')." = ".$db->quote($email));
+		$query->where($db->quoteName('email') . " = " . $db->quote($email));
 
 		$db->setQuery($query);
 		$count = $db->loadResult();
@@ -688,14 +649,12 @@ class ImcFrontendHelper
 		//try to align input with available language
 		$availLanguages = $lang->getKnownLanguages();
 		foreach ($availLanguages as $key => $value) {
-			if($language == substr($key, 0, 2))
-			{
+			if ($language == substr($key, 0, 2)) {
 				$joomlaLang = $key;
 			}
 		}
 
-		if(is_null($joomlaLang))
-		{
+		if (is_null($joomlaLang)) {
 			$joomlaLang = JFactory::getLanguage()->getDefault();
 		}
 
@@ -710,14 +669,14 @@ class ImcFrontendHelper
 
 	public static function getRelativeTime($time)
 	{
-		if(strtotime($time) <= 0)
+		if (strtotime($time) <= 0)
 			return '';
 
 		$time = ImcFrontendHelper::convertFromUTC($time);
 
 		// Load the parameters.
 		$app = JFactory::getApplication();
-/*		$params	= $app->getParams();
+		/*		$params	= $app->getParams();
 		$showrelativedates = $params->get('showrelativedates');		
 		$dateformat = $params->get('dateformat');		
 		
@@ -725,102 +684,88 @@ class ImcFrontendHelper
 			//$item->reported_rel = date("d/m/Y",strtotime($item->reported));
 			return date($dateformat,strtotime($time));
 		}
-*/		
+*/
 		$SECOND = 1;
 		$MINUTE = 60 * $SECOND;
 		$HOUR = 60 * $MINUTE;
 		$DAY = 24 * $HOUR;
 		$MONTH = 30 * $DAY;
- 
+
 		$delta = time() - strtotime($time);
-		
-		if ($delta < 1 * $MINUTE)
-		{
+
+		if ($delta < 1 * $MINUTE) {
 			return $delta == 1 ? JText::_('ONE_SECOND_AGO') : sprintf(JText::_('SECONDS_AGO'), $delta);
 		}
-		if ($delta < 2 * $MINUTE)
-		{
-		  return JText::_('A_MINUTE_AGO');
+		if ($delta < 2 * $MINUTE) {
+			return JText::_('A_MINUTE_AGO');
 		}
-		if ($delta < 45 * $MINUTE)
-		{
+		if ($delta < 45 * $MINUTE) {
 			return sprintf(JText::_('MINUTES_AGO'), floor($delta / $MINUTE));
 		}
-		if ($delta < 90 * $MINUTE)
-		{
-		  return JText::_('AN_HOUR_AGO');
+		if ($delta < 90 * $MINUTE) {
+			return JText::_('AN_HOUR_AGO');
 		}
-		if ($delta < 24 * $HOUR)
-		{
-		  return sprintf(JText::_('HOURS_AGO'), floor($delta / $HOUR));
+		if ($delta < 24 * $HOUR) {
+			return sprintf(JText::_('HOURS_AGO'), floor($delta / $HOUR));
 		}
-		if ($delta < 48 * $HOUR)
-		{
-		  return JText::_('YESTERDAY');
+		if ($delta < 48 * $HOUR) {
+			return JText::_('YESTERDAY');
 		}
-		if ($delta < 30 * $DAY)
-		{
+		if ($delta < 30 * $DAY) {
 			return sprintf(JText::_('DAYS_AGO'), floor($delta / $DAY));
 		}
-		if ($delta < 12 * $MONTH)
-		{
-		  $months = floor($delta / $DAY / 30);
-		  return $months <= 1 ? JText::_('ONE_MONTH_AGO') : sprintf(JText::_('MONTHS_AGO'), $months);
-		}
-		else
-		{
+		if ($delta < 12 * $MONTH) {
+			$months = floor($delta / $DAY / 30);
+			return $months <= 1 ? JText::_('ONE_MONTH_AGO') : sprintf(JText::_('MONTHS_AGO'), $months);
+		} else {
 			$years = floor($delta / $DAY / 365);
-			if($years < 100)	//TODO: needed for versions older than PHP5.3
+			if ($years < 100)	//TODO: needed for versions older than PHP5.3
 				return $years <= 1 ? JText::_('ONE_YEAR_AGO') : sprintf(JText::_('YEARS_AGO'), $years);
 			else
 				return '';
 		}
-
 	}
 
 	public static function cutString($title, $max)
 	{
-	    if($title=='')
-	        return '';
+		if ($title == '')
+			return '';
 
-	    if(is_array($title)) list($string, $match_to) = $title;
-	    else { $string = $title; $match_to = $title{0}; }
-	 
-	    $match_start = stristr($string, $match_to);
-	    $match_compute = strlen($string) - strlen($match_start);
-	 
-	    if (strlen($string) > $max)
-	    {
-	        if ($match_compute < ($max - strlen($match_to)))
-	        {
-	            $pre_string = substr($string, 0, $max);
-	            $pos_end = strrpos($pre_string, " ");
-	            if($pos_end === false) $string = $pre_string."...";
-	            else $string = substr($pre_string, 0, $pos_end)."...";
-	        }
-	        else if ($match_compute > (strlen($string) - ($max - strlen($match_to))))
-	        {
-	            $pre_string = substr($string, (strlen($string) - ($max - strlen($match_to))));
-	            $pos_start = strpos($pre_string, " ");
-	            $string = "...".substr($pre_string, $pos_start);
-	            if($pos_start === false) $string = "...".$pre_string;
-	            else $string = "...".substr($pre_string, $pos_start);
-	        }
-	        else
-	        {
-	            $pre_string = substr($string, ($match_compute - round(($max / 3))), $max);
-	            $pos_start = strpos($pre_string, " "); $pos_end = strrpos($pre_string, " ");
-	            $string = "...".substr($pre_string, $pos_start, $pos_end)."...";
-	            if($pos_start === false && $pos_end === false) $string = "...".$pre_string."...";
-	            else $string = "...".substr($pre_string, $pos_start, $pos_end)."...";
-	        }
-	 
-	        $match_start = stristr($string, $match_to);
-	        $match_compute = strlen($string) - strlen($match_start);
-	    }
-	 
-	    return $string;
+		if (is_array($title)) list($string, $match_to) = $title;
+		else {
+			$string = $title;
+			$match_to = $title[0];
+		}
 
+		$match_start = stristr($string, $match_to);
+		$match_compute = strlen($string) - strlen($match_start);
+
+		if (strlen($string) > $max) {
+			if ($match_compute < ($max - strlen($match_to))) {
+				$pre_string = substr($string, 0, $max);
+				$pos_end = strrpos($pre_string, " ");
+				if ($pos_end === false) $string = $pre_string . "...";
+				else $string = substr($pre_string, 0, $pos_end) . "...";
+			} else if ($match_compute > (strlen($string) - ($max - strlen($match_to)))) {
+				$pre_string = substr($string, (strlen($string) - ($max - strlen($match_to))));
+				$pos_start = strpos($pre_string, " ");
+				$string = "..." . substr($pre_string, $pos_start);
+				if ($pos_start === false) $string = "..." . $pre_string;
+				else $string = "..." . substr($pre_string, $pos_start);
+			} else {
+				$pre_string = substr($string, ($match_compute - round(($max / 3))), $max);
+				$pos_start = strpos($pre_string, " ");
+				$pos_end = strrpos($pre_string, " ");
+				$string = "..." . substr($pre_string, $pos_start, $pos_end) . "...";
+				if ($pos_start === false && $pos_end === false) $string = "..." . $pre_string . "...";
+				else $string = "..." . substr($pre_string, $pos_start, $pos_end) . "...";
+			}
+
+			$match_start = stristr($string, $match_to);
+			$match_compute = strlen($string) - strlen($match_start);
+		}
+
+		return $string;
 	}
 
 	public static function getModifiedVotes($ts = null)
@@ -833,7 +778,7 @@ class ImcFrontendHelper
 			a.id IN (
 				SELECT DISTINCT b.issueid
 				FROM #__imc_votes AS b
-				WHERE b.updated >= "'.$ts.'"
+				WHERE b.updated >= "' . $ts . '"
 			)
 		');
 
@@ -857,23 +802,19 @@ class ImcFrontendHelper
 		$query->where('a.state = 1');
 		$query->group('a.created_by');
 		$query->order('count_issues DESC');
-		if(!is_null($limit) && $limit > 0)
-		{
+		if (!is_null($limit) && $limit > 0) {
 			$query->setlimit($limit);
 		}
-		if(!is_null($ts))
-		{
+		if (!is_null($ts)) {
 			//$query->where('UNIX_TIMESTAMP(a.updated) >= ' . $ts);
-			$query->where('a.created >= "' . $ts .'"');
+			$query->where('a.created >= "' . $ts . '"');
 		}
-		if(!is_null($prior_to))
-		{
+		if (!is_null($prior_to)) {
 			//$query->where('UNIX_TIMESTAMP(a.updated) <= ' . $prior_to);
-			$query->where('a.created <= "' . $prior_to .'"');
+			$query->where('a.created <= "' . $prior_to . '"');
 		}
-		if(!is_null($ids))
-		{
-			$query->where('a.id IN ('.$ids.')');
+		if (!is_null($ids)) {
+			$query->where('a.id IN (' . $ids . ')');
 		}
 
 		$db->setQuery($query);
@@ -891,23 +832,19 @@ class ImcFrontendHelper
 		$query->where('a.state = 1');
 		$query->group('a.catid');
 		$query->order('count_issues DESC');
-		if(!is_null($limit) && $limit > 0)
-		{
+		if (!is_null($limit) && $limit > 0) {
 			$query->setlimit($limit);
 		}
-		if(!is_null($ts))
-		{
+		if (!is_null($ts)) {
 			//$query->where('UNIX_TIMESTAMP(a.updated) >= ' . $ts);
-			$query->where('a.created >= "' . $ts .'"');
+			$query->where('a.created >= "' . $ts . '"');
 		}
-		if(!is_null($prior_to))
-		{
+		if (!is_null($prior_to)) {
 			//$query->where('UNIX_TIMESTAMP(a.updated) <= ' . $prior_to);
-			$query->where('a.created <= "' . $prior_to .'"');
+			$query->where('a.created <= "' . $prior_to . '"');
 		}
-		if(!is_null($ids))
-		{
-			$query->where('a.id IN ('.$ids.')');
+		if (!is_null($ids)) {
+			$query->where('a.id IN (' . $ids . ')');
 		}
 
 		$db->setQuery($query);
@@ -926,23 +863,19 @@ class ImcFrontendHelper
 		$query->group('a.stepid');
 		$query->order('b.ordering ASC');
 		$query->order('count_issues DESC');
-		if(!is_null($limit) && $limit > 0)
-		{
+		if (!is_null($limit) && $limit > 0) {
 			$query->setlimit($limit);
 		}
-		if(!is_null($ts))
-		{
+		if (!is_null($ts)) {
 			//$query->where('UNIX_TIMESTAMP(a.updated) >= ' . $ts);
-			$query->where('a.created >= "' . $ts .'"');
+			$query->where('a.created >= "' . $ts . '"');
 		}
-		if(!is_null($prior_to))
-		{
+		if (!is_null($prior_to)) {
 			//$query->where('UNIX_TIMESTAMP(a.updated) <= ' . $prior_to);
-			$query->where('a.created <= "' . $prior_to .'"');
+			$query->where('a.created <= "' . $prior_to . '"');
 		}
-		if(!is_null($ids))
-		{
-			$query->where('a.id IN ('.$ids.')');
+		if (!is_null($ids)) {
+			$query->where('a.id IN (' . $ids . ')');
 		}
 
 		$db->setQuery($query);
@@ -961,23 +894,19 @@ class ImcFrontendHelper
 		$query->group('a.created_by');
 		$query->order('count_votes DESC');
 
-		if(!is_null($limit) && $limit > 0)
-		{
+		if (!is_null($limit) && $limit > 0) {
 			$query->setlimit($limit);
 		}
-		if(!is_null($ts))
-		{
+		if (!is_null($ts)) {
 			//$query->where('UNIX_TIMESTAMP(a.updated) >= ' . $ts);
-			$query->where('a.created >= "' . $ts .'"');
+			$query->where('a.created >= "' . $ts . '"');
 		}
-		if(!is_null($prior_to))
-		{
+		if (!is_null($prior_to)) {
 			//$query->where('UNIX_TIMESTAMP(a.updated) <= ' . $prior_to);
-			$query->where('a.created <= "' . $prior_to .'"');
+			$query->where('a.created <= "' . $prior_to . '"');
 		}
-		if(!is_null($ids))
-		{
-			$query->where('a.id IN ('.$ids.')');
+		if (!is_null($ids)) {
+			$query->where('a.id IN (' . $ids . ')');
 		}
 
 		$db->setQuery($query);
@@ -996,23 +925,19 @@ class ImcFrontendHelper
 		$query->group('a.created_by');
 		$query->order('count_comments DESC');
 
-		if(!is_null($limit) && $limit > 0)
-		{
+		if (!is_null($limit) && $limit > 0) {
 			$query->setlimit($limit);
 		}
-		if(!is_null($ts))
-		{
+		if (!is_null($ts)) {
 			//$query->where('UNIX_TIMESTAMP(a.updated) >= ' . $ts);
-			$query->where('a.created >= "' . $ts .'"');
+			$query->where('a.created >= "' . $ts . '"');
 		}
-		if(!is_null($prior_to))
-		{
+		if (!is_null($prior_to)) {
 			//$query->where('UNIX_TIMESTAMP(a.updated) <= ' . $prior_to);
-			$query->where('a.created <= "' . $prior_to .'"');
+			$query->where('a.created <= "' . $prior_to . '"');
 		}
-		if(!is_null($ids))
-		{
-			$query->where('a.id IN ('.$ids.')');
+		if (!is_null($ids)) {
+			$query->where('a.id IN (' . $ids . ')');
 		}
 
 		$db->setQuery($query);
@@ -1051,17 +976,14 @@ class ImcFrontendHelper
 		$query->join('LEFT', '#__categories AS b ON b.id = a.catid');
 		$query->where('a.state=1');
 		$keywords = $db->Quote('%' . $db->escape($keywords, true) . '%');
-		$query->where('( c.description LIKE '.$keywords.' )');
-		if(!is_null($ts))
-		{
-			$query->where('a.created >= "' . $ts .'"');
+		$query->where('( c.description LIKE ' . $keywords . ' )');
+		if (!is_null($ts)) {
+			$query->where('a.created >= "' . $ts . '"');
 		}
-		if(!is_null($prior_to))
-		{
-			$query->where('a.created <= "' . $prior_to .'"');
+		if (!is_null($prior_to)) {
+			$query->where('a.created <= "' . $prior_to . '"');
 		}
-		if(!is_null($limit) && $limit > 0)
-		{
+		if (!is_null($limit) && $limit > 0) {
 			$query->setlimit($limit);
 		}
 		$db->setQuery($query);
@@ -1069,17 +991,13 @@ class ImcFrontendHelper
 		$items = $db->loadAssocList();
 
 		//replicate issues models getItems()
-		foreach ($items as &$item)
-		{
+		foreach ($items as &$item) {
 			$item['created_by_name'] = JFactory::getUser($item['created_by'])->name;
 			$prms = json_decode($item['catid_params']);
 			unset($item['catid_params']);
-			if (isset($prms->image))
-			{
+			if (isset($prms->image)) {
 				$item['category_image'] = $prms->image;
-			}
-			else
-			{
+			} else {
 				$item['category_image'] = '';
 			}
 		}
@@ -1097,17 +1015,14 @@ class ImcFrontendHelper
 		$query->join('LEFT', '#__categories AS b ON b.id = a.catid');
 		$query->where('a.state=1');
 		$keywords = $db->Quote('%' . $db->escape($keywords, true) . '%');
-		$query->where('( a.' . $field .' LIKE '.$keywords.' )');
-		if(!is_null($ts))
-		{
-			$query->where('a.created >= "' . $ts .'"');
+		$query->where('( a.' . $field . ' LIKE ' . $keywords . ' )');
+		if (!is_null($ts)) {
+			$query->where('a.created >= "' . $ts . '"');
 		}
-		if(!is_null($prior_to))
-		{
-			$query->where('a.created <= "' . $prior_to .'"');
+		if (!is_null($prior_to)) {
+			$query->where('a.created <= "' . $prior_to . '"');
 		}
-		if(!is_null($limit) && $limit > 0)
-		{
+		if (!is_null($limit) && $limit > 0) {
 			$query->setlimit($limit);
 		}
 		$db->setQuery($query);
@@ -1115,17 +1030,13 @@ class ImcFrontendHelper
 		$items = $db->loadAssocList();
 
 		//replicate issues models getItems()
-		foreach ($items as &$item)
-		{
+		foreach ($items as &$item) {
 			$item['created_by_name'] = JFactory::getUser($item['created_by'])->name;
 			$prms = json_decode($item['catid_params']);
 			unset($item['catid_params']);
-			if (isset($prms->image))
-			{
+			if (isset($prms->image)) {
 				$item['category_image'] = $prms->image;
-			}
-			else
-			{
+			} else {
 				$item['category_image'] = '';
 			}
 		}
@@ -1137,8 +1048,7 @@ class ImcFrontendHelper
 	{
 		foreach ($in as &$comment) {
 			$obj = new stdClass();
-			foreach ($comment as $key => $value)
-			{
+			foreach ($comment as $key => $value) {
 				$obj->$key = $value;
 			}
 			$comment = $obj;
@@ -1171,8 +1081,8 @@ class ImcFrontendHelper
 		$counter = 0;
 		$total = $monthsDiff;
 
-		foreach($period as $dt) {
-			if($counter < $total) {
+		foreach ($period as $dt) {
+			if ($counter < $total) {
 				$startDate = $dt->format("Y-m-01 00:00:00");
 				$newDate = $startDate;
 				$newDatetime = new DateTime($newDate);
@@ -1181,22 +1091,21 @@ class ImcFrontendHelper
 
 				$alias = $dt->format("M-y");
 
-				$countStr .= 'COUNT(CASE WHEN a.created >= "'.$startDate.'" AND a.created < "'.$endDate.'" THEN a.id END) AS `'.$alias.'`,';
+				$countStr .= 'COUNT(CASE WHEN a.created >= "' . $startDate . '" AND a.created < "' . $endDate . '" THEN a.id END) AS `' . $alias . '`,';
 				$counter++;
 			}
 		}
 
-		if(!empty($countStr)) {
-			$countStr = ' '.rtrim($countStr, ",").' ';
+		if (!empty($countStr)) {
+			$countStr = ' ' . rtrim($countStr, ",") . ' ';
 		}
 
 		$query->select($countStr);
 		$query->from('#__imc_issues AS a');
-		$query->where('a.state=1 AND (a.created BETWEEN "' . $ts .'" AND "' . $endDate .'")');
+		$query->where('a.state=1 AND (a.created BETWEEN "' . $ts . '" AND "' . $endDate . '")');
 		$query->order('a.catid');
 
-		switch($field)
-		{
+		switch ($field) {
 			case 'stepid':
 				$query->select('b.title, b.stepcolor, a.stepid');
 				$query->join('LEFT', '#__imc_steps AS b ON b.id = a.stepid');
@@ -1258,8 +1167,7 @@ class ImcFrontendHelper
 		$query->where('MONTH(a.created) = ' . $month);
 		$query->group('MONTH(a.created)');
 
-		switch($field)
-		{
+		switch ($field) {
 			case 'stepid':
 				$query->select('b.title, b.stepcolor, a.stepid');
 				$query->join('LEFT', '#__imc_steps AS b ON b.id = a.stepid');
@@ -1275,8 +1183,8 @@ class ImcFrontendHelper
 		$db->setQuery($query);
 		return $db->loadAssocList();
 	}
-    
-    public static function intervals($by_step = false, $by_category = false, $ts = null, $prior_to = null, $for_perf = null)
+
+	public static function intervals($by_step = false, $by_category = false, $ts = null, $prior_to = null, $for_perf = null)
 	{
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
@@ -1288,23 +1196,20 @@ class ImcFrontendHelper
 			$query->select('AVG(step_days_diff) AS avg_days, MIN(step_days_diff) AS min_days, MAX(step_days_diff) AS max_days, COUNT(issueid) AS count_issues');
 		}
 
-		if($for_perf == true)
-		{
+		if ($for_perf == true) {
 			$query->from('
 			(
 				SELECT #__imc_log.issueid, #__imc_log.stepid, #__imc_issues.catid, #__imc_log.created, #__imc_log.step_days_diff
 				FROM #__imc_log INNER JOIN #__imc_issues ON #__imc_log.issueid = #__imc_issues.id
 				WHERE #__imc_log.state = 1 AND
-					#__imc_log.action = "step" '.
-						$days_diff_string .
-						(!is_null($ts) ? ' AND #__imc_issues.created >= "' . $ts .'"' : '').
-						(!is_null($prior_to) ? ' AND #__imc_issues.created <= "' . $prior_to .'"' : '').'
+					#__imc_log.action = "step" ' .
+				$days_diff_string .
+				(!is_null($ts) ? ' AND #__imc_issues.created >= "' . $ts . '"' : '') .
+				(!is_null($prior_to) ? ' AND #__imc_issues.created <= "' . $prior_to . '"' : '') . '
 				ORDER BY #__imc_log.issueid
 			) AS intervals
 			');
-		}
-		else 
-		{
+		} else {
 			$query->from('
 			(
 				SELECT MAX(stepid) AS stepid, issueid, catid
@@ -1312,32 +1217,29 @@ class ImcFrontendHelper
 						SELECT #__imc_log.issueid as issueid, #__imc_log.stepid as stepid, #__imc_issues.catid AS catid, #__imc_log.created as created
 						FROM #__imc_log INNER JOIN #__imc_issues ON #__imc_log.issueid = #__imc_issues.id
 						WHERE #__imc_log.state = 1 AND #__imc_issues.state = 1 AND
-							#__imc_log.action = "step" '.
-							$days_diff_string .
-							(!is_null($ts) ? ' AND #__imc_issues.created >= "' . $ts .'"' : '').
-							(!is_null($prior_to) ? ' AND #__imc_issues.created <= "' . $prior_to .'"' : '').'
+							#__imc_log.action = "step" ' .
+				$days_diff_string .
+				(!is_null($ts) ? ' AND #__imc_issues.created >= "' . $ts . '"' : '') .
+				(!is_null($prior_to) ? ' AND #__imc_issues.created <= "' . $prior_to . '"' : '') . '
 						ORDER BY #__imc_log.issueid
 					) as foo
 
 				GROUP BY issueid  
 			) AS intervals
-			');			
+			');
 		}
 
-		if($by_step && !$by_category)
-		{
+		if ($by_step && !$by_category) {
 			$query->select('stepid, s.title AS steptitle, s.stepcolor');
 			$query->join('LEFT', '#__imc_steps AS s ON s.id = intervals.stepid');
 			$query->group('stepid');
 		}
-		if($by_category && !$by_step)
-		{
+		if ($by_category && !$by_step) {
 			$query->select('catid, c.title AS category');
 			$query->join('LEFT', '#__categories AS c ON c.id = intervals.catid');
 			$query->group('catid');
 		}
-		if($by_category && $by_step)
-		{
+		if ($by_category && $by_step) {
 			$query->select('stepid, s.title AS steptitle, s.stepcolor');
 			$query->select('catid, c.title AS category');
 			$query->join('LEFT', '#__imc_steps AS s ON s.id = intervals.stepid');
@@ -1356,16 +1258,13 @@ class ImcFrontendHelper
 			$nested = array();
 			$categories = array();
 			$cat = 'any';
-			foreach ($results as $ar)
-			{
-				if($ar['catid'] != $cat)
-				{
+			foreach ($results as $ar) {
+				if ($ar['catid'] != $cat) {
 					array_push($categories, $ar['catid']);
 				}
 				$cat = $ar['catid'];
 			}
-			foreach ($results as $ar)
-			{
+			foreach ($results as $ar) {
 				$nested[$ar['catid']][] = $ar;
 			}
 
@@ -1375,7 +1274,7 @@ class ImcFrontendHelper
 		$db->setQuery($query);
 		return $db->loadAssocList();
 	}
-	
+
 	public static function __intervals($by_step = false, $by_category = false, $ts = null, $prior_to = null)
 	{
 		$db = JFactory::getDbo();
@@ -1387,61 +1286,55 @@ class ImcFrontendHelper
 				FROM #__imc_log INNER JOIN #__imc_issues ON #__imc_log.issueid = #__imc_issues.id
 				WHERE #__imc_log.state = 1 AND
 					  #__imc_log.action = "step" AND
-					  #__imc_log.step_days_diff != "NULL" '.
-					  (!is_null($ts) ? ' AND #__imc_issues.created >= "' . $ts .'"' : '').
-					  (!is_null($prior_to) ? ' AND #__imc_issues.created <= "' . $prior_to .'"' : '').'
+					  #__imc_log.step_days_diff != "NULL" ' .
+			(!is_null($ts) ? ' AND #__imc_issues.created >= "' . $ts . '"' : '') .
+			(!is_null($prior_to) ? ' AND #__imc_issues.created <= "' . $prior_to . '"' : '') . '
 				ORDER BY #__imc_log.issueid
 			) AS intervals
 		');
-	
-		if($by_step && !$by_category)
-		{
+
+		if ($by_step && !$by_category) {
 			$query->select('stepid, s.title AS steptitle, s.stepcolor');
 			$query->join('LEFT', '#__imc_steps AS s ON s.id = intervals.stepid');
 			$query->group('stepid');
 		}
-		if($by_category && !$by_step)
-		{
+		if ($by_category && !$by_step) {
 			$query->select('catid, c.title AS category');
 			$query->join('LEFT', '#__categories AS c ON c.id = intervals.catid');
 			$query->group('catid');
 		}
-		if($by_category && $by_step)
-		{
+		if ($by_category && $by_step) {
 			$query->select('stepid, s.title AS steptitle, s.stepcolor');
 			$query->select('catid, c.title AS category');
 			$query->join('LEFT', '#__imc_steps AS s ON s.id = intervals.stepid');
 			$query->join('LEFT', '#__categories AS c ON c.id = intervals.catid');
 			$query->where('step_days_diff != "NULL"');
 			$query->group('catid, stepid');
-	
+
 			//nest steps by category
 			$db->setQuery($query);
 			$results =  $db->loadAssocList();
-	
+
 			$nested = array();
 			$categories = array();
 			$cat = 'any';
-			foreach ($results as $ar)
-			{
-				if($ar['catid'] != $cat)
-				{
+			foreach ($results as $ar) {
+				if ($ar['catid'] != $cat) {
 					array_push($categories, $ar['catid']);
 				}
 				$cat = $ar['catid'];
 			}
-			foreach ($results as $ar)
-			{
+			foreach ($results as $ar) {
 				$nested[$ar['catid']][] = $ar;
 			}
-	
+
 			return $nested;
 		}
-	
+
 		$db->setQuery($query);
 		return $db->loadAssocList();
 	}
-	
+
 	public static function getIds($data)
 	{
 		$ids = array();
@@ -1459,9 +1352,8 @@ class ImcFrontendHelper
 		$uname = $username;
 		$i = 0;
 		$name = '';
-		while($uname)
-		{
-			$name = ($i == 0) ? $username : $username.'-'.$i;
+		while ($uname) {
+			$name = ($i == 0) ? $username : $username . '-' . $i;
 
 			$query->clear();
 			$query->select($db->quoteName('username'));
@@ -1475,15 +1367,16 @@ class ImcFrontendHelper
 		return $name;
 	}
 
-	public static function getFreeMail($email){
+	public static function getFreeMail($email)
+	{
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$umail = $email;
 		$parts = explode('@', $email);
 
 		$i = 0;
-		while($umail){
-			$mail = ($i == 0) ? $email : $parts[0].'-'.$i.'@'.$parts[1];
+		while ($umail) {
+			$mail = ($i == 0) ? $email : $parts[0] . '-' . $i . '@' . $parts[1];
 
 			$query->clear();
 			$query->select($db->quoteName('email'));
@@ -1541,22 +1434,21 @@ class ImcFrontendHelper
 		$object->f_name = $f_name;
 		$object->l_name = $l_name;
 		$object->email = $email;
-		if(!is_null($phone))
-		{
+		if (!is_null($phone)) {
 			$object->phone = $phone;
 		}
-		$result = JFactory::getDbo()->updateObject('#__plg_slogin_profile', $object, array('user_id', 'slogin_id') );
+		$result = JFactory::getDbo()->updateObject('#__plg_slogin_profile', $object, array('user_id', 'slogin_id'));
 		return $result;
 	}
 
-    public static function updateUserUsername($userid, $newUsername)
-    {
-	    $object = new stdClass();
-	    $object->id = $userid;
-	    $object->username = $newUsername;
-	    $result = JFactory::getDbo()->updateObject('#__users', $object, 'id');
-	    return $result;
-    }
+	public static function updateUserUsername($userid, $newUsername)
+	{
+		$object = new stdClass();
+		$object->id = $userid;
+		$object->username = $newUsername;
+		$result = JFactory::getDbo()->updateObject('#__users', $object, 'id');
+		return $result;
+	}
 
 	public static function updateUserName($userid, $newName)
 	{
@@ -1587,8 +1479,7 @@ class ImcFrontendHelper
 		$object->provider = $provider;
 
 		$result = $db->insertObject('#__slogin_users', $object);
-		if(!$result)
-		{
+		if (!$result) {
 			throw new Exception('Cannot store new social user');
 		}
 
@@ -1607,8 +1498,7 @@ class ImcFrontendHelper
 		$object->phone = $phone;
 
 		$result = JFactory::getDbo()->insertObject('#__plg_slogin_profile', $object);
-		if(!$result)
-		{
+		if (!$result) {
 			throw new Exception('Cannot store new social user profile');
 		}
 		return $result;
@@ -1619,11 +1509,10 @@ class ImcFrontendHelper
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('`id`')
-				->from('`#__users`')
-				->where('`username` = '.$db->quote($username))
-				->where('`email` = '.$db->quote($email))
-		;
-		$userid	= (int)$db->setQuery($query,0,1)->loadResult();
+			->from('`#__users`')
+			->where('`username` = ' . $db->quote($username))
+			->where('`email` = ' . $db->quote($email));
+		$userid	= (int)$db->setQuery($query, 0, 1)->loadResult();
 		return $userid;
 	}
 
@@ -1633,32 +1522,26 @@ class ImcFrontendHelper
 		$query = $db->getQuery(true);
 		$query->select('`id`,`latitude`,`longitude`,`votes`')
 			->from('`#__imc_issues` AS a')
-			->where('state = 1')
-		;
+			->where('state = 1');
 
-		if(!is_null($minLat) && !is_null($maxLat) && !is_null($minLng) && !is_null($maxLng))
-		{
-			$query->where('a.latitude BETWEEN ' . $minLat . ' AND ' . $maxLat );
-			$query->where('a.longitude BETWEEN ' . $minLng . ' AND ' . $maxLng );
+		if (!is_null($minLat) && !is_null($maxLat) && !is_null($minLng) && !is_null($maxLng)) {
+			$query->where('a.latitude BETWEEN ' . $minLat . ' AND ' . $maxLat);
+			$query->where('a.longitude BETWEEN ' . $minLng . ' AND ' . $maxLng);
 		}
 
-		if(!is_null($ts))
-		{
+		if (!is_null($ts)) {
 			//$query->where('UNIX_TIMESTAMP(a.updated) >=' . $ts);
-			$query->where('a.updated >= "' . $ts .'"');
-
+			$query->where('a.updated >= "' . $ts . '"');
 		}
 
-		if(!is_null($prior_to))
-		{
+		if (!is_null($prior_to)) {
 			//$query->where('UNIX_TIMESTAMP(a.updated) <=' . $prior_to);
-			$query->where('a.updated <= "' . $prior_to .'"');
+			$query->where('a.updated <= "' . $prior_to . '"');
 		}
 
 		$db->setQuery($query);
 		$result = $db->loadAssocList();
 		return $result;
-
 	}
 
 	public static function showComments($user, $issue)
@@ -1671,85 +1554,77 @@ class ImcFrontendHelper
 		$ownIssue = $user->id == $issue->created_by;
 
 		//if mode is private and user is the owner of the issue then show comments
-		if ($commentsMode == 'private' && $ownIssue)
-		{
+		if ($commentsMode == 'private' && $ownIssue) {
 			$showComments = true;
-		}
-		else
-		{
+		} else {
 			$showComments = false;
 		}
 
 		//if user is comments-administrator then show the comments in any case
-		if(ImcHelper::getActions($user)->get('imc.manage.comments'))
-		{
+		if (ImcHelper::getActions($user)->get('imc.manage.comments')) {
 			$showComments = true;
 		}
 
 		//also if mode is public then show the comments in any case
-		if ($commentsMode == 'public')
-		{
+		if ($commentsMode == 'public') {
 			$showComments = true;
 		}
 
 		//finally, if comments are disabled then do not show comments in any case
-		if(!$commentsEnabled)
-		{
+		if (!$commentsEnabled) {
 			$showComments = false;
 		}
 
 		return $showComments;
 	}
 
-    public static function issuesByCategory($ts = null, $catid = null)
-    {
-        if(is_null($ts))
-        {
-            $ts = 0;
-        }
-        $db = JFactory::getDbo();
-        $query = $db->getQuery(true);
-        $query
-            ->select('a.id, a.title, a.stepid, a.description, a.address, a.latitude, a.longitude, a.state, a.created, a.updated')
-            ->from('#__imc_issues AS a')
-            ->where('a.state=1')
-            ->where('a.updated >= "' . $ts . '"');
+	public static function issuesByCategory($ts = null, $catid = null)
+	{
+		if (is_null($ts)) {
+			$ts = 0;
+		}
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+		$query
+			->select('a.id, a.title, a.stepid, a.description, a.address, a.latitude, a.longitude, a.state, a.created, a.updated')
+			->from('#__imc_issues AS a')
+			->where('a.state=1')
+			->where('a.updated >= "' . $ts . '"');
 
-        if(!is_null($catid))
-        {
-            $query->where('a.catid='.$catid);
-        }
+		if (!is_null($catid)) {
+			$query->where('a.catid=' . $catid);
+		}
 
-        $db->setQuery($query);
-        $result = $db->loadAssocList();
+		$db->setQuery($query);
+		$result = $db->loadAssocList();
 
-        return $result;
-    }
-
-    public static function countModifiedIssues($ts = 0, $limit = 0)
-    {
-	    $db = JFactory::getDbo();
-	    $query = "SELECT COUNT(b.id) FROM (SELECT a.id FROM #__imc_issues AS a WHERE a.updated >= ".$ts." LIMIT ".$limit.") AS b";
-
-	    $db->setQuery($query);
-	    $result = $db->loadResult();
-	    return $result;
+		return $result;
 	}
-	
-	public static function searchByKey($array, $key) {
+
+	public static function countModifiedIssues($ts = 0, $limit = 0)
+	{
+		$db = JFactory::getDbo();
+		$query = "SELECT COUNT(b.id) FROM (SELECT a.id FROM #__imc_issues AS a WHERE a.updated >= " . $ts . " LIMIT " . $limit . ") AS b";
+
+		$db->setQuery($query);
+		$result = $db->loadResult();
+		return $result;
+	}
+
+	public static function searchByKey($array, $key)
+	{
 		$results = array();
 
-		if(is_array($array)) {
-			if(isset($array[$key])) {
+		if (is_array($array)) {
+			if (isset($array[$key])) {
 				$results[] = $array;
 			}
 
-			foreach($array as $subarray) {
+			foreach ($array as $subarray) {
 				$results = array_merge($results, self::searchByKey($subarray, $key));
 			}
 		}
 
 		return $results;
 	}
-
 }
