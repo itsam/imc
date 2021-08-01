@@ -22,6 +22,9 @@
 			<language tag="en-GB">en-GB/en-GB.mod_imcmap.sys.ini</language>
 			<language tag="el-GR">el-GR/el-GR.mod_imcmap.ini</language>
 			<language tag="el-GR">el-GR/el-GR.mod_imcmap.sys.ini</language>
+			<language tag="es-ES">es-ES/es-ES.mod_imcmap.ini</language>
+			<language tag="es-ES">es-ES/es-ES.mod_imcmap.sys.ini</language>
+
     </languages>
     <config>
         <fields name="params">

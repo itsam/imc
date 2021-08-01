@@ -26,6 +26,8 @@
 			<language tag="it-IT">it-IT/it-IT.mod_imcfilters.sys.ini</language>            
 			<language tag="fr-FR">fr-FR/fr-FR.mod_imcfilters.ini</language>
 			<language tag="fr-FR">fr-FR/fr-FR.mod_imcfilters.sys.ini</language>            
+			<language tag="es-ES">es-ES/es-ES.mod_imcfilters.ini</language>
+			<language tag="es-ES">es-ES/es-ES.mod_imcfilters.sys.ini</language>            
 
     </languages>
     <config>
