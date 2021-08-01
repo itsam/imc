@@ -15,6 +15,7 @@
         <filename>index.html</filename>
         <filename>language/en-GB/en-GB.plg_imc_mail_notifier.sys.ini</filename>
         <filename>language/el-GR/el-GR.plg_imc_mail_notifier.sys.ini</filename>
+        <filename>language/fr-FR/fr-FR.plg_imc_mail_notifier.sys.ini</filename>
     </files>
 
     <languages folder="language">
@@ -22,6 +23,9 @@
 		<language tag="en-GB">en-GB/en-GB.plg_imc_mail_notifier.sys.ini</language>
 		<language tag="el-GR">el-GR/el-GR.plg_imc_mail_notifier.ini</language>
 		<language tag="el-GR">el-GR/el-GR.plg_imc_mail_notifier.sys.ini</language>
+		<language tag="fr-FR">fr-FR/fr-FR.plg_imc_mail_notifier.ini</language>
+		<language tag="fr-FR">fr-FR/fr-FR.plg_imc_mail_notifier.sys.ini</language>
+
     </languages>
 
     <config>
@@ -106,7 +110,8 @@
                 <field name="messagesbackend" type="radio" default="0" class="btn-group btn-group-yesno" label="PLG_IMC_MAIL_NOTIFIER_SETTINGS_SHOW_INFO_MSGS_BACKEND" description="">
                   <option value="0">JNO</option>
                   <option value="1">JYES</option>
-                </field>                    
+                </field>           
+                <field type="text" name="mail_language" label="Language" default="en-GB" />         
 
             </fieldset>
 

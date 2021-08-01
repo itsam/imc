@@ -2025,7 +2025,7 @@ class ImcControllerApi extends ImcController
 				unset($item->category_image);
 				unset($item->checked_out);
 				unset($item->checked_out_time);
-				unset($item->created_by_name);
+				//unset($item->created_by_name);
 				unset($item->stepid_color);
 				unset($item->access_level);
 
