@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @version     3.0.0
  * @package     com_imc
@@ -33,9 +34,9 @@ class JFormFieldGmap extends JFormField
 	protected $lng;
 	protected $zoom;
 	protected $icon = '';
-	
+
 	protected $mapOnly = false;
-	
+
 	/**
 	 * Method to get certain otherwise inaccessible properties from the form field object.
 	 *
@@ -47,17 +48,16 @@ class JFormFieldGmap extends JFormField
 	 */
 	public function __get($name)
 	{
-		switch ($name)
-		{
+		switch ($name) {
 			case 'latitudefield':
 			case 'longitudefield':
 			case 'width':
 			case 'height':
 			case 'lat':
 			case 'lng':
-			case 'zoom':			
-			case 'icon':			
-			case 'mapOnly':			
+			case 'zoom':
+			case 'icon':
+			case 'mapOnly':
 				return $this->$name;
 		}
 
@@ -65,7 +65,7 @@ class JFormFieldGmap extends JFormField
 	}
 
 
-/**
+	/**
 	 * Method to set certain otherwise inaccessible properties of the form field object.
 	 *
 	 * @param   string  $name   The property name for which to the the value.
@@ -77,8 +77,7 @@ class JFormFieldGmap extends JFormField
 	 */
 	public function __set($name, $value)
 	{
-		switch ($name)
-		{
+		switch ($name) {
 			case 'latitudefield':
 			case 'longitudefield':
 			case 'width':
@@ -95,7 +94,7 @@ class JFormFieldGmap extends JFormField
 		}
 	}
 
-	public function showField($lat, $lng, $zoom = 14) 
+	public function showField($lat, $lng, $zoom = 14)
 	{
 		$this->element['disabled'] = true;
 		$this->element['latitudefield'] = 'latitudefield';
@@ -115,32 +114,32 @@ class JFormFieldGmap extends JFormField
 	protected function getInput()
 	{
 		$disabled = false;
-		if(isset($this->element['disabled'])){
+		if (isset($this->element['disabled'])) {
 			$disabled = $this->element['disabled'];
 		}
-		JFactory::getDocument()->addStyleSheet(JURI::root(true).'/components/com_imc/models/fields/gmap/css/gmap.css');
-		
+		JFactory::getDocument()->addStyleSheet(JURI::root(true) . '/components/com_imc/models/fields/gmap/css/gmap.css');
+
 		//(isset($this->element['api_key']) ? $this->element['api_key'] : '');
-		if(!isset($this->element['latitudefield']))
+		if (!isset($this->element['latitudefield']))
 			return '<strong>GMap field argument `latitudefield` is not set</strong>';
-		if(!isset($this->element['longitudefield']))
+		if (!isset($this->element['longitudefield']))
 			return '<strong>GMap field argument `longitudefield` is not set</strong>';
 
 		$params = JComponentHelper::getParams('com_imc');
 		$api_key = $params->get('api_key');
 
-		if($api_key == '')
-			echo '<span style="color: red; font-weight:bold;">'.JText::_('COM_IMC_JFIELD_GMAP_MISSING_KEY').'</span>';
-		
+		if ($api_key == '')
+			echo '<span style="color: red; font-weight:bold;">' . JText::_('COM_IMC_JFIELD_GMAP_MISSING_KEY') . '</span>';
+
 
 		//get google maps default options if no value is set (e.g. new record)
-		$lat        = (isset($this->lat) ? $this->lat : $params->get('latitude') );
-		$lng        = (isset($this->lng) ? $this->lng : $params->get('longitude') );
-		$zoom       = (isset($this->zoom) ? $this->zoom : $params->get('zoom') );
+		$lat        = (isset($this->lat) ? $this->lat : $params->get('latitude'));
+		$lng        = (isset($this->lng) ? $this->lng : $params->get('longitude'));
+		$zoom       = (isset($this->zoom) ? $this->zoom : $params->get('zoom'));
 		//If field is used on params just set some default values...
-		if(!$zoom) $zoom = 14;
-		if(!$lat)  $lat  = '40.626449';
-		if(!$lng)  $lng  = '22.948426';
+		if (!$zoom) $zoom = 14;
+		if (!$lat)  $lat  = '40.626449';
+		if (!$lng)  $lng  = '22.948426';
 
 		$scrollwheel = ($params->get('scrollwheel') == 1 ? true : false);
 		$lockaddressbtn = ($params->get('lockaddressbtn') == 1 ? true : false);
@@ -149,14 +148,13 @@ class JFormFieldGmap extends JFormField
 		$boundaries = $params->get('boundaries', null);
 
 
-		if($api_key != '')
-			JFactory::getDocument()->addScript('https://maps.googleapis.com/maps/api/js?key='.$api_key.'&language='.$language.'&libraries=geometry');
+		if ($api_key != '')
+			JFactory::getDocument()->addScript('https://maps.googleapis.com/maps/api/js?key=' . $api_key . '&language=' . $language . '&libraries=geometry');
 		else
-			JFactory::getDocument()->addScript('https://maps.googleapis.com/maps/api/js?language='.$language.'&libraries=geometry');
+			JFactory::getDocument()->addScript('https://maps.googleapis.com/maps/api/js?language=' . $language . '&libraries=geometry');
 
 		$borders = array();
-		if(!is_null($boundaries))
-		{
+		if (!is_null($boundaries)) {
 			$arPolygons = explode(";", $boundaries);
 
 			foreach ($arPolygons as $poly) {
@@ -164,11 +162,10 @@ class JFormFieldGmap extends JFormField
 
 				$bounds = array();
 				$arBoundaries = explode("\n", $polygon);
-				foreach ($arBoundaries as $bnd)
-				{
-					if(strlen($bnd) > 1) {
+				foreach ($arBoundaries as $bnd) {
+					if (strlen($bnd) > 1) {
 						$latLng = explode(',', $bnd);
-						array_push($bounds, array('lng' => (double)$latLng[0], 'lat' => (double)$latLng[1]));
+						array_push($bounds, array('lng' => (float)$latLng[0], 'lat' => (float)$latLng[1]));
 					}
 				}
 
@@ -177,38 +174,37 @@ class JFormFieldGmap extends JFormField
 			$boundaries = json_encode($borders);
 		}
 
-		JFactory::getDocument()->addScript(JURI::root(true).'/components/com_imc/models/fields/gmap/js/gmap.js');
+		JFactory::getDocument()->addScript(JURI::root(true) . '/components/com_imc/models/fields/gmap/js/gmap.js');
 
 
 		//set js variables
 		$itemId   = (isset($this->element['userstate']) ? JFactory::getApplication()->getUserState($this->element['userstate']) : JRequest::getVar('id', 0));
-		if($itemId == '')
+		if ($itemId == '')
 			$itemId = 0;
 
 		$script = array();
-		if($disabled)
-			$script[] = "var disabled=".$disabled.";";
+		if ($disabled)
+			$script[] = "var disabled=" . $disabled . ";";
 		else
 			$script[] = "var disabled=false;";
 
-		$script[] = "var itemId=".$itemId.";";
-		$script[] = "var Lat='".$lat."';";
-		$script[] = "var Lng='".$lng."';";
-		$script[] = "var latfield='jform_".$this->element['latitudefield']."';";
-		$script[] = "var lngfield='jform_".$this->element['longitudefield']."';";
-		$script[] = "var addrfield='".$this->id."';";
-		$script[] = "var zoom=".$zoom.";";
-		$script[] = "var scrollwheel='".$scrollwheel."';";
-		$script[] = "var icon='".$this->icon."';";
-		$script[] = "var language='".$language."';";
-		$script[] = "var hiddenterm='".addslashes($hiddenterm)."';";
-		if(!is_null($boundaries))
-		{
+		$script[] = "var itemId=" . $itemId . ";";
+		$script[] = "var Lat='" . $lat . "';";
+		$script[] = "var Lng='" . $lng . "';";
+		$script[] = "var latfield='jform_" . $this->element['latitudefield'] . "';";
+		$script[] = "var lngfield='jform_" . $this->element['longitudefield'] . "';";
+		$script[] = "var addrfield='" . $this->id . "';";
+		$script[] = "var zoom=" . $zoom . ";";
+		$script[] = "var scrollwheel='" . $scrollwheel . "';";
+		$script[] = "var icon='" . $this->icon . "';";
+		$script[] = "var language='" . $language . "';";
+		$script[] = "var hiddenterm='" . addslashes($hiddenterm) . "';";
+		if (!is_null($boundaries)) {
 			$script[] = "var boundaries=JSON.parse('" . $boundaries . "');";
 		}
-		$script[] = "var info='".addslashes(JText::_('COM_IMC_DRAG_MARKER'))."';";
-		$script[] = "var info_unlock='".addslashes(JText::_('COM_IMC_UNLOCK_ADDRESS'))."';";
-		$script[] = "var notfound='".addslashes(JText::_('COM_IMC_ADDRESS_NOT_FOUND'))."';";
+		$script[] = "var info='" . addslashes(JText::_('COM_IMC_DRAG_MARKER')) . "';";
+		$script[] = "var info_unlock='" . addslashes(JText::_('COM_IMC_UNLOCK_ADDRESS')) . "';";
+		$script[] = "var notfound='" . addslashes(JText::_('COM_IMC_ADDRESS_NOT_FOUND')) . "';";
 		JFactory::getDocument()->addScriptDeclaration(implode("\n", $script));
 
 		//initialize map
@@ -219,31 +215,32 @@ class JFormFieldGmap extends JFormField
 
 		//style
 		$style = array();
-		$style[] = (isset($this->element['width']) ? 'width:'.$this->element['width'].';' : '');
-		$style[] = (isset($this->element['height']) ? 'height:'.$this->element['height'].';' : '');
+		$style[] = (isset($this->element['width']) ? 'width:' . $this->element['width'] . ';' : '');
+		$style[] = (isset($this->element['height']) ? 'height:' . $this->element['height'] . ';' : '');
 
 		//set html
 		$html = array();
 
-		if($this->mapOnly){
+		if ($this->mapOnly) {
 			$html[] = '	<div id="imc-map-canvas"></div>';
 			return implode("\n", $html);
 		}
 
-        $html[] = '<div style="'.implode("", $style).'display:table-cell;clear:both;padding-bottom: 5px;">';
-		if(!$disabled) {
-			$html[] = '		<button id="searchaddress" class="btn btn-mini" type="button"><i class="icon-search icon-white"></i> '. JText::_('COM_IMC_CUSTOM_FIELD_LOCATE_ADDRESS') . '</button>';
-			if($lockaddressbtn) {
+		$html[] = '<div style="' . implode("", $style) . 'display:table-cell;clear:both;padding-bottom: 5px;">';
+		if (!$disabled) {
+			$html[] = '		<button id="searchaddress" class="btn btn-mini" type="button"><i class="icon-search icon-white"></i> ' . JText::_('COM_IMC_CUSTOM_FIELD_LOCATE_ADDRESS') . '</button>';
+			if ($lockaddressbtn) {
 				$html[] = '		<button id="lockaddress" class="btn btn-mini" type="button"><i class="icon-lock"></i> ' . JText::_('COM_IMC_CUSTOM_FIELD_LOCK_ADDRESS') . '</button>';
 			}
-			$html[] = '		<button id="locateposition" style="float:right;" class="btn btn-mini" type="button"><i class="icon-screenshot"></i> '. JText::_('COM_IMC_CUSTOM_FIELD_LOCATE_POSITION') . '</button>';
+			$html[] = '		<button id="locateposition" style="float:right;" class="btn btn-mini" type="button"><i class="icon-screenshot"></i> ' . JText::_('COM_IMC_CUSTOM_FIELD_LOCATE_POSITION') . '</button>';
 		}
-		$html[] = ' <textarea placeholder="'.JText::_('COM_IMC_FORM_LBL_ISSUE_ADDRESS').'" '. ($disabled ? "disabled=\"\"" : "").' class="imc-gmap-textarea validate-boundaries" rows="3" cols="75" id="' . $this->id . '" name="' . $this->name . '">'.htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8').'</textarea>';
-        $html[] = '	<div id="imc-map-canvas"></div>';
+		$html[] = ' <textarea placeholder="' . JText::_('COM_IMC_FORM_LBL_ISSUE_ADDRESS') . '" ' . ($disabled ? "disabled=\"\"" : "") . ' class="imc-gmap-textarea validate-boundaries" rows="3" cols="75" id="' . $this->id . '" name="' . $this->name . '">' . htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '</textarea>';
+		$html[] = '	<div id="imc-map-canvas" style="height: 300px;"></div>';
+
 		$html[] = '</div>';
 
 		$html[] = '<!-- Modal -->';
-		$html[] = '<div id="IMC_searchModal" class="modal fade'.(isset($this->element['side']) && $this->element['side'] == 'backend' ? ' hide' : '').'" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">';
+		$html[] = '<div id="IMC_searchModal" class="modal fade' . (isset($this->element['side']) && $this->element['side'] == 'backend' ? ' hide' : '') . '" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">';
 		$html[] = '	<div class="modal-dialog modal-sm">';
 		$html[] = '		<div class="modal-content">';
 		$html[] = '			<div class="modal-header">';
