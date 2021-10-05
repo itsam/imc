@@ -195,10 +195,11 @@ class ImcModelIssues extends JModelList
 
         $com_imc_params = JComponentHelper::getParams('com_imc');
         $showOnlyMyIssues    = $com_imc_params->get('own_issues_only');
-        $u = JFactory::getUser();
-        $isRoot = $u->authorise('core.admin');
-        if ($showOnlyMyIssues && !$isRoot) {
-            $query->where('a.created_by = ' . $user->id);
+        $isRoot = $user->authorise('core.admin');
+        if (!$isRoot) {
+            if ($showOnlyMyIssues) {
+                $query->where('a.created_by = ' . $user->id);
+            }
         }
 
         // Filter by moderation
