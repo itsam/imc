@@ -192,7 +192,10 @@ class ImcModelIssues extends JModelList
 
 
         //JFactory::getUser()->id == $item->created_by
-        $showOnlyMyIssues = false;
+
+        $com_imc_params = JComponentHelper::getParams('com_imc');
+        $showOnlyMyIssues    = $com_imc_params->get('own_issues_only');
+        //$showOnlyMyIssues = false;
         if ($showOnlyMyIssues) {
             $query->where('a.created_by = ' . $user->id);
         }

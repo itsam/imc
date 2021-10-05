@@ -170,6 +170,10 @@
             <option value="0">JNO</option>
             <option value="1">JYES</option>
         </field>
+        <field name="own_issues_only" type="radio" default="0" class="btn-group btn-group-yesno" label="COM_IMC_SETTINGS_ADVANCED_OWN_ISSUES_ONLY_LABEL" description="COM_IMC_SETTINGS_ADVANCED_OWN_ISSUES_ONLY_DESC">
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>        
 
         <field type="spacer" name="myspacer" hr="true" />
     </fieldset>
