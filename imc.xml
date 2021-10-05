@@ -7,7 +7,7 @@
     <author>Ioannis Tsampoulatidis</author>
     <authorEmail>tsampoulatidis@gmail.com</authorEmail>
     <authorUrl>https://github.com/itsam</authorUrl>
-    <version>3.1.1</version>
+    <version>3.1.2</version>
     <description>COM_IMC_XML_DESCRIPTION</description>
     
     <install> <!-- Runs on install -->
