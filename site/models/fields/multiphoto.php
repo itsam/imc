@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @version     3.0.0
  * @package     com_imc
@@ -27,16 +28,16 @@ class JFormFieldMultiphoto extends JFormField
 	protected $type = 'Multiphoto';
 
 	/**
-	* @var string
-	* relative to joomla root (e.g. images/imc)
-	*/
+	 * @var string
+	 * relative to joomla root (e.g. images/imc)
+	 */
 	protected $imagedir;
 
 	/**
-	* @var string
-	* instead of JRequest::getVar('id') use the userstate session (e.g. com_imc.edit.issue.id)
-	* mainly used on front-end edit forms
-	*/
+	 * @var string
+	 * instead of JRequest::getVar('id') use the userstate session (e.g. com_imc.edit.issue.id)
+	 * mainly used on front-end edit forms
+	 */
 	protected $userstate;
 
 	/**
@@ -50,8 +51,7 @@ class JFormFieldMultiphoto extends JFormField
 	 */
 	public function __get($name)
 	{
-		switch ($name)
-		{
+		switch ($name) {
 			case 'imagedir':
 			case 'userstate':
 			case 'side':
@@ -74,8 +74,7 @@ class JFormFieldMultiphoto extends JFormField
 	 */
 	public function __set($name, $value)
 	{
-		switch ($name)
-		{
+		switch ($name) {
 			case 'imagedir':
 			case 'userstate':
 			case 'side':
@@ -96,21 +95,21 @@ class JFormFieldMultiphoto extends JFormField
 	{
 		$isSite = false;
 		$isSite = JFactory::getApplication()->isSite();
-		$pdfIcon = JURI::root(true).'/components/com_imc/models/fields/multiphoto/img/pdf.png';
+		$pdfIcon = JURI::root(true) . '/components/com_imc/models/fields/multiphoto/img/pdf.png';
 
 		$imagedir = (isset($this->element['imagedir']) ? $this->element['imagedir'] : 'images/imc');
 		$itemId   = (isset($this->element['userstate']) ? JFactory::getApplication()->getUserState($this->element['userstate']) : JRequest::getVar('id', 0));
 		$isNew    = 0;
 		//if isnew set timestamp as id
-		if($itemId == 0){
+		if ($itemId == 0) {
 			$itemId = time();
 			$isNew = 1;
 		}
 
-		JFactory::getDocument()->addStyleSheet(JURI::root(true).'/components/com_imc/models/fields/multiphoto/css/blueimp-gallery.min.css');
-		JFactory::getDocument()->addStyleSheet(JURI::root(true).'/components/com_imc/models/fields/multiphoto/css/imc-style.css');
-		JFactory::getDocument()->addStyleSheet(JURI::root(true).'/components/com_imc/models/fields/multiphoto/css/jquery.fileupload.css');
-		JFactory::getDocument()->addStyleSheet(JURI::root(true).'/components/com_imc/models/fields/multiphoto/css/jquery.fileupload-ui.css');
+		JFactory::getDocument()->addStyleSheet(JURI::root(true) . '/components/com_imc/models/fields/multiphoto/css/blueimp-gallery.min.css');
+		JFactory::getDocument()->addStyleSheet(JURI::root(true) . '/components/com_imc/models/fields/multiphoto/css/imc-style.css');
+		JFactory::getDocument()->addStyleSheet(JURI::root(true) . '/components/com_imc/models/fields/multiphoto/css/jquery.fileupload.css');
+		JFactory::getDocument()->addStyleSheet(JURI::root(true) . '/components/com_imc/models/fields/multiphoto/css/jquery.fileupload-ui.css');
 
 		$script = array();
 		$script[] = '<!-- The template to display files available for upload -->';
@@ -132,13 +131,13 @@ class JFormFieldMultiphoto extends JFormField
 		$script[] = '            {% if (!i && !o.options.autoUpload) { %}';
 		$script[] = '                <button class="btn btn-primary start" disabled>';
 		$script[] = '                    <i class="icon-upload"></i>';
-		$script[] = '                    <span>'.JText::_('COM_IMC_JFIELD_MULTIPHOTO_START').'</span>';
+		$script[] = '                    <span>' . JText::_('COM_IMC_JFIELD_MULTIPHOTO_START') . '</span>';
 		$script[] = '                </button>';
 		$script[] = '            {% } %}';
 		$script[] = '            {% if (!i) { %}';
 		$script[] = '                <button class="btn btn-warning btn-sm cancel">';
 		$script[] = '                    <i class="icon-remove"></i>';
-		$script[] = '                    <span>'.JText::_('JCANCEL').'</span>';
+		$script[] = '                    <span>' . JText::_('JCANCEL') . '</span>';
 		$script[] = '                </button>';
 		$script[] = '            {% } %}';
 		$script[] = '        </div>';
@@ -155,7 +154,7 @@ class JFormFieldMultiphoto extends JFormField
 		$script2[] = '                {% if (file.thumbnailUrl) { %}';
 		$script2[] = '                    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" data-gallery><img src="{%=file.thumbnailUrl%}"></a>';
 		$script2[] = '                {% } else { %}';
-		$script2[] = '                	<img src="'.$pdfIcon.'" alt="" />';
+		$script2[] = '                	<img src="' . $pdfIcon . '" alt="" />';
 		$script2[] = '                {% } %}';
 		$script2[] = '            </span>';
 		$script2[] = '        </div>';
@@ -187,40 +186,40 @@ class JFormFieldMultiphoto extends JFormField
 		$script2[] = '{% } %}';
 		$script2[] = '</script>';
 
-		JFactory::getDocument()->addScript(JURI::root(true).'/components/com_imc/models/fields/multiphoto/js/vendor/jquery.ui.widget.js');
-		JFactory::getDocument()->addScript(JURI::root(true).'/components/com_imc/models/fields/multiphoto/js/tmpl.min.js');
-		JFactory::getDocument()->addScript(JURI::root(true).'/components/com_imc/models/fields/multiphoto/js/load-image.min.js');
-		JFactory::getDocument()->addScript(JURI::root(true).'/components/com_imc/models/fields/multiphoto/js/canvas-to-blob.min.js');
-		JFactory::getDocument()->addScript(JURI::root(true).'/components/com_imc/models/fields/multiphoto/js/jquery.blueimp-gallery.min.js');
-		JFactory::getDocument()->addScript(JURI::root(true).'/components/com_imc/models/fields/multiphoto/js/jquery.iframe-transport.js');
-		JFactory::getDocument()->addScript(JURI::root(true).'/components/com_imc/models/fields/multiphoto/js/jquery.fileupload.js');
-		JFactory::getDocument()->addScript(JURI::root(true).'/components/com_imc/models/fields/multiphoto/js/jquery.fileupload-process.js');
-		JFactory::getDocument()->addScript(JURI::root(true).'/components/com_imc/models/fields/multiphoto/js/jquery.fileupload-image.js');
-		JFactory::getDocument()->addScript(JURI::root(true).'/components/com_imc/models/fields/multiphoto/js/jquery.fileupload-validate.js');
-		JFactory::getDocument()->addScript(JURI::root(true).'/components/com_imc/models/fields/multiphoto/js/jquery.fileupload-ui.js');
-		JFactory::getDocument()->addScript(JURI::root(true).'/components/com_imc/models/fields/multiphoto/js/multiphoto.js');
+		JFactory::getDocument()->addScript(JURI::root(true) . '/components/com_imc/models/fields/multiphoto/js/vendor/jquery.ui.widget.js');
+		JFactory::getDocument()->addScript(JURI::root(true) . '/components/com_imc/models/fields/multiphoto/js/tmpl.min.js');
+		JFactory::getDocument()->addScript(JURI::root(true) . '/components/com_imc/models/fields/multiphoto/js/load-image.min.js');
+		JFactory::getDocument()->addScript(JURI::root(true) . '/components/com_imc/models/fields/multiphoto/js/canvas-to-blob.min.js');
+		JFactory::getDocument()->addScript(JURI::root(true) . '/components/com_imc/models/fields/multiphoto/js/jquery.blueimp-gallery.min.js');
+		JFactory::getDocument()->addScript(JURI::root(true) . '/components/com_imc/models/fields/multiphoto/js/jquery.iframe-transport.js');
+		JFactory::getDocument()->addScript(JURI::root(true) . '/components/com_imc/models/fields/multiphoto/js/jquery.fileupload.js');
+		JFactory::getDocument()->addScript(JURI::root(true) . '/components/com_imc/models/fields/multiphoto/js/jquery.fileupload-process.js');
+		JFactory::getDocument()->addScript(JURI::root(true) . '/components/com_imc/models/fields/multiphoto/js/jquery.fileupload-image.js');
+		JFactory::getDocument()->addScript(JURI::root(true) . '/components/com_imc/models/fields/multiphoto/js/jquery.fileupload-validate.js');
+		JFactory::getDocument()->addScript(JURI::root(true) . '/components/com_imc/models/fields/multiphoto/js/jquery.fileupload-ui.js');
+		JFactory::getDocument()->addScript(JURI::root(true) . '/components/com_imc/models/fields/multiphoto/js/multiphoto.js');
 
-		$url = JRoute::_(  JURI::root(true)."/administrator/index.php?option=com_imc&task=upload.handler&format=json&id=".$itemId."&imagedir=".$imagedir."&".JSession::getFormToken()."=1" );
+		$url = JRoute::_(JURI::root(true) . "/administrator/index.php?option=com_imc&task=upload.handler&format=json&id=" . $itemId . "&imagedir=" . $imagedir . "&" . JSession::getFormToken() . "=1");
 		//change controller url if accessed from backend to work with secure JSession token
-		if($this->element['side'] == 'frontend'){
-			$url = JRoute::_(  JURI::root(true)."/index.php?option=com_imc&task=upload.handler&format=json&id=".$itemId."&imagedir=".$imagedir."&".JSession::getFormToken()."=1" );
+		if ($this->element['side'] == 'frontend') {
+			$url = JRoute::_(JURI::root(true) . "/index.php?option=com_imc&task=upload.handler&format=json&id=" . $itemId . "&imagedir=" . $imagedir . "&" . JSession::getFormToken() . "=1");
 		}
 
 
 		//TODO:  get `com_imc` as field argument `component`
 		$init = array();
 		$init[] = "function init() {";
-		$init[] = "	   var form_id = jQuery('#".$this->id."').closest('form').attr('id');";
+		$init[] = "	   var form_id = jQuery('#" . $this->id . "').closest('form').attr('id');";
 		$init[] = "    'use strict';";
 		$init[] = "    // Initialize the jQuery File Upload widget:";
 		$init[] = "    jQuery('#'+form_id).fileupload({";
 		$init[] = "        autoUpload: true,";
 		$init[] = "        // Uncomment the following to send cross-domain cookies:";
 		$init[] = "        xhrFields: {withCredentials: true},";
-		$init[] = "        url: '".$url."' ";
+		$init[] = "        url: '" . $url . "' ";
 		//$init[] = "    }).bind('fileuploaddone',    function(e,data){onDone(data.result.files,".$this->id." )}).";
-		$init[] = "    }).bind('fileuploaddone',    function(e,data){onDone(data.result.files,jQuery('#".$this->id."').attr('id') )}).";
-		$init[] = "       bind('fileuploaddestroy', function(e,data){if (!window.confirm('".JText::_('COM_IMC_JFIELD_MULTIPHOTO_CONFIRM_DELETE')."')) {return false;}onDestroy(data.url.substring(data.url.indexOf('file=') + 5),jQuery('#".$this->id."').attr('id')  )}).";
+		$init[] = "    }).bind('fileuploaddone',    function(e,data){onDone(data.result.files,jQuery('#" . $this->id . "').attr('id') )}).";
+		$init[] = "       bind('fileuploaddestroy', function(e,data){if (!window.confirm('" . JText::_('COM_IMC_JFIELD_MULTIPHOTO_CONFIRM_DELETE') . "')) {return false;}onDestroy(data.url.substring(data.url.indexOf('file=') + 5),jQuery('#" . $this->id . "').attr('id')  )}).";
 		$init[] = "       bind('fileuploadadd',     function(e,data){jQuery('input[name=\"task\"]').val('upload.handler');});";
 		$init[] = "    // Enable iframe cross-domain access via redirect option:";
 		$init[] = "    jQuery('#'+form_id).fileupload(";
@@ -242,7 +241,7 @@ class JFormFieldMultiphoto extends JFormField
 		$init[] = "        jQuery(this).removeClass('fileupload-processing');";
 		$init[] = "    }).done(function (result) {";
 		//$init[] = "        if(result) onInit(result.files,".$this->id.",".$itemId.",".$isNew.",'".$imagedir."');";
-		$init[] = "        if(result) onInit(result.files,jQuery('#".$this->id."').attr('id'),".$itemId.",".$isNew.",'".$imagedir."');";
+		$init[] = "        if(result) onInit(result.files,jQuery('#" . $this->id . "').attr('id')," . $itemId . "," . $isNew . ",'" . $imagedir . "');";
 		$init[] = "        jQuery(this).fileupload('option', 'done')";
 		$init[] = "            .call(this, jQuery.Event('done'), {result: result});";
 		$init[] = "    });";
@@ -252,15 +251,15 @@ class JFormFieldMultiphoto extends JFormField
 		$init[] = '	init();';
 		$init[] = '});';
 
-		JFactory::getDocument()->addScriptDeclaration( implode("\n", $init));
+		JFactory::getDocument()->addScriptDeclaration(implode("\n", $init));
 
 		$html = array();
-		$html[] = '<div class="row'.($isSite ? '' : '-fluid').' fileupload-buttonbar">';
+		$html[] = '<div class="row' . ($isSite ? '' : '-fluid') . ' fileupload-buttonbar">';
 		$html[] = '    <div class="col-7 span7">';
 		$html[] = '        <!-- The fileinput-button span is used to style the file input field as button -->';
 		$html[] = '        <span class="btn btn-success fileinput-button">';
 		$html[] = '            <i class="icon-plus"></i>';
-		$html[] = '            <span>'.JText::_('COM_IMC_JFIELD_MULTIPHOTO_ADD_FILES').'</span>';
+		$html[] = '            <span>' . JText::_('COM_IMC_JFIELD_MULTIPHOTO_ADD_FILES') . '</span>';
 		$html[] = '            <input type="file" name="files[]" multiple>';
 		$html[] = '        </span>';
 		$html[] = '    </div>';
@@ -275,9 +274,9 @@ class JFormFieldMultiphoto extends JFormField
 		$html[] = '    </div>';
 		$html[] = '</div>';
 		$html[] = '<!-- Listing the files available for upload/download -->';
-		$html[] = '<div class="row'.($isSite ? '' : '-fluid').'">';
-		$html[] = '	<div class="col-sm-12 span12">';		
-		$html[] = '		<div class="drop-photos"><span class="dptitle">'.JText::_('COM_IMC_JFIELD_MULTIPHOTO_DROP_FILES').'</span>';
+		$html[] = '<div class="row' . ($isSite ? '' : '-fluid') . '">';
+		$html[] = '	<div class="col-sm-12 span12">';
+		$html[] = '		<div class="drop-photos"><span class="dptitle">' . JText::_('COM_IMC_JFIELD_MULTIPHOTO_DROP_FILES') . '</span>';
 		$html[] = '			<div class="files"></div>';
 		$html[] = '		</div>';
 		$html[] = '	</div>';
@@ -287,6 +286,7 @@ class JFormFieldMultiphoto extends JFormField
 		$html[] = implode("\n", $script2);
 
 		$html[] = '<!-- The blueimp Gallery widget -->';
+		$html[] = '<div style="z-index: 999999 !important; position:relative;">';
 		$html[] = '<div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls" data-filter=":even">';
 		$html[] = '    <div class="slides"></div>';
 		$html[] = '    <h3 class="title"></h3>';
@@ -296,9 +296,10 @@ class JFormFieldMultiphoto extends JFormField
 		$html[] = '    <a class="play-pause"></a>';
 		$html[] = '    <ol class="indicator"></ol>';
 		$html[] = '</div>';
+		$html[] = '</div>';
 
 		$attr = '';
-		$html[] = '	<input type=hidden name="' . $this->name . '" id="' . $this->id . '" value="'. htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '" readonly="readonly"' . $attr . ' />';
+		$html[] = '	<input type=hidden name="' . $this->name . '" id="' . $this->id . '" value="' . htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '" readonly="readonly"' . $attr . ' />';
 
 		return implode("\n", $html);
 	}
