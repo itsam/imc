@@ -162,12 +162,12 @@ class UploadHandler
                 // You can add arrays to generate different versions.
                 // The name of the key is the name of the version (example: 'medium').
                 // the array contains the options to apply.
-                /*
+
                 'medium' => array(
-                    'max_width' => 800,
-                    'max_height' => 600
+                    'max_width' => 1242,
+                    'max_height' => 480
                 ),
-                */
+
                 'thumbnail' => array(
                     // Uncomment the following to use a defined directory for the thumbnails
                     // instead of a subdirectory based on the version identifier.
