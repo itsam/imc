@@ -12,7 +12,7 @@
 
 class UploadHandler
 {
-
+    public $imc_api = null;
     protected $options;
 
     // PHP File Upload error message codes:
