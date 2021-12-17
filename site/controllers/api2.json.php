@@ -505,13 +505,13 @@ class ImcControllerApi2 extends ImcController
 
 						);
 						$upload_handler = new UploadHandler($options);
-						if (isset($upload_handler->imc_api)) {
-							$files_json = json_decode($upload_handler->imc_api);
-							$args['photo'] = json_encode(array('isnew' => 1, 'id' => $tmpTime, 'imagedir' => $imagedir, 'files' => $files_json->files));
-							$app->enqueueMessage('File(s) uploaded successfully', 'info');
-						} else {
-							throw new Exception(JText::_('COM_IMC_API_UPLOAD_FAILED'));
-						}
+						//if (isset($upload_handler->imc_api)) {
+						$files_json = json_decode($upload_handler->imc_api);
+						$args['photo'] = json_encode(array('isnew' => 1, 'id' => $tmpTime, 'imagedir' => $imagedir, 'files' => $files_json->files));
+						$app->enqueueMessage('File(s) uploaded successfully', 'info');
+						//} else {
+						//	throw new Exception(JText::_('COM_IMC_API_UPLOAD_FAILED'));
+						//}
 					} else {
 						$args['photo'] = json_encode(array('isnew' => 1, 'id' => $tmpTime, 'imagedir' => $imagedir, 'files' => array()));
 					}

@@ -10,6 +10,8 @@
  * https://opensource.org/licenses/MIT
  */
 
+defined('_JEXEC') or die('How dare calling me directly!');
+
 class UploadHandler
 {
     public $imc_api = null;
