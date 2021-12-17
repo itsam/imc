@@ -1474,6 +1474,10 @@ class UploadHandler
                     $this->header('Range: 0-' . ($this->fix_integer_overflow((int)$files[0]->size) - 1));
                 }
             }
+            if (isset($this->options['imc_api'])) {
+                $this->imc_api = $json;
+                return;
+            }
             $this->body($json);
         }
         return $content;
