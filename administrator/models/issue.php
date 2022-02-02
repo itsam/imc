@@ -150,7 +150,10 @@ class ImcModelIssue extends JModelAdmin
 		if ($item = parent::getItem($pk)) {
 			//Do any procesing on fields here if needed
 	        $category = JCategories::getInstance('Imc')->get($item->catid);
-	        $params = json_decode($category->params);
+	        $params = null;
+		if(isset($category->params)){
+			$params = json_decode($category->params);
+		}
 	        if(isset($params->imc_category_emails)){
 	        	//$item->notification_emails = explode("\n", $params->imc_category_emails);
 	        	$category_emails = explode("\n", $params->imc_category_emails);
