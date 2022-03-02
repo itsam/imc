@@ -29,7 +29,11 @@ class plgImcmail_notifier extends JPlugin
 		$parsed_url = $uri->toString();
 		$parsed_url = str_replace('administrator/', '', $parsed_url);
 		$parsed_url = str_replace('component/imc', $MENUALIAS, $parsed_url);
+
 		$issueLink = $DOMAIN . $parsed_url;
+		$redirectUrl = urlencode(base64_encode($issueLink));
+		$redirectUrl = '?return=' . $redirectUrl;
+		$issueLink = $issueLink . $redirectUrl;
 
 		//Prepare email for admins
 		if ($this->params->get('mailnewissueadmins')) {
@@ -113,7 +117,11 @@ class plgImcmail_notifier extends JPlugin
 		$parsed_url = $uri->toString();
 		$parsed_url = str_replace('administrator/', '', $parsed_url);
 		$parsed_url = str_replace('component/imc', $MENUALIAS, $parsed_url);
+
 		$issueLink = $DOMAIN . $parsed_url;
+		$redirectUrl = urlencode(base64_encode($issueLink));
+		$redirectUrl = '?return=' . $redirectUrl;
+		$issueLink = $issueLink . $redirectUrl;
 
 		//Prepare email for admins
 		if ($this->params->get('mailcategorychangeadmins')) {
@@ -198,7 +206,11 @@ class plgImcmail_notifier extends JPlugin
 		$parsed_url = $uri->toString();
 		$parsed_url = str_replace('administrator/', '', $parsed_url);
 		$parsed_url = str_replace('component/imc', $MENUALIAS, $parsed_url);
+
 		$issueLink = $DOMAIN . $parsed_url;
+		$redirectUrl = urlencode(base64_encode($issueLink));
+		$redirectUrl = '?return=' . $redirectUrl;
+		$issueLink = $issueLink . $redirectUrl;
 
 		//Prepare email for admins
 		if ($this->params->get('mailstatuschangeadmins')) {
@@ -283,7 +295,11 @@ class plgImcmail_notifier extends JPlugin
 		$parsed_url = $uri->toString();
 		$parsed_url = str_replace('administrator/', '', $parsed_url);
 		$parsed_url = str_replace('component/imc', $MENUALIAS, $parsed_url);
+
 		$issueLink = $DOMAIN . $parsed_url;
+		$redirectUrl = urlencode(base64_encode($issueLink));
+		$redirectUrl = '?return=' . $redirectUrl;
+		$issueLink = $issueLink . $redirectUrl;
 
 		//Prepare email for admins
 		if ($this->params->get('mailnewcommentadmins')) {
@@ -375,7 +391,11 @@ class plgImcmail_notifier extends JPlugin
 		$parsed_url = $uri->toString();
 		$parsed_url = str_replace('administrator/', '', $parsed_url);
 		$parsed_url = str_replace('component/imc', $MENUALIAS, $parsed_url);
+
 		$issueLink = $DOMAIN . $parsed_url;
+		$redirectUrl = urlencode(base64_encode($issueLink));
+		$redirectUrl = '?return=' . $redirectUrl;
+		$issueLink = $issueLink . $redirectUrl;
 
 		//Prepare email for user
 
