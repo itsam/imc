@@ -252,11 +252,13 @@ class ImcControllerApi2 extends ImcController
 		$result = null;
 		$app = JFactory::getApplication();
 		try {
-			$userid = self::validateRequest();
+			//$userid = self::validateRequest();
 
 			if ($app->input->getMethod() != 'GET') {
 				throw new Exception('You cannot use other method than GET to fetch issues');
 			}
+
+			$userid = self::validateRequest();
 
 			//get necessary arguments
 			$minLat = $app->input->getString('minLat');
@@ -274,6 +276,7 @@ class ImcControllerApi2 extends ImcController
 
 			//get issues model
 			$issuesModel = JModelLegacy::getInstance('Issues', 'ImcModel', array('ignore_request' => true));
+
 			//set states
 			if (!is_null($filterSteps)) {
 				$issuesModel->setState('filter.steps', $filterSteps);
@@ -352,10 +355,15 @@ class ImcControllerApi2 extends ImcController
 				$issuesModel->setState('filter.imcapi.priorto', $prior_to);
 			}
 
+			$issuesModel->setState('filter.state', 1);
+
 			//handle unexpected warnings from model
 			set_error_handler(array($this, 'exception_error_handler'));
 			//get items and sanitize them
 			$data = $issuesModel->getItems();
+
+			$total = $issuesModel->getTotal();
+
 			$result = ImcFrontendHelper::sanitizeIssues($data, $userid);
 
 
@@ -385,8 +393,14 @@ class ImcControllerApi2 extends ImcController
 
 			//$app->enqueueMessage('size: ' . sizeof($result), 'info');
 			restore_error_handler();
-			header('Content-type: application/json');
-			echo new JResponseJson($result, 'Issues fetched successfully');
+
+			header('Content-type: application/json; charset=utf-8');
+			//echo new JResponseJson($result, 'Issues fetched successfully');
+			$res = new JResponseJson($result, 'Issues fetched successfully');
+			$resObj = json_decode($res);
+			//echo $res;
+			$resObj->total = $total;
+			echo json_encode($resObj, JSON_UNESCAPED_UNICODE);
 			exit();
 		} catch (Exception $e) {
 			header("HTTP/1.0 202 Accepted");
