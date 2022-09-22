@@ -245,6 +245,7 @@ class ImcModelIssueForm extends JModelForm
 			//Check the user can edit this item
 			$authorised = $user->authorise('core.edit', 'com_imc.issue.' . $id) || $authorised = $user->authorise('core.edit.own', 'com_imc.issue.' . $id);
 			if ($user->authorise('core.edit.state', 'com_imc.issue.' . $id) !== true && $state == 1) { //The user cannot edit the state of the item.
+				return false;
 				$data['state'] = 0;
 			}
 		} else {
