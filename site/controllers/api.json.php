@@ -1,9 +1,10 @@
 <?php
-
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Headers: *");
 /**
- * @version     3.0.0
+ * @version     3.0.1
  * @package     com_imc
- * @copyright   Copyright (C) 2014. All rights reserved.
+ * @copyright   Copyright (C) 2019. All rights reserved.
  * @license     GNU AFFERO GENERAL PUBLIC LICENSE Version 3; see LICENSE
  * @author      Ioannis Tsampoulatidis <tsampoulatidis@gmail.com> - https://github.com/itsam
  */
@@ -13,7 +14,7 @@ defined('_JEXEC') or die;
 
 require_once JPATH_COMPONENT . '/controller.php';
 require_once JPATH_COMPONENT_SITE . '/helpers/imc.php';
-require_once JPATH_COMPONENT_SITE . '/helpers/MCrypt.php';
+require_once JPATH_COMPONENT_SITE . '/helpers/MCrypt2.php';
 require_once JPATH_COMPONENT_SITE . '/models/tokens.php';
 require_once JPATH_COMPONENT_SITE . '/controllers/comments.json.php';
 
@@ -36,7 +37,7 @@ require_once JPATH_COMPONENT_SITE . '/controllers/comments.json.php';
  * Please note that for better security it is highly recommended to protect your site with SSL (https)
  */
 
-class ImcControllerApi extends ImcController
+class ImcControllerApi2 extends ImcController
 {
 	private $mcrypt;
 	private $keyModel;
@@ -56,6 +57,11 @@ class ImcControllerApi extends ImcController
 		$ee = new ErrorException($errstr, 0, $errno, $errfile, $errline);
 		JFactory::getApplication()->enqueueMessage($ee, 'error');
 		throw $ee;
+	}
+
+	private function valid_email($email)
+	{
+		return !!filter_var($email, FILTER_VALIDATE_EMAIL);
 	}
 
 	private function validateRequest($isNew = false)
@@ -110,7 +116,22 @@ class ImcControllerApi extends ImcController
 		}
 
 		//4. authenticate user
-		$userid = JUserHelper::getUserId($objToken->u);
+		$userid = 0;
+		if (self::valid_email($objToken->u)) {
+			//b. get userid given email
+			$db = JFactory::getDbo();
+			$query = $db->getQuery(true);
+			$query->select('id');
+			$query->from('#__users');
+			$query->where('UPPER(email) = UPPER(' . $db->Quote($objToken->u) . ')');
+			$db->setQuery($query);
+			$result = $db->loadObject();
+			$userid = $result->id;
+		} else {
+			//a. get userid given username
+			$userid = JUserHelper::getUserId($objToken->u);
+		}
+
 		$user = JFactory::getUser($userid);
 		$userInfo = array();
 		if ($isNew) {
@@ -125,7 +146,6 @@ class ImcControllerApi extends ImcController
 					$app->enqueueMessage(JText::_('COM_IMC_API_USERNAME_PASSWORD_NO_MATCH'), 'error');
 					throw new Exception('Token does not match');
 				}
-
 				if ($user->block) {
 					$app->enqueueMessage(JText::_('COM_IMC_API_USER_NOT_ACTIVATED'), 'error');
 					throw new Exception(JText::_('COM_IMC_API_USER_BLOCKED'));
@@ -233,11 +253,13 @@ class ImcControllerApi extends ImcController
 		$result = null;
 		$app = JFactory::getApplication();
 		try {
-			$userid = self::validateRequest();
+			//$userid = self::validateRequest();
 
 			if ($app->input->getMethod() != 'GET') {
 				throw new Exception('You cannot use other method than GET to fetch issues');
 			}
+
+			$userid = self::validateRequest();
 
 			//get necessary arguments
 			$minLat = $app->input->getString('minLat');
@@ -249,10 +271,53 @@ class ImcControllerApi extends ImcController
 			$offset = $app->input->getInt('offset', 0);
 			$ts = $app->input->getString('ts');
 			$prior_to = $app->input->getString('prior_to');
-
+			$filterSteps = $app->input->getString('filterSteps');
+			$filterCategories = $app->input->getString('filterCategories');
+			$filterPersonal = $app->input->getString('filterPersonal');
+			
 			//get issues model
 			$issuesModel = JModelLegacy::getInstance('Issues', 'ImcModel', array('ignore_request' => true));
+
 			//set states
+			if (!is_null($filterSteps)) {
+				$issuesModel->setState('filter.steps', $filterSteps);
+			}
+
+			if (!is_null($filterCategories)) {
+				$issuesModel->setState('filter.category', $filterCategories);
+			}
+
+			if ($filterPersonal == 'mine') {
+				$owned = 'true';
+			} else {
+				$owned = 'false';
+			}
+			if ($filterPersonal == 'moderated') {
+				$issuesModel->setState('filter.moderated', 'yes');
+				$owned = 'true';
+			}
+			if ($filterPersonal == 'starred') {
+
+
+				$votesModel = JModelLegacy::getInstance('Votes', 'ImcModel', array('ignore_request' => true));
+				$votesModel->setState('filter.imcapi.userid', $userid);
+				$votesModel->setState('filter.state', 1);
+				//handle unexpected warnings from model
+				set_error_handler(array($this, 'exception_error_handler'));
+				//get items and sanitize them
+				$data = $votesModel->getItems();
+				//simplify votedIssues
+				$voted = array();
+				foreach ($data as $votedIssue) {
+					$voted[] = $votedIssue->issueid;
+				}
+
+				restore_error_handler();
+
+				$owned = 'false';
+				$issuesModel->setState('filter.starred', $voted);
+			}
+
 			$issuesModel->setState('filter.owned', ($owned === 'true' ? 'yes' : 'no'));
 			$issuesModel->setState('filter.imcapi.userid', $userid);
 			if ($userid == 0) {
@@ -291,15 +356,54 @@ class ImcControllerApi extends ImcController
 				$issuesModel->setState('filter.imcapi.priorto', $prior_to);
 			}
 
+			$issuesModel->setState('filter.state', 1);
+			
 			//handle unexpected warnings from model
 			set_error_handler(array($this, 'exception_error_handler'));
 			//get items and sanitize them
 			$data = $issuesModel->getItems();
+			$total = $issuesModel->getTotal();
+			
 			$result = ImcFrontendHelper::sanitizeIssues($data, $userid);
-			$app->enqueueMessage('size: ' . sizeof($result), 'info');
+
+
+			//API2 sanitize further and include timeline
+			$logsModel = JModelLegacy::getInstance('Logs', 'ImcModel', array('ignore_request' => true));
+			foreach ($result as &$issue) {
+				unset($issue->created_by);
+				unset($issue->hits);
+				unset($issue->regnum);
+				unset($issue->regdate);
+				unset($issue->responsible);
+				unset($issue->extra);
+				unset($issue->subgroup);
+				unset($issue->alias);
+				unset($issue->created_by_name);
+				unset($issue->attachments);
+				unset($issue->created_TZ);
+				unset($issue->updated_TZ);
+				unset($issue->regdate_TZ);
+				unset($issue->created_ts);
+				unset($issue->updated_ts);
+				unset($issue->coords);
+
+				$logs = $logsModel->getItemsByIssue($issue->id);
+				$timeline = ImcFrontendHelper::sanitizeLogs($logs);
+				$issue->timeline = $timeline;
+			}
+
+			//$app->enqueueMessage('size: ' . sizeof($result), 'info');
 			restore_error_handler();
-			header('Content-type: application/json');
-			echo new JResponseJson($result, 'Issues fetched successfully');
+			header('Content-type: application/json; charset=utf-8');
+			//echo new JResponseJson($result, 'Issues fetched successfully');
+			$res = new JResponseJson($result, 'Issues fetched successfully');
+		    $resObj = json_decode($res);
+			//echo $res;
+	        $resObj->total = $total;
+			
+			echo json_encode($resObj, JSON_UNESCAPED_UNICODE);
+//			echo json_encode($resObj);
+
 			exit();
 		} catch (Exception $e) {
 			header("HTTP/1.0 202 Accepted");
@@ -309,7 +413,40 @@ class ImcControllerApi extends ImcController
 		}
 	}
 
-	public function issue()
+
+	public function foo2() 
+	{
+		//$result = $_REQUEST;
+		$app = JFactory::getApplication();
+		header('Content-type: application/json');
+		$result = $_FILES;
+		echo new JResponseJson($result, 'Issue action completed successfully');
+	}
+
+	public function foo()
+	{
+		$result = null;
+		$app = JFactory::getApplication();
+		try{
+			$userid = self::validateRequest();
+			//$result = $_REQUEST;
+			$app = JFactory::getApplication();
+			header('Content-type: application/json');
+			$result = $_FILES;
+			echo new JResponseJson($result, 'Issue action completed successfully');
+		} catch (Exception $e) {
+
+			header("HTTP/1.0 202 Accepted");
+			header('Content-type: application/json');
+			echo new JResponseJson($e);
+			exit();			
+		}
+	}
+
+
+
+
+public function issue2()
 	{
 		$result = null;
 		$app = JFactory::getApplication();
@@ -319,51 +456,11 @@ class ImcControllerApi extends ImcController
 			$id = $app->input->getInt('id', null);
 
 			switch ($app->input->getMethod()) {
-					//fetch existing issue
-				case 'GET':
-					if ($id == null) {
-						throw new Exception('Id is not set');
-					}
 
-					//get models
-					$issueModel = JModelLegacy::getInstance('Issue', 'ImcModel', array('ignore_request' => true));
-					$logsModel = JModelLegacy::getInstance('Logs', 'ImcModel', array('ignore_request' => true));
-					$votesModel = JModelLegacy::getInstance('Votes', 'ImcModel', array('ignore_request' => true));
-					$commentsModel = JModelLegacy::getInstance('Comments', 'ImcModel', array('ignore_request' => true));
-
-					//handle unexpected warnings from model
-					set_error_handler(array($this, 'exception_error_handler'));
-					$data = $issueModel->getData($id);
-					if (is_object($data)) {
-						//merge logs as timeline
-						$data->timeline = $logsModel->getItemsByIssue($id);
-						//merge hasVoted
-						$data->hasVoted = $votesModel->hasVoted($data->id, $userid);
-						//merge comments count if enabled
-						require_once JPATH_COMPONENT_SITE . '/models/comments.php';
-						$data->comments = $commentsModel->count($id, $userid);
-					} else {
-						throw new Exception(JText::_('COM_IMC_API_ISSUE_NOT_EXIST'));
-					}
-
-					restore_error_handler();
-
-					$result = ImcFrontendHelper::sanitizeIssue($data, $userid);
-
-					//check for any restrictions
-					if (!$result->myIssue && $result->moderation) {
-						throw new Exception(JText::_('COM_IMC_API_ISSUE_UNDER_MODERATION'));
-					}
-					if ($result->state != 1) {
-						throw new Exception(JText::_('COM_IMC_API_ISSUE_NOT_PUBLISHED'));
-					}
-
-					//be consistent return as array (of size 1)
-					$result = array($result);
-
-					break;
-					//create new issue
 				case 'POST':
+					// header('Content-type: application/json');
+					// $result = $_FILES;
+					// echo new JResponseJson($result, 'Issue action completed successfully');
 					if ($id != null) {
 						throw new Exception('You cannot use POST to fetch issue. Use GET instead');
 					}
@@ -381,7 +478,8 @@ class ImcControllerApi extends ImcController
 						'description' => $app->input->getString('description'),
 						'address' => $app->input->getString('address'),
 						'latitude' => $app->input->getString('lat'),
-						'longitude' => $app->input->getString('lng')
+						'longitude' => $app->input->getString('lng'),
+						'district' => $app->input->getInt('district')
 					);
 					ImcFrontendHelper::checkNullArguments($args);
 
@@ -447,6 +545,170 @@ class ImcControllerApi extends ImcController
 
 					//be consistent return as array (of size 1)
 					$result = array($result);
+
+					break;
+				default:
+					throw new Exception('HTTP method is not supported');
+			}
+			header('Content-type: application/json');
+			echo new JResponseJson($result, 'Issue action completed successfully');
+			exit();
+		} catch (Exception $e) {
+			header("HTTP/1.0 202 Accepted");
+			header('Content-type: application/json');
+			echo new JResponseJson($e);
+			exit();
+		}
+	}
+
+
+
+
+
+
+	public function issue()
+	{
+
+		$result = null;
+		$app = JFactory::getApplication();
+		try {
+			$userid = self::validateRequest();
+			//get necessary arguments
+			$id = $app->input->getInt('id', null);
+
+			switch ($app->input->getMethod()) {
+					//fetch existing issue
+				case 'GET':
+					if ($id == null) {
+						throw new Exception('Id is not set');
+					}
+
+					//get models
+					$issueModel = JModelLegacy::getInstance('Issue', 'ImcModel', array('ignore_request' => true));
+					$logsModel = JModelLegacy::getInstance('Logs', 'ImcModel', array('ignore_request' => true));
+					$votesModel = JModelLegacy::getInstance('Votes', 'ImcModel', array('ignore_request' => true));
+					$commentsModel = JModelLegacy::getInstance('Comments', 'ImcModel', array('ignore_request' => true));
+
+					//handle unexpected warnings from model
+					set_error_handler(array($this, 'exception_error_handler'));
+					$data = $issueModel->getData($id);
+					if (is_object($data)) {
+						unset($data->coords);
+						//merge logs as timeline
+						$data->timeline = $logsModel->getItemsByIssue($id);
+						//merge hasVoted
+						$data->hasVoted = $votesModel->hasVoted($data->id, $userid);
+						//merge comments count if enabled
+						require_once JPATH_COMPONENT_SITE . '/models/comments.php';
+						$data->comments = $commentsModel->count($id, $userid);
+					} else {
+						throw new Exception(JText::_('COM_IMC_API_ISSUE_NOT_EXIST'));
+					}
+
+					restore_error_handler();
+
+					$result = ImcFrontendHelper::sanitizeIssue($data, $userid);
+
+					//check for any restrictions
+					if (!$result->myIssue && $result->moderation) {
+						throw new Exception(JText::_('COM_IMC_API_ISSUE_UNDER_MODERATION'));
+					}
+					if ($result->state != 1) {
+						throw new Exception(JText::_('COM_IMC_API_ISSUE_NOT_PUBLISHED'));
+					}
+
+					//be consistent return as array (of size 1)
+					$result = array($result);
+
+					break;
+					//create new issue
+				case 'POST':
+//header("Access-Control-Allow-Origin: *");
+//header("Access-Control-Allow-Headers: *");
+					if ($id != null) {
+						throw new Exception('You cannot use POST to fetch issue. Use GET instead');
+					}
+
+					//guests are not allowed to post issues
+					//TODO: get this from settings
+					if ($userid == 0) {
+						throw new Exception("Guests are not allowed to post:".JText::_('COM_IMC_API_NO_GUESTS_NO_POST'));
+					}
+					//get necessary arguments
+					$args = array(
+						'catid' => $app->input->getInt('catid'),
+						'title' => $app->input->getString('title'),
+						'description' => $app->input->getString('description'),
+						'address' => $app->input->getString('address'),
+						'latitude' => $app->input->getString('lat'),
+						'longitude' => $app->input->getString('lng')
+					);
+					ImcFrontendHelper::checkNullArguments($args);
+
+					//check if category exists
+					if (is_null(ImcFrontendHelper::getCategoryNameByCategoryId($args['catid'], true))) {
+						throw new Exception(JText::_('COM_IMC_API_CATEGORY_NOT_EXIST'));
+					}
+
+					$args['userid'] = $userid;
+					$args['created_by'] = $userid;
+					$args['stepid'] = ImcFrontendHelper::getPrimaryStepId();
+					$args['id'] = 0;
+					$args['created'] = ImcFrontendHelper::convert2UTC(date('Y-m-d H:i:s'));
+					$args['updated'] = $args['created'];
+					$args['note'] = 'modality=' . $app->input->getInt('m_id');
+					$args['language'] = '*';
+					$args['subgroup'] = 0;
+					$m_id  = $app->input->getInt('m_id', 0);
+					$args['modality'] = $m_id;
+
+					$tmpTime = time(); //used for temporary id
+					$imagedir = 'images/imc';
+
+					//check if post contains files
+					$file = $app->input->files->get('files');
+					if (!empty($file)) {
+						$app->enqueueMessage('Files found in body', 'info');
+						require_once JPATH_ROOT . '/components/com_imc/models/fields/multiphoto/server/UploadHandler.php';
+						$options = array(
+							'script_url' => JRoute::_(JURI::root(true) . '/administrator/index.php?option=com_imc&task=upload.handler&format=json&id=' . $tmpTime . '&imagedir=' . $imagedir . '&' . JSession::getFormToken() . '=1'),
+							'upload_dir' => JPATH_ROOT . '/' . $imagedir . '/' . $tmpTime . '/',
+							'upload_url' => $imagedir . '/' . $tmpTime . '/',
+							'param_name' => 'files',
+							'imc_api' => true
+
+						);
+						$upload_handler = new UploadHandler($options);
+						if (isset($upload_handler->imc_api)) {
+							$files_json = json_decode($upload_handler->imc_api);
+							$args['photo'] = json_encode(array('isnew' => 1, 'id' => $tmpTime, 'imagedir' => $imagedir, 'files' => $files_json->files));
+							$app->enqueueMessage('File(s) uploaded successfully', 'info');
+						} else {
+							throw new Exception(JText::_('COM_IMC_API_UPLOAD_FAILED'));
+						}
+					} else {
+						$app->enqueueMessage('No files found in body', 'info');
+						$args['photo'] = json_encode(array('isnew' => 1, 'id' => $tmpTime, 'imagedir' => $imagedir, 'files' => array()));
+					}
+
+					//get issueForm model and save
+					$issueFormModel = JModelLegacy::getInstance('IssueForm', 'ImcModel', array('ignore_request' => true));
+
+					//handle unexpected warnings from model
+					set_error_handler(array($this, 'exception_error_handler'));
+					$issueFormModel->save($args);
+					$insertid = JFactory::getApplication()->getUserState('com_imc.edit.issue.insertid');
+
+					//call post save hook
+					require_once JPATH_COMPONENT . '/controllers/issueform.php';
+					$issueFormController = new ImcControllerIssueForm();
+					$issueFormController->postSaveHook($issueFormModel, $args);
+					restore_error_handler();
+
+					$result = array('issueid' => $insertid);
+
+					//be consistent return as array (of size 1)
+					$result = array($result);
 					break;
 					//update existing issue
 				case 'PUT':
@@ -462,7 +724,7 @@ class ImcControllerApi extends ImcController
 			echo new JResponseJson($result, 'Issue action completed successfully');
 			exit();
 		} catch (Exception $e) {
-			header("HTTP/1.0 202 Accepted");
+			header("HTTP/1.0 500 Accepted");
 			header('Content-type: application/json');
 			echo new JResponseJson($e);
 			exit();
@@ -638,6 +900,13 @@ class ImcControllerApi extends ImcController
 					$data = $votesModel->getItems();
 					$votedIssues = ImcFrontendHelper::sanitizeVotes($data);
 					restore_error_handler();
+
+					//simplify votedIssues
+					// $voted = array();
+					// foreach ($votedIssues as $votedIssue) {
+					// 	$voted[] = $votedIssue->issueid;
+					// }
+
 					$fullname = JFactory::getUser($userid)->name;
 
 					//check is user is admin
@@ -647,7 +916,25 @@ class ImcControllerApi extends ImcController
 						$isAdmin = false;
 					}
 
-					$result = array('userid' => $userid, 'fullname' => $fullname, 'isAdmin' => $isAdmin, 'votedIssues' => $votedIssues);
+					//count submitted issues 
+					$db = JFactory::getDbo();
+					$query = $db->getQuery(true);
+					$query->select('COUNT(id) as c');
+					$query->from('`#__imc_issues` AS a');
+					$query->where("a.created_by = '" . $userid . "'");
+					$query->where("a.state >= 0");
+					$db->setQuery($query);
+					$result = $db->loadObject();
+					$countIssues = $result->c;
+
+					$result = array(
+						'userid' => $userid,
+						'fullname' => $fullname,
+						'isAdmin' => $isAdmin,
+						//'votedIssues' => $voted,
+						'countVotes' => count($votedIssues),
+						'countIssues' => $countIssues
+					);
 
 					//be consistent return as array (of size 1)
 					$result = array($result);
@@ -672,8 +959,8 @@ class ImcControllerApi extends ImcController
 					$args['username'] = $userInfo['username'];
 					$args['password1'] = $userInfo['password'];
 					$args['email1'] = $args['email'];
-					$args['phone'] = $app->input->getString('phone', '');
-					$args['address'] = $app->input->getString('address', '');
+					$args['phone'] = $app->input->getString('phone', null);
+					$args['address'] = $app->input->getString('address', null);
 
 					//handle unexpected warnings from model
 					set_error_handler(array($this, 'exception_error_handler'));
@@ -692,6 +979,22 @@ class ImcControllerApi extends ImcController
 						$app->enqueueMessage(JText::_('COM_USERS_REGISTRATION_COMPLETE_ACTIVATE'), 'info');
 					} else {
 						$app->enqueueMessage(JText::_('COM_USERS_REGISTRATION_SAVE_SUCCESS'), 'info');
+					}
+
+					//populate user profile
+					if (!is_null($args['phone'])) {
+						$userid = JUserHelper::getUserId($args['email']);
+						$db = JFactory::getDbo();
+						$tuples = array();
+						$order = 1;
+						$data = [
+							'phone' => $args['phone'],
+						];
+						foreach ($data as $k => $v) {
+							$tuples[] = '(' . $userid . ', ' . $db->quote('profile.' . $k) . ', ' . $db->quote(json_encode($v)) . ', ' . $order++ . ')';
+						}
+						$db->setQuery('INSERT INTO ' . $db->quoteName('#__user_profiles') . ' VALUES ' . implode(', ', $tuples));
+						$db->execute();
 					}
 
 					//be consistent return as array (of size 1)
@@ -1181,468 +1484,6 @@ class ImcControllerApi extends ImcController
 		return array('info' => $info, 'updated' => $updated);
 	}
 
-	public function topusers()
-	{
-		self::getTop('users');
-	}
-
-	public function topcategories()
-	{
-		self::getTop('categories');
-	}
-
-	public function topsteps()
-	{
-		self::getTop('steps');
-	}
-
-	public function topvoters()
-	{
-		self::getTop('voters');
-	}
-
-	public function topcommenters()
-	{
-		self::getTop('commenters');
-	}
-
-	private function getTop($type)
-	{
-		$result = null;
-		$app = JFactory::getApplication();
-		try {
-			self::validateRequest();
-
-			if ($app->input->getMethod() != 'GET') {
-				throw new Exception('You cannot use other method than GET to fetch top users');
-			}
-
-			//get necessary arguments
-			$ts = $app->input->getString('ts', null);
-			$prior_to = $app->input->getString('prior_to', null);
-			$lim = $app->input->getInt('lim', null);
-			$ids = $app->input->getString('ids', null);
-
-			if (!is_null($ts) && !ImcFrontendHelper::isValidTimeStamp($ts)) {
-				throw new Exception('Invalid timestamp ts');
-			}
-			if (!is_null($prior_to) && !ImcFrontendHelper::isValidTimeStamp($prior_to)) {
-				throw new Exception('Invalid timestamp prior_to');
-			}
-
-			//get date from ts
-			if (!is_null($ts)) {
-				$ts = gmdate('Y-m-d H:i:s', $ts);
-			}
-			if (!is_null($prior_to)) {
-				$prior_to = gmdate('Y-m-d H:i:s', $prior_to);
-			}
-
-			//handle unexpected warnings from model
-			set_error_handler(array($this, 'exception_error_handler'));
-			switch ($type) {
-				case 'users':
-					$result = ImcFrontendHelper::getTopUsers($lim, $ts, $prior_to, $ids);
-					break;
-				case 'categories':
-					$result = ImcFrontendHelper::getTopCategories($lim, $ts, $prior_to, $ids);
-					break;
-				case 'steps':
-					$result = ImcFrontendHelper::getTopSteps($lim, $ts, $prior_to, $ids);
-					break;
-				case 'voters':
-					$result = ImcFrontendHelper::getTopVoters($lim, $ts, $prior_to, $ids);
-					break;
-				case 'commenters':
-					$result = ImcFrontendHelper::getTopCommenters($lim, $ts, $prior_to, $ids);
-					break;
-			}
-			restore_error_handler();
-
-			$app->enqueueMessage('size: ' . sizeof($result), 'info');
-			header('Content-type: application/json');
-			echo new JResponseJson($result, 'Top fetched successfully');
-			exit();
-		} catch (Exception $e) {
-			header("HTTP/1.0 202 Accepted");
-			header('Content-type: application/json');
-			echo new JResponseJson($e);
-			exit();
-		}
-	}
-
-	public function boundaries()
-	{
-		$result = array();
-		$app = JFactory::getApplication();
-		try {
-			self::validateRequest();
-
-			if ($app->input->getMethod() != 'GET') {
-				throw new Exception('You cannot use other method than GET to fetch boundaries');
-			}
-
-			$params = JComponentHelper::getParams('com_imc');
-			$boundaries = $params->get('boundaries', null);
-
-			/*			if(!is_null($boundaries))
-			{
-				$boundaries = str_replace("\r", "", $boundaries);
-				$bounds = array();
-				$arBoundaries = explode("\n", $boundaries);
-				foreach ($arBoundaries as $bnd)
-				{
-					$latLng = explode(',', $bnd);
-					array_push($bounds, array('lng'=>(double)$latLng[0], 'lat'=>(double)$latLng[1]));
-				}
-				if(!empty($bounds))
-				{
-					$result = $bounds;
-				}
-			}*/
-
-			$borders = array();
-			if (!is_null($boundaries)) {
-				$arPolygons = explode(";", $boundaries);
-
-				foreach ($arPolygons as $poly) {
-					$polygon = str_replace("\r", "", $poly);
-
-					$bounds = array();
-					$arBoundaries = explode("\n", $polygon);
-					foreach ($arBoundaries as $bnd) {
-						if (strlen($bnd) > 1) {
-							$latLng = explode(',', $bnd);
-							array_push($bounds, array('lng' => (float) $latLng[0], 'lat' => (float) $latLng[1]));
-						}
-					}
-
-					array_push($borders, $bounds);
-				}
-				$result = $borders;
-			}
-
-			$app->enqueueMessage('size: ' . sizeof($result), 'info');
-			header('Content-type: application/json');
-			echo new JResponseJson($result, 'Boundaries fetched successfully');
-			exit();
-		} catch (Exception $e) {
-			header("HTTP/1.0 202 Accepted");
-			header('Content-type: application/json');
-			echo new JResponseJson($e);
-			exit();
-		}
-	}
-
-	public function totals()
-	{
-		$result = null;
-		$app = JFactory::getApplication();
-		try {
-			self::validateRequest();
-
-			if ($app->input->getMethod() != 'GET') {
-				throw new Exception('You cannot use other method than GET to fetch totals');
-			}
-
-			//handle unexpected warnings from model
-			set_error_handler(array($this, 'exception_error_handler'));
-			$result = ImcFrontendHelper::getTotals();
-
-			// Calculate the difference between start and end date (in years, months & days).
-			$diff = date_diff(date_create($result[0]['newest_issue_date']), date_create($result[0]['oldest_issue_date']));
-			$result[0]['years'] = $diff->y;
-			$result[0]['months'] = $diff->m;
-			$result[0]['days'] = $diff->d;
-
-			restore_error_handler();
-
-			$app->enqueueMessage('size: ' . sizeof($result), 'info');
-			header('Content-type: application/json');
-			echo new JResponseJson($result, 'Totals fetched successfully');
-			exit();
-		} catch (Exception $e) {
-			header("HTTP/1.0 202 Accepted");
-			header('Content-type: application/json');
-			echo new JResponseJson($e);
-			exit();
-		}
-	}
-
-	public function issuesbykeywords()
-	{
-		$result = null;
-		$app = JFactory::getApplication();
-		try {
-			$userid = self::validateRequest();
-
-			if ($app->input->getMethod() != 'GET') {
-				throw new Exception('You cannot use other method than GET to fetch top users');
-			}
-
-			//get necessary arguments
-			$keywords = $app->input->getString('keywords', null);
-			$ts = $app->input->getString('ts', null);
-			$prior_to = $app->input->getString('prior_to', null);
-			$lim = $app->input->getInt('lim', null);
-
-			if (is_null($keywords)) {
-				throw new Exception('Invalid keywords');
-			}
-			if (!is_null($ts) && !ImcFrontendHelper::isValidTimeStamp($ts)) {
-				throw new Exception('Invalid timestamp ts');
-			}
-			if (!is_null($prior_to) && !ImcFrontendHelper::isValidTimeStamp($prior_to)) {
-				throw new Exception('Invalid timestamp prior_to');
-			}
-
-			//get date from ts
-			if (!is_null($ts)) {
-				$ts = gmdate('Y-m-d H:i:s', $ts);
-			}
-			if (!is_null($prior_to)) {
-				$prior_to = gmdate('Y-m-d H:i:s', $prior_to);
-			}
-
-			//handle unexpected warnings
-			set_error_handler(array($this, 'exception_error_handler'));
-			$arComments = ImcFrontendHelper::searchIssuesByComments($keywords, $lim, $ts, $prior_to);
-			$arDescription = ImcFrontendHelper::searchIssues($keywords, 'description', $lim, $ts, $prior_to);
-			$arTitle = ImcFrontendHelper::searchIssues($keywords, 'title', $lim, $ts, $prior_to);
-			$arAddress = ImcFrontendHelper::searchIssues($keywords, 'address', $lim, $ts, $prior_to);
-			restore_error_handler();
-
-			$info = array(
-				'count_in_comments' => sizeof($arComments),
-				'count_in_description' => sizeof($arDescription),
-				'count_in_title' => sizeof($arTitle),
-				'count_in_address' => sizeof($arAddress),
-				'ids_in_comments' => ImcFrontendHelper::getIds($arComments),
-				'ids_in_description' => ImcFrontendHelper::getIds($arDescription),
-				'ids_in_title' => ImcFrontendHelper::getIds($arTitle),
-				'ids_in_address' => ImcFrontendHelper::getIds($arAddress)
-
-			);
-
-			$found = array(
-				'in_comments' => ImcFrontendHelper::sanitizeIssues(ImcFrontendHelper::array2obj($arComments), $userid),
-				'in_description' => ImcFrontendHelper::sanitizeIssues(ImcFrontendHelper::array2obj($arDescription), $userid),
-				'in_title' => ImcFrontendHelper::sanitizeIssues(ImcFrontendHelper::array2obj($arTitle), $userid),
-				'in_address' => ImcFrontendHelper::sanitizeIssues(ImcFrontendHelper::array2obj($arAddress), $userid)
-			);
-
-			$result = array('info' => $info, 'found' => $found);
-			header('Content-type: application/json');
-			echo new JResponseJson($result, 'Issues by keywords fetched successfully');
-			exit();
-		} catch (Exception $e) {
-			header("HTTP/1.0 202 Accepted");
-			header('Content-type: application/json');
-			echo new JResponseJson($e);
-			exit();
-		}
-	}
-
-	public function calendar()
-	{
-		$result = null;
-		$app = JFactory::getApplication();
-		try {
-			self::validateRequest();
-
-			if ($app->input->getMethod() != 'GET') {
-				throw new Exception('You cannot use other method than GET to fetch calendar issues');
-			}
-
-			//get necessary arguments
-			$field = $app->input->getString('field', null);
-			$allowedFields = array('stepid', 'catid');
-			if (!in_array($field, $allowedFields)) {
-				$field = null;
-			}
-
-			$ts = $app->input->getString('ts', null);
-			$prior_to = $app->input->getString('prior_to', null);
-
-			if (!is_null($ts) && !ImcFrontendHelper::isValidTimeStamp($ts)) {
-				throw new Exception('Invalid timestamp ts');
-			}
-			if (!is_null($prior_to) && !ImcFrontendHelper::isValidTimeStamp($prior_to)) {
-				throw new Exception('Invalid timestamp prior_to');
-			}
-
-			//get date from ts
-			if (!is_null($ts)) {
-				$ts = gmdate('Y-m-d H:i:s', $ts);
-			}
-			if (!is_null($prior_to)) {
-				$prior_to = gmdate('Y-m-d H:i:s', $prior_to);
-			}
-
-			//handle unexpected warnings
-			set_error_handler(array($this, 'exception_error_handler'));
-			$result = ImcFrontendHelper::calendar($field, $ts, $prior_to);
-			restore_error_handler();
-
-			header('Content-type: application/json');
-			echo new JResponseJson($result, 'Calendar Issues fetched successfully');
-			exit();
-		} catch (Exception $e) {
-			header("HTTP/1.0 202 Accepted");
-			header('Content-type: application/json');
-			echo new JResponseJson($e);
-			exit();
-		}
-	}
-
-	public function dailyCalendar()
-	{
-		$result = null;
-		$app = JFactory::getApplication();
-		try {
-			self::validateRequest();
-
-			if ($app->input->getMethod() != 'GET') {
-				throw new Exception('You cannot use other method than GET to fetch calendar issues');
-			}
-
-			//get necessary arguments
-			$field = $app->input->getString('field', null);
-			$allowedFields = array('stepid', 'catid');
-			if (!in_array($field, $allowedFields)) {
-				$field = null;
-			}
-
-			$year = $app->input->getInt('year', null);
-			$month = $app->input->getInt('month', null);
-			if (is_null($year)) {
-				throw new Exception('Year is mandatory');
-			}
-			if (is_null($month)) {
-				throw new Exception('Month (1-12) is mandatory');
-			}
-
-			//handle unexpected warnings
-			set_error_handler(array($this, 'exception_error_handler'));
-			$calendar = ImcFrontendHelper::dailyCalendar($year, $month, $field);
-			$result = ImcFrontendHelper::sanitizeDailyCalendar($calendar, $year, $month);
-			restore_error_handler();
-
-			header('Content-type: application/json');
-			echo new JResponseJson($result, 'Daily Calendar Issues fetched successfully');
-			exit();
-		} catch (Exception $e) {
-			header("HTTP/1.0 202 Accepted");
-			header('Content-type: application/json');
-			echo new JResponseJson($e);
-			exit();
-		}
-	}
-
-	public function intervals()
-	{
-		$result = null;
-		$app = JFactory::getApplication();
-		try {
-			self::validateRequest();
-
-			if ($app->input->getMethod() != 'GET') {
-				throw new Exception('You cannot use other method than GET to fetch intervals');
-			}
-
-			//get necessary arguments
-			$by_step = $app->input->getString('by_step', null);
-			$by_category = $app->input->getString('by_category', null);
-			$for_perf = $app->input->getString('for_perf', null);
-
-			$by_step = ($by_step === 'true');
-			$by_category = ($by_category === 'true');
-			$for_perf = ($for_perf === 'true');
-
-			$ts = $app->input->getString('ts', null);
-			$prior_to = $app->input->getString('prior_to', null);
-
-			if (!is_null($ts) && !ImcFrontendHelper::isValidTimeStamp($ts)) {
-				throw new Exception('Invalid timestamp ts');
-			}
-			if (!is_null($prior_to) && !ImcFrontendHelper::isValidTimeStamp($prior_to)) {
-				throw new Exception('Invalid timestamp prior_to');
-			}
-
-			//get date from ts
-			if (!is_null($ts)) {
-				$ts = gmdate('Y-m-d H:i:s', $ts);
-			}
-			if (!is_null($prior_to)) {
-				$prior_to = gmdate('Y-m-d H:i:s', $prior_to);
-			}
-
-			//handle unexpected warnings
-			set_error_handler(array($this, 'exception_error_handler'));
-			$result = ImcFrontendHelper::intervals($by_step, $by_category, $ts, $prior_to, $for_perf);
-			restore_error_handler();
-
-			header('Content-type: application/json');
-			echo new JResponseJson($result, 'Intervals fetched successfully');
-			exit();
-		} catch (Exception $e) {
-			header("HTTP/1.0 202 Accepted");
-			header('Content-type: application/json');
-			echo new JResponseJson($e);
-			exit();
-		}
-	}
-
-	public function __intervals()
-	{
-		$result = null;
-		$app = JFactory::getApplication();
-		try {
-			self::validateRequest();
-
-			if ($app->input->getMethod() != 'GET') {
-				throw new Exception('You cannot use other method than GET to fetch intervals');
-			}
-
-			//get necessary arguments
-			$by_step = $app->input->getString('by_step', null);
-			$by_category = $app->input->getString('by_category', null);
-			$by_step = ($by_step === 'true');
-			$by_category = ($by_category === 'true');
-			$ts = $app->input->getString('ts', null);
-			$prior_to = $app->input->getString('prior_to', null);
-
-			if (!is_null($ts) && !ImcFrontendHelper::isValidTimeStamp($ts)) {
-				throw new Exception('Invalid timestamp ts');
-			}
-			if (!is_null($prior_to) && !ImcFrontendHelper::isValidTimeStamp($prior_to)) {
-				throw new Exception('Invalid timestamp prior_to');
-			}
-
-			//get date from ts
-			if (!is_null($ts)) {
-				$ts = gmdate('Y-m-d H:i:s', $ts);
-			}
-			if (!is_null($prior_to)) {
-				$prior_to = gmdate('Y-m-d H:i:s', $prior_to);
-			}
-
-			//handle unexpected warnings
-			set_error_handler(array($this, 'exception_error_handler'));
-			$result = ImcFrontendHelper::intervals($by_step, $by_category, $ts, $prior_to);
-			restore_error_handler();
-
-			header('Content-type: application/json');
-			echo new JResponseJson($result, 'Intervals fetched successfully');
-			exit();
-		} catch (Exception $e) {
-			header("HTTP/1.0 202 Accepted");
-			header('Content-type: application/json');
-			echo new JResponseJson($e);
-			exit();
-		}
-	}
-
 	public function slogin()
 	{
 		$result = null;
@@ -1935,133 +1776,6 @@ class ImcControllerApi extends ImcController
 		}
 	}
 
-	public function exportES()
-	{
-		$result = null;
-		$app = JFactory::getApplication();
-		try {
-			self::validateRequest();
-			//get necessary arguments
-			$minLat = $app->input->getString('minLat');
-			$maxLat = $app->input->getString('maxLat');
-			$minLng = $app->input->getString('minLng');
-			$maxLng = $app->input->getString('maxLng');
-			$owned = $app->input->get('owned', false);
-			$lim = $app->input->getInt('lim', 0);
-			$offset = $app->input->getInt('offset', 0);
-			$ts = $app->input->getString('ts');
-			$prior_to = $app->input->getString('prior_to');
-
-			//get issues model
-			$issuesModel = JModelLegacy::getInstance('Issues', 'ImcModel', array('ignore_request' => true));
-			//set states
-			$issuesModel->setState('filter.owned', ($owned === 'true' ? 'yes' : 'no'));
-
-			/*
-				$issuesModel->setState('filter.imcapi.userid', $userid);
-			if($userid == 0)
-			{
-					$issuesModel->setState('filter.imcapi.guest', true);
-			}*/
-
-			$issuesModel->setState('filter.imcapi.ordering', 'id');
-			$issuesModel->setState('filter.imcapi.direction', 'ASC');
-
-			$issuesModel->setState('filter.imcapi.limit', $lim);
-			$issuesModel->setState('filter.imcapi.offset', $offset);
-
-
-			if (!is_null($minLat) && !is_null($maxLat) && !is_null($minLng) && !is_null($maxLng)) {
-				$issuesModel->setState('filter.imcapi.minLat', $minLat);
-				$issuesModel->setState('filter.imcapi.maxLat', $maxLat);
-				$issuesModel->setState('filter.imcapi.minLng', $minLng);
-				$issuesModel->setState('filter.imcapi.maxLng', $maxLng);
-			}
-
-			if (!is_null($ts)) {
-				if (!ImcFrontendHelper::isValidTimeStamp($ts)) {
-					throw new Exception('Invalid timestamp');
-				}
-
-				//get date from ts
-				$ts = gmdate('Y-m-d H:i:s', $ts);
-				$issuesModel->setState('filter.imcapi.ts', $ts);
-			}
-			if (!is_null($prior_to)) {
-				if (!ImcFrontendHelper::isValidTimeStamp($prior_to)) {
-					throw new Exception('Invalid prior_to timestamp');
-				}
-				//get date from ts
-				$prior_to = gmdate('Y-m-d H:i:s', $prior_to);
-				$issuesModel->setState('filter.imcapi.priorto', $prior_to);
-			}
-
-			//handle unexpected warnings from model
-			set_error_handler(array($this, 'exception_error_handler'));
-			//get items and sanitize them
-			$data = $issuesModel->getItems();
-			//$result = ImcFrontendHelper::sanitizeIssues($data, $userid);
-
-			restore_error_handler();
-			//unlink("logs.json");
-			unlink('logs_' . $lim . '_' . $offset . '.ndjson');
-			foreach ($data as $item) {
-				unset($item->asset_id);
-				//unset($item->title);
-				//unset($item->description);
-				unset($item->photo);
-				unset($item->language);
-				unset($item->note);
-				unset($item->alias);
-				unset($item->editor);
-				unset($item->regnum);
-				unset($item->regdate);
-				unset($item->responsible);
-				unset($item->extra);
-				unset($item->subgroup);
-				unset($item->ordering);
-				unset($item->access);
-				unset($item->hits);
-				unset($item->category_image);
-				unset($item->checked_out);
-				unset($item->checked_out_time);
-				//unset($item->created_by_name);
-				unset($item->stepid_color);
-				unset($item->access_level);
-
-				$item->id = (int) $item->id;
-				$item->stepid = (int) $item->stepid;
-				$item->catid = (int) $item->catid;
-				$item->latitude = (float) $item->latitude;
-				$item->longitude = (float) $item->longitude;
-				$item->location = $item->latitude . ", " . $item->longitude;
-				$item->state = (int) $item->state;
-				$item->created_by = (int) $item->created_by;
-				$item->votes = (int) $item->votes;
-				$item->updated_by = (int) $item->updated_by;
-				$item->modality = (int) $item->modality;
-				$item->moderation = (int) $item->moderation;
-				$item->comments = (int) $item->comments;
-
-				$txt  = json_encode(array("index" => array("_id" => $item->id))) . "\n";
-				$txt .= json_encode($item, JSON_UNESCAPED_UNICODE);
-				//$txt .= $this->raw_json_encode( $item ) . "\n";
-				$myfile = file_put_contents('logs_' . $lim . '_' . $offset . '.ndjson', $txt . PHP_EOL, FILE_APPEND | LOCK_EX);
-			}
-
-			//header('Content-type: application/json');
-			echo '<a href="' . JUri::root() .  'logs_' . $lim . '_' . $offset . '.ndjson">' .  'logs_' . $lim . '_' . $offset . '.ndjson'   . '</a>';
-			echo "<br />" . 'done';
-			exit();
-
-			//echo new JResponseJson($data, 'Issues fetched successfully');
-		} catch (Exception $e) {
-			header("HTTP/1.0 202 Accepted");
-			header('Content-type: application/json');
-			echo new JResponseJson($e);
-			exit();
-		}
-	}
 
 	private function raw_json_encode($input, $flags = 0)
 	{

@@ -100,7 +100,7 @@
             class="input-xxlarge"
             filter="safehtml" /> 
 
-        <field name="address" type="gmap" 
+        <field name="address" type="osm" 
             label="COM_IMC_FORM_LBL_ISSUE_ADDRESS" 
             latitudefield="latitude" 
             longitudefield="longitude" 

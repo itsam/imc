@@ -1,5 +1,6 @@
 <?php
-
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Headers: *");
 /**
  * @version     3.0.1
  * @package     com_imc
@@ -72,7 +73,7 @@ class ImcControllerApi2 extends ImcController
 
 		//1. check necessary arguments are exist
 		if (is_null($token) || is_null($m_id) || is_null($l)) {
-			$app->enqueueMessage('Either token, m_id (modality), or l (language) are missing', 'error');
+			$app->enqueueMessage('Either, token, m_id (modality), or l (language) are missing', 'error');
 			throw new Exception('Request is invalid');
 		}
 
@@ -104,7 +105,8 @@ class ImcControllerApi2 extends ImcController
 			throw new Exception('Token is invalid');
 		}
 
-		if (!isset($objToken->u) || !isset($objToken->p) || !isset($objToken->t) || !isset($objToken->r)) {
+		//if (!isset($objToken->u) || !isset($objToken->p) || !isset($objToken->t) || !isset($objToken->r)) {
+		if (!isset($objToken->u) || !isset($objToken->p)) {
 			throw new Exception('Token is not well formatted');
 		}
 
@@ -273,7 +275,7 @@ class ImcControllerApi2 extends ImcController
 			$filterSteps = $app->input->getString('filterSteps');
 			$filterCategories = $app->input->getString('filterCategories');
 			$filterPersonal = $app->input->getString('filterPersonal');
-
+			
 			//get issues model
 			$issuesModel = JModelLegacy::getInstance('Issues', 'ImcModel', array('ignore_request' => true));
 
@@ -356,14 +358,13 @@ class ImcControllerApi2 extends ImcController
 			}
 
 			$issuesModel->setState('filter.state', 1);
-
+			
 			//handle unexpected warnings from model
 			set_error_handler(array($this, 'exception_error_handler'));
 			//get items and sanitize them
 			$data = $issuesModel->getItems();
-
 			$total = $issuesModel->getTotal();
-
+			
 			$result = ImcFrontendHelper::sanitizeIssues($data, $userid);
 
 
@@ -385,6 +386,7 @@ class ImcControllerApi2 extends ImcController
 				unset($issue->regdate_TZ);
 				unset($issue->created_ts);
 				unset($issue->updated_ts);
+				unset($issue->coords);
 
 				$logs = $logsModel->getItemsByIssue($issue->id);
 				$timeline = ImcFrontendHelper::sanitizeLogs($logs);
@@ -393,14 +395,16 @@ class ImcControllerApi2 extends ImcController
 
 			//$app->enqueueMessage('size: ' . sizeof($result), 'info');
 			restore_error_handler();
-
 			header('Content-type: application/json; charset=utf-8');
 			//echo new JResponseJson($result, 'Issues fetched successfully');
 			$res = new JResponseJson($result, 'Issues fetched successfully');
-			$resObj = json_decode($res);
+		    $resObj = json_decode($res);
 			//echo $res;
-			$resObj->total = $total;
+	        $resObj->total = $total;
+			
 			echo json_encode($resObj, JSON_UNESCAPED_UNICODE);
+//			echo json_encode($resObj);
+
 			exit();
 		} catch (Exception $e) {
 			header("HTTP/1.0 202 Accepted");
@@ -410,7 +414,8 @@ class ImcControllerApi2 extends ImcController
 		}
 	}
 
-	public function issue()
+
+	public function issue2()
 	{
 		$result = null;
 		$app = JFactory::getApplication();
@@ -420,51 +425,11 @@ class ImcControllerApi2 extends ImcController
 			$id = $app->input->getInt('id', null);
 
 			switch ($app->input->getMethod()) {
-					//fetch existing issue
-				case 'GET':
-					if ($id == null) {
-						throw new Exception('Id is not set');
-					}
 
-					//get models
-					$issueModel = JModelLegacy::getInstance('Issue', 'ImcModel', array('ignore_request' => true));
-					$logsModel = JModelLegacy::getInstance('Logs', 'ImcModel', array('ignore_request' => true));
-					$votesModel = JModelLegacy::getInstance('Votes', 'ImcModel', array('ignore_request' => true));
-					$commentsModel = JModelLegacy::getInstance('Comments', 'ImcModel', array('ignore_request' => true));
-
-					//handle unexpected warnings from model
-					set_error_handler(array($this, 'exception_error_handler'));
-					$data = $issueModel->getData($id);
-					if (is_object($data)) {
-						//merge logs as timeline
-						$data->timeline = $logsModel->getItemsByIssue($id);
-						//merge hasVoted
-						$data->hasVoted = $votesModel->hasVoted($data->id, $userid);
-						//merge comments count if enabled
-						require_once JPATH_COMPONENT_SITE . '/models/comments.php';
-						$data->comments = $commentsModel->count($id, $userid);
-					} else {
-						throw new Exception(JText::_('COM_IMC_API_ISSUE_NOT_EXIST'));
-					}
-
-					restore_error_handler();
-
-					$result = ImcFrontendHelper::sanitizeIssue($data, $userid);
-
-					//check for any restrictions
-					if (!$result->myIssue && $result->moderation) {
-						throw new Exception(JText::_('COM_IMC_API_ISSUE_UNDER_MODERATION'));
-					}
-					if ($result->state != 1) {
-						throw new Exception(JText::_('COM_IMC_API_ISSUE_NOT_PUBLISHED'));
-					}
-
-					//be consistent return as array (of size 1)
-					$result = array($result);
-
-					break;
-					//create new issue
 				case 'POST':
+					// header('Content-type: application/json');
+					// $result = $_FILES;
+					// echo new JResponseJson($result, 'Issue action completed successfully');
 					if ($id != null) {
 						throw new Exception('You cannot use POST to fetch issue. Use GET instead');
 					}
@@ -482,7 +447,8 @@ class ImcControllerApi2 extends ImcController
 						'description' => $app->input->getString('description'),
 						'address' => $app->input->getString('address'),
 						'latitude' => $app->input->getString('lat'),
-						'longitude' => $app->input->getString('lng')
+						'longitude' => $app->input->getString('lng'),
+						'district' => $app->input->getInt('district')
 					);
 					ImcFrontendHelper::checkNullArguments($args);
 
@@ -548,6 +514,170 @@ class ImcControllerApi2 extends ImcController
 
 					//be consistent return as array (of size 1)
 					$result = array($result);
+
+					break;
+				default:
+					throw new Exception('HTTP method is not supported');
+			}
+			header('Content-type: application/json');
+			echo new JResponseJson($result, 'Issue action completed successfully');
+			exit();
+		} catch (Exception $e) {
+			header("HTTP/1.0 202 Accepted");
+			header('Content-type: application/json');
+			echo new JResponseJson($e);
+			exit();
+		}
+	}
+
+
+
+
+
+
+	public function issue()
+	{
+
+		$result = null;
+		$app = JFactory::getApplication();
+		try {
+			$userid = self::validateRequest();
+			//get necessary arguments
+			$id = $app->input->getInt('id', null);
+
+			switch ($app->input->getMethod()) {
+					//fetch existing issue
+				case 'GET':
+					if ($id == null) {
+						throw new Exception('Id is not set');
+					}
+
+					//get models
+					$issueModel = JModelLegacy::getInstance('Issue', 'ImcModel', array('ignore_request' => true));
+					$logsModel = JModelLegacy::getInstance('Logs', 'ImcModel', array('ignore_request' => true));
+					$votesModel = JModelLegacy::getInstance('Votes', 'ImcModel', array('ignore_request' => true));
+					$commentsModel = JModelLegacy::getInstance('Comments', 'ImcModel', array('ignore_request' => true));
+
+					//handle unexpected warnings from model
+					set_error_handler(array($this, 'exception_error_handler'));
+					$data = $issueModel->getData($id);
+					if (is_object($data)) {
+						unset($data->coords);
+						//merge logs as timeline
+						$data->timeline = $logsModel->getItemsByIssue($id);
+						//merge hasVoted
+						$data->hasVoted = $votesModel->hasVoted($data->id, $userid);
+						//merge comments count if enabled
+						require_once JPATH_COMPONENT_SITE . '/models/comments.php';
+						$data->comments = $commentsModel->count($id, $userid);
+					} else {
+						throw new Exception(JText::_('COM_IMC_API_ISSUE_NOT_EXIST'));
+					}
+
+					restore_error_handler();
+
+					$result = ImcFrontendHelper::sanitizeIssue($data, $userid);
+
+					//check for any restrictions
+					if (!$result->myIssue && $result->moderation) {
+						throw new Exception(JText::_('COM_IMC_API_ISSUE_UNDER_MODERATION'));
+					}
+					if ($result->state != 1) {
+						throw new Exception(JText::_('COM_IMC_API_ISSUE_NOT_PUBLISHED'));
+					}
+
+					//be consistent return as array (of size 1)
+					$result = array($result);
+
+					break;
+					//create new issue
+				case 'POST':
+//header("Access-Control-Allow-Origin: *");
+//header("Access-Control-Allow-Headers: *");
+					if ($id != null) {
+						throw new Exception('You cannot use POST to fetch issue. Use GET instead');
+					}
+
+					//guests are not allowed to post issues
+					//TODO: get this from settings
+					if ($userid == 0) {
+						throw new Exception("Guests are not allowed to post:".JText::_('COM_IMC_API_NO_GUESTS_NO_POST'));
+					}
+					//get necessary arguments
+					$args = array(
+						'catid' => $app->input->getInt('catid'),
+						'title' => $app->input->getString('title'),
+						'description' => $app->input->getString('description'),
+						'address' => $app->input->getString('address'),
+						'latitude' => $app->input->getString('lat'),
+						'longitude' => $app->input->getString('lng')
+					);
+					ImcFrontendHelper::checkNullArguments($args);
+
+					//check if category exists
+					if (is_null(ImcFrontendHelper::getCategoryNameByCategoryId($args['catid'], true))) {
+						throw new Exception(JText::_('COM_IMC_API_CATEGORY_NOT_EXIST'));
+					}
+
+					$args['userid'] = $userid;
+					$args['created_by'] = $userid;
+					$args['stepid'] = ImcFrontendHelper::getPrimaryStepId();
+					$args['id'] = 0;
+					$args['created'] = ImcFrontendHelper::convert2UTC(date('Y-m-d H:i:s'));
+					$args['updated'] = $args['created'];
+					$args['note'] = 'modality=' . $app->input->getInt('m_id');
+					$args['language'] = '*';
+					$args['subgroup'] = 0;
+					$m_id  = $app->input->getInt('m_id', 0);
+					$args['modality'] = $m_id;
+
+					$tmpTime = time(); //used for temporary id
+					$imagedir = 'images/imc';
+
+					//check if post contains files
+					$file = $app->input->files->get('files');
+					if (!empty($file)) {
+						$app->enqueueMessage('Files found in body', 'info');
+						require_once JPATH_ROOT . '/components/com_imc/models/fields/multiphoto/server/UploadHandler.php';
+						$options = array(
+							'script_url' => JRoute::_(JURI::root(true) . '/administrator/index.php?option=com_imc&task=upload.handler&format=json&id=' . $tmpTime . '&imagedir=' . $imagedir . '&' . JSession::getFormToken() . '=1'),
+							'upload_dir' => JPATH_ROOT . '/' . $imagedir . '/' . $tmpTime . '/',
+							'upload_url' => $imagedir . '/' . $tmpTime . '/',
+							'param_name' => 'files',
+							'imc_api' => true
+
+						);
+						$upload_handler = new UploadHandler($options);
+						if (isset($upload_handler->imc_api)) {
+							$files_json = json_decode($upload_handler->imc_api);
+							$args['photo'] = json_encode(array('isnew' => 1, 'id' => $tmpTime, 'imagedir' => $imagedir, 'files' => $files_json->files));
+							$app->enqueueMessage('File(s) uploaded successfully', 'info');
+						} else {
+							throw new Exception(JText::_('COM_IMC_API_UPLOAD_FAILED'));
+						}
+					} else {
+						$app->enqueueMessage('No files found in body', 'info');
+						$args['photo'] = json_encode(array('isnew' => 1, 'id' => $tmpTime, 'imagedir' => $imagedir, 'files' => array()));
+					}
+
+					//get issueForm model and save
+					$issueFormModel = JModelLegacy::getInstance('IssueForm', 'ImcModel', array('ignore_request' => true));
+
+					//handle unexpected warnings from model
+					set_error_handler(array($this, 'exception_error_handler'));
+					$issueFormModel->save($args);
+					$insertid = JFactory::getApplication()->getUserState('com_imc.edit.issue.insertid');
+
+					//call post save hook
+					require_once JPATH_COMPONENT . '/controllers/issueform.php';
+					$issueFormController = new ImcControllerIssueForm();
+					$issueFormController->postSaveHook($issueFormModel, $args);
+					restore_error_handler();
+
+					$result = array('issueid' => $insertid);
+
+					//be consistent return as array (of size 1)
+					$result = array($result);
 					break;
 					//update existing issue
 				case 'PUT':
@@ -563,7 +693,7 @@ class ImcControllerApi2 extends ImcController
 			echo new JResponseJson($result, 'Issue action completed successfully');
 			exit();
 		} catch (Exception $e) {
-			header("HTTP/1.0 202 Accepted");
+			header("HTTP/1.0 500 Accepted");
 			header('Content-type: application/json');
 			echo new JResponseJson($e);
 			exit();
