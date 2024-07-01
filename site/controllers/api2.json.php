@@ -449,7 +449,7 @@ class ImcControllerApi2 extends ImcController
 						'latitude' => $app->input->getString('lat'),
 						'longitude' => $app->input->getString('lng'),
 						'district' => $app->input->getInt('district'),
-						'extra' => $app->input->getString('extra')
+						'extra' = $app->input->getString('extra', '');
 					);
 					ImcFrontendHelper::checkNullArguments($args);
 
